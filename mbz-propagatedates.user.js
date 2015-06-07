@@ -53,7 +53,7 @@ function propagateDates() {
         } else {
             var from_period = relations[idx].period;
             relations.forEach(function(rel) {
-                var linkType = rel.linkTypeID();
+                var linkType = rel.linkTypeID().toString();
                 if (linkType === linkTypePerformer || linkType === linkTypeWork
                     || linkType === linkTypeInstrument || linkType === linkTypeVocals
                     || linkType === linkTypeOrchestra || linkType === linkTypeConductor

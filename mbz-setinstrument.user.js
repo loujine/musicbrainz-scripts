@@ -23,8 +23,9 @@ function setInstrument(attrId) {
         attr = { type: MB.attrInfoByID[attrId] };
     recordings.forEach(function(recording) {
         recording.relationships().forEach(function(rel) {
-            if (rel.linkTypeID() === linkTypeOrchestra
-                || rel.linkTypeID() === linkTypePerformer) {
+            var linkType = rel.linkTypeID().toString();
+            if (linkType === linkTypeOrchestra
+                || linkType === linkTypePerformer) {
                 rel.linkTypeID(linkTypeInstrument);
                 rel.setAttributes([attr]);
             }
