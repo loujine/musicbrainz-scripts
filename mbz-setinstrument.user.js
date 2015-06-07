@@ -28,6 +28,7 @@ function setInstrument(attrId) {
                 || linkType === linkTypePerformer) {
                 rel.linkTypeID(linkTypeInstrument);
                 rel.setAttributes([attr]);
+                rel.attributes()[0].creditedAs('string quartet');
             }
         });
     });
@@ -36,12 +37,14 @@ function setInstrument(attrId) {
 var elm = document.createElement('input');
 elm.id = 'batchsetinstrument';
 elm.type = 'button';
-elm.value = 'Batch-set instrument';
+elm.value = 'Batch-set "String Quartet" instrument';
 
 var tabdiv = document.getElementsByClassName('tabs')[0];
 tabdiv.parentNode.insertBefore(elm, tabdiv.nextSibling);
 
 document.getElementById('batchsetinstrument').addEventListener('click', function(event) {
     setInstrument(attrIdStrings);
+    var vm = MB.releaseRelationshipEditor;
+    vm.editNote('Use "strings" instrument AR for a String Quartet artist');
 }, false);
 

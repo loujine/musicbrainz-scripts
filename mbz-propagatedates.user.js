@@ -75,4 +75,6 @@ tabdiv.parentNode.insertBefore(elm, tabdiv.nextSibling);
 
 document.getElementById('propagatedates').addEventListener('click', function(event) {
     propagateDates();
+    var vm = MB.releaseRelationshipEditor;
+    vm.editNote('Propagate recording dates from other advanced relationships');
 }, false);
