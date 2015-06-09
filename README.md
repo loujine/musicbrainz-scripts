@@ -22,6 +22,19 @@ relationships with specific instruments relationships. The main objective is to
 replace incorrect "performing orchestra" used for chamber music groups (string
 quartets, etc.)
 
+* mbz-setguessedworks: add related work suggested by the search server if the
+recording has no linked work. Search is done using the recording title.
+
+
+TODO
+----
+
+* placement of the buttons is awkward, but it is because buttons placed next to
+the "batch-" options do not work (due to this part of the page being reloaded?)
+
+* improve guessed work: use the track artist to limit the search to the correct
+composer
+
 
 Notes
 -----
