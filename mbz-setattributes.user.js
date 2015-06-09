@@ -2,7 +2,7 @@
 // @name         MusicBrainz: Batch-set recording-work attributes
 // @author       loujine
 // @version      2015.5.28
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/src
+// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-setattributes.user.js
 // @description  musicbrainz.org: Set "live" attribute on selected recordings
 // @compatible   firefox+greasemonkey  quickly tested
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)

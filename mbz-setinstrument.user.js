@@ -2,7 +2,7 @@
 // @name         MusicBrainz: Batch-set recording-artist instrument
 // @author       loujine
 // @version      2015.5.28
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/src
+// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-setinstrument.user.js
 // @description  musicbrainz.org: Convert to "string" instrument AR on selected recordings
 // @compatible   firefox+greasemonkey  quickly tested
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
