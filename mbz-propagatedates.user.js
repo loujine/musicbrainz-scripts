@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch-propagate recording dates
 // @author       loujine
-// @version      2015.5.28
+// @version      2015.6.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-propagatedates.user.js
 // @description  musicbrainz.org: Copy dates on relevant recording AR fields
 // @compatible   firefox+greasemonkey  quickly tested
