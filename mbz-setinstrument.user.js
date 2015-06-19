@@ -20,6 +20,17 @@ var linkTypeInstrument = '148',
     attrIdPiano = 180,
     attrIdStrings = 69;
 
+function unsetOrchestra() {
+    var recordings = MB.relationshipEditor.UI.checkedRecordings(),
+        vm = MB.releaseRelationshipEditor;
+    recordings.forEach(function(rec) {
+        var relationships = rec.getRelationshipGroup(linkTypeOrchestra, vm);
+        if (relationships.length > 0) {
+            relationships[0].linkTypeID(linkTypePerformer);
+        }
+    });
+}
+
 function setCreditedInstrument(attrId, credit) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
         attr = { type: MB.attrInfoByID[attrId] };
@@ -38,13 +49,23 @@ function setCreditedInstrument(attrId, credit) {
     });
 }
 
+var elmOrchestra = document.createElement('input');
+elmOrchestra.id = 'batch-unset-orchestra';
+elmOrchestra.type = 'button';
+elmOrchestra.value = 'Batch-unset "Orchestra"';
+
 var elmSQ = document.createElement('input');
 elmSQ.id = 'batch-set-string-quartet';
 elmSQ.type = 'button';
 elmSQ.value = 'Batch-set "String Quartet" instrument';
 
 var tabdiv = document.getElementsByClassName('tabs')[0];
+tabdiv.parentNode.insertBefore(elmOrchestra, tabdiv.nextSibling);
 tabdiv.parentNode.insertBefore(elmSQ, tabdiv.nextSibling);
+
+document.getElementById('batch-unset-orchestra').addEventListener('click', function(event) {
+    unsetOrchestra();
+}, false);
 
 document.getElementById('batch-set-string-quartet').addEventListener('click', function(event) {
     var vm = MB.releaseRelationshipEditor;
