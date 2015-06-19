@@ -20,7 +20,7 @@ var linkTypeInstrument = '148',
     attrIdPiano = 180,
     attrIdStrings = 69;
 
-function setInstrument(attrId) {
+function setCreditedInstrument(attrId, credit) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
         attr = { type: MB.attrInfoByID[attrId] };
     recordings.forEach(function(recording) {
@@ -30,23 +30,25 @@ function setInstrument(attrId) {
                 linkType === linkTypePerformer) {
                 rel.linkTypeID(linkTypeInstrument);
                 rel.setAttributes([attr]);
-                rel.attributes()[0].creditedAs('string quartet');
+                if (rel.attributes().length > 0) {
+                    rel.attributes()[0].creditedAs(credit);
+                }
             }
         });
     });
 }
 
-var elm = document.createElement('input');
-elm.id = 'batchsetinstrument';
-elm.type = 'button';
-elm.value = 'Batch-set "String Quartet" instrument';
+var elmSQ = document.createElement('input');
+elmSQ.id = 'batch-set-string-quartet';
+elmSQ.type = 'button';
+elmSQ.value = 'Batch-set "String Quartet" instrument';
 
 var tabdiv = document.getElementsByClassName('tabs')[0];
-tabdiv.parentNode.insertBefore(elm, tabdiv.nextSibling);
+tabdiv.parentNode.insertBefore(elmSQ, tabdiv.nextSibling);
 
-document.getElementById('batchsetinstrument').addEventListener('click', function(event) {
-    setInstrument(attrIdStrings);
+document.getElementById('batch-set-string-quartet').addEventListener('click', function(event) {
     var vm = MB.releaseRelationshipEditor;
+    setCreditedInstrument(attrIdStrings, 'string quartet');
     vm.editNote('Use "strings" instrument AR for a String Quartet artist');
 }, false);
 
