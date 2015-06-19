@@ -18,6 +18,8 @@ var linkTypeInstrument = '148',
     linkTypeOrchestra = '150',
     linkTypePerformer = '156',
     attrIdPiano = 180,
+    attrIdViolin = 86,
+    attrIdCello = 84,
     attrIdStrings = 69;
 
 function setInstrument(fromType, toType, attrIds, credit) {
@@ -49,11 +51,17 @@ elmOrchestra.value = 'Batch-unset "Orchestra"';
 var elmSQ = document.createElement('input');
 elmSQ.id = 'batch-set-string-quartet';
 elmSQ.type = 'button';
-elmSQ.value = 'Batch-set "String Quartet" instrument';
+elmSQ.value = 'Batch-set "String Quartet"';
+
+var elmTrio = document.createElement('input');
+elmTrio.id = 'batch-set-piano-trio';
+elmTrio.type = 'button';
+elmTrio.value = 'Batch-set "Piano Trio"';
 
 var tabdiv = document.getElementsByClassName('tabs')[0];
 tabdiv.parentNode.insertBefore(elmOrchestra, tabdiv.nextSibling);
 tabdiv.parentNode.insertBefore(elmSQ, tabdiv.nextSibling);
+tabdiv.parentNode.insertBefore(elmTrio, tabdiv.nextSibling);
 
 document.getElementById('batch-unset-orchestra').addEventListener('click', function(event) {
     setInstrument(linkTypeOrchestra, linkTypePerformer);
@@ -65,4 +73,12 @@ document.getElementById('batch-set-string-quartet').addEventListener('click', fu
                   [attrIdStrings], 'string quartet');
     vm.editNote('Use "strings" instrument AR for a String Quartet artist');
 }, false);
+
+document.getElementById('batch-set-piano-trio').addEventListener('click', function(event) {
+    var vm = MB.releaseRelationshipEditor;
+    setInstrument(linkTypePerformer, linkTypeInstrument,
+                  [attrIdPiano, attrIdViolin, attrIdCello]);
+    vm.editNote('Use instruments AR for a Piano Trio artist');
+}, false);
+
 
