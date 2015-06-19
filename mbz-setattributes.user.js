@@ -11,16 +11,18 @@
 // @run-at       document-end
 // ==/UserScript==
 
+'use strict';
+
 // from musicbrainz-server/root/static/scripts/tests/typeInfo.js
 var attrIdLive = 578,
     attrIdPartial = 278;
 
 function setLive(attrId) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
-        attr = { type: MB.attrInfoByID[attrIdLive] };
+        attr = { type: MB.attrInfoByID[attrId] };
     recordings.forEach(function(recording) {
-        recording.performances().forEach(function(rel) {
-            rel.setAttributes([attr]);
+        recording.performances().forEach(function(relation) {
+            relation.setAttributes([attr]);
         });
     });
 }

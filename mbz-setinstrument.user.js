@@ -11,6 +11,8 @@
 // @run-at       document-end
 // ==/UserScript==
 
+'use strict';
+
 // from musicbrainz-server/root/static/scripts/tests/typeInfo.js
 var linkTypeInstrument = '148',
     linkTypeOrchestra = '150',
@@ -24,8 +26,8 @@ function setInstrument(attrId) {
     recordings.forEach(function(recording) {
         recording.relationships().forEach(function(rel) {
             var linkType = rel.linkTypeID().toString();
-            if (linkType === linkTypeOrchestra
-                || linkType === linkTypePerformer) {
+            if (linkType === linkTypeOrchestra ||
+                linkType === linkTypePerformer) {
                 rel.linkTypeID(linkTypeInstrument);
                 rel.setAttributes([attr]);
                 rel.attributes()[0].creditedAs('string quartet');

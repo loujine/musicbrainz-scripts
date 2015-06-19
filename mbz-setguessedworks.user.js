@@ -11,28 +11,31 @@
 // @run-at       document-end
 // ==/UserScript==
 
+'use strict';
+
 function guessWork(recording) {
     var url = 'https://musicbrainz.org/ws/js/work/?q=' +
               encodeURIComponent(recording.name) +
               '&artist=' + encodeURIComponent(recording.artist) +
               '&fmt=json&limit=1',
-        req = new XMLHttpRequest,
+        req = new XMLHttpRequest(),
         resp;
     req.open('GET', url, false);
     req.onload = function() {
-        if (req.status == 200 && req.responseText != null) {
+        if (req.status === 200 && req.responseText != null) {
             resp = JSON.parse(req.responseText);
         } else {
             console.log(req.status);
-        };
+        }
     };
     req.send(null);
     return resp[0];
-};
+}
 
 function setGuessedWork() {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
-        vm = MB.releaseRelationshipEditor;
+        vm = MB.releaseRelationshipEditor,
+        work;
     recordings.forEach(function(recording) {
             if (recording.performances().length === 0) {
                 work = guessWork(recording);
@@ -41,9 +44,9 @@ function setGuessedWork() {
                     target: work,
                     viewModel: vm,
                 }).accept();
-            };
+            }
     });
-};
+}
 
 var elm = document.createElement('input');
 elm.id = 'batchguesswork';

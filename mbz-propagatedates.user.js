@@ -11,6 +11,8 @@
 // @run-at       document-end
 // ==/UserScript==
 
+'use strict';
+
 // from musicbrainz-server/root/static/scripts/tests/typeInfo.js
 var linkTypeInstrument = '148',
     linkTypeVocals = '149',
@@ -21,10 +23,10 @@ var linkTypeInstrument = '148',
     linkTypePlace = '693',
     linkTypeArea = '698';
 
-function copyDate(from_date, rel) {
+function copyDate(from_date, relation) {
     ['beginDate', 'endDate'].forEach(function(date) {
         ['day', 'month', 'year'].forEach(function(unit) {
-            rel.period[date][unit](from_date[date][unit]());
+            relation.period[date][unit](from_date[date][unit]());
         });
     });
 }
@@ -54,10 +56,10 @@ function propagateDates() {
             var from_period = relations[idx].period;
             relations.forEach(function(rel) {
                 var linkType = rel.linkTypeID().toString();
-                if (linkType === linkTypePerformer || linkType === linkTypeWork
-                    || linkType === linkTypeInstrument || linkType === linkTypeVocals
-                    || linkType === linkTypeOrchestra || linkType === linkTypeConductor
-                    || linkType === linkTypePlace || linkType === linkTypeArea) {
+                if (linkType === linkTypePerformer || linkType === linkTypeWork ||
+                    linkType === linkTypeInstrument || linkType === linkTypeVocals ||
+                    linkType === linkTypeOrchestra || linkType === linkTypeConductor ||
+                    linkType === linkTypePlace || linkType === linkTypeArea) {
                     copyDate(from_period, rel);
                 }
             });
