@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch-set guessed works
 // @author       loujine
-// @version      2015.6.3
+// @version      2015.6.19
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-setguessedworks.user.js
 // @description  musicbrainz.org: Set best-guess related works
 // @compatible   firefox+greasemonkey  quickly tested
