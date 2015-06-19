@@ -20,32 +20,24 @@ var linkTypeInstrument = '148',
     attrIdPiano = 180,
     attrIdStrings = 69;
 
-function unsetOrchestra() {
+function setInstrument(fromType, toType, attrIds, credit) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
-        vm = MB.releaseRelationshipEditor;
+        vm = MB.releaseRelationshipEditor,
+        attrIds = attrIds || [];
     recordings.forEach(function(rec) {
-        var relationships = rec.getRelationshipGroup(linkTypeOrchestra, vm);
-        if (relationships.length > 0) {
-            relationships[0].linkTypeID(linkTypePerformer);
-        }
-    });
-}
-
-function setCreditedInstrument(attrId, credit) {
-    var recordings = MB.relationshipEditor.UI.checkedRecordings(),
-        attr = { type: MB.attrInfoByID[attrId] };
-    recordings.forEach(function(recording) {
-        recording.relationships().forEach(function(rel) {
-            var linkType = rel.linkTypeID().toString();
-            if (linkType === linkTypeOrchestra ||
-                linkType === linkTypePerformer) {
-                rel.linkTypeID(linkTypeInstrument);
-                rel.setAttributes([attr]);
-                if (rel.attributes().length > 0) {
-                    rel.attributes()[0].creditedAs(credit);
-                }
-            }
-        });
+        var relationships = rec.getRelationshipGroup(fromType, vm);
+        relationships.forEach(function(rel) {
+            var attrs = rel.attributes();
+            rel.linkTypeID(toType);
+            attrIds.forEach(function(attrId) {
+                attrs.push({ type: MB.attrInfoByID[attrId] });
+            });
+            console.log(attrs);
+            rel.setAttributes(attrs);
+            attrIds.forEach(function(attrId, idx) {
+                rel.attributes()[idx].creditedAs(credit);
+            });
+         });
     });
 }
 
@@ -64,12 +56,13 @@ tabdiv.parentNode.insertBefore(elmOrchestra, tabdiv.nextSibling);
 tabdiv.parentNode.insertBefore(elmSQ, tabdiv.nextSibling);
 
 document.getElementById('batch-unset-orchestra').addEventListener('click', function(event) {
-    unsetOrchestra();
+    setInstrument(linkTypeOrchestra, linkTypePerformer);
 }, false);
 
 document.getElementById('batch-set-string-quartet').addEventListener('click', function(event) {
     var vm = MB.releaseRelationshipEditor;
-    setCreditedInstrument(attrIdStrings, 'string quartet');
+    setInstrument(linkTypePerformer, linkTypeInstrument,
+                  [attrIdStrings], 'string quartet');
     vm.editNote('Use "strings" instrument AR for a String Quartet artist');
 }, false);
 
