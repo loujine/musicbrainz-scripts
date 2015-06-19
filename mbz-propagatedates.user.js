@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch-propagate recording dates
 // @author       loujine
-// @version      2015.6.8
+// @version      2015.6.18
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-propagatedates.user.js
 // @description  musicbrainz.org: Copy dates on relevant recording AR fields
 // @compatible   firefox+greasemonkey  quickly tested
@@ -33,8 +33,8 @@ function referenceDate(relations) {
     var idx_ref = -1;
     // look for one recording link with a date
     // give priority to the most precise one (day > month > year)
-    relations.forEach(function(rel, idx) {
-        ['day', 'month', 'year'].forEach(function(unit) {
+    ['day', 'month', 'year'].forEach(function(unit) {
+        relations.forEach(function(rel, idx) {
             if (idx_ref === -1 && rel.period.endDate[unit]() > 0) {
                 idx_ref = idx;
             }
