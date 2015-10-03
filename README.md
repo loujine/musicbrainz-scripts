@@ -7,6 +7,9 @@ Collection of greasemonkey scripts for MusicBrainz editing.
 Content
 -------
 
+Relationship editor
++++++++++++++++++++
+
 The first scripts concern batch-editing in the relationship editor in order to
 modify all selected recordings at once:
 
@@ -26,6 +29,21 @@ quartets, etc.)
 recording has no linked work. Search is done using the recording title.
 
 
+Artist relationships tab
+++++++++++++++++++++++++
+
+* mbz-showmissingwork: check for each recording whether a linked work exists.
+  Mark with:
+
+  - a green ✓ if at least one work exists and a date is set on the
+  relationship
+  - an orange ⚠ if at least one work exists with no date
+  - a red ✗ if no work is linked to the recording
+
+Queries are set 1 second apart to avoid hitting the rate limit on musicbrainz
+server.
+
+
 TODO
 ----
 
@@ -39,7 +57,7 @@ composer
 Notes
 -----
 
-Warning: those scripts are developped for my own use! I expect them to be
+Warning: those scripts are developed for my own use! I expect them to be
 useless for other people, except as an example to adapt to your own goals.
 Contributions and feedback are welcome.
 
