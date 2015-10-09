@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch-set recording-artist instrument
 // @author       loujine
-// @version      2015.6.22
+// @version      2015.10.09
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -17,9 +17,9 @@
 'use strict';
 
 // from musicbrainz-server/root/static/scripts/tests/typeInfo.js
-var linkTypeInstrument = '148',
-    linkTypeOrchestra = '150',
-    linkTypePerformer = '156',
+var linkTypeInstrument = 148,
+    linkTypeOrchestra = 150,
+    linkTypePerformer = 156,
     attrIdPiano = 180,
     attrIdViolin = 86,
     attrIdCello = 84,
@@ -29,59 +29,97 @@ function setInstrument(fromType, toType, attrIds, credit) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
         vm = MB.releaseRelationshipEditor,
         attrIds = attrIds || [];
-    recordings.forEach(function(rec) {
-        var relationships = rec.getRelationshipGroup(fromType, vm);
-        relationships.forEach(function(rel) {
-            var attrs = rel.attributes();
-            rel.linkTypeID(toType);
+    recordings.forEach(function(recording) {
+        var relationships = recording.getRelationshipGroup(fromType, vm);
+        relationships.forEach(function(relation) {
+            var attrs = relation.attributes();
+            relation.linkTypeID(toType);
             attrIds.forEach(function(attrId) {
                 attrs.push({ type: MB.attrInfoByID[attrId] });
             });
             console.log(attrs);
-            rel.setAttributes(attrs);
+            relation.setAttributes(attrs);
             attrIds.forEach(function(attrId, idx) {
-                rel.attributes()[idx].creditedAs(credit);
+                relation.attributes()[idx].creditedAs(credit);
             });
          });
     });
 }
 
-var elmOrchestra = document.createElement('input');
-elmOrchestra.id = 'batch-unset-orchestra';
-elmOrchestra.type = 'button';
-elmOrchestra.value = 'Batch-unset "Orchestra"';
+if ($('div#loujine-menu').length) {
+    var container = $('div#loujine-menu');
+} else {
+    var container = $('<div></div>', {
+        'id': 'loujine-menu',
+        'css': {'background-color': 'white',
+                'padding': '8px',
+                'margin': '0px -6px 6px',
+                'border': '5px dotted #736DAB'
+            }
+        }
+    ).append(
+        $('<h2></h2>', {'text': 'loujine GM tools'})
+    );
+}
 
-var elmSQ = document.createElement('input');
-elmSQ.id = 'batch-set-string-quartet';
-elmSQ.type = 'button';
-elmSQ.value = 'Batch-set "String Quartet"';
+$('div.tabs').after(
+    container
+    .append(
+        $('<h3></h3>', {'text': 'Recording-performer instrument attributes'})
+    ).append(
+        $('<input></input>', {
+            'id': 'batch-unset-orchestra',
+            'type': 'button',
+            'value': 'Batch-unset "Orchestra"'
+            })
+    ).append(
+        $('<input></input>', {
+            'id': 'batch-set-string-quartet',
+            'type': 'button',
+            'value': 'Batch-set "String Quartet"'
+            })
+    ).append(
+        $('<input></input>', {
+            'id': 'batch-set-piano-trio',
+            'type': 'button',
+            'value': 'Batch-set "Piano Trio"'
+            })
+    ).append(
+        $('<input></input>', {
+            'id': 'batch-set-piano',
+            'type': 'button',
+            'value': 'Batch-set "Piano"'
+            })
+    )
+);
 
-var elmTrio = document.createElement('input');
-elmTrio.id = 'batch-set-piano-trio';
-elmTrio.type = 'button';
-elmTrio.value = 'Batch-set "Piano Trio"';
+function signEditNote(msg) {
+    var vm = MB.releaseRelationshipEditor,
+        oldmsg = vm.editNote(),
+        signature = '\n\n--\n' + 'Using "MusicBrainz: Batch-set instruments" GM script\n';
+    vm.editNote(oldmsg + msg + signature);
+}
 
-var tabdiv = document.getElementsByClassName('tabs')[0];
-tabdiv.parentNode.insertBefore(elmOrchestra, tabdiv.nextSibling);
-tabdiv.parentNode.insertBefore(elmSQ, tabdiv.nextSibling);
-tabdiv.parentNode.insertBefore(elmTrio, tabdiv.nextSibling);
-
-document.getElementById('batch-unset-orchestra').addEventListener('click', function(event) {
-    setInstrument(linkTypeOrchestra, linkTypePerformer);
-}, false);
-
-document.getElementById('batch-set-string-quartet').addEventListener('click', function(event) {
-    var vm = MB.releaseRelationshipEditor;
-    setInstrument(linkTypePerformer, linkTypeInstrument,
-                  [attrIdStrings], 'string quartet');
-    vm.editNote('Use "strings" instrument AR for a String Quartet artist');
-}, false);
-
-document.getElementById('batch-set-piano-trio').addEventListener('click', function(event) {
-    var vm = MB.releaseRelationshipEditor;
-    setInstrument(linkTypePerformer, linkTypeInstrument,
-                  [attrIdPiano, attrIdViolin, attrIdCello]);
-    vm.editNote('Use instruments AR for a Piano Trio artist');
-}, false);
-
+$(document).ready(function() {
+    $('#batch-unset-orchestra').click(function() {
+        setInstrument(linkTypeOrchestra, linkTypePerformer);
+        signEditNote();
+    });
+    $('#batch-set-string-quartet').click(function() {
+        setInstrument(linkTypePerformer, linkTypeInstrument,
+                      [attrIdStrings], 'string quartet');
+        signEditNote('Use "strings" instrument AR for a String Quartet artist');
+    });
+    $('#batch-set-piano-trio').click(function() {
+        setInstrument(linkTypePerformer, linkTypeInstrument,
+                      [attrIdPiano, attrIdViolin, attrIdCello]);
+        signEditNote('Use instruments AR for a Piano Trio artist');
+    });
+    $('#batch-set-piano').click(function() {
+        setInstrument(linkTypePerformer, linkTypeInstrument,
+                      [attrIdPiano]);
+        signEditNote();
+    });
+    return false;
+});
 
