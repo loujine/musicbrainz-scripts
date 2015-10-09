@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch-set guessed works
 // @author       loujine
-// @version      2015.6.22
+// @version      2015.10.09
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -16,49 +16,95 @@
 
 'use strict';
 
-function guessWork(recording) {
-    var url = 'https://musicbrainz.org/ws/js/work/?q=' +
+// https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
+// we wait for `mbz_timeout` milliseconds between two queries
+var mbz_timeout = 1000;
+
+function guessWork(recording, callback) {
+    var url = '/ws/js/work/?q=' +
               encodeURIComponent(recording.name) +
               '&artist=' + encodeURIComponent(recording.artist) +
               '&fmt=json&limit=1',
-        req = new XMLHttpRequest(),
-        resp;
-    req.open('GET', url, false);
-    req.onload = function() {
-        if (req.status === 200 && req.responseText != null) {
-            resp = JSON.parse(req.responseText);
-        } else {
-            console.log(req.status);
+        xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200 && xhr.responseText != null) {
+                callback(JSON.parse(xhr.responseText)[0]);
+            } else {
+                console.log('Error: ', xhr.status);
+            }
         }
     };
-    req.send(null);
-    return resp[0];
+    xhr.open('GET', url, true);
+    xhr.timeout = 5000;
+    xhr.ontimeout = function() {
+        console.error('The request for ' + url + ' timed out.');
+        };
+    xhr.send(null);
 }
 
 function setGuessedWork() {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
         vm = MB.releaseRelationshipEditor,
-        work;
+        idx = 0;
     recordings.forEach(function(recording) {
-            if (recording.performances().length === 0) {
-                work = guessWork(recording);
-                MB.relationshipEditor.UI.AddDialog({
-                    source: recording,
-                    target: work,
-                    viewModel: vm,
-                }).accept();
-            }
+        if (recording.performances().length === 0) {
+            idx += 1;
+            setTimeout(function() {
+                var callback = function(work) {
+                    MB.relationshipEditor.UI.AddDialog({
+                        source: recording,
+                        target: work,
+                        viewModel: vm
+                    }).accept();
+                };
+                guessWork(recording, callback);
+            }, idx * mbz_timeout);
+        }
     });
 }
 
-var elm = document.createElement('input');
-elm.id = 'batchguesswork';
-elm.type = 'button';
-elm.value = 'Batch-guess work';
+if ($('div#loujine-menu').length) {
+    var container = $('div#loujine-menu');
+} else {
+    var container = $('<div></div>', {
+        'id': 'loujine-menu',
+        'css': {'background-color': 'white',
+                'padding': '8px',
+                'margin': '0px -6px 6px',
+                'border': '5px dotted #736DAB'
+            }
+        }
+    ).append(
+        $('<h2></h2>', {'text': 'loujine GM tools'})
+    );
+}
 
-var tabdiv = document.getElementsByClassName('tabs')[0];
-tabdiv.parentNode.insertBefore(elm, tabdiv.nextSibling);
+$('div.tabs').after(
+    container
+    .append(
+        $('<h3></h3>', {'text': 'Search for works'})
+    ).append(
+        $('<input></input>', {
+            'id': 'searchwork',
+            'type': 'button',
+            'value': 'Batch-guess work'
+            })
+    )
+);
 
-document.getElementById('batchguesswork').addEventListener('click', function(event) {
-    setGuessedWork();
-}, false);
+function signEditNote() {
+    var vm = MB.releaseRelationshipEditor,
+        msg = vm.editNote(),
+        signature = '\n\n--\n' + 'Using "MusicBrainz: Batch-set guessed works" GM script\n';
+    vm.editNote(msg + 'Set guessed works' + signature);
+}
+
+$(document).ready(function() {
+    $('#searchwork').click(function() {
+        setGuessedWork();
+        signEditNote();
+    });
+    return false;
+});
+
