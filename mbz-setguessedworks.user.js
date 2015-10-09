@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch-set guessed works
 // @author       loujine
-// @version      2015.10.09
+// @version      2015.10.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -88,7 +88,7 @@ $('div.tabs').after(
         $('<input></input>', {
             'id': 'searchwork',
             'type': 'button',
-            'value': 'Batch-guess work'
+            'value': 'Guess works'
             })
     )
 );

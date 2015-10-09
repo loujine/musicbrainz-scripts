@@ -7,8 +7,7 @@ Collection of greasemonkey scripts for MusicBrainz editing.
 Content
 -------
 
-Relationship editor
-+++++++++++++++++++
+### Relationship editor
 
 The first scripts concern batch-editing in the relationship editor in order to
 modify all selected recordings at once:
@@ -29,8 +28,7 @@ quartets, etc.)
 recording has no linked work. Search is done using the recording title.
 
 
-Artist relationships tab
-++++++++++++++++++++++++
+### Artist relationships tab
 
 * mbz-showmissingwork: check for each recording whether a linked work exists.
   Mark with:
@@ -47,11 +45,17 @@ server.
 TODO
 ----
 
-* placement of the buttons is awkward, but it is because buttons placed next to
-the "batch-" options do not work (due to this part of the page being reloaded?)
-
-* improve guessed work: use the track artist to limit the search to the correct
+* improve 'guessed work': use the track artist to limit the search to the correct
 composer
+
+* improve 'set instrument': switch to drop down menu
+
+* ideas for future scripts:
+
+  - select work tonality (key) from artist works tab
+  - show subworks on a work series page (catalog)
+  - show track durations on artist relationship page
+  - show discid counter on relase tab headers
 
 
 Notes

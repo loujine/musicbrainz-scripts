@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch-propagate recording dates
 // @author       loujine
-// @version      2015.10.09
+// @version      2015.10.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -111,13 +111,13 @@ $('div.tabs').after(
         $('<input></input>', {
             'id': 'copydates',
             'type': 'button',
-            'value': 'Batch-copy dates'
+            'value': 'Copy dates'
             })
     ).append(
         $('<input></input>', {
             'id': 'removedates',
             'type': 'button',
-            'value': 'Batch-remove dates'
+            'value': 'Remove dates'
             })
     )
 );
