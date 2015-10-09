@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch-set recording-work attributes
 // @author       loujine
-// @version      2015.6.22
+// @version      2015.10.09
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -18,26 +18,78 @@
 
 // from musicbrainz-server/root/static/scripts/tests/typeInfo.js
 var attrIdLive = 578,
-    attrIdPartial = 278;
+    attrIdPartial = 579;
 
-function setLive(attrId) {
-    var recordings = MB.relationshipEditor.UI.checkedRecordings(),
-        attr = { type: MB.attrInfoByID[attrId] };
+function setAttributes(attrId) {
+    var recordings = MB.relationshipEditor.UI.checkedRecordings();
     recordings.forEach(function(recording) {
         recording.performances().forEach(function(relation) {
-            relation.setAttributes([attr]);
+            var attrs = relation.attributes();
+            var attr = attrs.filter(function(el) {
+                // attrId already in relation attributes
+                return el.type.id === attrId});
+            if (attr.length) {
+                attrs.splice(attrs.indexOf(attr), 1);
+            } else {
+                attrs.push({type: MB.attrInfoByID[attrId]});
+            }
+            relation.setAttributes(attrs);
         });
     });
 }
 
-var elm = document.createElement('input');
-elm.id = 'batchsetlive';
-elm.type = 'button';
-elm.value = 'Batch-set live';
+if ($('div#loujine-menu').length) {
+    var container = $('div#loujine-menu');
+} else {
+    var container = $('<div></div>', {
+        'id': 'loujine-menu',
+        'css': {'background-color': 'white',
+                'padding': '8px',
+                'margin': '0px -6px 6px',
+                'border': '5px dotted #736DAB'
+            }
+        }
+    ).append(
+        $('<h2></h2>', {'text': 'loujine GM tools'})
+    );
+}
 
-var tabdiv = document.getElementsByClassName('tabs')[0];
-tabdiv.parentNode.insertBefore(elm, tabdiv.nextSibling);
+$('div.tabs').after(
+    container
+    .append(
+        $('<h3></h3>', {'text': 'Recording-Work relation attributes'})
+    ).append(
+        $('<input></input>', {
+            'id': 'setlive',
+            'type': 'button',
+            'value': 'Toggle live'
+            })
+    ).append(
+        $('<input></input>', {
+            'id': 'setpartial',
+            'type': 'button',
+            'value': 'Toggle partial'
+            })
+    )
+);
 
-document.getElementById('batchsetlive').addEventListener('click', function(event) {
-    setLive(attrIdLive);
-}, false);
+function signEditNote() {
+    var vm = MB.releaseRelationshipEditor,
+        msg = vm.editNote(),
+        signature = '\n\n--\n' + 'Using "MusicBrainz: Batch-set attributes" GM script\n';
+    vm.editNote(msg + 'Set Recording-Work relation attributes' + signature);
+}
+
+$(document).ready(function() {
+    $('#setlive').click(function() {
+        setAttributes(attrIdLive);
+        signEditNote();
+    });
+    $('#setpartial').click(function() {
+        setAttributes(attrIdPartial);
+        signEditNote();
+    });
+    return false;
+});
+
+
