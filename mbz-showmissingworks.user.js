@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Show missing works
 // @author       loujine
-// @version      2015.10.03
+// @version      2015.10.09
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showmissingworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showmissingworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -79,14 +79,28 @@ function showMissingWorks() {
     });
 }
 
-var elm = document.createElement('input');
-elm.id = 'showmissingworks';
-elm.type = 'button';
-elm.value = 'Show missing works';
 
-var sidebar = document.getElementById('sidebar');
-sidebar.insertBefore(elm, sidebar.children[0]);
+$('#sidebar').prepend(
+    $('<div></div>', {
+      'id': 'loujine-sidebar',
+      'css': {'background-color': 'white',
+              'padding': '8px',
+              'margin': '0px -6px 6px',
+              'border': '2px dotted #736DAB'
+          }
+      }
+    ).append(
+        $('<h2></h2>', {'text': 'loujine GM tools'})
+    ).append(
+        $('<input></input>', {
+          'id': 'showmissingworks',
+          'type': 'button',
+          'value': 'Show missing works'
+          })
+    )
+);
 
-document.getElementById('showmissingworks').addEventListener('click', function(event) {
-    showMissingWorks();
-}, false);
+$(document).ready(function() {
+    $('#showmissingworks').click(function() {showMissingWorks()});
+    return false;
+});
