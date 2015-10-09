@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch-set recording-artist instrument
 // @author       loujine
-// @version      2015.10.09
+// @version      2015.10.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -23,6 +23,7 @@ var linkTypeInstrument = 148,
     attrIdPiano = 180,
     attrIdViolin = 86,
     attrIdCello = 84,
+    attrIdBowedStrings = 275,
     attrIdStrings = 69;
 
 function setInstrument(fromType, toType, attrIds, credit) {
@@ -37,7 +38,6 @@ function setInstrument(fromType, toType, attrIds, credit) {
             attrIds.forEach(function(attrId) {
                 attrs.push({ type: MB.attrInfoByID[attrId] });
             });
-            console.log(attrs);
             relation.setAttributes(attrs);
             attrIds.forEach(function(attrId, idx) {
                 relation.attributes()[idx].creditedAs(credit);
@@ -70,25 +70,31 @@ $('div.tabs').after(
         $('<input></input>', {
             'id': 'batch-unset-orchestra',
             'type': 'button',
-            'value': 'Batch-unset "Orchestra"'
+            'value': 'Unset "Orchestra"'
+            })
+    ).append(
+        $('<input></input>', {
+            'id': 'batch-unset-instrument',
+            'type': 'button',
+            'value': 'Unset instrument'
             })
     ).append(
         $('<input></input>', {
             'id': 'batch-set-string-quartet',
             'type': 'button',
-            'value': 'Batch-set "String Quartet"'
+            'value': 'Set "String Quartet"'
             })
     ).append(
         $('<input></input>', {
             'id': 'batch-set-piano-trio',
             'type': 'button',
-            'value': 'Batch-set "Piano Trio"'
+            'value': 'Set "Piano Trio"'
             })
     ).append(
         $('<input></input>', {
             'id': 'batch-set-piano',
             'type': 'button',
-            'value': 'Batch-set "Piano"'
+            'value': 'Set "Piano"'
             })
     )
 );
@@ -103,6 +109,10 @@ function signEditNote(msg) {
 $(document).ready(function() {
     $('#batch-unset-orchestra').click(function() {
         setInstrument(linkTypeOrchestra, linkTypePerformer);
+        signEditNote();
+    });
+    $('#batch-unset-instrument').click(function() {
+        setInstrument(linkTypeInstrument, linkTypePerformer);
         signEditNote();
     });
     $('#batch-set-string-quartet').click(function() {
