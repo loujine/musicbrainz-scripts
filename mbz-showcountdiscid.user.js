@@ -52,8 +52,12 @@ function showCountDiscid() {
     var tab = document.querySelector("div.tabs > ul.tabs > li > a[href$='/discids']"),
         mbid = document.URL.split('/')[4];
     var callback = function(xml, tab) {
-        var cnt = xml.documentElement.querySelector('disc-list');
-        cnt = parseInt(cnt.attributes.count.textContent, 10);
+        var cnts = xml.documentElement.querySelectorAll('disc-list'),
+            cnt = 0,
+            idx;
+        for (idx = 0; idx < cnts.length; idx++) {
+            cnt += parseInt(cnts[idx].attributes.count.textContent, 10);
+        }
         if (cnt > 0) {
             tab.style.setProperty('background-color', '#6f9');
         }
