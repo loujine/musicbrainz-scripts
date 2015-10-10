@@ -42,10 +42,15 @@ Queries are set 1 second apart to avoid hitting the rate limit on musicbrainz
 server.
 
 
-### Release main tab
+### Release overview tab
 
 * mbz-showcountdiscid: display the number of linked discids in the discid tab
 header
+
+
+### Work overview tab
+
+* mbz-showperformancedurations: add each performance duration in a new column
 
 
 TODO
@@ -60,8 +65,6 @@ composer
 
   - select work tonality (key) from artist works tab
   - show subworks on a work series page (catalog)
-  - show track durations on artist relationship page
-  - show discid counter on relase tab headers
 
 
 Notes
