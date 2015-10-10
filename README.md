@@ -42,6 +42,12 @@ Queries are set 1 second apart to avoid hitting the rate limit on musicbrainz
 server.
 
 
+### Release main tab
+
+* mbz-showcountdiscid: display the number of linked discids in the discid tab
+header
+
+
 TODO
 ----
 
