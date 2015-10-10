@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch-set recording-work attributes
 // @author       loujine
-// @version      2015.10.09
+// @version      2015.10.23
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -20,7 +20,7 @@
 var attrIdLive = 578,
     attrIdPartial = 579;
 
-function setAttributes(attrId) {
+function setAttributes(attrId, toggle) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings();
     recordings.forEach(function(recording) {
         recording.performances().forEach(function(relation) {
@@ -28,10 +28,10 @@ function setAttributes(attrId) {
             var attr = attrs.filter(function(el) {
                 // attrId already in relation attributes
                 return el.type.id === attrId});
-            if (attr.length) {
-                attrs.splice(attrs.indexOf(attr), 1);
-            } else {
+            if (attr.length === 0) {
                 attrs.push({type: MB.attrInfoByID[attrId]});
+            } else if (toggle === true) {
+                attrs.splice(attrs.indexOf(attr), 1);
             }
             relation.setAttributes(attrs);
         });
@@ -62,11 +62,23 @@ $('div.tabs').after(
         $('<input></input>', {
             'id': 'setlive',
             'type': 'button',
-            'value': 'Toggle live'
+            'value': 'Set live'
             })
     ).append(
         $('<input></input>', {
             'id': 'setpartial',
+            'type': 'button',
+            'value': 'Set partial'
+            })
+    ).append(
+        $('<input></input>', {
+            'id': 'togglelive',
+            'type': 'button',
+            'value': 'Toggle live'
+            })
+    ).append(
+        $('<input></input>', {
+            'id': 'togglepartial',
             'type': 'button',
             'value': 'Toggle partial'
             })
@@ -82,11 +94,19 @@ function signEditNote() {
 
 $(document).ready(function() {
     $('#setlive').click(function() {
-        setAttributes(attrIdLive);
+        setAttributes(attrIdLive, false);
         signEditNote();
     });
     $('#setpartial').click(function() {
-        setAttributes(attrIdPartial);
+        setAttributes(attrIdPartial, false);
+        signEditNote();
+    });
+    $('#togglelive').click(function() {
+        setAttributes(attrIdLive, true);
+        signEditNote();
+    });
+    $('#togglepartial').click(function() {
+        setAttributes(attrIdPartial, true);
         signEditNote();
     });
     return false;
