@@ -44,6 +44,38 @@ function findPerformanceDuration(mbid, callback) {
     xhr.send(null);
 }
 
+// musicbrainz-server/root/static/scripts/common/utility/formatTrackLength.js
+function formatTrackLength(milliseconds) {
+    if (!milliseconds) {
+        return '';
+    }
+
+    if (milliseconds < 1000) {
+        return milliseconds + ' ms';
+    }
+
+    var oneMinute = 60;
+    var oneHour = 60 * oneMinute;
+
+    var seconds = Math.round(milliseconds / 1000.0);
+    var hours = Math.floor(seconds / oneHour);
+    seconds = seconds % oneHour;
+
+    var minutes = Math.floor(seconds / oneMinute);
+    seconds = seconds % oneMinute;
+
+    var result = ('00' + seconds).slice(-2);
+
+    if (hours > 0) {
+        result = hours + ':' + ('00' + minutes).slice(-2) + ':' + result;
+    } else {
+        result = minutes + ':' + result;
+    }
+
+    return result;
+}
+
+
 function showPerformanceDurations() {
     var recordings = $('a[href*="/recording/"]').toArray();
     recordings.shift();
@@ -60,14 +92,12 @@ function showPerformanceDurations() {
                 tbody_node.tBodies[0].children[0].children[1].colSpan += 1;
             }
             var callback = function(resp) {
-                var time_s = Math.floor(resp.length / 1000);
-                td_node.textContent = Math.floor(time_s / 60).toString() + ':' + (time_s % 60).toString();
+                td_node.textContent = formatTrackLength(resp.length);
             };
             findPerformanceDuration(recording_mbid, callback);
         }, idx * mbz_timeout);
     });
 }
-
 
 $('#sidebar').prepend(
     $('<div></div>', {
