@@ -93,18 +93,25 @@ function showPerformers() {
     });
 }
 
-$('#sidebar').prepend(
-    $('<div></div>', {
-      'id': 'loujine-sidebar',
-      'css': {'background-color': 'white',
-              'padding': '8px',
-              'margin': '0px -6px 6px',
-              'border': '2px dotted #736DAB'
-          }
-      }
+if ($('div#loujine-sidebar').length) {
+    var container = $('div#loujine-sidebar');
+} else {
+    var container = $('<div></div>', {
+        'id': 'loujine-sidebar',
+        'css': {'background-color': 'white',
+                'padding': '8px',
+                'margin': '0px -6px 6px',
+                'border': '2px dotted #736DAB'
+            }
+        }
     ).append(
         $('<h2></h2>', {'text': 'loujine GM tools'})
-    ).append(
+    );
+}
+
+$('.work-information').before(
+    container
+    .append(
         $('<input></input>', {
           'id': 'showperformers',
           'type': 'button',

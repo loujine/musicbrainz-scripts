@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Show performance durations
 // @author       loujine
-// @version      2015.10.10
+// @version      2015.10.24
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformancedurations.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformancedurations.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -99,18 +99,25 @@ function showPerformanceDurations() {
     });
 }
 
-$('#sidebar').prepend(
-    $('<div></div>', {
-      'id': 'loujine-sidebar',
-      'css': {'background-color': 'white',
-              'padding': '8px',
-              'margin': '0px -6px 6px',
-              'border': '2px dotted #736DAB'
-          }
-      }
+if ($('div#loujine-sidebar').length) {
+    var container = $('div#loujine-sidebar');
+} else {
+    var container = $('<div></div>', {
+        'id': 'loujine-sidebar',
+        'css': {'background-color': 'white',
+                'padding': '8px',
+                'margin': '0px -6px 6px',
+                'border': '2px dotted #736DAB'
+            }
+        }
     ).append(
         $('<h2></h2>', {'text': 'loujine GM tools'})
-    ).append(
+    );
+}
+
+$('.work-information').before(
+    container
+    .append(
         $('<input></input>', {
           'id': 'showdurations',
           'type': 'button',
