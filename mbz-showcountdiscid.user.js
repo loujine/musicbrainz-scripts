@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Show discid count
 // @author       loujine
-// @version      2015.10.10
+// @version      2015.10.24
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountdiscid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountdiscid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -29,12 +29,12 @@
 // adapted from jesus2099  mb. INLINE STUFF
 
 function fetchDiscids(mbid, tab, callback) {
-    var url = '/ws/2/release/' + encodeURIComponent(mbid) + '/?inc=discids',
+    var url = '/ws/2/release/' + encodeURIComponent(mbid) + '/?inc=discids&fmt=json',
         xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
             if (xhr.status === 200 && xhr.responseText != null) {
-                callback(xhr.responseXML, tab);
+                callback(JSON.parse(xhr.responseText), tab);
             } else {
                 console.log('Error: ', xhr.status);
             }
@@ -49,15 +49,13 @@ function fetchDiscids(mbid, tab, callback) {
 }
 
 function showCountDiscid() {
-    var tab = document.querySelector("div.tabs > ul.tabs > li > a[href$='/discids']"),
+    var tab = $("a[href$='/discids']")[0],
         mbid = document.URL.split('/')[4];
-    var callback = function(xml, tab) {
-        var cnts = xml.documentElement.querySelectorAll('disc-list'),
-            cnt = 0,
-            idx;
-        for (idx = 0; idx < cnts.length; idx++) {
-            cnt += parseInt(cnts[idx].attributes.count.textContent, 10);
-        }
+    var callback = function(resp, tab) {
+        var cnt = 0;
+        resp.media.forEach(function (medium) {
+            cnt += medium.discs.length;
+        })
         if (cnt > 0) {
             tab.style.setProperty('background-color', '#6f9');
         }

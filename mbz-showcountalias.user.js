@@ -41,7 +41,7 @@ function fetchAliases(mbid, tab, callback) {
 }
 
 function showCountAliases() {
-    var tab = document.querySelector("div.tabs > ul.tabs > li > a[href$='/aliases']"),
+    var tab = $("a[href$='/aliases']")[0],
         mbid = document.URL.split('/')[4];
     var callback = function(resp, tab) {
         var cnt = resp.aliases.length,
