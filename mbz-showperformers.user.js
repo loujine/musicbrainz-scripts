@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Show performers
 // @author       loujine
-// @version      2015.10.23
+// @version      2015.10.28
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformers.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformers.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts

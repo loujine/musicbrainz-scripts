@@ -16,8 +16,8 @@ modify all selected recordings at once:
 dates with explicit day have priority over dates with only the month and so on)
 to all relevant advanced relationships (performers, works, areas, places).
 
-* mbz-setattributes: add attributes to the recording-work relationships. For
-the moment only the "live" attribute is set.
+* mbz-setattributes: add/toggle attributes to the recording-work relationships. For
+the moment only the "live" and "partial" attributes are set.
 
 * mbz-setinstrument: replace all "performer" or "orchestra" recording-artist
 relationships with specific instruments relationships. The main objective is to
@@ -47,10 +47,21 @@ server.
 * mbz-showcountdiscid: display the number of linked discids in the discid tab
 header
 
+* mbz-showcountalias: display the number as defined aliases and the list of
+languages used (if any)
+
 
 ### Work overview tab
 
 * mbz-showperformancedurations: add each performance duration in a new column
+
+* mbz-showperformers: add performers from the recording advanced relationships in
+a new column (with the instrument/vocal attribute if defined). Show:
+
+  - the performer name (from AR) if the recording artist is the composer
+  - nothing if the recording artist is not the composer (we assume it is the
+    perfomers)
+  - a red ✗ if no AR is found
 
 
 TODO

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Show alias count
 // @author       loujine
-// @version      2015.10.24
+// @version      2015.10.28
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountalias.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountalias.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
