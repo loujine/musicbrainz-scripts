@@ -51,7 +51,9 @@ function formatPerformers(relations) {
         if (rel.type === 'instrument' || rel.type === 'vocal' ||
             rel.type === 'conductor' || rel.type === 'performing orchestra' ||
             rel.type === 'performer') {
-            if (rel.attributes.length === 0) {
+            if (rel.type === 'performing orchestra') {
+                type = 'orchestra';
+            } else if (rel.attributes.length === 0) {
                 type = rel.type;
             } else {
                 type = rel.attributes[0];
