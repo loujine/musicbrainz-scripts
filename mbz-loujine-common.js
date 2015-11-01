@@ -34,9 +34,9 @@ var mbzTimeout = 1000;
 
 function requestGET(url, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            if (xhr.status === 200 && xhr.responseText != null) {
+            if (xhr.status === 200 && xhr.responseText !== null) {
                 callback(xhr.responseText);
             } else {
                 console.log('Error ', xhr.status, ': ', url);
@@ -45,12 +45,29 @@ function requestGET(url, callback) {
     };
     xhr.open('GET', url, true);
     xhr.timeout = 5000;
-    xhr.ontimeout = function() {
+    xhr.ontimeout = function () {
         console.error('The request for ' + url + ' timed out.');
         };
     xhr.send(null);
 }
 
+function requestPOST(url, param, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            callback(xhr.status);
+        }
+    };
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.setRequestHeader('Content-length', param.length);
+    xhr.setRequestHeader('Connection', 'close');
+    xhr.timeout = 5000;
+    xhr.ontimeout = function () {
+        console.error('The request for ' + url + ' timed out.');
+        };
+    xhr.send(param);
+}
 
 // musicbrainz-server/root/static/scripts/common/utility/formatTrackLength.js
 function formatTrackLength(milliseconds) {
