@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Show performers
 // @author       loujine
-// @version      2015.10.29
+// @version      2015.11.04
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformers.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformers.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -10,6 +10,7 @@
 // @compatible   firefox+greasemonkey  quickly tested
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      mbz-loujine-sidebar.js
+// @require      mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*
 // @grant        none
@@ -18,32 +19,8 @@
 
 'use strict';
 
-// https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
-// we wait for `mbz_timeout` milliseconds between two queries
-var mbz_timeout = 1000;
-
-
-function findPerformer(mbid, callback) {
-    var url = '/ws/2/recording/' +
-              encodeURIComponent(mbid) +
-              '?fmt=json&inc=artist-rels',
-        xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200 && xhr.responseText != null) {
-                callback(JSON.parse(xhr.responseText));
-            } else {
-                console.log('Error: ', xhr.status);
-            }
-        }
-    };
-    xhr.open('GET', url, true);
-    xhr.timeout = 5000;
-    xhr.ontimeout = function() {
-        console.error('The request for ' + url + ' timed out.');
-        };
-    xhr.send(null);
-}
+// imported from mbz-loujine-common.js: requestGET, mbzTimeout
+// imported from mbz-loujine-sidebar.js: container
 
 function formatPerformers(relations) {
     var performers = [];
@@ -66,33 +43,36 @@ function formatPerformers(relations) {
 }
 
 function showPerformers() {
-    var recordings = $('a[href*="/recording/"]').toArray(),
-        composer = $('th:contains("composer:")')[0].parentElement.children[1].children[0].textContent
-    recordings.shift(); // drop the "Editing > Add Standalone recording" menu item
+    var recordings = $('table a[href*="/recording/"]'),
+        composer_node = $('th:contains("composer:")')[0].parentElement.children[1].children[0],
+        composer_mbid = composer_node.href.split('/')[4];
 
-    recordings.forEach(function(recording, idx) {
-        setTimeout(function() {
-            var recording_mbid = recording.href.split('/')[4],
-                tr_node = recording.parentElement.parentElement,
-                td_node = tr_node.insertCell(-1);
+    recordings.each(function (idx, recording) {
+        setTimeout(function () {
+            var mbid = recording.href.split('/')[4],
+                url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json&inc=artist-rels',
+                tr_node = $(recording).parents('tr')[0],
+                td_node = tr_node.insertCell(-1),
+                callback = function (resp) {
+                    if (resp.relations.length > 0) {
+                        td_node.textContent = formatPerformers(resp.relations);
+                    } else {
+                        td_node.textContent = '✗';
+                        td_node.style.color = 'red';
+                    }
+                };
             if (idx === 0) {
                 var tbody_node = tr_node.parentElement.parentElement;
                 var head = tbody_node.tHead.children[0].insertCell(-1);
                 head.textContent = 'Performers';
                 tbody_node.tBodies[0].children[0].children[1].colSpan += 1;
             }
-            var callback = function(resp) {
-                if (resp.relations.length > 0) {
-                    td_node.textContent = formatPerformers(resp.relations);
-                } else {
-                    td_node.textContent = '✗';
-                    td_node.style.color = 'red';
-                }
-            };
-            if (tr_node.children[3].children[0].textContent === composer) {
-                findPerformer(recording_mbid, callback);
+            if (tr_node.children[3].children[0].href.split('/')[4] === composer_mbid) {
+                requestGET(url, function (resp) {
+                    callback(JSON.parse(resp));
+                });
             }
-        }, idx * mbz_timeout);
+        }, idx * mbzTimeout);
     });
 }
 
@@ -104,7 +84,7 @@ $('.work-information').before(
           'id': 'showperformers',
           'type': 'button',
           'value': 'Show performers'
-          })
+        })
     )
 );
 

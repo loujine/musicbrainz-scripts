@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MusicBrainz: Batch-set guessed works
 // @author       loujine
-// @version      2015.10.29
+// @version      2015.11.04
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -10,6 +10,7 @@
 // @compatible   firefox+greasemonkey  quickly tested
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      mbz-loujine-releditor.js
+// @require      mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -17,55 +18,37 @@
 
 'use strict';
 
-// https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
-// we wait for `mbz_timeout` milliseconds between two queries
-var mbz_timeout = 1000;
+// imported from mbz-loujine-common.js: requestGET, mbzTimeout
+// imported from mbz-loujine-sidebar.js: container
 
-function guessWork(recording, callback) {
-    var url = '/ws/js/work/?q=' +
-              encodeURIComponent(recording.name) +
-              '&artist=' + encodeURIComponent(recording.artist) +
-              '&fmt=json&limit=1',
-        xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200 && xhr.responseText != null) {
-                callback(JSON.parse(xhr.responseText)[0]);
-            } else {
-                console.log('Error: ', xhr.status);
-            }
-        }
-    };
-    xhr.open('GET', url, true);
-    xhr.timeout = 5000;
-    xhr.ontimeout = function() {
-        console.error('The request for ' + url + ' timed out.');
-        };
-    xhr.send(null);
+function validateDialog(recording, work) {
+    var vm = MB.releaseRelationshipEditor;
+    MB.relationshipEditor.UI.AddDialog({
+        source: recording,
+        target: work,
+        viewModel: vm
+    }).accept();
 }
 
 function setGuessedWork() {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
-        vm = MB.releaseRelationshipEditor,
         idx = 0;
-    recordings.forEach(function(recording) {
+    recordings.forEach(function (recording) {
+        var url = '/ws/js/work/?q=' +
+                  encodeURIComponent(recording.name) +
+                  '&artist=' + encodeURIComponent(recording.artist) +
+                  '&fmt=json&limit=1';
         if (recording.performances().length === 0) {
             idx += 1;
-            setTimeout(function() {
-                var callback = function(work) {
-                    MB.relationshipEditor.UI.AddDialog({
-                        source: recording,
-                        target: work,
-                        viewModel: vm
-                    }).accept();
-                };
-                guessWork(recording, callback);
-            }, idx * mbz_timeout);
+            setTimeout(function () {
+                requestGET(url, function (resp) {
+                    validateDialog(recording, JSON.parse(resp)[0]);
+                });
+            }, idx * mbzTimeout);
         }
     });
 }
 
-// container defined in mbz-loujine-releditor.js
 $('div.tabs').after(
     container
     .append(
@@ -75,7 +58,7 @@ $('div.tabs').after(
             'id': 'searchwork',
             'type': 'button',
             'value': 'Guess works'
-            })
+        })
     )
 );
 
