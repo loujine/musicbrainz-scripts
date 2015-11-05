@@ -1,14 +1,32 @@
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: common files
+// @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.04
+// @version      2015.11.05
 // @description  musicbrainz.org: common functions for relationship editor scripts
-// @compatible   firefox+greasemonkey  quickly tested
+// @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
+
+// from musicbrainz-server/root/static/scripts/tests/typeInfo.js
+var linkTypeInstrument = 148,
+    linkTypeVocals = 149,
+    linkTypeOrchestra = 150,
+    linkTypeConductor = 151,
+    linkTypePerformer = 156,
+    linkTypeWork = 278,
+    linkTypePlace = 693,
+    linkTypeArea = 698,
+    attrIdStrings = 69,
+    attrIdCello = 84,
+    attrIdViolin = 86,
+    attrIdPiano = 180,
+    attrIdBowedStrings = 275,
+    attrIdLive = 578,
+    attrIdPartial = 579;
 
 // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
 // we wait for `mbz_timeout` milliseconds between two queries

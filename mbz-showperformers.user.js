@@ -1,13 +1,15 @@
+'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Show performers
+// @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.04
+// @version      2015.11.05
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformers.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformers.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Show performers on a Work page (for when the Artist credit is the composer)
-// @compatible   firefox+greasemonkey  quickly tested
+// @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      mbz-loujine-sidebar.js
 // @require      mbz-loujine-common.js
@@ -17,10 +19,7 @@
 // @run-at       document-end
 // ==/UserScript==
 
-'use strict';
-
 // imported from mbz-loujine-common.js: requestGET, mbzTimeout
-// imported from mbz-loujine-sidebar.js: container
 
 function formatPerformers(relations) {
     var performers = [];
@@ -76,7 +75,7 @@ function showPerformers() {
     });
 }
 
-// container defined in mbz-loujine-sidebar.js
+// imported from mbz-loujine-sidebar.js: container
 $('.work-information').before(
     container
     .append(

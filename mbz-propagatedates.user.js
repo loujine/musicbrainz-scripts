@@ -1,31 +1,24 @@
+'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Batch-propagate recording dates
+// @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.10.29
+// @version      2015.11.05
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Copy dates on relevant recording AR fields
-// @compatible   firefox+greasemonkey  quickly tested
+// @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      mbz-loujine-releditor.js
+// @require      mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
 
-'use strict';
-
-// from musicbrainz-server/root/static/scripts/tests/typeInfo.js
-var linkTypeInstrument = '148',
-    linkTypeVocals = '149',
-    linkTypeOrchestra = '150',
-    linkTypeConductor = '151',
-    linkTypePerformer = '156',
-    linkTypeWork = '278',
-    linkTypePlace = '693',
-    linkTypeArea = '698';
+// imported from mbz-loujine-common.js: linkTypeXXX
 
 function copyDate(from_date, relation) {
     ['beginDate', 'endDate'].forEach(function(date) {
@@ -58,6 +51,7 @@ function referenceDate(relations) {
     return idx_ref;
 }
 
+// imported from mbz-loujine-common.js: linkTypeXXX
 function propagateDates() {
     var recordings = MB.relationshipEditor.UI.checkedRecordings();
     recordings.forEach(function(recording) {
@@ -66,7 +60,7 @@ function propagateDates() {
         if (idx !== -1) {
             var from_period = relations[idx].period;
             relations.forEach(function(rel) {
-                var linkType = rel.linkTypeID().toString();
+                var linkType = parseInt(rel.linkTypeID());
                 if (linkType === linkTypePerformer || linkType === linkTypeWork ||
                     linkType === linkTypeInstrument || linkType === linkTypeVocals ||
                     linkType === linkTypeOrchestra || linkType === linkTypeConductor ||
@@ -88,18 +82,20 @@ function removeDates() {
     });
 }
 
-// container defined in mbz-loujine-releditor.js
+// imported from mbz-loujine-releditor.js: container
 $('div.tabs').after(
     container
     .append(
         $('<h3></h3>', {'text': 'Dates'})
-    ).append(
+    )
+    .append(
         $('<input></input>', {
             'id': 'copydates',
             'type': 'button',
             'value': 'Copy dates'
             })
-    ).append(
+    )
+    .append(
         $('<input></input>', {
             'id': 'removedates',
             'type': 'button',

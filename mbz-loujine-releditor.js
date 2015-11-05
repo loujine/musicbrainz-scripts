@@ -1,10 +1,11 @@
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: common files
+// @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.10.29
+// @version      2015.11.05
 // @description  musicbrainz.org: common functions for relationship editor scripts
-// @compatible   firefox+greasemonkey  quickly tested
+// @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @grant        none
 // @run-at       document-end
@@ -20,8 +21,8 @@ if ($('div#loujine-menu').length) {
                 'margin': '0px -6px 6px',
                 'border': '5px dotted #736DAB'
             }
-        }
-    ).append(
+        })
+    .append(
         $('<h2></h2>', {'text': 'loujine GM tools'})
     );
 }

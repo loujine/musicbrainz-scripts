@@ -1,31 +1,22 @@
+'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Batch-set recording-artist instrument
+// @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.10.29
+// @version      2015.11.05
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Convert to "string" instrument AR on selected recordings
-// @compatible   firefox+greasemonkey  quickly tested
+// @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      mbz-loujine-releditor.js
+// @require      mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
-
-'use strict';
-
-// from musicbrainz-server/root/static/scripts/tests/typeInfo.js
-var linkTypeInstrument = 148,
-    linkTypeOrchestra = 150,
-    linkTypePerformer = 156,
-    attrIdPiano = 180,
-    attrIdViolin = 86,
-    attrIdCello = 84,
-    attrIdBowedStrings = 275,
-    attrIdStrings = 69;
 
 function setInstrument(fromType, toType, attrIds, credit) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
@@ -58,25 +49,29 @@ $('div.tabs').after(
             'type': 'button',
             'value': 'Unset "Orchestra"'
             })
-    ).append(
+    )
+    .append(
         $('<input></input>', {
             'id': 'batch-unset-instrument',
             'type': 'button',
             'value': 'Unset instrument'
             })
-    ).append(
+    )
+    .append(
         $('<input></input>', {
             'id': 'batch-set-string-quartet',
             'type': 'button',
             'value': 'Set "String Quartet"'
             })
-    ).append(
+    )
+    .append(
         $('<input></input>', {
             'id': 'batch-set-piano-trio',
             'type': 'button',
             'value': 'Set "Piano Trio"'
             })
-    ).append(
+    )
+    .append(
         $('<input></input>', {
             'id': 'batch-set-piano',
             'type': 'button',
@@ -92,26 +87,27 @@ function signEditNote(msg) {
     vm.editNote(oldmsg + msg + signature);
 }
 
-$(document).ready(function() {
-    $('#batch-unset-orchestra').click(function() {
+// imported from mbz-loujine-common.js: linkTypeXXX, ttrIdXXX
+$(document).ready(function () {
+    $('#batch-unset-orchestra').click(function () {
         setInstrument(linkTypeOrchestra, linkTypePerformer);
         signEditNote();
     });
-    $('#batch-unset-instrument').click(function() {
+    $('#batch-unset-instrument').click(function () {
         setInstrument(linkTypeInstrument, linkTypePerformer);
         signEditNote();
     });
-    $('#batch-set-string-quartet').click(function() {
+    $('#batch-set-string-quartet').click(function () {
         setInstrument(linkTypePerformer, linkTypeInstrument,
                       [attrIdStrings], 'string quartet');
         signEditNote('Use "strings" instrument AR for a String Quartet artist');
     });
-    $('#batch-set-piano-trio').click(function() {
+    $('#batch-set-piano-trio').click(function () {
         setInstrument(linkTypePerformer, linkTypeInstrument,
                       [attrIdPiano, attrIdViolin, attrIdCello]);
         signEditNote('Use instruments AR for a Piano Trio artist');
     });
-    $('#batch-set-piano').click(function() {
+    $('#batch-set-piano').click(function () {
         setInstrument(linkTypePerformer, linkTypeInstrument,
                       [attrIdPiano]);
         signEditNote();

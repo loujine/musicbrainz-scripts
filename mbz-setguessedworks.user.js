@@ -1,13 +1,15 @@
+'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Batch-set guessed works
+// @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.04
+// @version      2015.11.05
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Set best-guess related works
-// @compatible   firefox+greasemonkey  quickly tested
+// @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      mbz-loujine-releditor.js
 // @require      mbz-loujine-common.js
@@ -15,11 +17,6 @@
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
-
-'use strict';
-
-// imported from mbz-loujine-common.js: requestGET, mbzTimeout
-// imported from mbz-loujine-sidebar.js: container
 
 function validateDialog(recording, work) {
     var vm = MB.releaseRelationshipEditor;
@@ -30,6 +27,7 @@ function validateDialog(recording, work) {
     }).accept();
 }
 
+// imported from mbz-loujine-common.js: requestGET, mbzTimeout
 function setGuessedWork() {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
         idx = 0;
@@ -38,7 +36,7 @@ function setGuessedWork() {
                   encodeURIComponent(recording.name) +
                   '&artist=' + encodeURIComponent(recording.artist) +
                   '&fmt=json&limit=1';
-        if (recording.performances().length === 0) {
+        if (!recording.performances().length) {
             idx += 1;
             setTimeout(function () {
                 requestGET(url, function (resp) {
@@ -49,6 +47,7 @@ function setGuessedWork() {
     });
 }
 
+// imported from mbz-loujine-releditor.js: container
 $('div.tabs').after(
     container
     .append(
