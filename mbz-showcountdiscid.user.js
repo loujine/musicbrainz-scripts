@@ -11,7 +11,7 @@
 // @description  musicbrainz.org: Show discid number on main release pages
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-musicbrainz-common-files/code/MusicBrainz:%20common%20files.js?version=85770
+// @require      https://greasyfork.org/scripts/13747-musicbrainz-common-files/code/MusicBrainz:%20common%20files.js?version=85809
 // @include      http*://*musicbrainz.org/release/*
 // @exclude      http*://*musicbrainz.org/release/add*
 // @exclude      http*://*musicbrainz.org/release/*/*

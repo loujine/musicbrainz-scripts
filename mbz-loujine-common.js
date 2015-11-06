@@ -112,6 +112,14 @@ function formatPerformers(relations) {
     return performers.sort().join(', ');
 }
 
+// Sort function for performers in the recording artist list
+var order = [linkTypeVocals, linkTypeInstrument, linkTypeOrchestra, linkTypeConductor, linkTypePerformer];
+
+var comparefct = function (a, b) {
+    if (a.link === b.link) {return 0}
+    return order.indexOf(a.link) > order.indexOf(b.link) ? 1 : -1
+};
+
 // Replace composer -> performer as recording artist (CSG)
 function formatEditInfo(json) {
     var data = [],
@@ -135,7 +143,7 @@ function formatEditInfo(json) {
         if (linkType === linkTypePerformer ||
             linkType === linkTypeInstrument || linkType === linkTypeVocals ||
             linkType === linkTypeOrchestra || linkType === linkTypeConductor) {
-            performers.push({'name': rel.target.name, 'id': rel.target.id});
+            performers.push({'name': rel.target.name, 'id': rel.target.id, 'link': linkType});
         }
         data.push('edit-recording.rel.' + idx + '.relationship_id=' + rel.id);
         data.push('edit-recording.rel.' + idx + '.target=' + rel.target.gid);
@@ -146,7 +154,7 @@ function formatEditInfo(json) {
     });
     editNote = $('#batch_replace_edit_note')[0].value;
     data.push('edit-recording.edit_note=' + editNote);
-    performers.forEach(function(performer, idx) {
+    performers.sort(comparefct).forEach(function(performer, idx) {
         data.push('edit-recording.artist_credit.names.' + idx + '.name=' + performer.name);
         if (idx === performers.length - 1) {
             data.push('edit-recording.artist_credit.names.' + idx + '.join_phrase');
