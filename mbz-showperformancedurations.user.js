@@ -20,40 +20,26 @@
 // ==/UserScript==
 
 // imported from mbz-loujine-common.js: requestGET, mbzTimeout, formatTrackLength
-
-
-function findPerformanceDuration(mbid, callback) {
-    var url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json';
-    requestGET(url, function (resp) {
-        callback(JSON.parse(resp));
-    })
-}
-
 function showPerformanceDurations() {
-    var recordings = $('table a[href*="/recording/"]');
+    var $recordings = $('table a[href*="/recording/"]');
+    $('thead > tr').append('<th>Time</th>');
+    $('.subh > th')[1].colSpan += 1;
 
-    recordings.each(function (idx, recording) {
+    $recordings.each(function (idx, recording) {
         setTimeout(function () {
-            var recording_mbid = recording.href.split('/')[4],
-                tr_node = recording.parentElement.parentElement,
-                td_node = tr_node.insertCell(-1),
-                callback = function (resp) {
-                    td_node.textContent = formatTrackLength(resp.length);
-                };
-            if (idx === 0) {
-                var tbody_node = tr_node.parentElement.parentElement,
-                    head = tbody_node.tHead.children[0].insertCell(-1);
-                head.textContent = 'Time';
-                tbody_node.tBodies[0].children[0].children[1].colSpan += 1;
-            }
-            findPerformanceDuration(recording_mbid, callback);
+            var mbid = recording.href.split('/')[4],
+                url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json';
+            requestGET(url, function (resp) {
+                var duration = formatTrackLength(JSON.parse(resp).length);
+                $(recording).parents('tr').append('<td>' + duration + '</td>');
+            });
         }, idx * mbzTimeout);
     });
 }
 
 // imported from mbz-loujine-sidebar.js: container
 $('.work-information').before(
-    container
+    $container
     .append(
         $('<input></input>', {
           'id': 'showdurations',

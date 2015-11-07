@@ -30,7 +30,7 @@ function formatPerformers(relations) {
             rel.type === 'performer') {
             if (rel.type === 'performing orchestra') {
                 type = 'orchestra';
-            } else if (rel.attributes.length === 0) {
+            } else if (!rel.attributes.length) {
                 type = rel.type;
             } else {
                 type = rel.attributes[0];
@@ -42,42 +42,31 @@ function formatPerformers(relations) {
 }
 
 function showPerformers() {
-    var recordings = $('table a[href*="/recording/"]'),
-        composer_node = $('th:contains("composer:")')[0].parentElement.children[1].children[0],
-        composer_mbid = composer_node.href.split('/')[4];
+    var $recordings = $('table a[href*="/recording/"]');
+    $('thead > tr').append('<th>Performer AR</th>');
+    $('.subh > th')[1].colSpan += 1;
 
-    recordings.each(function (idx, recording) {
+    $recordings.each(function (idx, recording) {
         setTimeout(function () {
             var mbid = recording.href.split('/')[4],
-                url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json&inc=artist-rels',
-                tr_node = $(recording).parents('tr')[0],
-                td_node = tr_node.insertCell(-1),
-                callback = function (resp) {
-                    if (resp.relations.length > 0) {
-                        td_node.textContent = formatPerformers(resp.relations);
-                    } else {
-                        td_node.textContent = '✗';
-                        td_node.style.color = 'red';
-                    }
-                };
-            if (idx === 0) {
-                var tbody_node = tr_node.parentElement.parentElement;
-                var head = tbody_node.tHead.children[0].insertCell(-1);
-                head.textContent = 'Performers';
-                tbody_node.tBodies[0].children[0].children[1].colSpan += 1;
-            }
-            if (tr_node.children[3].children[0].href.split('/')[4] === composer_mbid) {
-                requestGET(url, function (resp) {
-                    callback(JSON.parse(resp));
-                });
-            }
+                url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json&inc=artist-rels';
+            requestGET(url, function (response) {
+                var resp = JSON.parse(response),
+                    $node;
+                if (resp.relations.length) {
+                    $node = $('<td>' + formatPerformers(resp.relations) + '</td>');
+                } else {
+                    $node = $('<td>✗</td>').css('background-color', 'red');
+                }
+                $(recording).parents('tr').append($node);
+            });
         }, idx * mbzTimeout);
     });
 }
 
 // imported from mbz-loujine-sidebar.js: container
 $('.work-information').before(
-    container
+    $container
     .append(
         $('<input></input>', {
           'id': 'showperformers',

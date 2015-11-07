@@ -12,9 +12,9 @@
 // ==/UserScript==
 
 if ($('div#loujine-sidebar').length) {
-    var container = $('div#loujine-sidebar');
+    var $container = $('div#loujine-sidebar');
 } else {
-    var container = $('<div></div>', {
+    var $container = $('<div></div>', {
         'id': 'loujine-sidebar',
         'css': {'background-color': 'white',
                 'padding': '8px',

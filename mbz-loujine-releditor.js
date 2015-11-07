@@ -12,9 +12,9 @@
 // ==/UserScript==
 
 if ($('div#loujine-menu').length) {
-    var container = $('div#loujine-menu');
+    var $container = $('div#loujine-menu');
 } else {
-    var container = $('<div></div>', {
+    var $container = $('<div></div>', {
         'id': 'loujine-menu',
         'css': {'background-color': 'white',
                 'padding': '8px',

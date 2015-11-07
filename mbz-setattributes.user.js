@@ -38,7 +38,7 @@ function setAttributes(attrId, toggle) {
 
 // imported from mbz-loujine-releditor.js: container
 $('div.tabs').after(
-    container
+    $container
     .append(
         $('<h3></h3>', {'text': 'Recording-Work relation attributes'})
     )

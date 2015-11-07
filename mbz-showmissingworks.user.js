@@ -21,37 +21,28 @@
 // imported from mbz-loujine-common.js: requestGET, mbzTimeout
 
 function showMissingWorks() {
-    var recordings = $('table a[href*="/recording/"]');
+    var $recordings = $('table a[href*="/recording/"]');
+    $('thead > tr').append('<th>Related work</th>');
+    $('.subh').append('<th>with date</th>');
 
-    recordings.each(function (idx, recording) {
+    $recordings.each(function (idx, recording) {
         setTimeout(function () {
             var mbid = recording.href.split('/')[4],
-                url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json&inc=work-rels',
-                tr_node = $(recording).parents('tr')[0],
-                td_node = tr_node.insertCell(-1),
-                callback = function (resp) {
-                    if (resp.relations.length > 0) {
-                        if (resp.relations[0].begin) {
-                            td_node.textContent = '✓';
-                            td_node.style.color = 'green';
-                        } else {
-                            td_node.textContent = '⚠';
-                            td_node.style.color = 'orange';
-                            recording.style.color = 'orange';
-                        }
+                url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json&inc=work-rels';
+            requestGET(url, function (response) {
+                var resp = JSON.parse(response),
+                    $node;
+                if (resp.relations.length) {
+                    if (resp.relations[0].begin) {
+                        $node = $('<td>✓</td>').css('background-color', 'green');
                     } else {
-                        td_node.textContent = '✗';
-                        td_node.style.color = 'red';
-                        recording.style.color = 'red';
+                        $node = $('<td>⚠</td>').css('background-color', 'orange');
                     }
-                };
-            if (idx === 0) {
-                var tbody_node = tr_node.parentElement.parentElement;
-                tbody_node.tHead.children[0].insertCell(-1);
-                tbody_node.tBodies[0].children[0].children[1].colSpan += 1;
-            }
-            requestGET(url, function (resp) {
-                callback(JSON.parse(resp));
+                } else {
+                    $node = $('<td>✗</td>').css('background-color', 'red');
+                }
+                $(recording).parents('tr').append($node.css({'text-align': 'center',
+                                                             'font-size': '100%'}));
             });
         }, idx * mbzTimeout);
     });
@@ -59,7 +50,7 @@ function showMissingWorks() {
 
 // imported from mbz-loujine-sidebar.js: container
 $('.artist-information').before(
-    container
+    $container
     .append(
         $('<input></input>', {
           'id': 'showmissingworks',

@@ -84,7 +84,7 @@ function removeDates() {
 
 // imported from mbz-loujine-releditor.js: container
 $('div.tabs').after(
-    container
+    $container
     .append(
         $('<h3></h3>', {'text': 'Dates'})
     )

@@ -49,10 +49,11 @@ function setGuessedWork() {
 
 // imported from mbz-loujine-releditor.js: container
 $('div.tabs').after(
-    container
+    $container
     .append(
         $('<h3></h3>', {'text': 'Search for works'})
-    ).append(
+    )
+    .append(
         $('<input></input>', {
             'id': 'searchwork',
             'type': 'button',

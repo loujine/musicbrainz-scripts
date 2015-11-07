@@ -40,10 +40,11 @@ function setInstrument(fromType, toType, attrIds, credit) {
 
 // container defined in mbz-loujine-releditor.js
 $('div.tabs').after(
-    container
+    $container
     .append(
         $('<h3></h3>', {'text': 'Recording-performer instrument attributes'})
-    ).append(
+    )
+    .append(
         $('<input></input>', {
             'id': 'batch-unset-orchestra',
             'type': 'button',
