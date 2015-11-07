@@ -38,8 +38,7 @@ function showPerformanceDurations() {
 }
 
 // imported from mbz-loujine-sidebar.js: container
-$('.work-information').before(
-    $container
+$container
     .append(
         $('<input></input>', {
           'id': 'showdurations',
@@ -47,7 +46,6 @@ $('.work-information').before(
           'value': 'Show performance durations'
           })
     )
-);
 
 $(document).ready(function() {
     $('#showdurations').click(function() {showPerformanceDurations()});

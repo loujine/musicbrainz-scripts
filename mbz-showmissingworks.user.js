@@ -49,8 +49,7 @@ function showMissingWorks() {
 }
 
 // imported from mbz-loujine-sidebar.js: container
-$('.artist-information').before(
-    $container
+$container
     .append(
         $('<input></input>', {
           'id': 'showmissingworks',
@@ -58,7 +57,6 @@ $('.artist-information').before(
           'value': 'Show missing works'
         })
     )
-);
 
 $(document).ready(function () {
     $('#showmissingworks').click(function () {showMissingWorks()});

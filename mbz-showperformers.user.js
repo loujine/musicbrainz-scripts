@@ -151,8 +151,7 @@ function replaceArtist() {
 }
 
 // imported from mbz-loujine-sidebar.js: container
-$('.work-information').before(
-    $container
+$container
     .append(
         $('<h3></h3>', {'text': 'Replace artists'})
     )
@@ -182,8 +181,7 @@ $('.work-information').before(
     )
     .append(
         $('<p></p>', {'text': 'Checkbox becomes grey when the request has been sent'})
-    )
-);
+    );
 
 $(document).ready(function() {
     $('#batch_replace_edit_note')[0].value = 'CSG';

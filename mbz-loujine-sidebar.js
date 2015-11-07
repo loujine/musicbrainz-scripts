@@ -27,3 +27,6 @@ if ($('div#loujine-sidebar').length) {
     );
 }
 
+$('h2.rating').before(
+    $container
+)
