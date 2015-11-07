@@ -32,41 +32,40 @@ var linkTypeInstrument = 148,
 // we wait for `mbz_timeout` milliseconds between two queries
 var mbzTimeout = 1000;
 
-function requestGET(url, callback) {
+function request(verb, url, param, callback) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            if (xhr.status === 200 && xhr.responseText !== null) {
-                callback(xhr.responseText);
-            } else {
-                console.log('Error ', xhr.status, ': ', url);
-            }
+                callback(xhr);
         }
     };
-    xhr.open('GET', url, true);
-    xhr.timeout = 5000;
-    xhr.ontimeout = function () {
-        console.error('The request for ' + url + ' timed out.');
-        };
-    xhr.send(null);
-}
-
-function requestPOST(url, param, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            callback(xhr.status);
-        }
-    };
-    xhr.open('POST', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.setRequestHeader('Content-length', param.length);
-    xhr.setRequestHeader('Connection', 'close');
-    xhr.timeout = 5000;
+    xhr.open(verb, url, true);
+    if (verb === 'POST') {
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.setRequestHeader('Content-length', param.length);
+        xhr.setRequestHeader('Connection', 'close');
+    }
+    xhr.timeout = 10000;
     xhr.ontimeout = function () {
         console.error('The request for ' + url + ' timed out.');
         };
     xhr.send(param);
+}
+
+function requestGET(url, callback) {
+    request('GET', url, null, function (xhr) {
+        if (xhr.status === 200 && xhr.responseText !== null) {
+            callback(xhr.responseText);
+        } else {
+            console.log('Error ', xhr.status, ': ', url);
+        }
+    });
+}
+
+function requestPOST(url, param, callback) {
+    request('POST', url, param, function (xhr) {
+        callback(xhr.status);
+    });
 }
 
 // musicbrainz-server/root/static/scripts/common/utility/formatTrackLength.js
