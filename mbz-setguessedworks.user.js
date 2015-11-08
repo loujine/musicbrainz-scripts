@@ -3,7 +3,7 @@
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.05
+// @version      2015.11.08
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -33,6 +33,7 @@ function setGuessedWork() {
         idx = 0;
     recordings.forEach(function (recording) {
         var url = '/ws/js/work/?q=' +
+                  encodeURIComponent($('#prefix')[0].value) +
                   encodeURIComponent(recording.name) +
                   '&artist=' + encodeURIComponent(recording.artist) +
                   '&fmt=json&limit=1';
@@ -52,6 +53,16 @@ $('div.tabs').after(
     $container
     .append(
         $('<h3></h3>', {'text': 'Search for works'})
+    )
+    .append(
+        $('<span></span>', {'text': 'Prefix: '})
+    )
+    .append(
+        $('<input></input>', {
+            'id': 'prefix',
+            'type': 'text',
+            'value': ''
+        })
     )
     .append(
         $('<input></input>', {

@@ -39,7 +39,9 @@ replace incorrect "performing orchestra" used for chamber music groups (string
 quartets, etc.)
 
 * mbz-setguessedworks: add related work suggested by the search server if the
-recording has no linked work. Search is done using the recording title.
+recording has no linked work. Search is done using the recording title. An
+optional prefix can be added for the search (useful to add full work info on
+classical works)
 
 
 ### Artist relationships tab
