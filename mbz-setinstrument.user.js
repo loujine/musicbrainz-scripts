@@ -1,9 +1,10 @@
 'use strict';
+var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Batch-set recording-artist instrument
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.05
+// @version      2015.11.08
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -17,6 +18,11 @@
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
+};
+if (meta && meta.toString && (meta = meta.toString())) {
+    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
+                'version': meta.match(/@version\s+(.+)/)[1]};
+}
 
 function setInstrument(fromType, toType, attrIds, credit) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
@@ -81,37 +87,30 @@ $('div.tabs').after(
     )
 );
 
-function signEditNote(msg) {
-    var vm = MB.releaseRelationshipEditor,
-        oldmsg = vm.editNote(),
-        signature = '\n\n--\n' + 'Using "MusicBrainz: Batch-set instruments" GM script\n';
-    vm.editNote(oldmsg + msg + signature);
-}
-
 // imported from mbz-loujine-common.js: linkTypeXXX, ttrIdXXX
 $(document).ready(function () {
     $('#batch-unset-orchestra').click(function () {
         setInstrument(linkTypeOrchestra, linkTypePerformer);
-        signEditNote();
+        releditorEditNote(meta);
     });
     $('#batch-unset-instrument').click(function () {
         setInstrument(linkTypeInstrument, linkTypePerformer);
-        signEditNote();
+        releditorEditNote(meta);
     });
     $('#batch-set-string-quartet').click(function () {
         setInstrument(linkTypePerformer, linkTypeInstrument,
                       [attrIdStrings], 'string quartet');
-        signEditNote('Use "strings" instrument AR for a String Quartet artist');
+        releditorEditNote(meta, 'Use "strings" instrument AR for a String Quartet artist');
     });
     $('#batch-set-piano-trio').click(function () {
         setInstrument(linkTypePerformer, linkTypeInstrument,
                       [attrIdPiano, attrIdViolin, attrIdCello]);
-        signEditNote('Use instruments AR for a Piano Trio artist');
+        releditorEditNote(meta, 'Use instruments AR for a Piano Trio artist');
     });
     $('#batch-set-piano').click(function () {
         setInstrument(linkTypePerformer, linkTypeInstrument,
                       [attrIdPiano]);
-        signEditNote();
+        releditorEditNote(meta);
     });
     return false;
 });

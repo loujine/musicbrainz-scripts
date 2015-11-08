@@ -1,4 +1,5 @@
 'use strict';
+var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
@@ -17,6 +18,11 @@
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
+};
+if (meta && meta.toString && (meta = meta.toString())) {
+    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
+                'version': meta.match(/@version\s+(.+)/)[1]};
+}
 
 function validateDialog(recording, work) {
     var vm = MB.releaseRelationshipEditor;
@@ -73,17 +79,10 @@ $('div.tabs').after(
     )
 );
 
-function signEditNote() {
-    var vm = MB.releaseRelationshipEditor,
-        msg = vm.editNote(),
-        signature = '\n\n--\n' + 'Using "MusicBrainz: Batch-set guessed works" GM script\n';
-    vm.editNote(msg + 'Set guessed works' + signature);
-}
-
 $(document).ready(function() {
     $('#searchwork').click(function() {
         setGuessedWork();
-        signEditNote();
+        releditorEditNote(meta, 'Set guessed works');
     });
     return false;
 });

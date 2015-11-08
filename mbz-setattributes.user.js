@@ -1,14 +1,15 @@
 'use strict';
+var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Batch-set recording-work attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.05
+// @version      2015.11.08
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org: Set "live" attribute on selected recordings
+// @description  musicbrainz.org: Set attributes (live, partial) on selected recordings
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      mbz-loujine-releditor.js
@@ -17,6 +18,11 @@
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
+};
+if (meta && meta.toString && (meta = meta.toString())) {
+    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
+                'version': meta.match(/@version\s+(.+)/)[1]};
+}
 
 function setAttributes(attrId, toggle) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings();
@@ -72,32 +78,24 @@ $('div.tabs').after(
     )
 );
 
-function signEditNote() {
-    var vm = MB.releaseRelationshipEditor,
-        msg = vm.editNote(),
-        signature = '\n\n--\n' + 'Using "MusicBrainz: Batch-set attributes" GM script\n';
-    vm.editNote(msg + 'Set Recording-Work relation attributes' + signature);
-}
-
 // imported from mbz-loujine-common.js: attrIdXXX
 $(document).ready(function() {
     $('#setlive').click(function() {
         setAttributes(attrIdLive, false);
-        signEditNote();
+        releditorEditNote(meta);
     });
     $('#setpartial').click(function() {
         setAttributes(attrIdPartial, false);
-        signEditNote();
+        releditorEditNote(meta);
     });
     $('#togglelive').click(function() {
         setAttributes(attrIdLive, true);
-        signEditNote();
+        releditorEditNote(meta);
     });
     $('#togglepartial').click(function() {
         setAttributes(attrIdPartial, true);
-        signEditNote();
+        releditorEditNote(meta);
     });
     return false;
 });
-
 
