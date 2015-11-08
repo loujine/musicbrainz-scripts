@@ -12,8 +12,8 @@ var meta = function() {
 // @description  musicbrainz.org: Set best-guess related works
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      mbz-loujine-releditor.js
-// @require      mbz-loujine-common.js
+// @require      https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-loujine-releditor.js
+// @require      https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
