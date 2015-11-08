@@ -3,7 +3,7 @@
 // @name         MusicBrainz: Replace recording artists from a Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.05
+// @version      2015.11.07
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformers.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformers.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts

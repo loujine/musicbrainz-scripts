@@ -3,7 +3,7 @@
 // @name         MusicBrainz: common files
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.05
+// @version      2015.11.07
 // @description  musicbrainz.org: common functions for relationship editor scripts
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)

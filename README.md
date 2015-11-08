@@ -7,6 +7,20 @@ Collection of greasemonkey scripts for MusicBrainz editing.
 Content
 -------
 
+### Common files
+
+* mbz-loujine-common: constants (link and attributes types for MusicBrainz data
+model) ,basic functionalities (XmlHttpRequest, data parsing)
+
+* mbz-loujine-releditor: jquery definition of a container to store script
+interfaces (buttons) impacting the release relationship editor
+
+* mbz-loujine-sidebar: same for the sidebar appearing on artist and work pages
+
+NB: XHR queries are set 1 second apart to avoid hitting the rate limit on musicbrainz
+server.
+
+
 ### Relationship editor
 
 The first scripts concern batch-editing in the relationship editor in order to
@@ -32,14 +46,21 @@ recording has no linked work. Search is done using the recording title.
 
 * mbz-showmissingwork: check for each recording whether a linked work exists.
   Mark with:
-
   - a green ✓ if at least one work exists and a date is set on the
-  relationship
+    relationship
   - an orange ⚠ if at least one work exists with no date
   - a red ✗ if no work is linked to the recording
 
-Queries are set 1 second apart to avoid hitting the rate limit on musicbrainz
-server.
+* mbz-replacerecordingartist: add performers from the recording advanced
+  relationships in a new column (with the instrument/vocal attribute if defined).
+  Show:
+  - the performer name(s) (from AR) if the recording artist is not the webpage artist
+  - nothing if the recording artist is not the composer (we assume it is the
+    right performers)
+  - a red ✗ if no AR is found
+
+* mbz-replacerecordingartist can set the selected performers above as recording
+artist by checking the checkboxes and clicking "Replace selected artists"
 
 
 ### Release overview tab
@@ -47,7 +68,7 @@ server.
 * mbz-showcountdiscid: display the number of linked discids in the discid tab
 header
 
-* mbz-showcountalias: display the number as defined aliases and the list of
+* mbz-showcountalias: display the number of defined aliases and the list of
 languages used (if any)
 
 
@@ -56,12 +77,14 @@ languages used (if any)
 * mbz-showperformancedurations: add each performance duration in a new column
 
 * mbz-showperformers: add performers from the recording advanced relationships in
-a new column (with the instrument/vocal attribute if defined). Show:
-
+  a new column (with the instrument/vocal attribute if defined). Show:
   - the performer name (from AR) if the recording artist is the composer
   - nothing if the recording artist is not the composer (we assume it is the
-    perfomers)
+    right performers)
   - a red ✗ if no AR is found
+
+* mbz-showperformers can set the selected performers above as recording
+artist by checking the checkboxes and clicking "Replace selected artists"
 
 
 TODO
