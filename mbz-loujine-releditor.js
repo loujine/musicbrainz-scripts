@@ -1,6 +1,6 @@
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: common files
+// @name         MusicBrainz: common files for the relationships editor
 // @namespace    mbz-loujine
 // @author       loujine
 // @version      2015.11.05
