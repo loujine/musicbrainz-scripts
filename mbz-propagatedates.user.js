@@ -12,8 +12,8 @@ var meta = function() {
 // @description  musicbrainz.org: Copy dates on relevant recording AR fields
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-loujine-releditor.js
-// @require      https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-loujine-common.js
+// @require      https://greasyfork.org/scripts/13748-musicbrainz-common-files-for-the-relationships-editor/code/MusicBrainz:%20common%20files%20for%20the%20relationships%20editor.js?version=85768
+// @require      https://greasyfork.org/scripts/13747-musicbrainz-common-files/code/MusicBrainz:%20common%20files.js?version=85770
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end

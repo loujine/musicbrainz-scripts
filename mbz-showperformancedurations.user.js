@@ -11,8 +11,8 @@
 // @description  musicbrainz.org: Show performance durations on a Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-loujine-sidebar.js
-// @require      https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-loujine-common.js
+// @require      https://greasyfork.org/scripts/13707-musicbrainz-common-files-for-the-sidebar/code/MusicBrainz:%20common%20files%20for%20the%20sidebar.js?version=85769
+// @require      https://greasyfork.org/scripts/13747-musicbrainz-common-files/code/MusicBrainz:%20common%20files.js?version=85770
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*
 // @grant        none
