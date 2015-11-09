@@ -3,7 +3,7 @@
 // @name         MusicBrainz: Show missing works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.05
+// @version      2015.11.09
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showmissingworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showmissingworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -51,12 +51,21 @@ function showMissingWorks() {
 // imported from mbz-loujine-sidebar.js: container
 $container
     .append(
+        $('<h3>Linked works</h3>')
+    )
+    .append(
         $('<input></input>', {
           'id': 'showmissingworks',
           'type': 'button',
           'value': 'Show missing works'
         })
     )
+    .append(
+        $('<p>Display:</p>')
+    )
+    .append(
+        $('<ul><li>✓: linked work with date</li><li>⚠: linked work without date</li><li>✗: no work linked</li></ul>')
+    );
 
 $(document).ready(function () {
     $('#showmissingworks').click(function () {showMissingWorks()});

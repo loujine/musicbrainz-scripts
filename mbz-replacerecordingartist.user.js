@@ -1,9 +1,10 @@
 'use strict';
+var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Replace recording artists from performer pages
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.07
+// @version      2015.11.09
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -17,6 +18,11 @@
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
+};
+if (meta && meta.toString && (meta = meta.toString())) {
+    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
+                'version': meta.match(/@version\s+(.+)/)[1]};
+}
 
 // imported from mbz-loujine-common.js: requestGET, mbzTimeout,
 // formatPerformers, replaceArtist
@@ -58,23 +64,27 @@ function showPerformers() {
 // imported from mbz-loujine-sidebar.js: container
 $container
     .append(
-        $('<h3></h3>', {'text': 'Replace artists'})
+        $('<h3>Show performers</h3>')
     )
     .append(
         $('<input></input>', {
           'id': 'showperformers',
           'type': 'button',
-          'value': 'Show performers'
+          'value': 'Show performer AR'
         })
     )
     .append(
-        $('<p></p>', {'text': 'First click "Show performers" then check boxes to select artists'})
+        $('<h3>Replace artists</h3>')
     )
     .append(
-        $('<p></p>', {'text': 'Edit note:'})
+        $('<p>First click "Show performer AR" then check boxes to select artists</p>')
     )
     .append(
-        $('<textarea></textarea>', {'id': 'batch_replace_edit_note'})
+        $('<p>Edit note:</p>')
+    )
+    .append(
+        $('<textarea></textarea>', {'id': 'batch_replace_edit_note',
+                                    'text': sidebarEditNote(meta)})
     )
     .append(
         $('<input></input>', {
@@ -83,13 +93,9 @@ $container
           'disabled': true,
           'value': 'Replace selected artists'
           })
-    )
-    .append(
-        $('<p></p>', {'text': 'Checkbox becomes grey when the request has been sent'})
     );
 
 $(document).ready(function() {
-    $('#batch_replace_edit_note')[0].value = 'CSG';
     $('#showperformers').click(function() {
         showPerformers();
         $('#batch_replace').prop('disabled', false);
