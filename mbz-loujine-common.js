@@ -3,7 +3,7 @@
 // @name         MusicBrainz: common files
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.07
+// @version      2015.11.10
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -124,8 +124,11 @@ var comparefct = function (a, b) {
 function formatEditInfo(json) {
     var data = [],
         performers = [],
-        editNote;
-    data.push('edit-recording.name=' + json.name);
+        editNote,
+        encodeName = function (name) {
+            return encodeURIComponent(name).replace(/%20/g, '+');
+        };
+    data.push('edit-recording.name=' + encodeName(json.name));
     if (!json.comment.length) {
         data.push('edit-recording.comment');
     } else {
@@ -155,16 +158,16 @@ function formatEditInfo(json) {
     editNote = $('#batch_replace_edit_note')[0].value;
     data.push('edit-recording.edit_note=' + editNote);
     performers.sort(comparefct).forEach(function(performer, idx) {
-        data.push('edit-recording.artist_credit.names.' + idx + '.name=' + performer.name);
+        data.push('edit-recording.artist_credit.names.' + idx + '.name=' + encodeName(performer.name));
         if (idx === performers.length - 1) {
             data.push('edit-recording.artist_credit.names.' + idx + '.join_phrase');
         } else {
             data.push('edit-recording.artist_credit.names.' + idx + '.join_phrase=,+');
         }
-        data.push('edit-recording.artist_credit.names.' + idx + '.artist.name=' + performer.name);
+        data.push('edit-recording.artist_credit.names.' + idx + '.artist.name=' + encodeName(performer.name));
         data.push('edit-recording.artist_credit.names.' + idx + '.artist.id=' + performer.id);
     });
-    return data.join('&').replace(/ /g, '+');
+    return data.join('&');
 }
 
 function replaceArtist() {
