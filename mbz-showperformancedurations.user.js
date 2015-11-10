@@ -3,7 +3,7 @@
 // @name         MusicBrainz: Show performance durations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.05
+// @version      2015.11.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformancedurations.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformancedurations.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -40,12 +40,15 @@ function showPerformanceDurations() {
 // imported from mbz-loujine-sidebar.js: container
 $container
     .append(
+        $('<h3>Show durations<h3>')
+    )
+    .append(
         $('<input></input>', {
           'id': 'showdurations',
           'type': 'button',
           'value': 'Show performance durations'
           })
-    )
+    );
 
 $(document).ready(function() {
     $('#showdurations').click(function() {showPerformanceDurations()});
