@@ -114,7 +114,7 @@ Contributions and feedback are welcome.
 Installation
 ------------
 
-For installation, follow the [Greasemonkey manual](http://wiki.greasespot.net/Greasemonkey_Manual:Installing_Scripts)
+For installation, follow the [Greasemonkey manual](https://wiki.greasespot.net/Greasemonkey_Manual:Installing_Scripts)
 
 
 License
