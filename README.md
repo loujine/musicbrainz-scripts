@@ -111,6 +111,12 @@ useless for other people, except as an example to adapt to your own goals.
 Contributions and feedback are welcome.
 
 
+Contributors
+------------
+
+* jesus2099
+
+
 Installation
 ------------
 

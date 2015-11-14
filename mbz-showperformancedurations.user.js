@@ -3,7 +3,7 @@
 // @name         MusicBrainz: Show performance durations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.10
+// @version      2015.11.14
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformancedurations.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformancedurations.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -21,19 +21,22 @@
 
 // imported from mbz-loujine-common.js: requestGET, mbzTimeout, formatTrackLength
 function showPerformanceDurations() {
-    var $recordings = $('table a[href*="/recording/"]');
+    var mbid = document.URL.split('/')[4],
+        url = '/ws/2/work/' + encodeURIComponent(mbid) + '?inc=recording-rels&fmt=json',
+        $recordings = $('table a[href*="/recording/"]');
     $('thead > tr').append('<th>Time</th>');
     $('.subh > th')[1].colSpan += 1;
 
-    $recordings.each(function (idx, recording) {
-        setTimeout(function () {
+    requestGET(url, function (resp) {
+        var durations = {};
+        JSON.parse(resp).relations.forEach(function(rel) {
+            durations[rel.recording.id] = rel.recording.length;
+        });
+        $recordings.each(function (idx, recording) {
             var mbid = recording.href.split('/')[4],
-                url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json';
-            requestGET(url, function (resp) {
-                var duration = formatTrackLength(JSON.parse(resp).length);
-                $(recording).parents('tr').append('<td>' + duration + '</td>');
-            });
-        }, idx * mbzTimeout);
+                duration = formatTrackLength(durations[mbid]);
+            $(recording).parents('tr').append('<td>' + duration + '</td>');
+        });
     });
 }
 
