@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.08
+// @version      2015.11.16
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,7 +24,7 @@ if (meta && meta.toString && (meta = meta.toString())) {
                 'version': meta.match(/@version\s+(.+)/)[1]};
 }
 
-function validateDialog(recording, work) {
+function setWork(recording, work) {
     var vm = MB.releaseRelationshipEditor;
     MB.relationshipEditor.UI.AddDialog({
         source: recording,
@@ -34,12 +34,12 @@ function validateDialog(recording, work) {
 }
 
 // imported from mbz-loujine-common.js: requestGET, mbzTimeout
-function setGuessedWork() {
+function guessWork() {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
         idx = 0;
     recordings.forEach(function (recording) {
         var url = '/ws/js/work/?q=' +
-                  encodeURIComponent($('#prefix')[0].value) +
+                  encodeURIComponent($('#prefix')[0].value) + ' ' +
                   encodeURIComponent(recording.name) +
                   '&artist=' + encodeURIComponent(recording.artist) +
                   '&fmt=json&limit=1';
@@ -47,7 +47,7 @@ function setGuessedWork() {
             idx += 1;
             setTimeout(function () {
                 requestGET(url, function (resp) {
-                    validateDialog(recording, JSON.parse(resp)[0]);
+                    setWork(recording, JSON.parse(resp)[0]);
                 });
             }, idx * mbzTimeout);
         }
@@ -58,10 +58,13 @@ function setGuessedWork() {
 $('div.tabs').after(
     $container
     .append(
-        $('<h3></h3>', {'text': 'Search for works'})
+        $('<h3>Search for works</h3>')
     )
     .append(
-        $('<span></span>', {'text': 'Prefix: '})
+        $('<p>You can add an optional prefix (e.g. the misssing parent work name) to help guessing the right work</p>')
+    )
+    .append(
+        $('<span>Prefix:</span>')
     )
     .append(
         $('<input></input>', {
@@ -81,7 +84,7 @@ $('div.tabs').after(
 
 $(document).ready(function() {
     $('#searchwork').click(function() {
-        setGuessedWork();
+        guessWork();
         releditorEditNote(meta, 'Set guessed works');
     });
     return false;
