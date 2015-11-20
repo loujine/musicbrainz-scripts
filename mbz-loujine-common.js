@@ -3,7 +3,7 @@
 // @name         MusicBrainz: common files
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.10
+// @version      2015.11.15
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -181,8 +181,8 @@ function replaceArtist() {
                 callback = function (info) {
                     console.log('Sending POST ' + mbid + ' edit info');
                     requestPOST(url, formatEditInfo(info), function (status) {
-                        node.disabled = true;
                         if (status === 200) {
+                            node.disabled = true;
                             $(node).parent().css('color', 'green');
                         } else {
                             $(node).after(status).parent().css('color', 'red');

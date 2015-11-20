@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from performer pages
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.09
+// @version      2015.11.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      https://greasyfork.org/scripts/13707-musicbrainz-common-files-for-the-sidebar/code/MusicBrainz:%20common%20files%20for%20the%20sidebar.js?version=85769
-// @require      https://greasyfork.org/scripts/13747-musicbrainz-common-files/code/MusicBrainz:%20common%20files.js?version=85994
+// @require      https://greasyfork.org/scripts/13747-musicbrainz-common-files/code/MusicBrainz:%20common%20files.js?version=88427
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @grant        none
 // @run-at       document-end
@@ -53,7 +53,7 @@ function showPerformers() {
                     });
                     $node.append($button);
                 } else {
-                    $node = $('<td>✗</td>').css('background-color', 'red');
+                    $node = $('<td>✗</td>').css('color', 'red');
                 }
                 $(tr).append($node);
             });
@@ -75,6 +75,9 @@ $container
     )
     .append(
         $('<h3>Replace artists</h3>')
+    )
+    .append(
+        $('<p>Warning: this is experimental! Bogus data could be sent in the edit. Please check carefully your edit history after use, and help by reporting bugs</p>')
     )
     .append(
         $('<p>First click "Show performer AR" then check boxes to select artists</p>')
