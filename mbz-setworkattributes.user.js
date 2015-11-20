@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.15
+// @version      2015.11.16
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -137,7 +137,8 @@ var idxLang = $('table.tbl th:contains("Language")').index();
 var idxKey = $('table.tbl th:contains("Attributes")').index();
 
 $rows.each(function (idx, row) {
-    var mbid = $(row).find('a[href*="/work/"]').attr('href').split('/')[4];
+    var mbid = $(row).find('a[href*="/work/"]').attr('href').split('/')[4],
+        title = $(row).find('a[href*="/work/"]')[0].text;
     if (!row.children[idxType].textContent.trim()) {
         $(row.children[idxType]).append($('<form></form>').append($selectWork.clone()));
     }
@@ -146,6 +147,16 @@ $rows.each(function (idx, row) {
     }
     if (!row.children[idxKey].textContent.trim()) {
         $(row.children[idxKey]).append($('<form></form>').append($selectKey.clone()));
+        if (title.toLowerCase().contains('major') ||
+            title.toLowerCase().contains('minor')) {
+            var cell = row.children[idxKey];
+            var min = title.length;
+            $(cell).find('option').each(function (idx, option) {
+                if (title.toLowerCase().contains(option.text.toLowerCase())) {
+                    option.selected = true;
+                }
+            });
+        }
     }
     var $button = $('<input></input>', {
         'id': 'edit-' + mbid,
