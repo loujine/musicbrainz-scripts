@@ -151,7 +151,7 @@ function formatEditInfo(json) {
         data.push('edit-recording.rel.' + idx + '.relationship_id=' + rel.id);
         data.push('edit-recording.rel.' + idx + '.target=' + rel.target.gid);
         data.push('edit-recording.rel.' + idx + '.link_type_id=' + linkType);
-        if (linkType === linkTypeWork) {
+        if (rel.direction === 'backward') {
             data.push('edit-recording.rel.' + idx + '.backward=1');
         }
     });
