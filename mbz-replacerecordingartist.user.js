@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from performer pages
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.15
+// @version      2015.11.23
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -27,10 +27,10 @@ if (meta && meta.toString && (meta = meta.toString())) {
 // imported from mbz-loujine-common.js: requestGET, mbzTimeout,
 // formatPerformers, replaceArtist
 
-function showPerformers() {
+function showPerformers(start, maxcount) {
     var performer = document.URL.split('/')[4],
         $rows = $('table.tbl a[href*="/artist/"]').not('[href*="' + performer + '"]').parents('tr');
-    $rows = $($rows.get().reverse()); // FIXME whyis jquery reversing the list?
+    $rows = $($rows.get().reverse().splice(start, maxcount)); // FIXME why is jquery reversing the list?
     $('thead > tr').append('<th>Performer AR</th>');
     $('.subh > th')[1].colSpan += 1;
 
@@ -65,6 +65,26 @@ function showPerformers() {
 $container
     .append(
         $('<h3>Show performers</h3>')
+    )
+    .append(
+        $('<span>Start at:</span>')
+    )
+    .append(
+        $('<input></input>', {
+            'id': 'offset',
+            'type': 'text',
+            'value': '1'
+        })
+    )
+    .append(
+        $('<span>Max count:</span>')
+    )
+    .append(
+        $('<input></input>', {
+            'id': 'max',
+            'type': 'text',
+            'value': '10'
+        })
     )
     .append(
         $('<input></input>', {
@@ -107,7 +127,9 @@ $container
 
 $(document).ready(function () {
     $('#showperformers').click(function () {
-        showPerformers();
+        var start = $('#offset')[0].value,
+            maxcount = $('#max')[0].value;
+        showPerformers(parseInt(start - 1), parseInt(maxcount));
         $('#batch_replace').prop('disabled', false);
     });
     $('#batch_replace').click(function () {replaceArtist();});
