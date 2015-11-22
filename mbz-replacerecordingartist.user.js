@@ -83,6 +83,13 @@ $container
         $('<p>First click "Show performer AR" then check boxes to select artists</p>')
     )
     .append(
+        $('<input></input>', {
+          'id': 'batch_select',
+          'type': 'button',
+          'value': 'Select all'
+          })
+    )
+    .append(
         $('<p>Edit note:</p>')
     )
     .append(
@@ -98,11 +105,14 @@ $container
           })
     );
 
-$(document).ready(function() {
-    $('#showperformers').click(function() {
+$(document).ready(function () {
+    $('#showperformers').click(function () {
         showPerformers();
         $('#batch_replace').prop('disabled', false);
     });
-    $('#batch_replace').click(function() {replaceArtist();});
+    $('#batch_replace').click(function () {replaceArtist();});
+    $('#batch_select').click(function () {
+        $('.replace:input').attr('checked', true);
+    });
     return false;
 });
