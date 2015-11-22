@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.16
+// @version      2015.11.23
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -244,15 +244,6 @@ function formatEditInfo(json) {
             data.push('edit-work.attributes.' + idx + '.value=' + attr.value);
         });
     }
-    //
-    json.relationships.forEach(function (rel, idx) {
-        data.push('edit-work.rel.' + idx + '.relationship_id=' + rel.id);
-        data.push('edit-work.rel.' + idx + '.target=' + rel.target.gid);
-        if (rel.direction === 'backward') {
-            data.push('edit-work.rel.' + idx + '.backward=1');
-        }
-        data.push('edit-work.rel.' + idx + '.link_type_id=' + rel.linkTypeID);
-    });
     editNote = $('#batch_replace_edit_note')[0].value;
     data.push('edit-work.edit_note=' + editNote);
     return data.join('&');
