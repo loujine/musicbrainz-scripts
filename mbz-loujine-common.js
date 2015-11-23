@@ -3,7 +3,7 @@
 // @name         MusicBrainz: common files
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.15
+// @version      2015.11.23
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -147,12 +147,6 @@ function formatEditInfo(json) {
             linkType === linkTypeInstrument || linkType === linkTypeVocals ||
             linkType === linkTypeOrchestra || linkType === linkTypeConductor) {
             performers.push({'name': rel.target.name, 'id': rel.target.id, 'link': linkType});
-        }
-        data.push('edit-recording.rel.' + idx + '.relationship_id=' + rel.id);
-        data.push('edit-recording.rel.' + idx + '.target=' + rel.target.gid);
-        data.push('edit-recording.rel.' + idx + '.link_type_id=' + linkType);
-        if (rel.direction === 'backward') {
-            data.push('edit-recording.rel.' + idx + '.backward=1');
         }
     });
     editNote = $('#batch_replace_edit_note')[0].value;
