@@ -29,7 +29,9 @@ if (meta && meta.toString && (meta = meta.toString())) {
 
 function showPerformers(start, maxcount) {
     var performer = document.URL.split('/')[4],
-        $rows = $('table.tbl a[href*="/artist/"]').not('[href*="' + performer + '"]').parents('tr');
+        $allRows = $('table.tbl a[href*="/artist/"]').parents('tr'),
+        $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr'),
+        $rows = $allRows.not($performerRows);
     $rows = $($rows.get().reverse().splice(start, maxcount)); // FIXME why is jquery reversing the list?
     $('thead > tr').append('<th>Performer AR</th>');
     $('.subh > th')[1].colSpan += 1;
