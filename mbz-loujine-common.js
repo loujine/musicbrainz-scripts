@@ -116,8 +116,8 @@ function formatPerformers(relations) {
 var order = [linkTypeVocals, linkTypeInstrument, linkTypeOrchestra, linkTypeConductor, linkTypePerformer];
 
 var comparefct = function (a, b) {
-    if (a.link === b.link) {return 0}
-    return order.indexOf(a.link) > order.indexOf(b.link) ? 1 : -1
+    if (a.link === b.link) {return 0};
+    return order.indexOf(a.link) > order.indexOf(b.link) ? 1 : -1;
 };
 
 // Replace composer -> performer as recording artist (CSG)
