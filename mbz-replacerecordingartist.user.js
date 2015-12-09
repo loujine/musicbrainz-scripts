@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.12.05
+// @version      2015.12.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -61,8 +61,10 @@ function showPerformers(start, maxcount) {
             $rows = $('table.tbl a[href*="/artist/' + composer + '"]').parents('tr');
     }
     $rows = $($rows.get().reverse().splice(start, maxcount)); // FIXME why is jquery reversing the list?
-    $('thead > tr').append('<th>Performer AR</th>');
-    $('.subh > th')[1].colSpan += 1;
+    if (!$('#ARperformerColumn').length) {
+        $('thead > tr').append('<th id="ARperformerColumn">Performer AR</th>');
+        $('.subh > th')[1].colSpan += 1;
+    }
 
     $rows.each(function (idx, tr) {
         setTimeout(function () {
