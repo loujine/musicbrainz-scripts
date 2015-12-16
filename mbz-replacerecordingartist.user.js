@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.12.10
+// @version      2015.12.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -97,7 +97,9 @@ function showPerformers(start, maxcount) {
 function formatEditInfo(json) {
     var data = [],
         performers = [],
+        mbid = document.URL.split('/')[4],
         editNote,
+        performerName,
         encodeName = function (name) {
             return encodeURIComponent(name).replace(/%20/g, '+');
         };
@@ -119,13 +121,22 @@ function formatEditInfo(json) {
         if (linkType === linkTypePerformer ||
             linkType === linkTypeInstrument || linkType === linkTypeVocals ||
             linkType === linkTypeOrchestra || linkType === linkTypeConductor) {
-            performers.push({'name': rel.target.name, 'id': rel.target.id, 'link': linkType});
+            performers.push({'name': rel.target.name,
+                             'id': rel.target.id,
+                             'link': linkType,
+                             'mbid': rel.target.gid
+            });
         }
     });
     editNote = $('#batch_replace_edit_note')[0].value;
     data.push('edit-recording.edit_note=' + editNote);
     performers.sort(comparefct).forEach(function(performer, idx) {
-        data.push('edit-recording.artist_credit.names.' + idx + '.name=' + encodeName(performer.name));
+        if (document.URL.split('/')[3] === 'artist' && performer.mbid === mbid) {
+            performerName = $('#performerAlias')[0].selectedOptions[0].text;
+        } else {
+            performerName = performer.name;
+        }
+        data.push('edit-recording.artist_credit.names.' + idx + '.name=' + encodeName(performerName));
         if (idx === performers.length - 1) {
             data.push('edit-recording.artist_credit.names.' + idx + '.join_phrase');
         } else {
@@ -217,6 +228,10 @@ $container
           })
     )
     .append(
+        $('<p>').append('Primary locale alias to use:')
+        .append(
+            $('<select>', {'id': 'performerAlias'})
+        )
     )
     .append(
         $('<p>').append('Edit note:')
@@ -233,6 +248,35 @@ $container
           'value': 'Replace selected artists'
           })
     );
+
+function parseAliases() {
+    if (document.URL.split('/')[3] === 'artist') {
+        var mbid = document.URL.split('/')[4],
+            url = '/ws/2/artist/' + encodeURIComponent(mbid) + '?fmt=json&inc=aliases',
+            callback = function (aliasObject) {
+                $.each(aliasObject, function(locale, name) {
+                    $('#performerAlias').append(
+                        $('<option>', {'value': locale}).append(name)
+                    );
+                });
+            };
+
+        requestGET(url, function (response) {
+            var resp = JSON.parse(response),
+                aliases = {'default': resp.name};
+            if (resp.aliases.length) {
+                resp.aliases.forEach(function (alias) {
+                    if (alias.locale && alias.primary) {
+                        aliases[alias.locale] = alias.name;
+                    }
+                });
+                callback(aliases);
+            }
+        });
+    }
+}
+
+parseAliases();
 
 $(document).ready(function () {
     $('#showperformers').click(function () {
