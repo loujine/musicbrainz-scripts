@@ -146,7 +146,7 @@ function replaceArtist() {
             var mbid = node.id.replace('replace-', ''),
                 url = '/recording/' + encodeURIComponent(mbid) + '/edit',
                 callback = function (info) {
-                    console.log('Sending POST ' + mbid + ' edit info');
+                    // console.log('Sending POST ' + mbid + ' edit info');
                     requestPOST(url, formatEditInfo(info), function (status) {
                         if (status === 200 || status === 0) {
                             node.disabled = true;
@@ -156,7 +156,7 @@ function replaceArtist() {
                         }
                     });
                 };
-            console.log('Fetching ' + mbid + ' edit info');
+            // console.log('Fetching ' + mbid + ' edit info');
 
             requestGET(url, function (resp) {
                 var info = new RegExp('sourceData: (.*),\n').exec(resp)[1];
@@ -169,37 +169,39 @@ function replaceArtist() {
 // imported from mbz-loujine-sidebar.js: container
 $container
     .append(
-        $('<h3>Show performers</h3>')
+        $('<h3>').append('Show performers')
     )
     .append(
-        $('<span>Start at:</span>')
+        $('<div>')
+        .append('Start at:')
+        .append(
+            $('<input></input>', {
+                'id': 'offset',
+                'type': 'text',
+                'value': '1'
+            })
+        )
     )
     .append(
-        $('<input></input>', {
-            'id': 'offset',
-            'type': 'text',
-            'value': '1'
-        })
+        $('<div>')
+        .append('Max count:')
+        .append(
+            $('<input></input>', {
+                'id': 'max',
+                'type': 'text',
+                'value': '10'
+            })
+        )
     )
     .append(
-        $('<span>Max count:</span>')
-    )
-    .append(
-        $('<input></input>', {
-            'id': 'max',
-            'type': 'text',
-            'value': '10'
-        })
-    )
-    .append(
-        $('<input></input>', {
+        $('<input>', {
           'id': 'showperformers',
           'type': 'button',
           'value': 'Show performer AR'
         })
     )
     .append(
-        $('<h3>Replace artists</h3>')
+        $('<h3>').append('Replace artists')
     )
     .append(
         $('<p>Warning: this is experimental! Bogus data could be sent in the edit. Please check carefully your edit history after use, and help by reporting bugs</p>')
@@ -215,11 +217,13 @@ $container
           })
     )
     .append(
-        $('<p>Edit note:</p>')
     )
     .append(
-        $('<textarea></textarea>', {'id': 'batch_replace_edit_note',
-                                    'text': sidebarEditNote(meta, editNoteMsg)})
+        $('<p>').append('Edit note:')
+        .append(
+            $('<textarea></textarea>', {'id': 'batch_replace_edit_note',
+                                        'text': sidebarEditNote(meta, editNoteMsg)})
+        )
     )
     .append(
         $('<input></input>', {
