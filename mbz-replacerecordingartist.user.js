@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.12.15
+// @version      2015.12.20
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -264,6 +264,7 @@ function parseAliases() {
         requestGET(url, function (response) {
             var resp = JSON.parse(response),
                 aliases = {'default': resp.name};
+            $('#performerAlias').append( $('<option>', {'value': 'default'}).append(resp.name));
             if (resp.aliases.length) {
                 resp.aliases.forEach(function (alias) {
                     if (alias.locale && alias.primary) {
