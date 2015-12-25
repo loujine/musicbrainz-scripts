@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.23
+// @version      2015.12.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -145,7 +145,8 @@ $rows.each(function (idx, row) {
     if (!row.children[idxLang].textContent.trim()) {
         $(row.children[idxLang]).append($('<form></form>').append($selectLang.clone()));
     }
-    if (!row.children[idxKey].textContent.trim()) {
+    // if (!row.children[idxKey].textContent.trim()) {
+    if (true) {
         $(row.children[idxKey]).append($('<form></form>').append($selectKey.clone()));
         if (title.toLowerCase().contains('major') ||
             title.toLowerCase().contains('minor')) {
