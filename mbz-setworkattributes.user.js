@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.16
+// @version      2016.5.23
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -35,14 +35,13 @@ $rows.each(function (idx, row) {
     var mbid = $(row).find('a[href*="/work/"]').attr('href').split('/')[4],
         title = $(row).find('a[href*="/work/"]')[0].text;
     if (!row.children[idxType].textContent.trim()) {
-        $(row.children[idxType]).append($('<form></form>').append($(works.type).clone()));
+        $(row.children[idxType]).append($('<form>').append($(works.type).clone()));
     }
     if (!row.children[idxLang].textContent.trim()) {
-        $(row.children[idxLang]).append($('<form></form>').append($(works.lang).clone()));
+        $(row.children[idxLang]).append($('<form>').append($(works.lang).clone()));
     }
-    // if (!row.children[idxKey].textContent.trim()) {
-    if (true) {
-        $(row.children[idxKey]).append($('<form></form>').append($(works.key).clone()));
+    if (!row.children[idxKey].textContent.trim()) {
+        $(row.children[idxKey]).append($('<form>').append($(works.key).clone()));
         if (title.toLowerCase().contains('major') ||
             title.toLowerCase().contains('minor')) {
             var cell = row.children[idxKey];
@@ -79,11 +78,10 @@ function updateJSON(json, node) {
     }
     if (optionKey) {
         var keyAttribute = {'typeID': 1, 'value': parseInt(optionKey)};
-        if (json.attributes !== undefined) {
-            json.attributes.push(keyAttribute);
-        } else {
-            json.attributes = [keyAttribute];
+        if (json.attributes === undefined) {
+            json.attributes = [];
         }
+        json.attributes.push(keyAttribute);
     }
     return json;
 }
