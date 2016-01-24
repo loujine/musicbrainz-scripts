@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.12.25
+// @version      2016.01.24
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -280,29 +280,28 @@ function editWork() {
 }
 
 
-// imported from mbz-loujine-sidebar.js: container
+// imported from mbz-loujine-sidebar.js: sidebar
 $('h2.rating').before(
-    $container
+    sidebar.container()
     .append(
         $('<h3>Edit works</h3>')
-    )
-    .append(
+    ).append(
         $('<p>Warning: this is experimental! Bogus data could be sent in the edit. Please check carefully your edit history after use, and help by reporting bugs</p>')
-    )
-    .append(
+    ).append(
         $('<p>Edit note:</p>')
-    )
-    .append(
+    ).append(
         $('<textarea></textarea>', {
-          'id': 'batch_replace_edit_note',
-          'text': sidebarEditNote(meta)})
-    )
-    .append(
+            'id': 'batch_replace_edit_note',
+            'text': sidebar.editNote(meta),
+            'cols': 20,
+            'rows': 7
+        })
+    ).append(
         $('<input></input>', {
-          'id': 'batch_edit',
-          'type': 'button',
-          'value': 'Edit selected works'
-          })
+            'id': 'batch_edit',
+            'type': 'button',
+            'value': 'Edit selected works'
+        })
     )
 );
 

@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.12.20
+// @version      2016.01.24
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -177,8 +177,8 @@ function replaceArtist() {
     });
 }
 
-// imported from mbz-loujine-sidebar.js: container
-$container
+// imported from mbz-loujine-sidebar.js: sidebar
+sidebar.container()
     .append(
         $('<h3>').append('Show performers')
     )
@@ -206,9 +206,9 @@ $container
     )
     .append(
         $('<input>', {
-          'id': 'showperformers',
-          'type': 'button',
-          'value': 'Show performer AR'
+            'id': 'showperformers',
+            'type': 'button',
+            'value': 'Show performer AR'
         })
     )
     .append(
@@ -222,10 +222,10 @@ $container
     )
     .append(
         $('<input></input>', {
-          'id': 'batch_select',
-          'type': 'button',
-          'value': 'Select all'
-          })
+            'id': 'batch_select',
+            'type': 'button',
+            'value': 'Select all'
+        })
     )
     .append(
         $('<p>').append('Primary locale alias to use:')
@@ -237,16 +237,16 @@ $container
         $('<p>').append('Edit note:')
         .append(
             $('<textarea></textarea>', {'id': 'batch_replace_edit_note',
-                                        'text': sidebarEditNote(meta, editNoteMsg)})
+                                        'text': sidebar.editNote(meta, editNoteMsg)})
         )
     )
     .append(
         $('<input></input>', {
-          'id': 'batch_replace',
-          'type': 'button',
-          'disabled': true,
-          'value': 'Replace selected artists'
-          })
+            'id': 'batch_replace',
+            'type': 'button',
+            'disabled': true,
+            'value': 'Replace selected artists'
+        })
     );
 
 function parseAliases() {
