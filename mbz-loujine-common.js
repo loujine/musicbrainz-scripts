@@ -12,25 +12,30 @@
 // ==/UserScript==
 
 // from musicbrainz-server/root/static/scripts/tests/typeInfo.js
-var linkTypeInstrument = 148,
-    linkTypeVocals = 149,
-    linkTypeOrchestra = 150,
-    linkTypeConductor = 151,
-    linkTypePerformer = 156,
-    linkTypeWork = 278,
-    linkTypePlace = 693,
-    linkTypeArea = 698,
-    attrIdStrings = 69,
-    attrIdCello = 84,
-    attrIdViolin = 86,
-    attrIdPiano = 180,
-    attrIdBowedStrings = 275,
-    attrIdLive = 578,
-    attrIdPartial = 579;
-
-// https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
-// we wait for `mbz_timeout` milliseconds between two queries
-var mbzTimeout = 1000;
+var server = {
+    'link': {
+        'instrument': 148,
+        'vocals': 149,
+        'orchestra': 150,
+        'conductor': 151,
+        'performer': 156,
+        'work': 278,
+        'place': 693,
+        'area': 698
+    },
+    'attr': {
+        'strings': 69,
+        'cello': 84,
+        'violin': 86,
+        'piano': 180,
+        'bowedStrings': 275,
+        'live': 578,
+        'partial': 579
+    },
+    // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
+    // we wait for `server.timeout` milliseconds between two queries
+    'timeout': 1000
+};
 
 var requests = function () {
     var self = {};
@@ -102,8 +107,9 @@ var helper = function () {
 
     self.comparefct = function(a, b) {
         // Sort function for performers in the recording artist list
-        var order = [linkTypeVocals, linkTypeInstrument, linkTypeOrchestra, 
-                     linkTypeConductor, linkTypePerformer];
+        var link = server.link,
+            order = [link.vocals, link.instrument, link.orchestra,
+                     link.conductor, link.performer];
         if (a.link === b.link) {return 0;}
         return order.indexOf(a.link) > order.indexOf(b.link) ? 1 : -1;
     };

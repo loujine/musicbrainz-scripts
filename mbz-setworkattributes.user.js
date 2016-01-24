@@ -275,7 +275,7 @@ function editWork() {
                 var info = new RegExp('sourceData: (.*),\n').exec(resp)[1];
                 callback(JSON.parse(info));
             });
-        }, 2 * idx * mbzTimeout);
+        }, 2 * idx * server.timeout);
     });
 }
 

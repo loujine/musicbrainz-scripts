@@ -26,7 +26,7 @@ if (meta && meta.toString && (meta = meta.toString())) {
                 'version': meta.match(/@version\s+(.+)/)[1]};
 }
 
-// imported from mbz-loujine-common.js: requests, mbzTimeout,
+// imported from mbz-loujine-common.js: requests, server
 
 var editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
 
@@ -89,7 +89,7 @@ function showPerformers(start, maxcount) {
                 }
                 $(tr).append($node);
             });
-        }, idx * mbzTimeout);
+        }, idx * server.timeout);
     });
 }
 
@@ -118,9 +118,9 @@ function formatEditInfo(json) {
     }
     json.relationships.forEach(function(rel, idx) {
         var linkType = rel.linkTypeID;
-        if (linkType === linkTypePerformer ||
-            linkType === linkTypeInstrument || linkType === linkTypeVocals ||
-            linkType === linkTypeOrchestra || linkType === linkTypeConductor) {
+        if (linkType === server.link.performer ||
+            linkType === server.link.instrument || linkType === server.link.vocals ||
+            linkType === server.link.orchestra || linkType === server.link.conductor) {
             performers.push({'name': rel.target.name,
                              'id': rel.target.id,
                              'link': linkType,
@@ -173,7 +173,7 @@ function replaceArtist() {
                 var info = new RegExp('sourceData: (.*),\n').exec(resp)[1];
                 callback(JSON.parse(info));
             });
-        }, 2 * idx * mbzTimeout);
+        }, 2 * idx * server.timeout);
     });
 }
 

@@ -19,7 +19,7 @@
 // @run-at       document-end
 // ==/UserScript==
 
-// imported from mbz-loujine-common.js: requests, mbzTimeout, helper
+// imported from mbz-loujine-common.js: requests, helper
 function showPerformanceDurations() {
     var mbid = document.URL.split('/')[4],
         url = '/ws/2/work/' + encodeURIComponent(mbid) + '?inc=recording-rels&fmt=json',

@@ -49,67 +49,62 @@ $('div.tabs').after(
     relEditor.container()
     .append(
         $('<h3></h3>', {'text': 'Recording-performer instrument attributes'})
-    )
-    .append(
+    ).append(
         $('<input></input>', {
             'id': 'batch-unset-orchestra',
             'type': 'button',
             'value': 'Unset "Orchestra"'
-            })
-    )
-    .append(
+        })
+    ).append(
         $('<input></input>', {
             'id': 'batch-unset-instrument',
             'type': 'button',
             'value': 'Unset instrument'
-            })
-    )
-    .append(
+        })
+    ).append(
         $('<input></input>', {
             'id': 'batch-set-string-quartet',
             'type': 'button',
             'value': 'Set "String Quartet"'
-            })
-    )
-    .append(
+        })
+    ).append(
         $('<input></input>', {
             'id': 'batch-set-piano-trio',
             'type': 'button',
             'value': 'Set "Piano Trio"'
-            })
-    )
-    .append(
+        })
+    ).append(
         $('<input></input>', {
             'id': 'batch-set-piano',
             'type': 'button',
             'value': 'Set "Piano"'
-            })
+        })
     )
 );
 
-// imported from mbz-loujine-common.js: linkTypeXXX, ttrIdXXX
+// imported from mbz-loujine-common.js: server
 $(document).ready(function () {
     $('#batch-unset-orchestra').click(function () {
-        setInstrument(linkTypeOrchestra, linkTypePerformer);
+        setInstrument(server.link.orchestra, server.link.performer);
         relEditor.editNote(meta);
     });
     $('#batch-unset-instrument').click(function () {
-        setInstrument(linkTypeInstrument, linkTypePerformer);
+        setInstrument(server.link.instrument, server.link.performer);
         relEditor.editNote(meta);
     });
     $('#batch-set-string-quartet').click(function () {
-        setInstrument(linkTypePerformer, linkTypeInstrument,
-                      [attrIdStrings], 'string quartet');
+        setInstrument(server.link.performer, server.link.instrument,
+                      [server.attr.strings], 'string quartet');
         relEditor.editNote(meta, 'Use "strings" instrument AR for a String Quartet artist');
     });
     $('#batch-set-piano-trio').click(function () {
-        setInstrument(linkTypePerformer, linkTypeInstrument,
-                      [attrIdPiano, attrIdViolin, attrIdCello]);
+        setInstrument(server.link.performer, server.link.instrument,
+                      [server.attr.piano, server.attr.violin, server.attr.cello]);
         relEditor.editNote(meta, 'Use instruments AR for a Piano Trio artist');
     });
     $('#batch-set-piano').click(function () {
-        setInstrument(linkTypePerformer, linkTypeInstrument,
-                      [attrIdPiano]);
+        setInstrument(server.link.performer, server.link.instrument,
+                      [server.attr.piano]);
         relEditor.editNote(meta);
     });
     return false;

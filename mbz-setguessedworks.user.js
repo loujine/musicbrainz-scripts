@@ -33,7 +33,7 @@ function setWork(recording, work) {
     }).accept();
 }
 
-// imported from mbz-loujine-common.js: requests, mbzTimeout
+// imported from mbz-loujine-common.js: requests, server
 function guessWork() {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
         idx = 0;
@@ -49,7 +49,7 @@ function guessWork() {
                 requests.GET(url, function (resp) {
                     setWork(recording, JSON.parse(resp)[0]);
                 });
-            }, idx * mbzTimeout);
+            }, idx * server.timeout);
         }
     });
 }

@@ -18,7 +18,7 @@
 // @run-at       document-end
 // ==/UserScript==
 
-// imported from mbz-loujine-common.js: requests, mbzTimeout
+// imported from mbz-loujine-common.js: requests, server
 
 function showMissingWorks() {
     var $recordings = $('table a[href*="/recording/"]');
@@ -44,7 +44,7 @@ function showMissingWorks() {
                 $(recording).parents('tr').append($node.css({'text-align': 'center',
                                                              'font-size': '100%'}));
             });
-        }, idx * mbzTimeout);
+        }, idx * server.timeout);
     });
 }
 

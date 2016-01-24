@@ -55,7 +55,7 @@ function referenceDate(relations) {
     return idx_ref;
 }
 
-// imported from mbz-loujine-common.js: linkTypeXXX
+// imported from mbz-loujine-common.js: server
 function propagateDates() {
     var recordings = MB.relationshipEditor.UI.checkedRecordings();
     recordings.forEach(function(recording) {
@@ -65,10 +65,10 @@ function propagateDates() {
             var from_period = relations[idx].period;
             relations.forEach(function(rel) {
                 var linkType = parseInt(rel.linkTypeID());
-                if (linkType === linkTypePerformer || linkType === linkTypeWork ||
-                    linkType === linkTypeInstrument || linkType === linkTypeVocals ||
-                    linkType === linkTypeOrchestra || linkType === linkTypeConductor ||
-                    linkType === linkTypePlace || linkType === linkTypeArea) {
+                if (linkType === server.link.performer || linkType === server.link.work ||
+                    linkType === server.link.instrument || linkType === server.link.vocals ||
+                    linkType === server.link.orchestra || linkType === server.link.conductor ||
+                    linkType === server.link.place || linkType === server.link.area) {
                     copyDate(from_period, rel);
                 }
             });

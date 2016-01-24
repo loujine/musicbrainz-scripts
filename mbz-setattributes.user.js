@@ -48,53 +48,49 @@ $('div.tabs').after(
     relEditor.container()
     .append(
         $('<h3></h3>', {'text': 'Recording-Work relation attributes'})
-    )
-    .append(
+    ).append(
         $('<input></input>', {
             'id': 'setlive',
             'type': 'button',
             'value': 'Set live'
-            })
-    )
-    .append(
+        })
+    ).append(
         $('<input></input>', {
             'id': 'setpartial',
             'type': 'button',
             'value': 'Set partial'
-            })
-    )
-    .append(
+        })
+    ).append(
         $('<input></input>', {
             'id': 'togglelive',
             'type': 'button',
             'value': 'Toggle live'
-            })
-    )
-    .append(
+        })
+    ).append(
         $('<input></input>', {
             'id': 'togglepartial',
             'type': 'button',
             'value': 'Toggle partial'
-            })
+        })
     )
 );
 
-// imported from mbz-loujine-common.js: attrIdXXX
+// imported from mbz-loujine-common.js: server
 $(document).ready(function() {
     $('#setlive').click(function() {
-        setAttributes(attrIdLive, false);
+        setAttributes(server.attr.live, false);
         relEditor.editNote(meta);
     });
     $('#setpartial').click(function() {
-        setAttributes(attrIdPartial, false);
+        setAttributes(server.attr.partial, false);
         relEditor.editNote(meta);
     });
     $('#togglelive').click(function() {
-        setAttributes(attrIdLive, true);
+        setAttributes(server.attr.live, true);
         relEditor.editNote(meta);
     });
     $('#togglepartial').click(function() {
-        setAttributes(attrIdPartial, true);
+        setAttributes(server.attr.partial, true);
         relEditor.editNote(meta);
     });
     return false;
