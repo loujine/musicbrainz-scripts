@@ -1,9 +1,9 @@
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: common files
+// @name         MusicBrainz: common lib
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.29
+// @version      2016.01.24
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -68,36 +68,39 @@ function requestPOST(url, param, callback) {
     });
 }
 
-// musicbrainz-server/root/static/scripts/common/utility/formatTrackLength.js
-function formatTrackLength(milliseconds) {
-    if (!milliseconds) {
-        return '';
-    }
-    if (milliseconds < 1000) {
-        return milliseconds + ' ms';
-    }
-    var oneMinute = 60;
-    var oneHour = 60 * oneMinute;
-    var seconds = Math.round(milliseconds / 1000.0);
-    var hours = Math.floor(seconds / oneHour);
-    seconds = seconds % oneHour;
-    var minutes = Math.floor(seconds / oneMinute);
-    seconds = seconds % oneMinute;
-    var result = ('00' + seconds).slice(-2);
-    if (hours > 0) {
-        result = hours + ':' + ('00' + minutes).slice(-2) + ':' + result;
-    } else {
-        result = minutes + ':' + result;
-    }
-    return result;
-}
+var helper = function () {
+    var self = {};
 
-// Sort function for performers in the recording artist list
-var order = [linkTypeVocals, linkTypeInstrument, linkTypeOrchestra, linkTypeConductor, linkTypePerformer];
+    // musicbrainz-server/root/static/scripts/common/utility/formatTrackLength.js
+    self.formatTrackLength = function(milliseconds) {
+        if (!milliseconds) {
+            return '';
+        }
+        if (milliseconds < 1000) {
+            return milliseconds + ' ms';
+        }
+        var oneMinute = 60;
+        var oneHour = 60 * oneMinute;
+        var seconds = Math.round(milliseconds / 1000.0);
+        var hours = Math.floor(seconds / oneHour);
+        seconds = seconds % oneHour;
+        var minutes = Math.floor(seconds / oneMinute);
+        seconds = seconds % oneMinute;
+        var result = ('00' + seconds).slice(-2);
+        if (hours > 0) {
+            result = hours + ':' + ('00' + minutes).slice(-2) + ':' + result;
+        } else {
+            result = minutes + ':' + result;
+        }
+        return result;
+    };
 
-var comparefct = function (a, b) {
-    if (a.link === b.link) {return 0};
-    return order.indexOf(a.link) > order.indexOf(b.link) ? 1 : -1;
-};
-
-
+    self.comparefct = function(a, b) {
+        // Sort function for performers in the recording artist list
+        var order = [linkTypeVocals, linkTypeInstrument, linkTypeOrchestra, 
+                     linkTypeConductor, linkTypePerformer];
+        if (a.link === b.link) {return 0;}
+        return order.indexOf(a.link) > order.indexOf(b.link) ? 1 : -1;
+    };
+    return self;
+}();

@@ -130,7 +130,7 @@ function formatEditInfo(json) {
     });
     editNote = $('#batch_replace_edit_note')[0].value;
     data.push('edit-recording.edit_note=' + editNote);
-    performers.sort(comparefct).forEach(function(performer, idx) {
+    performers.sort(help.comparefct).forEach(function(performer, idx) {
         if (document.URL.split('/')[3] === 'artist' && performer.mbid === mbid) {
             performerName = $('#performerAlias')[0].selectedOptions[0].text;
         } else {

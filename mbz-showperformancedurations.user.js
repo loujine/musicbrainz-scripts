@@ -19,7 +19,7 @@
 // @run-at       document-end
 // ==/UserScript==
 
-// imported from mbz-loujine-common.js: requestGET, mbzTimeout, formatTrackLength
+// imported from mbz-loujine-common.js: requestGET, mbzTimeout, helper
 function showPerformanceDurations() {
     var mbid = document.URL.split('/')[4],
         url = '/ws/2/work/' + encodeURIComponent(mbid) + '?inc=recording-rels&fmt=json',
@@ -34,7 +34,7 @@ function showPerformanceDurations() {
         });
         $recordings.each(function (idx, recording) {
             var mbid = recording.href.split('/')[4],
-                duration = formatTrackLength(durations[mbid]);
+                duration = helper.formatTrackLength(durations[mbid]);
             $(recording).parents('tr').append('<td>' + duration + '</td>');
         });
     });
