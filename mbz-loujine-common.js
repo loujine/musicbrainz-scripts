@@ -32,41 +32,46 @@ var linkTypeInstrument = 148,
 // we wait for `mbz_timeout` milliseconds between two queries
 var mbzTimeout = 1000;
 
-function request(verb, url, param, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-                callback(xhr);
-        }
-    };
-    xhr.open(verb, url, true);
-    if (verb === 'POST') {
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.setRequestHeader('Content-length', param.length);
-        xhr.setRequestHeader('Connection', 'close');
-    }
-    xhr.timeout = 10000;
-    xhr.ontimeout = function () {
-        console.error('The request for ' + url + ' timed out.');
+var requests = function () {
+    var self = {};
+
+    self._request = function (verb, url, param, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                    callback(xhr);
+            }
         };
-    xhr.send(param);
-}
-
-function requestGET(url, callback) {
-    request('GET', url, null, function (xhr) {
-        if (xhr.status === 200 && xhr.responseText !== null) {
-            callback(xhr.responseText);
-        } else {
-            console.log('Error ', xhr.status, ': ', url);
+        xhr.open(verb, url, true);
+        if (verb === 'POST') {
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('Content-length', param.length);
+            xhr.setRequestHeader('Connection', 'close');
         }
-    });
-}
+        xhr.timeout = 10000;
+        xhr.ontimeout = function () {
+            console.error('The request for ' + url + ' timed out.');
+            };
+        xhr.send(param);
+    };
 
-function requestPOST(url, param, callback) {
-    request('POST', url, param, function (xhr) {
-        callback(xhr.status);
-    });
-}
+    self.GET = function (url, callback) {
+        self._request('GET', url, null, function (xhr) {
+            if (xhr.status === 200 && xhr.responseText !== null) {
+                callback(xhr.responseText);
+            } else {
+                console.log('Error ', xhr.status, ': ', url);
+            }
+        });
+    };
+
+    self.POST = function (url, param, callback) {
+        self._request('POST', url, param, function (xhr) {
+            callback(xhr.status);
+        });
+    };
+    return self;
+}();
 
 var helper = function () {
     var self = {};

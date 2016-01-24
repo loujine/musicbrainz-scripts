@@ -26,7 +26,7 @@ if (meta && meta.toString && (meta = meta.toString())) {
                 'version': meta.match(/@version\s+(.+)/)[1]};
 }
 
-// imported from mbz-loujine-common.js: requestGET, mbzTimeout,
+// imported from mbz-loujine-common.js: requests, mbzTimeout,
 
 var editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
 
@@ -71,7 +71,7 @@ function showPerformers(start, maxcount) {
             var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[4],
                 artist = $(tr).find('a[href*="/artist/"]').attr('href').split('/')[4],
                 url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json&inc=artist-rels';
-            requestGET(url, function (response) {
+            requests.GET(url, function (response) {
                 var resp = JSON.parse(response),
                     $node,
                     $button;
@@ -158,7 +158,7 @@ function replaceArtist() {
                 url = '/recording/' + encodeURIComponent(mbid) + '/edit',
                 callback = function (info) {
                     // console.log('Sending POST ' + mbid + ' edit info');
-                    requestPOST(url, formatEditInfo(info), function (status) {
+                    requests.POST(url, formatEditInfo(info), function (status) {
                         if (status === 200 || status === 0) {
                             node.disabled = true;
                             $(node).after(status).parent().css('color', 'green');
@@ -169,7 +169,7 @@ function replaceArtist() {
                 };
             // console.log('Fetching ' + mbid + ' edit info');
 
-            requestGET(url, function (resp) {
+            requests.GET(url, function (resp) {
                 var info = new RegExp('sourceData: (.*),\n').exec(resp)[1];
                 callback(JSON.parse(info));
             });
@@ -261,7 +261,7 @@ function parseAliases() {
                 });
             };
 
-        requestGET(url, function (response) {
+        requests.GET(url, function (response) {
             var resp = JSON.parse(response),
                 aliases = {'default': resp.name};
             $('#performerAlias').append( $('<option>', {'value': 'default'}).append(resp.name));

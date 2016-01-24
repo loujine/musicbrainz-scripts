@@ -261,7 +261,7 @@ function editWork() {
                 url = '/work/' + encodeURIComponent(mbid) + '/edit',
                 callback = function (info) {
                     var info2 = updateJSON(info, node);
-                    requestPOST(url, formatEditInfo(info2), function (status) {
+                    requests.POST(url, formatEditInfo(info2), function (status) {
                         if (status === 200) {
                             node.disabled = true;
                             $(node).parent().css('background-color', 'green');
@@ -271,7 +271,7 @@ function editWork() {
                     });
                 };
 
-            requestGET(url, function (resp) {
+            requests.GET(url, function (resp) {
                 var info = new RegExp('sourceData: (.*),\n').exec(resp)[1];
                 callback(JSON.parse(info));
             });

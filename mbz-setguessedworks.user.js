@@ -33,7 +33,7 @@ function setWork(recording, work) {
     }).accept();
 }
 
-// imported from mbz-loujine-common.js: requestGET, mbzTimeout
+// imported from mbz-loujine-common.js: requests, mbzTimeout
 function guessWork() {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
         idx = 0;
@@ -46,7 +46,7 @@ function guessWork() {
         if (!recording.performances().length) {
             idx += 1;
             setTimeout(function () {
-                requestGET(url, function (resp) {
+                requests.GET(url, function (resp) {
                     setWork(recording, JSON.parse(resp)[0]);
                 });
             }, idx * mbzTimeout);

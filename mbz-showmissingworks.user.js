@@ -18,7 +18,7 @@
 // @run-at       document-end
 // ==/UserScript==
 
-// imported from mbz-loujine-common.js: requestGET, mbzTimeout
+// imported from mbz-loujine-common.js: requests, mbzTimeout
 
 function showMissingWorks() {
     var $recordings = $('table a[href*="/recording/"]');
@@ -29,7 +29,7 @@ function showMissingWorks() {
         setTimeout(function () {
             var mbid = recording.href.split('/')[4],
                 url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json&inc=work-rels';
-            requestGET(url, function (response) {
+            requests.GET(url, function (response) {
                 var resp = JSON.parse(response),
                     $node;
                 if (resp.relations.length) {
