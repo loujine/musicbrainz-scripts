@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-propagate recording dates
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.08
+// @version      2016.01.24
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -86,9 +86,9 @@ function removeDates() {
     });
 }
 
-// imported from mbz-loujine-releditor.js: container
+// imported from mbz-loujine-releditor.js: relEditor
 $('div.tabs').after(
-    $container
+    relEditor.container()
     .append(
         $('<h3></h3>', {'text': 'Dates'})
     )
@@ -111,13 +111,12 @@ $('div.tabs').after(
 $(document).ready(function() {
     $('#removedates').click(function() {
         removeDates();
-        releditorEditNote(meta);
+        relEditor.editNote(meta);
     });
     $('#copydates').click(function() {
         propagateDates();
-        releditorEditNote(meta, 'Propagate recording dates from other advanced relationships');
+        relEditor.editNote(meta, 'Propagate recording dates from other advanced relationships');
     });
     return false;
 });
-
 

@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.16
+// @version      2016.01.24
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -54,26 +54,22 @@ function guessWork() {
     });
 }
 
-// imported from mbz-loujine-releditor.js: container
+// imported from mbz-loujine-releditor.js: relEditor
 $('div.tabs').after(
-    $container
+    relEditor.container()
     .append(
         $('<h3>Search for works</h3>')
-    )
-    .append(
+    ).append(
         $('<p>You can add an optional prefix (e.g. the misssing parent work name) to help guessing the right work</p>')
-    )
-    .append(
+    ).append(
         $('<span>Prefix:</span>')
-    )
-    .append(
+    ).append(
         $('<input></input>', {
             'id': 'prefix',
             'type': 'text',
             'value': ''
         })
-    )
-    .append(
+    ).append(
         $('<input></input>', {
             'id': 'searchwork',
             'type': 'button',
@@ -85,7 +81,7 @@ $('div.tabs').after(
 $(document).ready(function() {
     $('#searchwork').click(function() {
         guessWork();
-        releditorEditNote(meta, 'Set guessed works');
+        relEditor.editNote(meta, 'Set guessed works');
     });
     return false;
 });

@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set recording-work attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2015.11.08
+// @version      2016.01.24
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -30,8 +30,9 @@ function setAttributes(attrId, toggle) {
         recording.performances().forEach(function(relation) {
             var attrs = relation.attributes(),
                 attr = attrs.filter(function(el) {
-                // attrId already in relation attributes
-                return el.type.id === attrId});
+                    // attrId already in relation attributes
+                    return el.type.id === attrId;
+                });
             if (!attr.length) {
                 attrs.push({type: MB.attrInfoByID[attrId]});
             } else if (toggle) {
@@ -42,9 +43,9 @@ function setAttributes(attrId, toggle) {
     });
 }
 
-// imported from mbz-loujine-releditor.js: container
+// imported from mbz-loujine-releditor.js: relEditor
 $('div.tabs').after(
-    $container
+    relEditor.container()
     .append(
         $('<h3></h3>', {'text': 'Recording-Work relation attributes'})
     )
@@ -82,19 +83,19 @@ $('div.tabs').after(
 $(document).ready(function() {
     $('#setlive').click(function() {
         setAttributes(attrIdLive, false);
-        releditorEditNote(meta);
+        relEditor.editNote(meta);
     });
     $('#setpartial').click(function() {
         setAttributes(attrIdPartial, false);
-        releditorEditNote(meta);
+        relEditor.editNote(meta);
     });
     $('#togglelive').click(function() {
         setAttributes(attrIdLive, true);
-        releditorEditNote(meta);
+        relEditor.editNote(meta);
     });
     $('#togglepartial').click(function() {
         setAttributes(attrIdPartial, true);
-        releditorEditNote(meta);
+        relEditor.editNote(meta);
     });
     return false;
 });
