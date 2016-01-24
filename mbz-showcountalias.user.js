@@ -14,8 +14,10 @@
 // @require      https://greasyfork.org/scripts/13747-musicbrainz-common-files/code/MusicBrainz:%20common%20files.js?version=85994
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/add*
+// @exclude      http*://*musicbrainz.org/work/create*
 // @include      http*://*musicbrainz.org/artist/*
 // @exclude      http*://*musicbrainz.org/artist/add*
+// @exclude      http*://*musicbrainz.org/artist/create*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
