@@ -29,11 +29,19 @@ var $ = jQuery,
     relEditor = relEditor;
 
 function setInstrument(fromType, toType, attrIds, credit) {
+    function _relationships(recording, type) {
+        var relations = [];
+        recording.relationships().forEach(function(relation) {
+            if (relation.linkTypeID() === type) {relations.push(relation);}
+        })
+        return relations;
+    }
+
     attrIds = attrIds || [];
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
         vm = MB.releaseRelationshipEditor;
     recordings.forEach(function(recording) {
-        var relationships = recording.getRelationshipGroup(fromType, vm);
+        var relationships = _relationships(recording, fromType);
         relationships.forEach(function(relation) {
             var attrs = relation.attributes();
             relation.linkTypeID(toType);
