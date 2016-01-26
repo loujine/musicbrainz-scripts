@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.24
+// @version      2016.01.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,6 @@ var meta = function() {
 // @description  musicbrainz.org: Set attributes (lang, key) from the composer Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13707-musicbrainz-common-files-for-the-sidebar/code/MusicBrainz:%20common%20files%20for%20the%20sidebar.js?version=85769
 // @require      https://greasyfork.org/scripts/13747-musicbrainz-common-files/code/MusicBrainz:%20common%20files.js?version=88427
 // @include      http*://*musicbrainz.org/artist/*/works
 // @include      http*://*musicbrainz.org/artist/*/works?page=*
@@ -24,6 +23,8 @@ if (meta && meta.toString && (meta = meta.toString())) {
     var meta = {'name': meta.match(/@name\s+(.+)/)[1],
                 'version': meta.match(/@version\s+(.+)/)[1]};
 }
+
+// imported from mbz-loujine-common.js: requests, server, sidebar
 
 var $rows = $('table.tbl tr:gt(0)');
 var idxWork = $('table.tbl th:contains("Work")').index();
@@ -151,7 +152,7 @@ function editWork($, server, requests) {
 }
 
 
-// imported from mbz-loujine-sidebar.js: sidebar
+// display sidebar
 $('h2.rating').before(
     sidebar.container()
     .append(

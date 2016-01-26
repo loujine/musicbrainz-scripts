@@ -1,9 +1,9 @@
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: common lib
+// @name         loujine's mbz common lib
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.24
+// @version      2016.01.25
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -219,3 +219,75 @@ var helper = function () {
     };
     return self;
 }();
+
+
+var sidebar = function ($) {
+    var self = {};
+
+    // edit notes
+    self.editNote = function (meta, msg) {
+        msg = msg || '';
+        var signature = '\n —\n' + `GM script: "${meta.name}" (${meta.version})\n\n`;
+        return (msg + signature);
+    };
+
+    self.container = function () {
+        var $container;
+        if ($('div#loujine-sidebar').length) {
+            $container = $('div#loujine-sidebar');
+        } else {
+            $container = $('<div></div>', {
+                'id': 'loujine-sidebar',
+                'css': {
+                    'background-color': 'white',
+                    'padding': '8px',
+                    'margin': '0px -6px 6px',
+                    'border': '2px dotted #736DAB'
+                }
+            }).append(
+                $('<h2></h2>', {'text': 'loujine GM tools'})
+            );
+        }
+        $('h2.rating').before($container);
+        return $container;
+    };
+
+    return self;
+}($);
+
+
+var relEditor = function (MB, $) {
+    var self = {};
+
+    // edit note
+    self.editNote = function (meta, msg) {
+        msg = msg || '';
+        var vm = MB.releaseRelationshipEditor,
+            existingMsg = vm.editNote(),
+            signature = '\n —\n' +
+                        `GM script: "${meta.name}" (${meta.version})\n\n`;
+        vm.editNote(existingMsg + msg + signature);
+    };
+
+    self.container = function () {
+        var $container;
+        if ($('div#loujine-menu').length) {
+            $container = $('div#loujine-menu');
+        } else {
+            $container = $('<div></div>', {
+                'id': 'loujine-menu',
+                'css': {
+                    'background-color': 'white',
+                    'padding': '8px',
+                    'margin': '0px -6px 6px',
+                    'border': '5px dotted #736DAB'
+                }
+            }).append(
+                $('<h2></h2>', {'text': 'loujine GM tools'})
+            );
+        }
+        return $container;
+    };
+
+    return self;
+}(MB, $);

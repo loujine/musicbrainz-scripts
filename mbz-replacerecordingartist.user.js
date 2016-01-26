@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.24
+// @version      2016.01.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,6 @@ var meta = function() {
 // @description  musicbrainz.org: Replace associated recording artist from an Artist or Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13707-musicbrainz-common-files-for-the-sidebar/code/MusicBrainz:%20common%20files%20for%20the%20sidebar.js?version=93039
 // @require      https://greasyfork.org/scripts/13747-musicbrainz-common-files/code/MusicBrainz:%20common%20files.js?version=93034
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/work/*
@@ -26,7 +25,7 @@ if (meta && meta.toString && (meta = meta.toString())) {
                 'version': meta.match(/@version\s+(.+)/)[1]};
 }
 
-// imported from mbz-loujine-common.js: requests, server
+// imported from mbz-loujine-common.js: requests, server, sidebar
 
 var editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
 
@@ -177,7 +176,7 @@ function replaceArtist() {
     });
 }
 
-// imported from mbz-loujine-sidebar.js: sidebar
+// display sidebar
 sidebar.container()
     .append(
         $('<h3>').append('Show performers')

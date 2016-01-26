@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.24
+// @version      2016.01.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,6 @@ var meta = function() {
 // @description  musicbrainz.org: Set best-guess related works
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13748-musicbrainz-common-files-for-the-relationships-editor/code/MusicBrainz:%20common%20files%20for%20the%20relationships%20editor.js?version=85768
 // @require      https://greasyfork.org/scripts/13747-musicbrainz-common-files/code/MusicBrainz:%20common%20files.js?version=85994
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
@@ -24,6 +23,8 @@ if (meta && meta.toString && (meta = meta.toString())) {
                 'version': meta.match(/@version\s+(.+)/)[1]};
 }
 
+// imported from mbz-loujine-common.js: requests, server, relEditor
+
 function setWork(recording, work) {
     var vm = MB.releaseRelationshipEditor;
     MB.relationshipEditor.UI.AddDialog({
@@ -33,7 +34,6 @@ function setWork(recording, work) {
     }).accept();
 }
 
-// imported from mbz-loujine-common.js: requests, server
 function guessWork() {
     var recordings = MB.relationshipEditor.UI.checkedRecordings(),
         idx = 0;
@@ -54,7 +54,6 @@ function guessWork() {
     });
 }
 
-// imported from mbz-loujine-releditor.js: relEditor
 $('div.tabs').after(
     relEditor.container()
     .append(
