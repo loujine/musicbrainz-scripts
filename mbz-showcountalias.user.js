@@ -25,8 +25,10 @@
 // adapted from jesus2099  mb. INLINE STUFF
 
 // imported from mbz-loujine-common.js: requests
+var $ = jQuery,
+    requests = requests;
 
-function parseCount (resp, tab) {
+function parseCount(resp, tab) {
     var cnt = resp.aliases.length,
         locales = [];
     if (cnt > 0) {
@@ -43,7 +45,7 @@ function parseCount (resp, tab) {
     }
 }
 
-function showCountAliases() {
+(function showCountAliases() {
     var tab = $("a[href$='/aliases']")[0],
         entityType = document.URL.split('/')[3],
         mbid = document.URL.split('/')[4],
@@ -51,6 +53,5 @@ function showCountAliases() {
     requests.GET(url, function (resp) {
         parseCount(JSON.parse(resp), tab);
     });
-}
+})();
 
-showCountAliases();

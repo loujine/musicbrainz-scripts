@@ -18,6 +18,11 @@
 // ==/UserScript==
 
 // imported from mbz-loujine-common.js: requests, server, sidebar
+var $ = jQuery,
+    requests = requests,
+    server = server,
+    sidebar = sidebar;
+
 
 function showMissingWorks() {
     var $recordings = $('table a[href*="/recording/"]');
@@ -47,20 +52,21 @@ function showMissingWorks() {
     });
 }
 
-// display sidebar
-sidebar.container().append(
-    $('<h3>Linked works</h3>')
-).append(
-    $('<input></input>', {
-        'id': 'showmissingworks',
-        'type': 'button',
-        'value': 'Show missing works'
-    })
-).append(
-    $('<p>Display:</p>')
-).append(
-    $('<ul><li>✓: linked work with date</li><li>⚠: linked work without date</li><li>✗: no work linked</li></ul>')
-);
+(function displaySidebar(sidebar) {
+    sidebar.container().append(
+        $('<h3>Linked works</h3>')
+    ).append(
+        $('<input></input>', {
+            'id': 'showmissingworks',
+            'type': 'button',
+            'value': 'Show missing works'
+        })
+    ).append(
+        $('<p>Display:</p>')
+    ).append(
+        $('<ul><li>✓: linked work with date</li><li>⚠: linked work without date</li><li>✗: no work linked</li></ul>')
+    );
+})(sidebar);
 
 $(document).ready(function () {
     $('#showmissingworks').click(function () {showMissingWorks();});

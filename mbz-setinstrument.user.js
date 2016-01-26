@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set recording-artist instrument
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.25
+// @version      2016.01.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,6 +24,9 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-releditor.js: server, relEditor
+var $ = jQuery,
+    server = server,
+    relEditor = relEditor;
 
 function setInstrument(fromType, toType, attrIds, credit) {
     attrIds = attrIds || [];
@@ -45,42 +48,43 @@ function setInstrument(fromType, toType, attrIds, credit) {
     });
 }
 
-$('div.tabs').after(
-    relEditor.container()
-    .append(
-        $('<h3></h3>', {'text': 'Recording-performer instrument attributes'})
-    ).append(
-        $('<input></input>', {
-            'id': 'batch-unset-orchestra',
-            'type': 'button',
-            'value': 'Unset "Orchestra"'
-        })
-    ).append(
-        $('<input></input>', {
-            'id': 'batch-unset-instrument',
-            'type': 'button',
-            'value': 'Unset instrument'
-        })
-    ).append(
-        $('<input></input>', {
-            'id': 'batch-set-string-quartet',
-            'type': 'button',
-            'value': 'Set "String Quartet"'
-        })
-    ).append(
-        $('<input></input>', {
-            'id': 'batch-set-piano-trio',
-            'type': 'button',
-            'value': 'Set "Piano Trio"'
-        })
-    ).append(
-        $('<input></input>', {
-            'id': 'batch-set-piano',
-            'type': 'button',
-            'value': 'Set "Piano"'
-        })
-    )
-);
+(function displayToolbar(relEditor) {
+    $('div.tabs').after(
+        relEditor.container().append(
+            $('<h3></h3>', {'text': 'Recording-performer instrument attributes'})
+        ).append(
+            $('<input></input>', {
+                'id': 'batch-unset-orchestra',
+                'type': 'button',
+                'value': 'Unset "Orchestra"'
+            })
+        ).append(
+            $('<input></input>', {
+                'id': 'batch-unset-instrument',
+                'type': 'button',
+                'value': 'Unset instrument'
+            })
+        ).append(
+            $('<input></input>', {
+                'id': 'batch-set-string-quartet',
+                'type': 'button',
+                'value': 'Set "String Quartet"'
+            })
+        ).append(
+            $('<input></input>', {
+                'id': 'batch-set-piano-trio',
+                'type': 'button',
+                'value': 'Set "Piano Trio"'
+            })
+        ).append(
+            $('<input></input>', {
+                'id': 'batch-set-piano',
+                'type': 'button',
+                'value': 'Set "Piano"'
+            })
+        )
+    );
+})(relEditor);
 
 // imported from mbz-loujine-common.js: server
 $(document).ready(function () {

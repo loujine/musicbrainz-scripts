@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.25
+// @version      2016.01.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -26,8 +26,12 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: requests, server, sidebar
-
-var editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
+var $ = jQuery,
+    requests = requests,
+    server = server,
+    helper = helper,
+    sidebar = sidebar,
+    editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
 
 function formatPerformers(relations) {
     var performers = [];
@@ -50,14 +54,15 @@ function formatPerformers(relations) {
 }
 
 function showPerformers(start, maxcount) {
+    var $rows;
     if (document.URL.split('/')[3] === 'artist') {
         var performer = document.URL.split('/')[4],
             $allRows = $('table.tbl a[href*="/artist/"]').parents('tr'),
-            $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr'),
-            $rows = $allRows.not($performerRows);
+            $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr');
+        $rows = $allRows.not($performerRows);
     } else if (document.URL.split('/')[3] === 'work') {
-        var composer = $('th:contains("composer:")').parent().find('a').attr('href').split('/')[4],
-            $rows = $('table.tbl a[href*="/artist/' + composer + '"]').parents('tr');
+        var composer = $('th:contains("composer:")').parent().find('a').attr('href').split('/')[4];
+        $rows = $('table.tbl a[href*="/artist/' + composer + '"]').parents('tr');
     }
     $rows = $($rows.get().reverse().splice(start, maxcount)); // FIXME why is jquery reversing the list?
     if (!$('#ARperformerColumn').length) {
@@ -68,7 +73,6 @@ function showPerformers(start, maxcount) {
     $rows.each(function (idx, tr) {
         setTimeout(function () {
             var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[4],
-                artist = $(tr).find('a[href*="/artist/"]').attr('href').split('/')[4],
                 url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json&inc=artist-rels';
             requests.GET(url, function (response) {
                 var resp = JSON.parse(response),
@@ -115,7 +119,7 @@ function formatEditInfo(json) {
             data.push('edit-recording.isrcs.' + idx + '=' + json.isrc);
         });
     }
-    json.relationships.forEach(function(rel, idx) {
+    json.relationships.forEach(function(rel) {
         var linkType = rel.linkTypeID;
         if (linkType === server.link.performer ||
             linkType === server.link.instrument || linkType === server.link.vocals ||
@@ -129,7 +133,7 @@ function formatEditInfo(json) {
     });
     editNote = $('#batch_replace_edit_note')[0].value;
     data.push('edit-recording.edit_note=' + editNote);
-    performers.sort(help.comparefct).forEach(function(performer, idx) {
+    performers.sort(helper.comparefct).forEach(function(performer, idx) {
         if (document.URL.split('/')[3] === 'artist' && performer.mbid === mbid) {
             performerName = $('#performerAlias')[0].selectedOptions[0].text;
         } else {
@@ -176,12 +180,11 @@ function replaceArtist() {
     });
 }
 
-// display sidebar
-sidebar.container()
+(function displaySidebar(sidebar) {
+    sidebar.container()
     .append(
         $('<h3>').append('Show performers')
-    )
-    .append(
+    ).append(
         $('<div>')
         .append('Start at:')
         .append(
@@ -191,8 +194,7 @@ sidebar.container()
                 'value': '1'
             })
         )
-    )
-    .append(
+    ).append(
         $('<div>')
         .append('Max count:')
         .append(
@@ -202,44 +204,34 @@ sidebar.container()
                 'value': '10'
             })
         )
-    )
-    .append(
+    ).append(
         $('<input>', {
             'id': 'showperformers',
             'type': 'button',
             'value': 'Show performer AR'
         })
-    )
-    .append(
+    ).append(
         $('<h3>').append('Replace artists')
-    )
-    .append(
+    ).append(
         $('<p>Warning: this is experimental! Bogus data could be sent in the edit. Please check carefully your edit history after use, and help by reporting bugs</p>')
-    )
-    .append(
+    ).append(
         $('<p>First click "Show performer AR" then check boxes to select artists</p>')
-    )
-    .append(
+    ).append(
         $('<input></input>', {
             'id': 'batch_select',
             'type': 'button',
             'value': 'Select all'
         })
-    )
-    .append(
+    ).append(
         $('<p>').append('Primary locale alias to use:')
-        .append(
-            $('<select>', {'id': 'performerAlias'})
-        )
-    )
-    .append(
+        .append($('<select>', {'id': 'performerAlias'}))
+    ).append(
         $('<p>').append('Edit note:')
         .append(
             $('<textarea></textarea>', {'id': 'batch_replace_edit_note',
                                         'text': sidebar.editNote(meta, editNoteMsg)})
         )
-    )
-    .append(
+    ).append(
         $('<input></input>', {
             'id': 'batch_replace',
             'type': 'button',
@@ -247,6 +239,7 @@ sidebar.container()
             'value': 'Replace selected artists'
         })
     );
+})(sidebar);
 
 function parseAliases() {
     if (document.URL.split('/')[3] === 'artist') {

@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.25
+// @version      2016.01.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,13 +24,16 @@ if (meta && meta.toString && (meta = meta.toString())) {
                 'version': meta.match(/@version\s+(.+)/)[1]};
 }
 
-// imported from mbz-loujine-common.js: requests, server, sidebar
-
-var $rows = $('table.tbl tr:gt(0)');
-var idxWork = $('table.tbl th:contains("Work")').index();
-var idxType = $('table.tbl th:contains("Type")').index();
-var idxLang = $('table.tbl th:contains("Language")').index();
-var idxKey = $('table.tbl th:contains("Attributes")').index();
+// imported from mbz-loujine-common.js: requests, server, works, sidebar
+var $ = jQuery,
+    requests = requests,
+    server = server,
+    works = works,
+    sidebar = sidebar,
+    $rows = $('table.tbl tr:gt(0)'),
+    idxType = $('table.tbl th:contains("Type")').index(),
+    idxLang = $('table.tbl th:contains("Language")').index(),
+    idxKey = $('table.tbl th:contains("Attributes")').index();
 
 $rows.each(function (idx, row) {
     var mbid = $(row).find('a[href*="/work/"]').attr('href').split('/')[4],
@@ -47,7 +50,6 @@ $rows.each(function (idx, row) {
         if (title.toLowerCase().contains('major') ||
             title.toLowerCase().contains('minor')) {
             var cell = row.children[idxKey];
-            var min = title.length;
             $(cell).find('option').each(function (idx, option) {
                 if (title.toLowerCase().contains(option.text.toLowerCase())) {
                     option.selected = true;
@@ -123,10 +125,11 @@ function formatEditInfo(json) {
 }
 
 
-function editWork($, server, requests) {
-    // in order to determine the edit parameters required by POST
-    // we first load the /edit page and parse the JSON data
-    // in the sourceData block
+function editWork() {
+    /* in order to determine the edit parameters required by POST
+     * we first load the /edit page and parse the JSON data
+     * in the sourceData block
+     */
     $('.commit:input:checked:enabled').each(function (idx, node) {
         setTimeout(function () {
             var mbid = node.id.replace('edit-', ''),
@@ -152,33 +155,33 @@ function editWork($, server, requests) {
 }
 
 
-// display sidebar
-$('h2.rating').before(
-    sidebar.container()
-    .append(
-        $('<h3>Edit works</h3>')
-    ).append(
-        $('<p>Warning: this is experimental! Bogus data could be sent in the edit. Please check carefully your edit history after use, and help by reporting bugs</p>')
-    ).append(
-        $('<p>Edit note:</p>')
-    ).append(
-        $('<textarea></textarea>', {
-            'id': 'batch_replace_edit_note',
-            'text': sidebar.editNote(meta),
-            'cols': 20,
-            'rows': 7
-        })
-    ).append(
-        $('<input></input>', {
-            'id': 'batch_edit',
-            'type': 'button',
-            'value': 'Edit selected works'
-        })
-    )
-);
+(function displaySidebar(sidebar) {
+    $('h2.rating').before(
+        sidebar.container().append(
+            $('<h3>Edit works</h3>')
+        ).append(
+            $('<p>Warning: this is experimental! Bogus data could be sent in the edit. Please check carefully your edit history after use, and help by reporting bugs</p>')
+        ).append(
+            $('<p>Edit note:</p>')
+        ).append(
+            $('<textarea></textarea>', {
+                'id': 'batch_replace_edit_note',
+                'text': sidebar.editNote(meta),
+                'cols': 20,
+                'rows': 7
+            })
+        ).append(
+            $('<input></input>', {
+                'id': 'batch_edit',
+                'type': 'button',
+                'value': 'Edit selected works'
+            })
+        )
+    );
+})(sidebar);
 
 $(document).ready(function () {
-    $('#batch_edit').click(function () {editWork($, server, requests);});
+    $('#batch_edit').click(function () {editWork();});
     return false;
 });
 

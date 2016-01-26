@@ -3,7 +3,7 @@
 // @name         MusicBrainz: Show performance durations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.25
+// @version      2016.01.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformancedurations.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformancedurations.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -19,6 +19,11 @@
 // ==/UserScript==
 
 // imported from mbz-loujine-common.js: requests, helper, sidebar
+var $ = jQuery,
+    requests = requests,
+    helper = helper,
+    sidebar = sidebar;
+
 function showPerformanceDurations() {
     var mbid = document.URL.split('/')[4],
         url = '/ws/2/work/' + encodeURIComponent(mbid) + '?inc=recording-rels&fmt=json',
@@ -40,15 +45,17 @@ function showPerformanceDurations() {
 }
 
 // display sidebar
-sidebar.container().append(
-    $('<h3>Show durations<h3>')
-).append(
-    $('<input></input>', {
-        'id': 'showdurations',
-        'type': 'button',
-        'value': 'Show performance durations'
-    })
-);
+(function displaySidebar(sidebar) {
+    sidebar.container().append(
+        $('<h3>Show durations<h3>')
+    ).append(
+        $('<input></input>', {
+            'id': 'showdurations',
+            'type': 'button',
+            'value': 'Show performance durations'
+        })
+    );
+})(sidebar);
 
 $(document).ready(function() {
     $('#showdurations').click(function() {showPerformanceDurations();});

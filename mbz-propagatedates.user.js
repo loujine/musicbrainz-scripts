@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-propagate recording dates
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.25
+// @version      2016.01.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,6 +24,9 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: server, relEditor
+var $ = jQuery,
+    server = server,
+    relEditor = relEditor;
 
 function copyDate(from_date, relation) {
     ['beginDate', 'endDate'].forEach(function(date) {
@@ -86,26 +89,26 @@ function removeDates() {
     });
 }
 
-$('div.tabs').after(
-    relEditor.container()
-    .append(
-        $('<h3></h3>', {'text': 'Dates'})
-    )
-    .append(
-        $('<input></input>', {
-            'id': 'copydates',
-            'type': 'button',
-            'value': 'Copy dates'
-            })
-    )
-    .append(
-        $('<input></input>', {
-            'id': 'removedates',
-            'type': 'button',
-            'value': 'Remove dates'
-            })
-    )
-);
+(function displayToolbar(relEditor) {
+    $('div.tabs').after(
+        relEditor.container()
+        .append(
+            $('<h3></h3>', {'text': 'Dates'})
+        ).append(
+            $('<input></input>', {
+                'id': 'copydates',
+                'type': 'button',
+                'value': 'Copy dates'
+                })
+        ).append(
+            $('<input></input>', {
+                'id': 'removedates',
+                'type': 'button',
+                'value': 'Remove dates'
+                })
+        )
+    );
+})(relEditor);
 
 $(document).ready(function() {
     $('#removedates').click(function() {

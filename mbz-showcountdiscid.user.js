@@ -3,7 +3,7 @@
 // @name         MusicBrainz: Show discid count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.24
+// @version      2016.01.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountdiscid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountdiscid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -22,6 +22,8 @@
 // adapted from jesus2099  mb. INLINE STUFF
 
 // imported from mbz-loujine-common.js: requests
+var $ = jQuery,
+    requests = requests;
 
 function parseCount(resp, tab) {
     var cnt = 0;
@@ -34,13 +36,11 @@ function parseCount(resp, tab) {
     tab.textContent += ' (' + cnt + ')';
 }
 
-function showCountDiscid() {
+(function showCountDiscid() {
     var tab = $("a[href$='/discids']")[0],
         mbid = document.URL.split('/')[4],
         url = '/ws/2/release/' + encodeURIComponent(mbid) + '/?inc=discids&fmt=json';
     requests.GET(url, function (resp) {
         parseCount(JSON.parse(resp), tab);
     });
-}
-
-showCountDiscid();
+})();

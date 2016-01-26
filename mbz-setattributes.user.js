@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set recording-work attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.25
+// @version      2016.01.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,6 +24,9 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: server, relEditor
+var $ = jQuery,
+    server = server,
+    relEditor = relEditor;
 
 function setAttributes(attrId, toggle) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings();
@@ -44,36 +47,37 @@ function setAttributes(attrId, toggle) {
     });
 }
 
-$('div.tabs').after(
-    relEditor.container()
-    .append(
-        $('<h3></h3>', {'text': 'Recording-Work relation attributes'})
-    ).append(
-        $('<input></input>', {
-            'id': 'setlive',
-            'type': 'button',
-            'value': 'Set live'
-        })
-    ).append(
-        $('<input></input>', {
-            'id': 'setpartial',
-            'type': 'button',
-            'value': 'Set partial'
-        })
-    ).append(
-        $('<input></input>', {
-            'id': 'togglelive',
-            'type': 'button',
-            'value': 'Toggle live'
-        })
-    ).append(
-        $('<input></input>', {
-            'id': 'togglepartial',
-            'type': 'button',
-            'value': 'Toggle partial'
-        })
-    )
-);
+(function displayToolbar(relEditor) {
+    $('div.tabs').after(
+        relEditor.container().append(
+            $('<h3></h3>', {'text': 'Recording-Work relation attributes'})
+        ).append(
+            $('<input></input>', {
+                'id': 'setlive',
+                'type': 'button',
+                'value': 'Set live'
+            })
+        ).append(
+            $('<input></input>', {
+                'id': 'setpartial',
+                'type': 'button',
+                'value': 'Set partial'
+            })
+        ).append(
+            $('<input></input>', {
+                'id': 'togglelive',
+                'type': 'button',
+                'value': 'Toggle live'
+            })
+        ).append(
+            $('<input></input>', {
+                'id': 'togglepartial',
+                'type': 'button',
+                'value': 'Toggle partial'
+            })
+        )
+    );
+})(relEditor);
 
 $(document).ready(function() {
     $('#setlive').click(function() {

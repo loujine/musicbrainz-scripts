@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.25
+// @version      2016.01.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,6 +24,10 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: requests, server, relEditor
+var $ = jQuery,
+    requests = requests,
+    server = server,
+    relEditor = relEditor;
 
 function setWork(recording, work) {
     var vm = MB.releaseRelationshipEditor;
@@ -54,28 +58,29 @@ function guessWork() {
     });
 }
 
-$('div.tabs').after(
-    relEditor.container()
-    .append(
-        $('<h3>Search for works</h3>')
-    ).append(
-        $('<p>You can add an optional prefix (e.g. the misssing parent work name) to help guessing the right work</p>')
-    ).append(
-        $('<span>Prefix:</span>')
-    ).append(
-        $('<input></input>', {
-            'id': 'prefix',
-            'type': 'text',
-            'value': ''
-        })
-    ).append(
-        $('<input></input>', {
-            'id': 'searchwork',
-            'type': 'button',
-            'value': 'Guess works'
-        })
-    )
-);
+(function displayToolbar(relEditor) {
+    $('div.tabs').after(
+        relEditor.container().append(
+            $('<h3>Search for works</h3>')
+        ).append(
+            $('<p>You can add an optional prefix (e.g. the misssing parent work name) to help guessing the right work</p>')
+        ).append(
+            $('<span>Prefix:</span>')
+        ).append(
+            $('<input></input>', {
+                'id': 'prefix',
+                'type': 'text',
+                'value': ''
+            })
+        ).append(
+            $('<input></input>', {
+                'id': 'searchwork',
+                'type': 'button',
+                'value': 'Guess works'
+            })
+        )
+    );
+})(relEditor);
 
 $(document).ready(function() {
     $('#searchwork').click(function() {
