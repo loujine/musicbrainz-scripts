@@ -1,6 +1,6 @@
 'use strict';
 // ==UserScript==
-// @name         loujine's mbz common lib
+// @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
 // @version      2016.01.25

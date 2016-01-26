@@ -12,7 +12,7 @@ var meta = function() {
 // @description  musicbrainz.org: Set attributes (lang, key) from the composer Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-musicbrainz-common-files/code/MusicBrainz:%20common%20files.js?version=88427
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=103595
 // @include      http*://*musicbrainz.org/artist/*/works
 // @include      http*://*musicbrainz.org/artist/*/works?page=*
 // @grant        none
