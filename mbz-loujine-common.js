@@ -3,7 +3,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.25
+// @version      2016.01.27
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -139,6 +139,27 @@ var works = {
 '<option value="794">A Dorian</option>' +
 '<option value="795">B Dorian</option>' +
 '</select>'
+};
+
+// https://www.wikidata.org/wiki/Wikidata:List_of_properties/Person
+var wikidata = {
+    'entities': {
+        person: 5,
+        male: 6581097,
+        female: 6581072
+    },
+    'fields': {
+        type: 'P31',
+        gender: 'P21',
+        citizen: 'P27',
+        isni: 'P213',
+        birthDate: 'P569',
+        birthPlace: 'P19',
+        deathDate: 'P570',
+        deathPlace: 'P20',
+        mbidArtist: 'P434',
+        mbidArea: 'P982'
+    }
 };
 
 var requests = function () {
