@@ -3,7 +3,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.01.27
+// @version      2016.1.27.1920
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -33,7 +33,7 @@ var server = {
         'partial': 579
     },
     // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
-    // we wait for `server.timeout` milliseconds between two queries
+    // we wait for 'server.timeout' milliseconds between two queries
     'timeout': 1000
 };
 
@@ -248,7 +248,7 @@ var sidebar = function ($) {
     // edit notes
     self.editNote = function (meta, msg) {
         msg = msg || '';
-        var signature = '\n —\n' + `GM script: "${meta.name}" (${meta.version})\n\n`;
+        var signature = '\n —\n' + 'GM script: "${meta.name}" (${meta.version})\n\n';
         return (msg + signature);
     };
 
@@ -286,7 +286,7 @@ var relEditor = function (MB, $) {
         var vm = MB.releaseRelationshipEditor,
             existingMsg = vm.editNote(),
             signature = '\n —\n' +
-                        `GM script: "${meta.name}" (${meta.version})\n\n`;
+                        'GM script: "${meta.name}" (${meta.version})\n\n';
         vm.editNote(existingMsg + msg + signature);
     };
 
