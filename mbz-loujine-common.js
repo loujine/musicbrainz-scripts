@@ -248,7 +248,8 @@ var sidebar = function ($) {
     // edit notes
     self.editNote = function (meta, msg) {
         msg = msg || '';
-        var signature = '\n —\n' + 'GM script: "${meta.name}" (${meta.version})\n\n';
+        var signature = '\n —\n' +
+                        'GM script: "' + meta.name + '" (' + meta.version + ')\n\n';
         return (msg + signature);
     };
 
@@ -286,7 +287,7 @@ var relEditor = function (MB, $) {
         var vm = MB.releaseRelationshipEditor,
             existingMsg = vm.editNote(),
             signature = '\n —\n' +
-                        'GM script: "${meta.name}" (${meta.version})\n\n';
+                        'GM script: "' + meta.name + '" (' + meta.version + ')\n\n';
         vm.editNote(existingMsg + msg + signature);
     };
 
