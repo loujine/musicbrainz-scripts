@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Create artist from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.1.29
+// @version      2016.1.31
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -14,6 +14,7 @@ var meta = function() {
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=104306
 // @include      http*://*musicbrainz.org/artist/create*
+// @include      http*://*mbsandbox.org/artist/create*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -60,17 +61,24 @@ function parseWikidata(entity) {
         document.getElementsByName('edit-artist.isni_codes.0')[0].value = isni;
     }
 
-    function _fillDate(strDate, idx) {
+    function _fillDate(strDate, nodeId) {
         var date = new Date(strDate.slice(1)); // remove leading "+"
-        document.getElementsByClassName('partial-date')[idx].children[1].value = date.getFullYear();
-        document.getElementsByClassName('partial-date')[idx].children[2].value = date.getMonth() + 1;
-        document.getElementsByClassName('partial-date')[idx].children[3].value = date.getDate();
+        var yearInput = document.getElementById(nodeId + '.year');
+        if (yearInput.getAttribute('class').contains('jesus2099')) {
+            // jesus2099's EASY_DATE script is shifting the input node
+            // containing the year but not its id
+            yearInput.nextSibling.value = date.getFullYear();
+        } else {
+            yearInput.value = date.getFullYear();
+        }
+        document.getElementById(nodeId + '.month').value = date.getMonth() + 1;
+        document.getElementById(nodeId + '.day').value = date.getDate();
     }
 
-    // Dates
+    // Dates & places
     if (wikidata.fields.birthDate in claims) {
         var birthDate = claims[wikidata.fields.birthDate][0].mainsnak.datavalue.value.time;
-        _fillDate(birthDate, 0);
+        _fillDate(birthDate, 'id-edit-artist.period.begin_date');
     }
     if (wikidata.fields.birthPlace in claims) {
         var birthPlace = 'Q' + claims[wikidata.fields.birthPlace][0].mainsnak.datavalue.value['numeric-id'];
@@ -83,14 +91,8 @@ function parseWikidata(entity) {
                 input = document.getElementById('id-edit-artist.begin_area.name');
             if (wikidata.fields.mbidArea in entityArea.claims) {
                 var mbid = entityArea.claims[wikidata.fields.mbidArea][0].mainsnak.datavalue.value;
-                input.value = '/area/' + mbid;
-                // $(input).trigger($.Event('keypress', {which: 38}));
-                // $(input).focus();
-                // $(input).trigger($.Event('keyup'));
-                // var e = document.createEvent("KeyboardEvent");
-                // e.initKeyEvent("keydown", true, true, document.defaultView, false, false, false, false, 13, 0);
-                // input.dispatchEvent(e);
-                // $(input).change();
+                input.value = mbid;
+                $(input).trigger('keydown');
             } else {
                 input.value = entityArea.labels.en.value;
             }
@@ -98,7 +100,7 @@ function parseWikidata(entity) {
     }
     if (wikidata.fields.deathDate in claims) {
         var deathDate = claims[wikidata.fields.deathDate][0].mainsnak.datavalue.value.time;
-        _fillDate(deathDate, 1);
+        _fillDate(deathDate, 'id-edit-artist.period.end_date');
     }
     if (wikidata.fields.deathPlace in claims) {
         var deathPlace = 'Q' + claims[wikidata.fields.deathPlace][0].mainsnak.datavalue.value['numeric-id'];
@@ -107,12 +109,14 @@ function parseWikidata(entity) {
             url: url,
             dataType: 'jsonp',
         }).done(function (data) {
-            var entityArea = data.entities[deathPlace];
+            var entityArea = data.entities[deathPlace],
+                input = document.getElementById('id-edit-artist.end_area.name');
             if (wikidata.fields.mbidArea in entityArea.claims) {
                 var mbid = entityArea.claims[wikidata.fields.mbidArea][0].mainsnak.datavalue.value;
-                document.getElementById('id-edit-artist.end_area.name').value = 'https://www.musicbrainz.org/area/' + mbid;
+                input.value = mbid;
+                $(input).trigger('keydown');
             } else {
-                document.getElementById('id-edit-artist.end_area.name').value = entityArea.labels.en.value;
+                input.value = entityArea.labels.en.value;
             }
         });
     }
