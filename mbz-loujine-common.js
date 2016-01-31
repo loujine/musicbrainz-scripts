@@ -3,7 +3,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.2.7
+// @version      2016.4.13
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -162,8 +162,29 @@ var wikidata = {
         birthPlace: 'P19',
         deathDate: 'P570',
         deathPlace: 'P20',
+        dissolved: 'P576',
+        location: 'P740',
         mbidArtist: 'P434',
-        mbidArea: 'P982'
+        mbidArea: 'P982',
+        members: 'P527',
+        idDiscogs: 'P1953',
+        idIMDB: 'P345',
+        idSpotify: 'P1902',
+        idOL: 'P648',
+        idVIAF: 'P214',
+        idGND: 'P227',
+        idIMSLP: 'P839',
+        idBNF: 'P268'
+    },
+    'urls': {
+        idDiscogs: 'http://www.discogs.com/artist/',
+        idIMDB: 'http://www.imdb.com/name/',
+        idSpotify: 'https://open.spotify.com/artist/',
+        idOL: 'https://openlibrary.org/works/',
+        idVIAF: 'https://viaf.org/viaf/',
+        idGND: 'https://d-nb.info/gnd/',
+        idIMSLP: 'https://imslp.org/wiki/',
+        idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb'
     }
 };
 

@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Create artist from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.2.7
+// @version      2016.4.13
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -128,6 +128,18 @@ function parseWikidata(entity) {
             }
         });
     }
+
+    ['idVIAF', 'idGND', 'idIMSLP'].forEach(function(externalLink) {
+        if (wikidata.fields[externalLink] in claims) {
+            var inputs = document.getElementById('external-links-editor')
+                         .getElementsByTagName('input'),
+                input = inputs[inputs.length - 1];
+            input.value = wikidata.urls[externalLink]
+                          + claims[wikidata.fields[externalLink]][0].mainsnak.datavalue.value;
+            input.dispatchEvent(new Event('input', {'bubbles': true}));
+        }
+    });
+
 }
 
 function fillForm(wikidataURL) {
