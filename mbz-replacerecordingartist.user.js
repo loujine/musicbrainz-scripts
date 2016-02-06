@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.1.29
+// @version      2016.2.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -26,8 +26,7 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: requests, server, sidebar
-var $ = jQuery,
-    requests = requests,
+var requests = requests,
     server = server,
     helper = helper,
     sidebar = sidebar,

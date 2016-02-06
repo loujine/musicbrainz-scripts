@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-propagate recording dates
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.1.29
+// @version      2016.2.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,8 +24,7 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: server, relEditor
-var $ = jQuery,
-    server = server,
+var server = server,
     relEditor = relEditor;
 
 function copyDate(from_date, relation) {

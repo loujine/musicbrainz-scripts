@@ -3,7 +3,7 @@
 // @name         MusicBrainz: Show performance durations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.1.29
+// @version      2016.2.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformancedurations.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformancedurations.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -19,8 +19,7 @@
 // ==/UserScript==
 
 // imported from mbz-loujine-common.js: requests, helper, sidebar
-var $ = jQuery,
-    requests = requests,
+var requests = requests,
     helper = helper,
     sidebar = sidebar;
 

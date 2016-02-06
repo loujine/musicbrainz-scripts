@@ -3,7 +3,7 @@
 // @name         MusicBrainz: Show alias count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.1.29
+// @version      2016.2.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountalias.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountalias.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -25,8 +25,7 @@
 // adapted from jesus2099  mb. INLINE STUFF
 
 // imported from mbz-loujine-common.js: requests
-var $ = jQuery,
-    requests = requests;
+var requests = requests;
 
 function parseCount(resp, tab) {
     var cnt = resp.aliases.length,

@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set recording-artist instrument
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.1.29
+// @version      2016.2.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,8 +24,7 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-releditor.js: server, relEditor
-var $ = jQuery,
-    server = server,
+var server = server,
     relEditor = relEditor;
 
 function setInstrument(fromType, toType, attrIds, credit) {

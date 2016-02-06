@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Create artist from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.1.31
+// @version      2016.2.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -25,8 +25,7 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: wikidata, sidebar (for edit note)
-var $ = jQuery,
-    sidebar = sidebar,
+var sidebar = sidebar,
     wikidata = wikidata;
 
 
