@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Create artist from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.2.5
+// @version      2016.2.7
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@ var meta = function() {
 // @description  musicbrainz.org: Fill new artist info from wikidata
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=104306
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=106301
 // @include      http*://*musicbrainz.org/artist/create*
 // @include      http*://*mbsandbox.org/artist/create*
 // @grant        none
@@ -31,21 +31,30 @@ var sidebar = sidebar,
 
 function parseWikidata(entity) {
     var claims = entity.claims,
+        lang = wikidata.language,
         url;
+    if (!(lang in entity.labels)) {
+        lang = Object.keys(entity.labels)[0];
+    }
     // name and sort name
-    document.getElementById('id-edit-artist.name').value = entity.labels.en.value;
+    document.getElementById('id-edit-artist.name').value = entity.labels[lang].value;
     document.getElementsByClassName('guesscase-title')[0].click();
     document.getElementsByClassName('guesscase-sortname')[0].click();
 
     // Disambiguation
-    if (entity.descriptions.en.value) {
-        document.getElementById('id-edit-artist.comment').value = entity.descriptions.en.value;
+    if (entity.descriptions[lang] && entity.descriptions[lang].value) {
+        document.getElementById('id-edit-artist.comment').value = entity.descriptions[lang].value;
     }
 
     // Type and gender
     if (wikidata.fields.type in claims) {
         var type = claims[wikidata.fields.type][0].mainsnak.datavalue.value['numeric-id'];
-        document.getElementById('id-edit-artist.type_id').value = type === wikidata.entities.person ? 1 : 0;
+        document.getElementById('id-edit-artist.type_id').value = type === wikidata.entities.person ? 1 :
+                                                                  type === wikidata.entities.stringQuartet ? 2 :
+                                                                  type === wikidata.entities.orchestra ? 2 :
+                                                                  type === wikidata.entities.band ? 2 :
+                                                                  type === wikidata.entities.rockBand ? 2 :
+                                                                  0;
     }
 
     if (wikidata.fields.gender in claims) {
@@ -93,7 +102,7 @@ function parseWikidata(entity) {
                 input.value = mbid;
                 $(input).trigger('keydown');
             } else {
-                input.value = entityArea.labels.en.value;
+                input.value = entityArea.labels[lang].value;
             }
         });
     }
@@ -115,7 +124,7 @@ function parseWikidata(entity) {
                 input.value = mbid;
                 $(input).trigger('keydown');
             } else {
-                input.value = entityArea.labels.en.value;
+                input.value = entityArea.labels[lang].value;
             }
         });
     }
@@ -151,6 +160,15 @@ function fillForm(wikidataURL) {
     });
     document.getElementById('id-edit-artist.edit_note').value = sidebar.editNote(meta);
 }
+
+(function displayToolbar(relEditor) {
+    $('div.half-width').prepend(
+        relEditor.container()
+        .append(
+            $('<p>You can first add the wikidata link to retrieve automatically some information</p>')
+        )
+    );
+})(relEditor);
 
 document.addEventListener('DOMContentLoaded', function () {
     var node = document.getElementById('external-links-editor-container')

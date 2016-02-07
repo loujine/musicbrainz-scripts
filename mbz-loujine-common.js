@@ -3,7 +3,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.1.27.1920
+// @version      2016.2.7
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -143,8 +143,13 @@ var works = {
 
 // https://www.wikidata.org/wiki/Wikidata:List_of_properties/Person
 var wikidata = {
+    'language': 'en',
     'entities': {
         person: 5,
+        stringQuartet: 207338,
+        orchestra: 42998,
+        band: 215380,
+        rockBand: 5741069,
         male: 6581097,
         female: 6581072
     },
