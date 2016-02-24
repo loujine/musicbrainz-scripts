@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.2.5
+// @version      2016.2.24
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -60,7 +60,7 @@ function showPerformers(start, maxcount) {
             $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr');
         $rows = $allRows.not($performerRows);
     } else if (document.URL.split('/')[3] === 'work') {
-        var composer = $('th:contains("composer:")').parent().find('a').attr('href').split('/')[4];
+        var composer = $('th:contains("composer:")').parent().find('a').attr('href').split('/')[2];
         $rows = $('table.tbl a[href*="/artist/' + composer + '"]').parents('tr');
     }
     $rows = $($rows.get().reverse().splice(start, maxcount)); // FIXME why is jquery reversing the list?
@@ -71,7 +71,7 @@ function showPerformers(start, maxcount) {
 
     $rows.each(function (idx, tr) {
         setTimeout(function () {
-            var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[4],
+            var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[2],
                 url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json&inc=artist-rels';
             requests.GET(url, function (response) {
                 var resp = JSON.parse(response),
