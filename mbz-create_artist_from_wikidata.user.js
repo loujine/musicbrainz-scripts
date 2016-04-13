@@ -1,3 +1,4 @@
+/* global $ _ relEditor */
 'use strict';
 var meta = function() {
 // ==UserScript==
@@ -28,138 +29,161 @@ if (meta && meta.toString && (meta = meta.toString())) {
 var sidebar = sidebar,
     wikidata = wikidata;
 
+function fieldInWikidata(entity, field) {
+    return entity.claims[wikidata.fields[field]] !== undefined;
+}
+
+function valueFromField(entity, field) {
+    return entity.claims[wikidata.fields[field]][0].mainsnak.datavalue.value;
+}
+
+function fillArea(data, place, nodeId, lang) {
+    var entityArea = data.entities[place],
+        input = document.getElementById('id-edit-artist.' + nodeId + '.name');
+    if (!entityArea) {
+        return;
+    }
+    if (fieldInWikidata(entityArea, 'mbidArea')) {
+        input.value = valueFromField(entityArea, 'mbidArea');
+        $(input).trigger('keydown');
+    } else {
+        input.value = entityArea.labels[lang].value;
+    }
+}
+
+function fillDate(strDate, nodeId) {
+    var date = new Date(strDate.slice(1)); // remove leading "+"
+    document.getElementById('id-edit-artist.period.'
+                            + nodeId + '.year').value = date.getFullYear();
+    document.getElementById('id-edit-artist.period.'
+                            + nodeId + '.month').value = date.getMonth() + 1;
+    document.getElementById('id-edit-artist.period.'
+                            + nodeId + '.day').value = date.getDate();
+}
+
 
 function parseWikidata(entity) {
     var claims = entity.claims,
         lang = wikidata.language,
-        url;
+        value;
     if (!(lang in entity.labels)) {
         lang = Object.keys(entity.labels)[0];
     }
     // name and sort name
-    document.getElementById('id-edit-artist.name').value = entity.labels[lang].value;
+    document.getElementById(
+        'id-edit-artist.name').value = entity.labels[lang].value;
     document.getElementsByClassName('guesscase-title')[0].click();
     document.getElementsByClassName('guesscase-sortname')[0].click();
 
     // Disambiguation
     if (entity.descriptions[lang] && entity.descriptions[lang].value) {
-        document.getElementById('id-edit-artist.comment').value = entity.descriptions[lang].value;
+        document.getElementById(
+            'id-edit-artist.comment').value = entity.descriptions[lang].value;
     }
 
     // Type and gender
-    if (wikidata.fields.type in claims) {
-        var type = claims[wikidata.fields.type][0].mainsnak.datavalue.value['numeric-id'];
-        document.getElementById('id-edit-artist.type_id').value = type === wikidata.entities.person ? 1 :
-                                                                  type === wikidata.entities.stringQuartet ? 2 :
-                                                                  type === wikidata.entities.orchestra ? 2 :
-                                                                  type === wikidata.entities.band ? 2 :
-                                                                  type === wikidata.entities.rockBand ? 2 :
-                                                                  0;
+    if (fieldInWikidata(entity, 'type')) {
+        var type = valueFromField(entity, 'type')['numeric-id'];
+        switch(type) {
+            case wikidata.entities.person:
+                value = 1;
+                break;
+            case wikidata.entities.stringQuartet:
+            case wikidata.entities.orchestra:
+            case wikidata.entities.band:
+            case wikidata.entities.rockBand:
+                value = 2;
+                break;
+            default:
+                value = 0;
+                break;
+        }
+        document.getElementById('id-edit-artist.type_id').value = value;
     }
 
-    if (wikidata.fields.gender in claims) {
-        var gender = claims[wikidata.fields.gender][0].mainsnak.datavalue.value['numeric-id'];
-        document.getElementById('id-edit-artist.gender_id').value = gender === wikidata.entities.male ? 1 :
-                                                                    gender === wikidata.entities.female ? 2 : 3;
+    if (fieldInWikidata(entity, 'gender')) {
+        var gender = valueFromField(entity, 'gender')['numeric-id'];
+        switch(gender) {
+            case wikidata.entities.male:
+                value = 1;
+                break;
+            case wikidata.entities.female:
+                value = 2;
+                break;
+            default:
+                value = 3;
+                break;
+        }
+        document.getElementById('id-edit-artist.gender_id').value = value;
+    }
+
+    // Area
+    if (wikidata.fields.citizen in claims) {
+        var area = 'Q' + valueFromField(entity, 'citizen')['numeric-id'];
+        $.ajax({
+            url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
+                 + area + '&format=json',
+            dataType: 'jsonp'
+        }).done(function(data) {fillArea(data, area, 'area', lang)});
     }
 
     // ISNI
-    if (wikidata.fields.isni in claims) {
-        var isni = claims[wikidata.fields.isni][0].mainsnak.datavalue.value;
+    if (fieldInWikidata(entity, 'isni')) {
+        var isni = valueFromField(entity, 'isni');
         document.getElementsByName('edit-artist.isni_codes.0')[0].value = isni;
-    }
-
-    function _fillDate(strDate, nodeId) {
-        var date = new Date(strDate.slice(1)); // remove leading "+"
-        var yearInput = document.getElementById(nodeId + '.year');
-        if (yearInput.getAttribute('class').contains('jesus2099')) {
-            // jesus2099's EASY_DATE script is shifting the input node
-            // containing the year but not its id
-            yearInput.nextSibling.value = date.getFullYear();
-        } else {
-            yearInput.value = date.getFullYear();
-        }
-        document.getElementById(nodeId + '.month').value = date.getMonth() + 1;
-        document.getElementById(nodeId + '.day').value = date.getDate();
     }
 
     // Dates & places
     if (wikidata.fields.birthDate in claims) {
-        var birthDate = claims[wikidata.fields.birthDate][0].mainsnak.datavalue.value.time;
-        _fillDate(birthDate, 'id-edit-artist.period.begin_date');
-    }
-    if (wikidata.fields.birthPlace in claims) {
-        var birthPlace = 'Q' + claims[wikidata.fields.birthPlace][0].mainsnak.datavalue.value['numeric-id'];
-        url = 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids=' + birthPlace + '&format=json';
-        $.ajax({
-            url: url,
-            dataType: 'jsonp',
-        }).done(function (data) {
-            var entityArea = data.entities[birthPlace],
-                input = document.getElementById('id-edit-artist.begin_area.name');
-            if (wikidata.fields.mbidArea in entityArea.claims) {
-                var mbid = entityArea.claims[wikidata.fields.mbidArea][0].mainsnak.datavalue.value;
-                input.value = mbid;
-                $(input).trigger('keydown');
-            } else {
-                input.value = entityArea.labels[lang].value;
-            }
-        });
-    }
-    if (wikidata.fields.deathDate in claims) {
-        var deathDate = claims[wikidata.fields.deathDate][0].mainsnak.datavalue.value.time;
-        _fillDate(deathDate, 'id-edit-artist.period.end_date');
-    }
-    if (wikidata.fields.deathPlace in claims) {
-        var deathPlace = 'Q' + claims[wikidata.fields.deathPlace][0].mainsnak.datavalue.value['numeric-id'];
-        url = 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids=' + deathPlace + '&format=json';
-        $.ajax({
-            url: url,
-            dataType: 'jsonp',
-        }).done(function (data) {
-            var entityArea = data.entities[deathPlace],
-                input = document.getElementById('id-edit-artist.end_area.name');
-            if (wikidata.fields.mbidArea in entityArea.claims) {
-                var mbid = entityArea.claims[wikidata.fields.mbidArea][0].mainsnak.datavalue.value;
-                input.value = mbid;
-                $(input).trigger('keydown');
-            } else {
-                input.value = entityArea.labels[lang].value;
-            }
-        });
+        var birthDate = valueFromField(entity, 'birthDate').time;
+        _fillDate(birthDate, 'begin_date');
     }
 
-    ['idVIAF', 'idGND', 'idIMSLP'].forEach(function(externalLink) {
-        if (wikidata.fields[externalLink] in claims) {
+    if (wikidata.fields.birthPlace in claims) {
+        var birthArea = 'Q' + valueFromField(entity, 'birthPlace')['numeric-id'];
+        $.ajax({
+            url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
+                 + birthArea + '&format=json',
+            dataType: 'jsonp'
+        }).done(function(data) {fillArea(data, birthArea, 'begin_area', lang)});
+    }
+
+    if (wikidata.fields.deathDate in claims) {
+        var deathDate = valueFromField(entity, 'deathDate').time;
+        _fillDate(deathDate, 'end_date');
+    }
+
+    if (fieldInWikidata(entity, 'deathPlace')) {
+        var deathArea = 'Q' + valueFromField(entity, 'deathPlace')['numeric-id'];
+        $.ajax({
+            url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
+                 + deathArea + '&format=json',
+            dataType: 'jsonp'
+        }).done(function(data) {fillArea(data, deathArea, 'end_area', lang)});
+    }
+
+    Object.keys(wikidata.urls).forEach(function(externalLink) {
+        if (fieldInWikidata(entity, externalLink)) {
             var inputs = document.getElementById('external-links-editor')
                          .getElementsByTagName('input'),
                 input = inputs[inputs.length - 1];
             input.value = wikidata.urls[externalLink]
-                          + claims[wikidata.fields[externalLink]][0].mainsnak.datavalue.value;
+                          + valueFromField(entity, externalLink);
             input.dispatchEvent(new Event('input', {'bubbles': true}));
         }
     });
 
 }
 
-function fillForm(wikidataURL) {
-    function _getWikidataId(wikidataURL) {
-        if (wikidataURL.split('/')[2] !== "www.wikidata.org") {
-            throw "Not a wikidata link";
-        }
-        return wikidataURL.split('/')[4];
-    }
-
-    var wikiId = _getWikidataId(wikidataURL),
-        url = 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids=' +
-              wikiId + '&format=json';
+function fillForm(wikiId) {
     $.ajax({
-        url: url,
-        dataType: 'jsonp',
+        url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
+             + wikiId + '&format=json',
+        dataType: 'jsonp'
     }).done(function (data) {
         var entity = data.entities[wikiId];
-        if (wikidata.fields.mbidArtist in entity.claims) {
-            var mbid = entity.claims[wikidata.fields.mbidArtist][0].mainsnak.datavalue.value;
+        if (fieldInWikidata(entity, 'mbidArtist')) {
+            var mbid = valueFromField(entity, 'mbidArtist');
             if (window.confirm('An artist already exists linked to this wikidata id, ' +
                                'click "ok" to redirect to their page')) {
                 window.location.href='/artist/' + mbid;
@@ -170,7 +194,8 @@ function fillForm(wikidataURL) {
             parseWikidata(entity);
         }
     });
-    document.getElementById('id-edit-artist.edit_note').value = sidebar.editNote(meta);
+    document.getElementById(
+        'id-edit-artist.edit_note').value = sidebar.editNote(meta);
 }
 
 (function displayToolbar(relEditor) {
@@ -183,12 +208,15 @@ function fillForm(wikidataURL) {
 })(relEditor);
 
 document.addEventListener('DOMContentLoaded', function () {
-    var node = document.getElementById('external-links-editor-container')
-               .getElementsByTagName('input')[0];
-    node.addEventListener('input', function () {
-        var wikidataURL = node.value;
-        fillForm(wikidataURL);
-    }, false);
+    var nodes = document.getElementById('external-links-editor-container')
+                .getElementsByTagName('input');
+    _.forEach(nodes, function(node) {
+        node.addEventListener('input', function () {
+            if (node.value.split('/')[2] === "www.wikidata.org") {
+                fillForm(node.value.split('/')[4]);
+            }
+        }, false);
+    });
     return false;
 });
 
