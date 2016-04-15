@@ -43,6 +43,10 @@ function setValue(nodeId, value) {
     var node = document.getElementById(nodeId);
     if (!node.value) {
         node.value = value;
+    } else if (node.value != value) {  // != to allow autocasting to int
+        $(document.getElementById(nodeId)).parent()
+        .append('<p>Wikidata suggests: "' + value + '"</p>')
+        .css('color', 'red');
     }
 }
 
@@ -75,8 +79,6 @@ function parseWikidata(entity) {
         lang = Object.keys(entity.labels)[0];
     }
     // name and sort name
-    document.getElementsByClassName('guesscase-title')[0].click();
-    document.getElementsByClassName('guesscase-sortname')[0].click();
     setValue('id-edit-artist.name', entity.labels[lang].value);
 
     // Disambiguation
