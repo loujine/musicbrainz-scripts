@@ -212,6 +212,8 @@ function fillForm(wikiId) {
         relEditor.container()
         .append(
             $('<p>You can first add the wikidata link to retrieve automatically some information</p>')
+        ).append(
+            $('<p>Warning: if you use the "SUPER_MIND_CONTROL_Ⅱ_X_TURBO" script, year fields for dates will not be filled correctly</p>')
         )
     );
 })(relEditor);
