@@ -3,7 +3,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.13
+// @version      2016.4.14
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -157,13 +157,15 @@ var wikidata = {
         type: 'P31',
         gender: 'P21',
         citizen: 'P27',
+        country: 'P495',
         isni: 'P213',
         birthDate: 'P569',
+        inceptionDate: 'P571',
         birthPlace: 'P19',
+        formationLocation: 'P740',
         deathDate: 'P570',
+        dissolutionDate: 'P576',
         deathPlace: 'P20',
-        dissolved: 'P576',
-        location: 'P740',
         mbidArtist: 'P434',
         mbidArea: 'P982',
         members: 'P527',

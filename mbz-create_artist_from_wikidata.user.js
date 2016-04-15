@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Create artist from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.13
+// @version      2016.4.14
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Fill new artist info from wikidata
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=106301
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=119743
 // @include      http*://*musicbrainz.org/artist/create*
 // @include      http*://*mbsandbox.org/artist/create*
 // @grant        none
@@ -63,8 +63,7 @@ function fillDate(strDate, nodeId) {
 
 
 function parseWikidata(entity) {
-    var claims = entity.claims,
-        lang = wikidata.language,
+    var lang = wikidata.language,
         value;
     if (!(lang in entity.labels)) {
         lang = Object.keys(entity.labels)[0];
@@ -118,8 +117,9 @@ function parseWikidata(entity) {
     }
 
     // Area
-    if (wikidata.fields.citizen in claims) {
-        var area = 'Q' + valueFromField(entity, 'citizen')['numeric-id'];
+    if (fieldInWikidata(entity, 'citizen') || fieldInWikidata(entity, 'country')) {
+        var field = fieldInWikidata(entity, 'citizen') ? 'citizen' : 'country';
+        var area = 'Q' + valueFromField(entity, field)['numeric-id'];
         $.ajax({
             url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
                  + area + '&format=json',
@@ -134,13 +134,16 @@ function parseWikidata(entity) {
     }
 
     // Dates & places
-    if (wikidata.fields.birthDate in claims) {
-        var birthDate = valueFromField(entity, 'birthDate').time;
-        _fillDate(birthDate, 'begin_date');
+    if (fieldInWikidata(entity, 'birthDate')
+            || fieldInWikidata(entity, 'inceptionDate')) {
+        var field = fieldInWikidata(entity, 'birthDate') ? 'birthDate' : 'inceptionDate';
+        fillDate(valueFromField(entity, field).time, 'begin_date');
     }
 
-    if (wikidata.fields.birthPlace in claims) {
-        var birthArea = 'Q' + valueFromField(entity, 'birthPlace')['numeric-id'];
+    if (fieldInWikidata(entity, 'birthPlace')
+            || fieldInWikidata(entity, 'formationLocation')) {
+        var field = fieldInWikidata(entity, 'birthPlace') ? 'birthPlace' : 'formationLocation';
+        var birthArea = 'Q' + valueFromField(entity, field)['numeric-id'];
         $.ajax({
             url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
                  + birthArea + '&format=json',
@@ -148,9 +151,10 @@ function parseWikidata(entity) {
         }).done(function(data) {fillArea(data, birthArea, 'begin_area', lang)});
     }
 
-    if (wikidata.fields.deathDate in claims) {
-        var deathDate = valueFromField(entity, 'deathDate').time;
-        _fillDate(deathDate, 'end_date');
+    if (fieldInWikidata(entity, 'deathDate')
+            || fieldInWikidata(entity, 'dissolutionDate')) {
+        var field = fieldInWikidata(entity, 'deathDate') ? 'deathDate' : 'dissolutionDate';
+        fillDate(valueFromField(entity, field).time, 'end_date');
     }
 
     if (fieldInWikidata(entity, 'deathPlace')) {
