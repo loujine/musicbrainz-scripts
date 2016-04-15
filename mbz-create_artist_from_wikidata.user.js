@@ -2,20 +2,22 @@
 'use strict';
 var meta = function() {
 // ==UserScript==
-// @name         MusicBrainz: Create artist from wikidata
+// @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.14
+// @version      2016.4.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org: Fill new artist info from wikidata
+// @description  musicbrainz.org: Fill artist info from wikidata
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=119743
 // @include      http*://*musicbrainz.org/artist/create*
+// @include      http*://*musicbrainz.org/artist/*/edit
 // @include      http*://*mbsandbox.org/artist/create*
+// @include      http*://*mbsandbox.org/artist/*/edit
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -37,6 +39,13 @@ function valueFromField(entity, field) {
     return entity.claims[wikidata.fields[field]][0].mainsnak.datavalue.value;
 }
 
+function setValue(nodeId, value) {
+    var node = document.getElementById(nodeId);
+    if (!node.value) {
+        node.value = value;
+    }
+}
+
 function fillArea(data, place, nodeId, lang) {
     var entityArea = data.entities[place],
         input = document.getElementById('id-edit-artist.' + nodeId + '.name');
@@ -53,12 +62,9 @@ function fillArea(data, place, nodeId, lang) {
 
 function fillDate(strDate, nodeId) {
     var date = new Date(strDate.slice(1)); // remove leading "+"
-    document.getElementById('id-edit-artist.period.'
-                            + nodeId + '.year').value = date.getFullYear();
-    document.getElementById('id-edit-artist.period.'
-                            + nodeId + '.month').value = date.getMonth() + 1;
-    document.getElementById('id-edit-artist.period.'
-                            + nodeId + '.day').value = date.getDate();
+    setValue('id-edit-artist.period.' + nodeId + '.year', date.getFullYear());
+    setValue('id-edit-artist.period.' + nodeId + '.month', date.getMonth() + 1);
+    setValue('id-edit-artist.period.' + nodeId + '.day', date.getDate());
 }
 
 
@@ -69,15 +75,13 @@ function parseWikidata(entity) {
         lang = Object.keys(entity.labels)[0];
     }
     // name and sort name
-    document.getElementById(
-        'id-edit-artist.name').value = entity.labels[lang].value;
     document.getElementsByClassName('guesscase-title')[0].click();
     document.getElementsByClassName('guesscase-sortname')[0].click();
+    setValue('id-edit-artist.name', entity.labels[lang].value);
 
     // Disambiguation
     if (entity.descriptions[lang] && entity.descriptions[lang].value) {
-        document.getElementById(
-            'id-edit-artist.comment').value = entity.descriptions[lang].value;
+        setValue('id-edit-artist.comment', entity.descriptions[lang].value);
     }
 
     // Type and gender
@@ -97,7 +101,7 @@ function parseWikidata(entity) {
                 value = 0;
                 break;
         }
-        document.getElementById('id-edit-artist.type_id').value = value;
+        setValue('id-edit-artist.type_id', value);
     }
 
     if (fieldInWikidata(entity, 'gender')) {
@@ -113,7 +117,7 @@ function parseWikidata(entity) {
                 value = 3;
                 break;
         }
-        document.getElementById('id-edit-artist.gender_id').value = value;
+        setValue('id-edit-artist.gender_id', value);
     }
 
     // Area
@@ -198,8 +202,7 @@ function fillForm(wikiId) {
             parseWikidata(entity);
         }
     });
-    document.getElementById(
-        'id-edit-artist.edit_note').value = sidebar.editNote(meta);
+    setValue('id-edit-artist.edit_note', sidebar.editNote(meta));
 }
 
 (function displayToolbar(relEditor) {
