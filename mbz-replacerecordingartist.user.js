@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.2.24
+// @version      2016.4.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -258,7 +258,7 @@ function parseAliases() {
             $('#performerAlias').append( $('<option>', {'value': 'default'}).append(resp.name));
             if (resp.aliases.length) {
                 resp.aliases.forEach(function (alias) {
-                    if (alias.locale && alias.primary) {
+                    if (alias.locale) {
                         aliases[alias.locale] = alias.name;
                     }
                 });
