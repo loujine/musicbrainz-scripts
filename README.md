@@ -1,7 +1,9 @@
 Musicbrainz scripts
 ===================
 
-Collection of greasemonkey scripts for MusicBrainz editing.
+Collection of greasemonkey scripts I wrote for MusicBrainz editing.
+
+Contact me for bug reports/suggestions/patches: [loujine](https://bitbucket.org/loujine/) on bitbucket, [loujin](https://musicbrainz.org/user/loujin) on Musicbrainz (sadly 'loujine' was already taken)
 
 
 Content
@@ -9,13 +11,14 @@ Content
 
 ### Common files
 
-* mbz-loujine-common: constants (link and attributes types for MusicBrainz data
-model) ,basic functionalities (XmlHttpRequest, data parsing)
-
-* mbz-loujine-releditor: jquery definition of a container to store script
+Common data is stored in mbz-loujine-common:
+* musicbrainz "constants" (numerical codes for link and attributes types in
+MusicBrainz data model)
+* wikidata "constants" (same idea)
+* helper functions (XmlHttpRequest, data parsing)
+* jquery definition of a container to store script
 interfaces (buttons) impacting the release relationship editor
-
-* mbz-loujine-sidebar: same for the sidebar appearing on artist and work pages
+* idem for the sidebar appearing on artist and work pages
 
 NB: XHR queries are set 1 second apart to avoid hitting the rate limit on musicbrainz
 server.
@@ -43,6 +46,10 @@ recording has no linked work. Search is done using the recording title. An
 optional prefix can be added for the search (useful to add full work info on
 classical works)
 
+* mbz-move_release_AR_to_recordings: remove advanced relationships applied to
+release (e.g. performers that should apply to all recordings rather than the
+release) and copy them to the individual selected recordings
+
 
 ### Artist relationships tab
 
@@ -63,6 +70,20 @@ classical works)
 
 * mbz-replacerecordingartist can set the selected performers above as recording
 artist by checking the checkboxes and clicking "Replace selected artists"
+
+
+### Artist creation/edit page
+
+* mbz-create_artist_from_wikidata: adding a wikidata link fills automatically
+some of the existing fields in wikidata, e.g. artist name, disambiguation, area,
+birth date/place, death date/place, external links...
+
+
+### Artist work tab
+
+* mbz-setworkattributes: display a dropdown list of work types, languages and
+tonality attribute (key). Works to modify must be selected with the right-side
+individual checkboxes before pressing "Edit selected works"
 
 
 ### Release overview tab
@@ -88,19 +109,31 @@ languages used (if any)
 * mbz-showperformers can set the selected performers above as recording
 artist by checking the checkboxes and clicking "Replace selected artists"
 
+* mbz-sortablecolumns: make default columns sortable by clicking on them
+
 
 TODO
 ----
 
 * improve 'guessed work': use the track artist to limit the search to the correct
-composer
+composer; display advanced relationships on works (composer)
+
+* improve asynchronous operations (display a "pending operations" symbol, deal
+with 503 errors, display a clear success message)
 
 * improve 'set instrument': switch to drop down menu
 
-* ideas for future scripts:
+* improve 'set recording artist' (range selection labels)
 
-  - select work tonality (key) from artist works tab
+* ideas for future scripts:
+  - set recording attributes (video) and artist-recording attributes (guest, solo)
+  - add artist aliases from wikidata
+  - add recording titles as work aliases
   - show subworks on a work series page (catalog)
+  - launch recordings merge operation from acoustid page
+  - helper to fill singers AR on opera releases (with correct voice/character)
+
+If you are interested by such a script, tell me!
 
 
 Notes
