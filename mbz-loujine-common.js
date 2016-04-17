@@ -3,7 +3,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.14
+// @version      2016.4.17
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -31,6 +31,13 @@ var server = {
         'bowedStrings': 275,
         'live': 578,
         'partial': 579
+    },
+    'releaseToRecordingLink': {
+        51: 156, // performer
+        44: 148, // instrument
+        45: 150, // orchestra
+        46: 151, // conductor
+        60: 149  // vocal
     },
     // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
     // we wait for 'server.timeout' milliseconds between two queries
