@@ -16,8 +16,10 @@ var meta = function() {
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=119743
 // @include      http*://*musicbrainz.org/artist/create*
 // @include      http*://*musicbrainz.org/artist/*/edit
+// @exclude      http*://*musicbrainz.org/artist/*/alias/*/edit
 // @include      http*://*mbsandbox.org/artist/create*
 // @include      http*://*mbsandbox.org/artist/*/edit
+// @exclude      http*://*mbsandbox.org/artist/*/alias/*/edit
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
