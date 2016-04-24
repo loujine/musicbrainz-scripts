@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.15
+// @version      2016.5.16
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Replace associated recording artist from an Artist or Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125991
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125995
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*
@@ -158,8 +158,8 @@ function replaceArtist() {
                 url = '/recording/' + encodeURIComponent(mbid) + '/edit',
                 callback = function (info) {
                     // console.log('Sending POST ' + mbid + ' edit info');
-                    requests.POST(url, formatEditInfo(info), function (status) {
-                        if (status === 200 || status === 0) {
+                    requests.POST(url, formatEditInfo(info), function (xhr) {
+                        if (xhr.status === 200 || xhr.status === 0) {
                             node.disabled = true;
                             $(node).after(status).parent().css('color', 'green');
                         } else {

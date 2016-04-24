@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.15
+// @version      2016.5.16
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -235,7 +235,7 @@ var requests = function () {
 
     self.POST = function (url, param, callback) {
         self._request('POST', url, param, function (xhr) {
-            callback(xhr.status);
+            callback(xhr);
         });
     };
     return self;

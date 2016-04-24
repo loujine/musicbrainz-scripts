@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.15
+// @version      2016.5.16
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Set attributes (lang, key) from the composer Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125991
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125995
 // @include      http*://*musicbrainz.org/artist/*/works
 // @include      http*://*musicbrainz.org/artist/*/works?page=*
 // @grant        none
@@ -132,8 +132,8 @@ function editWork() {
                 url = '/work/' + encodeURIComponent(mbid) + '/edit',
                 callback = function (info) {
                     var info2 = updateJSON(info, node);
-                    requests.POST(url, formatEditInfo(info2), function (status) {
-                        if (status === 200) {
+                    requests.POST(url, formatEditInfo(info2), function (xhr) {
+                        if (xhr.status === 200) {
                             node.disabled = true;
                             $(node).parent().css('background-color', 'green');
                         } else {
