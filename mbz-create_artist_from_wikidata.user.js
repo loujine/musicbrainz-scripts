@@ -82,6 +82,9 @@ function parseWikidata(entity) {
     }
     // name and sort name
     setValue('id-edit-artist.name', entity.labels[lang].value);
+    document.getElementsByClassName('guesscase-title')[0].click();
+    document.getElementsByClassName('guesscase-sortname')[0].click();
+
 
     // Disambiguation
     if (entity.descriptions[lang] && entity.descriptions[lang].value) {
