@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.15
+// @version      2016.4.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -69,6 +69,12 @@ function fillArea(data, place, nodeId, lang) {
 function fillDate(strDate, nodeId) {
     var date = new Date(strDate.slice(1)); // remove leading "+"
     setValue('id-edit-artist.period.' + nodeId + '.year', date.getFullYear());
+    var yearInput = document.getElementById('id-edit-artist.period.' + nodeId + '.year');
+    if (yearInput.getAttribute('class').contains('jesus2099')) {
+            // jesus2099's EASY_DATE script is shifting the input node
+            // containing the year but not its id
+            yearInput.nextSibling.value = date.getFullYear();
+    }
     setValue('id-edit-artist.period.' + nodeId + '.month', date.getMonth() + 1);
     setValue('id-edit-artist.period.' + nodeId + '.day', date.getDate());
 }
@@ -217,8 +223,6 @@ function fillForm(wikiId) {
         relEditor.container()
         .append(
             $('<p>You can first add the wikidata link to retrieve automatically some information</p>')
-        ).append(
-            $('<p>Warning: if you use the "SUPER_MIND_CONTROL_Ⅱ_X_TURBO" script, year fields for dates will not be filled correctly</p>')
         )
     );
 })(relEditor);
