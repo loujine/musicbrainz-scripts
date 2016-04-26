@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.2.5
+// @version      2016.4.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -82,9 +82,13 @@ function guessWork() {
 })(relEditor);
 
 $(document).ready(function() {
+    var appliedNote = false;
     $('#searchwork').click(function() {
         guessWork();
-        relEditor.editNote(meta, 'Set guessed works');
+        if (!appliedNote) {
+            relEditor.editNote(meta, 'Set guessed works');
+            appliedNote = true;
+        }
     });
     return false;
 });
