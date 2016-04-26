@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.15
+// @version      2016.4.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -59,6 +59,7 @@ function showPerformers(start, maxcount) {
             $allRows = $('table.tbl a[href*="/artist/"]').parents('tr'),
             $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr');
         $rows = $allRows.not($performerRows);
+        document.getElementById('loujine-locale').hidden = false;
     } else if (document.URL.split('/')[3] === 'work') {
         var composer = $('th:contains("composer:")').parent().find('a').attr('href').split('/')[2];
         $rows = $('table.tbl a[href*="/artist/' + composer + '"]').parents('tr');
@@ -212,23 +213,28 @@ function replaceArtist() {
     ).append(
         $('<h3>').append('Replace artists')
     ).append(
-        $('<p>Warning: this is experimental! Bogus data could be sent in the edit. Please check carefully your edit history after use, and help by reporting bugs</p>')
-    ).append(
         $('<p>First click "Show performer AR" then check boxes to select artists</p>')
     ).append(
         $('<input></input>', {
             'id': 'batch_select',
             'type': 'button',
+            'disabled': true,
             'value': 'Select all'
         })
     ).append(
-        $('<p>').append('Primary locale alias to use:')
+        $('<p>', {
+            'id': 'loujine-locale',
+            'hidden': true
+        }).append('Primary locale alias to use:')
         .append($('<select>', {'id': 'performerAlias'}))
     ).append(
         $('<p>').append('Edit note:')
         .append(
-            $('<textarea></textarea>', {'id': 'batch_replace_edit_note',
-                                        'text': sidebar.editNote(meta, editNoteMsg)})
+            $('<textarea></textarea>', {
+                'id': 'batch_replace_edit_note',
+                'disabled': true,
+                'text': sidebar.editNote(meta, editNoteMsg)
+            })
         )
     ).append(
         $('<input></input>', {
@@ -275,6 +281,8 @@ $(document).ready(function () {
         var start = $('#offset')[0].value,
             maxcount = $('#max')[0].value;
         showPerformers(parseInt(start - 1), parseInt(maxcount));
+        $('#batch_select').prop('disabled', false);
+        $('#batch_replace_edit_note').prop('disabled', false);
         $('#batch_replace').prop('disabled', false);
     });
     $('#batch_replace').click(function () {replaceArtist();});
