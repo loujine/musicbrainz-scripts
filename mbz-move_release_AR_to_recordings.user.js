@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Move performer AR on release to recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.17
+// @version      2016.5.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -66,7 +66,9 @@ function moveAR(ids) {
                     dialog.relationship().setAttributes(releaseLinkAttributes);
                 }
             });
-            $('#release-rels .remove-button')[idx].click();
+            if (recordings.length) {
+                $('#release-rels .remove-button')[idx].click();
+            }
 
         }
     });
@@ -80,7 +82,7 @@ function moveAR(ids) {
             $('<input></input>', {
                 'id': 'moveAR',
                 'type': 'button',
-                'value': 'Move AR'
+                'value': 'Move AR to selected recordings',
             })
         )
     );
