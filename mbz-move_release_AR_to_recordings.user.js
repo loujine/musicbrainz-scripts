@@ -2,7 +2,7 @@
 'use strict';
 var meta = function() {
 // ==UserScript==
-// @name         MusicBrainz: Move performer AR on release to recordings
+// @name         MusicBrainz: Move performer AR on release to recordings AR
 // @namespace    mbz-loujine
 // @author       loujine
 // @version      2016.5.3
@@ -10,7 +10,7 @@ var meta = function() {
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org: Move performer AR on release to recordings
+// @description  musicbrainz.org: Move performer AR on release to recordings AR
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=120281
