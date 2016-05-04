@@ -3,7 +3,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.17
+// @version      2016.5.4
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -18,6 +18,7 @@ var server = {
         'vocals': 149,
         'orchestra': 150,
         'conductor': 151,
+        'chorusmaster': 152,
         'performer': 156,
         'work': 278,
         'place': 693,

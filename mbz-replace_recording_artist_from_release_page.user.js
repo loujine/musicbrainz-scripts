@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.3
+// @version      2016.5.4
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@ var meta = function() {
 // @description  musicbrainz.org: Replace associated recording artist from a Release page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=120281
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=123754
 // @include      http*://*musicbrainz.org/release/*
 // @include      http*://*mbsandbox.org/release/*
 // @grant        none
@@ -78,7 +78,7 @@ function formatEditInfo(json) {
     }
     json.relationships.forEach(function(rel) {
         var linkType = rel.linkTypeID;
-        if (linkType === server.link.performer ||
+        if (linkType === server.link.performer || linkType === server.link.chorusmaster ||
             linkType === server.link.instrument || linkType === server.link.vocals ||
             linkType === server.link.orchestra || linkType === server.link.conductor) {
             performers.push({'name': rel.target.name,
@@ -90,6 +90,11 @@ function formatEditInfo(json) {
     });
     editNote = $('#batch_replace_edit_note')[0].value;
     data.push('edit-recording.edit_note=' + editNote);
+    if (document.getElementById('votable').checked) {
+        data.push('edit-recording.make_votable=1');
+    } else {
+        data.push('edit-recording.make_votable=0');
+    }
     performers.sort(helper.comparefct).forEach(function(performer, idx) {
         if (document.URL.split('/')[3] === 'artist' && performer.mbid === mbid) {
             performerName = $('#performerAlias')[0].selectedOptions[0].text;
@@ -155,6 +160,8 @@ function replaceArtist() {
             'value': 'Select all'
         })
     ).append(
+        $('<div class="auto-editor"><label><input type="checkbox" id="votable" />Make all edits votable.</label></div>')
+    ).append(
         $('<p>').append('Edit note:')
         .append(
             $('<textarea></textarea>', {
@@ -179,6 +186,7 @@ $(document).ready(function () {
         $('#batch_select').prop('disabled', false);
         $('#batch_replace_edit_note').prop('disabled', false);
         $('#batch_replace').prop('disabled', false);
+        $('#selectors').prop('disabled', true);
     });
     $('#batch_replace').click(function () {replaceArtist();});
     $('#batch_select').click(function () {
