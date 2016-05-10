@@ -4,7 +4,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.4
+// @version      2016.5.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -29,7 +29,7 @@ var requests = requests,
     server = server,
     helper = helper,
     sidebar = sidebar,
-    editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
+    editNoteMsg = 'CSG: Set performer(s) in recording AR as recording artist\n';
 
 function showSelectors() {
     var $rows = $('table.tbl a[href*="/artist/"]').parents('tr');
@@ -73,7 +73,7 @@ function formatEditInfo(json) {
         data.push('edit-recording.isrcs.0');
     } else {
         json.isrcs.forEach(function(isrc, idx) {
-            data.push('edit-recording.isrcs.' + idx + '=' + json.isrc);
+            data.push('edit-recording.isrcs.' + idx + '=' + isrc);
         });
     }
     json.relationships.forEach(function(rel) {
