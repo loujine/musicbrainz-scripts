@@ -47,8 +47,7 @@ function parseCount(resp, tab) {
 (function showCountAliases() {
     var tab = $("a[href$='/aliases']")[0],
         entityType = document.URL.split('/')[3],
-        mbid = document.URL.split('/')[4],
-        url = '/ws/2/' + entityType + '/' + encodeURIComponent(mbid) + '/?inc=aliases&fmt=json';
+        url = helper.wsUrl(entityType, ['aliases']);
     requests.GET(url, function (resp) {
         parseCount(JSON.parse(resp), tab);
     });

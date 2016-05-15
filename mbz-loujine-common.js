@@ -275,6 +275,28 @@ var helper = function () {
         if (a.link === b.link) {return 0;}
         return order.indexOf(a.link) > order.indexOf(b.link) ? 1 : -1;
     };
+
+    self.mbidFromURL = function () {
+        return document.URL.split('/')[4];
+    };
+
+    self.wsUrl = function (entityType, options) {
+        var url = '/ws/2/' + entityType + '/'
+        url += encodeURIComponent(self.mbidFromURL())
+        url += '?fmt=json';
+        options.forEach(function (option) {
+            url += '&inc=' + option;
+        });
+        return url;
+    };
+
+    self._isEntityTypeURL = function(entityType) {
+        return document.URL.split('/')[3] === entityType;
+    };
+    self.isArtistURL = self._isEntityTypeURL('artist');
+    self.isReleaseURL = self._isEntityTypeURL('release');
+    self.isWorkURL = self._isEntityTypeURL('work');
+
     return self;
 }();
 

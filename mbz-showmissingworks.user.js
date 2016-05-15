@@ -28,8 +28,7 @@ function showMissingWorks() {
 
     $recordings.each(function (idx, recording) {
         setTimeout(function () {
-            var mbid = recording.href.split('/')[4],
-                url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json&inc=work-rels';
+            var url = helper.wsUrl('recording', ['work-rels']);
             requests.GET(url, function (response) {
                 var resp = JSON.parse(response),
                     $node;

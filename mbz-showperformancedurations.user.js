@@ -22,8 +22,7 @@
 // imported from mbz-loujine-common.js: requests, helper, sidebar
 
 function showPerformanceDurations() {
-    var mbid = document.URL.split('/')[4],
-        url = '/ws/2/work/' + encodeURIComponent(mbid) + '?inc=recording-rels&fmt=json',
+    var url = helper.wsUrl('work', ['recording-rels']),
         $recordings = $('table a[href*="/recording/"]');
     $('thead > tr').append('<th>Time</th>');
     $('.subh > th')[1].colSpan += 1;

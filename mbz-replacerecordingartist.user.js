@@ -97,7 +97,7 @@ function showPerformers(start, maxcount) {
 function formatEditInfo(json) {
     var data = [],
         performers = [],
-        mbid = document.URL.split('/')[4],
+        mbid = helper.mbidFromURL(),
         editNote,
         performerName,
         encodeName = function (name) {
@@ -131,7 +131,7 @@ function formatEditInfo(json) {
     editNote = $('#batch_replace_edit_note')[0].value;
     data.push('edit-recording.edit_note=' + editNote);
     performers.sort(helper.comparefct).forEach(function(performer, idx) {
-        if (document.URL.split('/')[3] === 'artist' && performer.mbid === mbid) {
+        if (helper.isArtistURL() && performer.mbid === mbid) {
             performerName = $('#performerAlias')[0].selectedOptions[0].text;
         } else {
             performerName = performer.name;
@@ -245,8 +245,7 @@ function replaceArtist() {
 
 function parseAliases() {
     if (document.URL.split('/')[3] === 'artist') {
-        var mbid = document.URL.split('/')[4],
-            url = '/ws/2/artist/' + encodeURIComponent(mbid) + '?fmt=json&inc=aliases',
+        var url = helper.wsUrl('artist', ['aliases']),
             callback = function (aliasObject) {
                 $.each(aliasObject, function(locale, name) {
                     $('#performerAlias').append(

@@ -37,8 +37,7 @@ function parseCount(resp, tab) {
 
 (function showCountDiscid() {
     var tab = $("a[href$='/discids']")[0],
-        mbid = document.URL.split('/')[4],
-        url = '/ws/2/release/' + encodeURIComponent(mbid) + '/?inc=discids&fmt=json';
+        url = helper.wsUrl('release', ['discids']);
     requests.GET(url, function (resp) {
         parseCount(JSON.parse(resp), tab);
     });
