@@ -39,6 +39,7 @@ var server = {
         44: 148, // instrument
         45: 150, // orchestra
         46: 151, // conductor
+        53: 152, // chorus master
         60: 149  // vocal
     },
     // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
