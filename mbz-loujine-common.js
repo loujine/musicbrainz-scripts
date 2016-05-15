@@ -1,9 +1,10 @@
+/* global $ MB */
 'use strict';
 // ==UserScript==
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.4
+// @version      2016.5.15
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -294,7 +295,7 @@ var sidebar = function ($) {
         if ($('div#loujine-sidebar').length) {
             $container = $('div#loujine-sidebar');
         } else {
-            $container = $('<div></div>', {
+            $container = $('<div>', {
                 'id': 'loujine-sidebar',
                 'css': {
                     'background-color': 'white',
@@ -303,7 +304,7 @@ var sidebar = function ($) {
                     'border': '2px dotted #736DAB'
                 }
             }).append(
-                $('<h2></h2>', {'text': 'loujine GM tools'})
+                $('<h2>', {'text': 'loujine GM tools'})
             );
         }
         $('h2.rating').before($container);
@@ -332,7 +333,7 @@ var relEditor = function (MB, $) {
         if ($('div#loujine-menu').length) {
             $container = $('div#loujine-menu');
         } else {
-            $container = $('<div></div>', {
+            $container = $('<div>', {
                 'id': 'loujine-menu',
                 'css': {
                     'background-color': 'white',
@@ -341,7 +342,7 @@ var relEditor = function (MB, $) {
                     'border': '5px dotted #736DAB'
                 }
             }).append(
-                $('<h2></h2>', {'text': 'loujine GM tools'})
+                $('<h2>', {'text': 'loujine GM tools'})
             );
         }
         return $container;

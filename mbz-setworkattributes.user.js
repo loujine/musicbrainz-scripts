@@ -1,10 +1,11 @@
+/* global $ requests server works sidebar */
 'use strict';
 var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.2.5
+// @version      2016.5.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -25,11 +26,7 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: requests, server, works, sidebar
-var requests = requests,
-    server = server,
-    works = works,
-    sidebar = sidebar,
-    $rows = $('table.tbl tr:gt(0)'),
+var $rows = $('table.tbl tr:gt(0)'),
     idxType = $('table.tbl th:contains("Type")').index(),
     idxLang = $('table.tbl th:contains("Language")').index(),
     idxKey = $('table.tbl th:contains("Attributes")').index();
@@ -56,7 +53,7 @@ $rows.each(function (idx, row) {
             });
         }
     }
-    var $button = $('<input></input>', {
+    var $button = $('<input>', {
         'id': 'edit-' + mbid,
         'class': 'commit',
         'type': 'checkbox'
@@ -163,14 +160,14 @@ function editWork() {
         ).append(
             $('<p>Edit note:</p>')
         ).append(
-            $('<textarea></textarea>', {
+            $('<textarea>', {
                 'id': 'batch_replace_edit_note',
                 'text': sidebar.editNote(meta),
                 'cols': 20,
                 'rows': 7
             })
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'batch_edit',
                 'type': 'button',
                 'value': 'Edit selected works'

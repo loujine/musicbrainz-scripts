@@ -1,3 +1,4 @@
+/* global $ requests server sidebar helper */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Show missing works
@@ -17,10 +18,7 @@
 // @run-at       document-end
 // ==/UserScript==
 
-// imported from mbz-loujine-common.js: requests, server, sidebar
-var requests = requests,
-    server = server,
-    sidebar = sidebar;
+// imported from mbz-loujine-common.js: requests, server, sidebar, helper
 
 
 function showMissingWorks() {
@@ -37,15 +35,19 @@ function showMissingWorks() {
                     $node;
                 if (resp.relations.length) {
                     if (resp.relations[0].begin) {
-                        $node = $('<td>✓</td>').css('background-color', 'green');
+                        $node = $('<td>✓</td>').css('background-color',
+                                                    'green');
                     } else {
-                        $node = $('<td>⚠</td>').css('background-color', 'orange');
+                        $node = $('<td>⚠</td>').css('background-color',
+                                                    'orange');
                     }
                 } else {
                     $node = $('<td>✗</td>').css('background-color', 'red');
                 }
-                $(recording).parents('tr').append($node.css({'text-align': 'center',
-                                                             'font-size': '100%'}));
+                $(recording).parents('tr').append(
+                    $node.css({'text-align': 'center',
+                               'font-size': '100%'})
+                );
             });
         }, idx * server.timeout);
     });
@@ -55,7 +57,7 @@ function showMissingWorks() {
     sidebar.container().append(
         $('<h3>Linked works</h3>')
     ).append(
-        $('<input></input>', {
+        $('<input>', {
             'id': 'showmissingworks',
             'type': 'button',
             'value': 'Show missing works'
@@ -63,7 +65,9 @@ function showMissingWorks() {
     ).append(
         $('<p>Display:</p>')
     ).append(
-        $('<ul><li>✓: linked work with date</li><li>⚠: linked work without date</li><li>✗: no work linked</li></ul>')
+        $('<ul><li>✓: linked work with date</li>' +
+              '<li>⚠: linked work without date</li>' +
+              '<li>✗: no work linked</li></ul>')
     );
 })(sidebar);
 

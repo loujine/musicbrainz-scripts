@@ -1,10 +1,11 @@
+/* global $ MB requests server relEditor */
 'use strict';
 var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.25
+// @version      2016.5.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,9 +25,6 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: requests, server, relEditor
-var requests = requests,
-    server = server,
-    relEditor = relEditor;
 
 function setWork(recording, work) {
     var vm = MB.releaseRelationshipEditor;
@@ -66,13 +64,13 @@ function guessWork() {
         ).append(
             $('<span>Prefix:</span>')
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'prefix',
                 'type': 'text',
                 'value': ''
             })
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'searchwork',
                 'type': 'button',
                 'value': 'Guess works'

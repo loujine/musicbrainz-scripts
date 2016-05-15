@@ -1,3 +1,4 @@
+/* global $ MB server relEditor */
 'use strict';
 var meta = function() {
 // ==UserScript==
@@ -24,8 +25,6 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-releditor.js: server, relEditor
-var server = server,
-    relEditor = relEditor;
 
 function setInstrument(fromType, toType, attrIds, credit) {
     function _relationships(recording, type) {
@@ -37,18 +36,17 @@ function setInstrument(fromType, toType, attrIds, credit) {
     }
 
     attrIds = attrIds || [];
-    var recordings = MB.relationshipEditor.UI.checkedRecordings(),
-        vm = MB.releaseRelationshipEditor;
+    var recordings = MB.relationshipEditor.UI.checkedRecordings();
     recordings.forEach(function(recording) {
         var relationships = _relationships(recording, fromType);
         relationships.forEach(function(relation) {
             var attrs = relation.attributes();
             relation.linkTypeID(toType);
-            attrIds.forEach(function(attrId) {
-                attrs.push({ type: MB.attrInfoByID[attrId] });
+            attrIds.forEach(function (attrId) {
+                attrs.push({type: MB.attrInfoByID[attrId]});
             });
             relation.setAttributes(attrs);
-            attrIds.forEach(function(attrId, idx) {
+            attrIds.forEach(function (attrId, idx) {
                 relation.attributes()[idx].creditedAs(credit);
             });
          });
@@ -58,33 +56,33 @@ function setInstrument(fromType, toType, attrIds, credit) {
 (function displayToolbar(relEditor) {
     $('div.tabs').after(
         relEditor.container().append(
-            $('<h3></h3>', {'text': 'Recording-performer instrument attributes'})
+            $('<h3>Recording-performer instrument attributes</h3>')
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'batch-unset-orchestra',
                 'type': 'button',
                 'value': 'Unset "Orchestra"'
             })
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'batch-unset-instrument',
                 'type': 'button',
                 'value': 'Unset instrument'
             })
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'batch-set-string-quartet',
                 'type': 'button',
                 'value': 'Set "String Quartet"'
             })
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'batch-set-piano-trio',
                 'type': 'button',
                 'value': 'Set "Piano Trio"'
             })
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'batch-set-piano',
                 'type': 'button',
                 'value': 'Set "Piano"'

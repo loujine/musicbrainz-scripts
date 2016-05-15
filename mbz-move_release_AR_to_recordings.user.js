@@ -1,11 +1,11 @@
-/* global $ _ relEditor MB */
+/* global $ _ MB requests server relEditor */
 'use strict';
 var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Move performer AR on release to recordings AR
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.3
+// @version      2016.5.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -26,9 +26,6 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: requests, server, relEditor
-var requests = requests,
-    server = server,
-    relEditor = relEditor;
 
 function fetchLinkIds() {
     var ids = [MB.typeInfo['artist-release'][0].id];
@@ -41,7 +38,7 @@ function fetchLinkIds() {
         }
     });
     return ids;
-};
+}
 
 function moveAR(ids) {
     var vm = MB.releaseRelationshipEditor;
@@ -59,8 +56,9 @@ function moveAR(ids) {
                     target: performer,
                     viewModel: vm
                 });
-                // console.log(releaseLinkType);
-                dialog.relationship().linkTypeID(server.releaseToRecordingLink[releaseLinkType]);
+                dialog.relationship().linkTypeID(
+                    server.releaseToRecordingLink[releaseLinkType]
+                );
                 dialog.accept();
                 if (releaseLinkAttributes.length) {
                     dialog.relationship().setAttributes(releaseLinkAttributes);
@@ -79,10 +77,10 @@ function moveAR(ids) {
         relEditor.container().append(
             $('<h3>Move AR to recordings</h3>')
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'moveAR',
                 'type': 'button',
-                'value': 'Move AR to selected recordings',
+                'value': 'Move AR to selected recordings'
             })
         )
     );

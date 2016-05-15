@@ -1,10 +1,11 @@
+/* global $ requests server helper sidebar */
 'use strict';
 var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.25
+// @version      2016.5.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -26,11 +27,7 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: requests, server, sidebar
-var requests = requests,
-    server = server,
-    helper = helper,
-    sidebar = sidebar,
-    editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
+var editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
 
 function formatPerformers(relations) {
     var performers = [];
@@ -80,7 +77,7 @@ function showPerformers(start, maxcount) {
                     $button;
                 if (resp.relations.length) {
                     $node = $('<td>' + formatPerformers(resp.relations) + '</td>');
-                    $button = $('<input></input>', {
+                    $button = $('<input>', {
                         'id': 'replace-' + mbid,
                         'class': 'replace',
                         'type': 'checkbox',
@@ -183,12 +180,12 @@ function replaceArtist() {
 (function displaySidebar(sidebar) {
     sidebar.container()
     .append(
-        $('<h3>').append('Show performers')
+        $('<h3>Show performers</h3>')
     ).append(
         $('<div>')
         .append('Start at:')
         .append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'offset',
                 'type': 'text',
                 'value': '1'
@@ -198,7 +195,7 @@ function replaceArtist() {
         $('<div>')
         .append('Max count:')
         .append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'max',
                 'type': 'text',
                 'value': '10'
@@ -211,11 +208,11 @@ function replaceArtist() {
             'value': 'Show performer AR'
         })
     ).append(
-        $('<h3>').append('Replace artists')
+        $('<h3>Replace artists</h3>')
     ).append(
         $('<p>First click "Show performer AR" then check boxes to select artists</p>')
     ).append(
-        $('<input></input>', {
+        $('<input>', {
             'id': 'batch_select',
             'type': 'button',
             'disabled': true,
@@ -237,7 +234,7 @@ function replaceArtist() {
             })
         )
     ).append(
-        $('<input></input>', {
+        $('<input>', {
             'id': 'batch_replace',
             'type': 'button',
             'disabled': true,
@@ -261,7 +258,9 @@ function parseAliases() {
         requests.GET(url, function (response) {
             var resp = JSON.parse(response),
                 aliases = {'default': resp.name};
-            $('#performerAlias').append( $('<option>', {'value': 'default'}).append(resp.name));
+            $('#performerAlias').append(
+                $('<option>', {'value': 'default'}).append(resp.name)
+            );
             if (resp.aliases.length) {
                 resp.aliases.forEach(function (alias) {
                     if (alias.locale) {

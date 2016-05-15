@@ -1,10 +1,11 @@
+/* global $ requests server helper sidebar */
 'use strict';
 var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.10
+// @version      2016.5.14
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -25,24 +26,20 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: requests, server, sidebar
-var requests = requests,
-    server = server,
-    helper = helper,
-    sidebar = sidebar,
-    editNoteMsg = 'CSG: Set performer(s) in recording AR as recording artist\n';
+var editNoteMsg = 'CSG: Set performer(s) in recording AR as recording artist\n';
 
 function showSelectors() {
-    var $rows = $('table.tbl a[href*="/artist/"]').parents('tr');
-    $rows = $($rows.get().reverse()); // FIXME why is jquery reversing the list?
+    var $rows = $(
+        $('table.tbl a[href*="/artist/"]').parents('tr').get().reverse()
+    );
     if (!$('#selectorColumn').length) {
         $('thead > tr').append('<th id="selectorColumn">AR</th>');
-        // $('.subh > th')[1].colSpan += 1;
     }
 
     $rows.each(function (idx, tr) {
-        var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[2];
-        var $node = $('<td></td>');
-        var $button = $('<input></input>', {
+        var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[2],
+            $node = $('<td>'),
+            $button = $('<input>', {
             'id': 'replace-' + mbid,
             'class': 'replace',
             'type': 'checkbox',
@@ -149,18 +146,25 @@ function replaceArtist() {
             'value': 'Show checkboxes'
         })
     ).append(
-        $('<h3>').append('Replace artists')
+        $('<h3>Replace artists</h3>')
     ).append(
         $('<p>First click "Show checkboxes" then select recordings to update</p>')
     ).append(
-        $('<input></input>', {
+        $('<input>', {
             'id': 'batch_select',
             'type': 'button',
             'disabled': true,
             'value': 'Select all'
         })
     ).append(
-        $('<div class="auto-editor"><label><input type="checkbox" id="votable" />Make all edits votable.</label></div>')
+        $('<div>', {'class': 'auto-editor'})
+        .append(
+            $('<label>Make all edits votable</label>')
+            .append($('<input>',
+                      {'type': 'checkbox',
+                       'id': 'votable'})
+            )
+        )
     ).append(
         $('<p>').append('Edit note:')
         .append(
@@ -171,7 +175,7 @@ function replaceArtist() {
             })
         )
     ).append(
-        $('<input></input>', {
+        $('<input>', {
             'id': 'batch_replace',
             'type': 'button',
             'disabled': true,

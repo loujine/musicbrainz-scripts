@@ -1,10 +1,11 @@
+/* global $ MB server relEditor */
 'use strict';
 var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Batch-propagate recording dates
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.25
+// @version      2016.5.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,8 +25,6 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: server, relEditor
-var server = server,
-    relEditor = relEditor;
 
 function copyDate(from_date, relation) {
     ['beginDate', 'endDate'].forEach(function(date) {
@@ -92,19 +91,19 @@ function removeDates() {
     $('div.tabs').after(
         relEditor.container()
         .append(
-            $('<h3></h3>', {'text': 'Dates'})
+            $('<h3>Dates</h3>')
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'copydates',
                 'type': 'button',
                 'value': 'Copy dates'
-                })
+            })
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'removedates',
                 'type': 'button',
                 'value': 'Remove dates'
-                })
+            })
         )
     );
 })(relEditor);

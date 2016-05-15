@@ -1,10 +1,11 @@
+/* global $ MB server relEditor */
 'use strict';
 var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Batch-set recording-work attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.2.5
+// @version      2016.5.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,8 +25,6 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: server, relEditor
-var server = server,
-    relEditor = relEditor;
 
 function setAttributes(attrId, toggle) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings();
@@ -49,27 +48,27 @@ function setAttributes(attrId, toggle) {
 (function displayToolbar(relEditor) {
     $('div.tabs').after(
         relEditor.container().append(
-            $('<h3></h3>', {'text': 'Recording-Work relation attributes'})
+            $('<h3>', {'text': 'Recording-Work relation attributes'})
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'setlive',
                 'type': 'button',
                 'value': 'Set live'
             })
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'setpartial',
                 'type': 'button',
                 'value': 'Set partial'
             })
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'togglelive',
                 'type': 'button',
                 'value': 'Toggle live'
             })
         ).append(
-            $('<input></input>', {
+            $('<input>', {
                 'id': 'togglepartial',
                 'type': 'button',
                 'value': 'Toggle partial'
