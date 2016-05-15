@@ -23,8 +23,10 @@
 
 function showMissingWorks() {
     var $recordings = $('table a[href*="/recording/"]');
-    $('thead > tr').append('<th>Related work</th>');
-    $('.subh').append('<th>with date</th>');
+    if (!$('#workColumn').length) {
+        $('thead > tr').append('<th id="workColumn">Related work</th>');
+        $('.subh').append('<th>with date</th>');
+    }
 
     $recordings.each(function (idx, recording) {
         setTimeout(function () {

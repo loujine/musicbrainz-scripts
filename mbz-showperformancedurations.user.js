@@ -24,8 +24,10 @@
 function showPerformanceDurations() {
     var url = helper.wsUrl('work', ['recording-rels']),
         $recordings = $('table a[href*="/recording/"]');
-    $('thead > tr').append('<th>Time</th>');
-    $('.subh > th')[1].colSpan += 1;
+    if (!$('#lengthColumn').length) {
+        $('thead > tr').append('<th id="lengthColumn">Length</th>');
+        $('.subh > th')[1].colSpan += 1;
+    }
 
     requests.GET(url, function (resp) {
         var durations = {};
