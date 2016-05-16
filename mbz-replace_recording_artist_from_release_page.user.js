@@ -1,4 +1,4 @@
-/* global $ requests server helper sidebar */
+/* global $ _ requests server helper sidebar */
 'use strict';
 var meta = function() {
 // ==UserScript==
@@ -90,7 +90,15 @@ function formatEditInfo(json) {
     } else {
         data.push('edit-recording.make_votable=0');
     }
+    var uniqueIds = [];
     performers.sort(helper.comparefct).forEach(function(performer, idx) {
+        if (_.includes(uniqueIds, performer.id)) {
+            if (idx === performers.length - 1) {
+                data[data.length - 3] = data[data.length - 3].slice(0, -2)
+            }
+            return;
+        };
+        uniqueIds.push(performer.id);
         var creditedName = performer.name;
         if (performer.creditedName) {
             creditedName = performer.creditedName;
@@ -118,6 +126,7 @@ function replaceArtist() {
                 callback = function (info) {
                     var $status = $('#' + node.id + '-text');
                     // console.log('Sending POST ' + mbid + ' edit info');
+                    // console.log(formatEditInfo(info));
                     requests.POST(url, formatEditInfo(info), function (xhr) {
                         $status.text('Sending edit data');
                         if (xhr.status === 200 || xhr.status === 0) {
