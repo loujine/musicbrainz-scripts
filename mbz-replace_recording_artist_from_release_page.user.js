@@ -125,10 +125,10 @@ function replaceArtist() {
                 url = '/recording/' + encodeURIComponent(mbid) + '/edit',
                 callback = function (info) {
                     var $status = $('#' + node.id + '-text');
+                    $status.text('Sending edit data');
                     // console.log('Sending POST ' + mbid + ' edit info');
                     // console.log(formatEditInfo(info));
                     requests.POST(url, formatEditInfo(info), function (xhr) {
-                        $status.text('Sending edit data');
                         if (xhr.status === 200 || xhr.status === 0) {
                             node.disabled = true;
                             $status.text(
@@ -151,8 +151,8 @@ function replaceArtist() {
                 };
             // console.log('Fetching ' + mbid + ' edit info');
 
+            $(node).after('<span id="' + node.id + '-text">Fetching required data</span>');
             requests.GET(url, function (resp) {
-                $(node).after('<span id="' + node.id + '-text">Fetching required data</span>');
                 var info = new RegExp('sourceData: (.*),\n').exec(resp)[1];
                 callback(JSON.parse(info));
             });
