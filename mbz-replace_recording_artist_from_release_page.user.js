@@ -54,9 +54,6 @@ function showSelectors() {
 function formatEditInfo(json) {
     var data = [],
         performers = [],
-        mbid = document.URL.split('/')[4],
-        editNote,
-        performerName,
         encodeName = function (name) {
             return encodeURIComponent(name).replace(/%20/g, '+');
         };
@@ -79,13 +76,14 @@ function formatEditInfo(json) {
             linkType === server.link.instrument || linkType === server.link.vocals ||
             linkType === server.link.orchestra || linkType === server.link.conductor) {
             performers.push({'name': rel.target.name,
+                             'creditedName': rel.entity0_credit,
                              'id': rel.target.id,
                              'link': linkType,
                              'mbid': rel.target.gid
             });
         }
     });
-    editNote = $('#batch_replace_edit_note')[0].value;
+    var editNote = $('#batch_replace_edit_note')[0].value;
     data.push('edit-recording.edit_note=' + editNote);
     if (document.getElementById('votable').checked) {
         data.push('edit-recording.make_votable=1');
@@ -93,12 +91,11 @@ function formatEditInfo(json) {
         data.push('edit-recording.make_votable=0');
     }
     performers.sort(helper.comparefct).forEach(function(performer, idx) {
-        if (document.URL.split('/')[3] === 'artist' && performer.mbid === mbid) {
-            performerName = $('#performerAlias')[0].selectedOptions[0].text;
-        } else {
-            performerName = performer.name;
+        var creditedName = performer.name;
+        if (performer.creditedName) {
+            creditedName = performer.creditedName;
         }
-        data.push('edit-recording.artist_credit.names.' + idx + '.name=' + encodeName(performerName));
+        data.push('edit-recording.artist_credit.names.' + idx + '.name=' + encodeName(creditedName));
         if (idx === performers.length - 1) {
             data.push('edit-recording.artist_credit.names.' + idx + '.join_phrase');
         } else {
