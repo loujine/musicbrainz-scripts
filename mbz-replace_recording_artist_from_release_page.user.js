@@ -33,20 +33,21 @@ function showSelectors() {
         $('table.tbl a[href*="/artist/"]').parents('tr').get().reverse()
     );
     if (!$('#selectorColumn').length) {
-        $('thead > tr').append('<th id="selectorColumn">AR</th>');
+        $('.subh').append('<th id="selectorColumn">AR</th>');
     }
 
     $rows.each(function (idx, tr) {
-        var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[2],
-            $node = $('<td>'),
-            $button = $('<input>', {
-            'id': 'replace-' + mbid,
-            'class': 'replace',
-            'type': 'checkbox',
-            'value': 'Replace artist'
-        });
-        $node.append($button);
-        $(tr).append($node);
+        var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[2];
+        $(tr).append(
+            $('<td>').append(
+                $('<input>', {
+                    'id': 'replace-' + mbid,
+                    'class': 'replace',
+                    'type': 'checkbox',
+                    'value': 'Replace artist'
+                })
+            )
+        );
     });
 }
 
@@ -108,6 +109,8 @@ function formatEditInfo(json) {
 }
 
 function replaceArtist() {
+    // in order to determine the edit parameters required by POST
+    // we first load the /edit page and parse the JSON data
     // in the sourceData block
     $('.replace:input:checked:enabled').each(function (idx, node) {
         setTimeout(function () {
