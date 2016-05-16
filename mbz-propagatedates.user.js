@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-propagate recording dates
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.15
+// @version      2016.5.16
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Copy dates on relevant recording AR fields
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125991
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=126061
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -66,10 +66,7 @@ function propagateDates() {
             var from_period = relations[idx].period;
             relations.forEach(function(rel) {
                 var linkType = parseInt(rel.linkTypeID());
-                if (linkType === server.link.performer || linkType === server.link.work ||
-                    linkType === server.link.instrument || linkType === server.link.vocals ||
-                    linkType === server.link.orchestra || linkType === server.link.conductor ||
-                    linkType === server.link.place || linkType === server.link.area) {
+                if (_.includes(_.values(server.recordingLinkType)), linkType) {
                     copyDate(from_period, rel);
                 }
             });

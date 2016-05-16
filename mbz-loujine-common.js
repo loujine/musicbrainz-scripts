@@ -14,7 +14,7 @@
 
 // from musicbrainz-server/root/static/scripts/tests/typeInfo.js
 var server = {
-    'link': {
+    'recordingLinkType': {
         'instrument': 148,
         'vocals': 149,
         'orchestra': 150,
@@ -25,6 +25,28 @@ var server = {
         'place': 693,
         'area': 698
     },
+    'releaseLinkTypeID': {
+        44: 'instrument',
+        60: 'vocals',
+        45: 'orchestra',
+        46: 'conductor',
+        53: 'chorusmaster',
+        51: 'performer',
+    },
+    'releaseToRecordingLink': function (linkTypeID) {
+        return server.recordingLinkType[server.releaseLinkTypeID[linkTypeID]];
+    },
+    '_performingRoles': [
+        'instrument',
+        'vocals',
+        'orchestra',
+        'conductor',
+        'chorusmaster',
+        'performer',
+    ],
+    'performingLinkTypes': function () {
+        return _.values(_.pick(server.recordingLinkType, server._performingRoles));
+    },
     'attr': {
         'strings': 69,
         'cello': 84,
@@ -33,14 +55,6 @@ var server = {
         'bowedStrings': 275,
         'live': 578,
         'partial': 579
-    },
-    'releaseToRecordingLink': {
-        51: 156, // performer
-        44: 148, // instrument
-        45: 150, // orchestra
-        46: 151, // conductor
-        53: 152, // chorus master
-        60: 149  // vocal
     },
     // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
     // we wait for 'server.timeout' milliseconds between two queries
@@ -270,7 +284,7 @@ var helper = function () {
 
     self.comparefct = function(a, b) {
         // Sort function for performers in the recording artist list
-        var link = server.link,
+        var link = server.recordingLinkType,
             order = [link.vocals, link.instrument, link.orchestra,
                      link.conductor, link.performer];
         if (a.link === b.link) {return 0;}

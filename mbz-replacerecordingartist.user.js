@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Replace associated recording artist from an Artist or Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125995
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=126061
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*
@@ -118,9 +118,7 @@ function formatEditInfo(json) {
     }
     json.relationships.forEach(function(rel) {
         var linkType = rel.linkTypeID;
-        if (linkType === server.link.performer ||
-            linkType === server.link.instrument || linkType === server.link.vocals ||
-            linkType === server.link.orchestra || linkType === server.link.conductor) {
+        if (_.includes(server.performingLinkTypes(), linkType)) {
             performers.push({'name': rel.target.name,
                              'id': rel.target.id,
                              'link': linkType,

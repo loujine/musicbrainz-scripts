@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set recording-artist instrument
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.2.5
+// @version      2016.5.16
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Convert to "string" instrument AR on selected recordings
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125991
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=126061
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -93,26 +93,27 @@ function setInstrument(fromType, toType, attrIds, credit) {
 
 // imported from mbz-loujine-common.js: server
 $(document).ready(function () {
+    var link = server.recordingLinkType;
     $('#batch-unset-orchestra').click(function () {
-        setInstrument(server.link.orchestra, server.link.performer);
+        setInstrument(link.orchestra, link.performer);
         relEditor.editNote(meta);
     });
     $('#batch-unset-instrument').click(function () {
-        setInstrument(server.link.instrument, server.link.performer);
+        setInstrument(link.instrument, link.performer);
         relEditor.editNote(meta);
     });
     $('#batch-set-string-quartet').click(function () {
-        setInstrument(server.link.performer, server.link.instrument,
+        setInstrument(link.performer, link.instrument,
                       [server.attr.strings], 'string quartet');
         relEditor.editNote(meta, 'Use "strings" instrument AR for a String Quartet artist');
     });
     $('#batch-set-piano-trio').click(function () {
-        setInstrument(server.link.performer, server.link.instrument,
+        setInstrument(link.performer, link.instrument,
                       [server.attr.piano, server.attr.violin, server.attr.cello]);
         relEditor.editNote(meta, 'Use instruments AR for a Piano Trio artist');
     });
     $('#batch-set-piano').click(function () {
-        setInstrument(server.link.performer, server.link.instrument,
+        setInstrument(link.performer, link.instrument,
                       [server.attr.piano]);
         relEditor.editNote(meta);
     });

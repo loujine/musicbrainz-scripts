@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Move performer AR on release to recordings AR
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.15
+// @version      2016.5.16
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Move performer AR on release to recordings AR
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125991
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=126061
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @include      http*://*mbsandbox.org/release/*/edit-relationships
 // @grant        none
@@ -57,7 +57,7 @@ function moveAR(ids) {
                     viewModel: vm
                 });
                 dialog.relationship().linkTypeID(
-                    server.releaseToRecordingLink[releaseLinkType]
+                    server.releaseToRecordingLink(releaseLinkType)
                 );
                 dialog.accept();
                 if (releaseLinkAttributes.length) {
