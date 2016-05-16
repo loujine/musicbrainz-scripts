@@ -117,23 +117,25 @@ function replaceArtist() {
             var mbid = node.id.replace('replace-', ''),
                 url = '/recording/' + encodeURIComponent(mbid) + '/edit',
                 callback = function (info) {
+                    var $status = $('#' + node.id + '-text');
                     // console.log('Sending POST ' + mbid + ' edit info');
                     requests.POST(url, formatEditInfo(info), function (xhr) {
+                        $status.text('Sending edit data');
                         if (xhr.status === 200 || xhr.status === 0) {
                             node.disabled = true;
-                            $(node).after(
-                                '<span>Success (code ' + xhr.status + ')</span>'
+                            $status.text(
+                                'Success (code ' + xhr.status + ')'
                             ).parent().css('color', 'green');
                             var editId = new RegExp(
                                 '/edit/(.*)">edit</a>'
                             ).exec(xhr.responseText)[1];
-                            $(node).next().after(
+                            $status.after(
                                 $('<p>').append(
                                     '<a href="/edit/' + editId + '" target="_blank">edit ' + editId + '</a>'
                                 )
                             );
                         } else {
-                            $(node).after(
+                            $status.text(
                                 'Error (code ' + xhr.status + ')'
                             ).parent().css('color', 'red');
                         }
@@ -142,6 +144,7 @@ function replaceArtist() {
             // console.log('Fetching ' + mbid + ' edit info');
 
             requests.GET(url, function (resp) {
+                $(node).after('<span id="' + node.id + '-text">Fetching required data</span>');
                 var info = new RegExp('sourceData: (.*),\n').exec(resp)[1];
                 callback(JSON.parse(info));
             });
