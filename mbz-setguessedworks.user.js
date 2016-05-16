@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.15
+// @version      2016.10.30
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -27,12 +27,21 @@ if (meta && meta.toString && (meta = meta.toString())) {
 // imported from mbz-loujine-common.js: requests, server, relEditor
 
 function setWork(recording, work) {
-    var vm = MB.releaseRelationshipEditor;
-    MB.relationshipEditor.UI.AddDialog({
-        source: recording,
-        target: work,
-        viewModel: vm
-    }).accept();
+    var url = '/ws/js/entity/' + work.gid + '?inc=rels';
+    requests.GET(url, function (resp) {
+        var vm = MB.releaseRelationshipEditor;
+        var target = JSON.parse(resp);
+        var dialog = MB.relationshipEditor.UI.AddDialog({
+            source: recording,
+            target: target,
+            viewModel: vm
+        });
+        target.relationships.forEach(function (rel) {
+            // apparently necessary to fill MB.entityCache with rels
+            MB.getRelationship(rel, target);
+        });
+        dialog.accept();
+    });
 }
 
 function guessWork() {
