@@ -121,9 +121,21 @@ function replaceArtist() {
                     requests.POST(url, formatEditInfo(info), function (xhr) {
                         if (xhr.status === 200 || xhr.status === 0) {
                             node.disabled = true;
-                            $(node).after(status).parent().css('color', 'green');
+                            $(node).after(
+                                '<span>Success (code ' + xhr.status + ')</span>'
+                            ).parent().css('color', 'green');
+                            var editId = new RegExp(
+                                '/edit/(.*)">edit</a>'
+                            ).exec(xhr.responseText)[1];
+                            $(node).next().after(
+                                $('<p>').append(
+                                    '<a href="/edit/' + editId + '" target="_blank">edit ' + editId + '</a>'
+                                )
+                            );
                         } else {
-                            $(node).after(status).parent().css('color', 'red');
+                            $(node).after(
+                                'Error (code ' + xhr.status + ')'
+                            ).parent().css('color', 'red');
                         }
                     });
                 };
