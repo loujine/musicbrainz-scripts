@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.16
+// @version      2016.5.17
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -51,17 +51,17 @@ function formatPerformers(relations) {
 
 function showPerformers(start, maxcount) {
     var $rows;
-    if (document.URL.split('/')[3] === 'artist') {
-        var performer = document.URL.split('/')[4],
+    if (helper.isArtistURL) {
+        var performer = helper.mbidFromURL(),
             $allRows = $('table.tbl a[href*="/artist/"]').parents('tr'),
             $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr');
         $rows = $allRows.not($performerRows);
         document.getElementById('loujine-locale').hidden = false;
-    } else if (document.URL.split('/')[3] === 'work') {
+    } else if (helper.isWorkURL) {
         var composer = $('th:contains("composer:")').parent().find('a').attr('href').split('/')[2];
         $rows = $('table.tbl a[href*="/artist/' + composer + '"]').parents('tr');
     }
-    $rows = $($rows.get().reverse().splice(start, maxcount)); // FIXME why is jquery reversing the list?
+    $rows = $($rows.get().reverse().splice(start, maxcount));
     if (!$('#ARperformerColumn').length) {
         $('thead > tr').append('<th id="ARperformerColumn">Performer AR</th>');
         $('.subh > th')[1].colSpan += 1;
@@ -180,22 +180,26 @@ function replaceArtist() {
     .append(
         $('<h3>Show performers</h3>')
     ).append(
+        $('<p>Show performers present in recording AR, for recordings not respecting the CSG</p>')
+    ).append(
         $('<div>')
-        .append('Start at:')
+        .append('First row:')
         .append(
             $('<input>', {
                 'id': 'offset',
-                'type': 'text',
+                'type': 'number',
+                'style': 'width: 50px',
                 'value': '1'
             })
         )
     ).append(
         $('<div>')
-        .append('Max count:')
+        .append('Rows to query:')
         .append(
             $('<input>', {
                 'id': 'max',
-                'type': 'text',
+                'type': 'number',
+                'style': 'width: 50px',
                 'value': '10'
             })
         )
@@ -242,7 +246,7 @@ function replaceArtist() {
 })(sidebar);
 
 function parseAliases() {
-    if (document.URL.split('/')[3] === 'artist') {
+    if (helper.isArtistURL) {
         var url = helper.wsUrl('artist', ['aliases']),
             callback = function (aliasObject) {
                 $.each(aliasObject, function(locale, name) {
