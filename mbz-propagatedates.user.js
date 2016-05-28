@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-propagate recording dates
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.16
+// @version      2016.5.28
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -66,7 +66,7 @@ function propagateDates() {
             var from_period = relations[idx].period;
             relations.forEach(function(rel) {
                 var linkType = parseInt(rel.linkTypeID());
-                if (_.includes(_.values(server.recordingLinkType)), linkType) {
+                if (_.includes(_.values(server.recordingLinkType), linkType)) {
                     copyDate(from_period, rel);
                 }
             });
