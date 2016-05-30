@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.23
+// @version      2016.5.29
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -32,7 +32,7 @@ var $rows = $('table.tbl tr:gt(0)'),
     idxKey = $('table.tbl th:contains("Attributes")').index();
 
 $rows.each(function (idx, row) {
-    var mbid = $(row).find('a[href*="/work/"]').attr('href').split('/')[4],
+    var mbid = $(row).find('a[href*="/work/"]').attr('href').split('/')[2],
         title = $(row).find('a[href*="/work/"]')[0].text;
     if (!row.children[idxType].textContent.trim()) {
         $(row.children[idxType]).append($('<form>').append($(works.type).clone()));
@@ -65,11 +65,11 @@ $rows.each(function (idx, row) {
 function updateJSON(json, node) {
     var row = $(node).parents('tr')[0];
     var type = $(row.children[idxType]).find('select');
-    var optionType = type ? type[0].value : null;
+    var optionType = type.length ? type[0].value : null;
     var lang = $(row.children[idxLang]).find('select');
-    var optionLang = lang ? lang[0].value : null;
+    var optionLang = lang.length ? lang[0].value : null;
     var key = $(row.children[idxKey]).find('select');
-    var optionKey = key ? key[0].value : null;
+    var optionKey = key.length ? key[0].value : null;
     if (optionType) {
         json.typeID = optionType;
     }
@@ -131,7 +131,7 @@ function editWork() {
                 callback = function (info) {
                     var info2 = updateJSON(info, node);
                     requests.POST(url, formatEditInfo(info2), function (xhr) {
-                        if (xhr.status === 200) {
+                        if (xhr.status === 200 || xhr.status === 0) {
                             node.disabled = true;
                             $(node).parent().css('background-color', 'green');
                         } else {
