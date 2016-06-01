@@ -1,11 +1,11 @@
-/* global $ _ requests server helper sidebar */
+/* global $ _ requests server helper sidebar edits */
 'use strict';
 var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.17
+// @version      2016.5.31
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Replace associated recording artist from a Release page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=126061
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=128923
 // @include      http*://*musicbrainz.org/release/*
 // @include      http*://*mbsandbox.org/release/*
 // @grant        none
@@ -52,7 +52,7 @@ function showSelectors() {
 }
 
 // Replace composer -> performer as recording artist (CSG)
-function formatEditInfo(json) {
+function formatEditData(json) {
     var data = [],
         performers = [],
         encodeName = function (name) {
@@ -73,7 +73,6 @@ function formatEditInfo(json) {
     }
     json.relationships.forEach(function(rel) {
         var linkType = rel.linkTypeID;
-
         if (_.includes(server.performingLinkTypes(), linkType)) {
             performers.push({'name': rel.target.name,
                              'creditedName': rel.entity0_credit,
@@ -97,7 +96,7 @@ function formatEditInfo(json) {
                 data[data.length - 3] = data[data.length - 3].slice(0, -2)
             }
             return;
-        };
+        }
         uniqueIds.push(performer.id);
         var creditedName = performer.name;
         if (performer.creditedName) {
@@ -116,47 +115,37 @@ function formatEditInfo(json) {
 }
 
 function replaceArtist() {
-    // in order to determine the edit parameters required by POST
-    // we first load the /edit page and parse the JSON data
-    // in the sourceData block
     $('.replace:input:checked:enabled').each(function (idx, node) {
+        var mbid = node.id.replace('replace-', ''),
+            url = edits.urlFromMbid('recording', mbid);
+        function success(xhr) {
+            var $status = $('#' + node.id + '-text');
+            node.disabled = true;
+            $status.text(
+                'Success (code ' + xhr.status + ')'
+            ).parent().css('color', 'green');
+            var editId = new RegExp(
+                '/edit/(.*)">edit</a>'
+            ).exec(xhr.responseText)[1];
+            $status.after(
+                $('<p>').append(
+                    '<a href="/edit/' + editId + '" target="_blank">edit ' + editId + '</a>'
+                )
+            )
+        }
+        function fail(xhr) {
+            $('#' + node.id + '-text').text(
+                'Error (code ' + xhr.status + ')'
+            ).parent().css('color', 'red');
+        }
+        function callback(data) {
+            $('#' + node.id + '-text').text('Sending edit data');
+            requests.POST(url, formatEditData(data), success, fail);
+        }
         setTimeout(function () {
-            var mbid = node.id.replace('replace-', ''),
-                url = '/recording/' + encodeURIComponent(mbid) + '/edit',
-                callback = function (info) {
-                    var $status = $('#' + node.id + '-text');
-                    $status.text('Sending edit data');
-                    // console.log('Sending POST ' + mbid + ' edit info');
-                    // console.log(formatEditInfo(info));
-                    requests.POST(url, formatEditInfo(info), function (xhr) {
-                        if (xhr.status === 200 || xhr.status === 0) {
-                            node.disabled = true;
-                            $status.text(
-                                'Success (code ' + xhr.status + ')'
-                            ).parent().css('color', 'green');
-                            var editId = new RegExp(
-                                '/edit/(.*)">edit</a>'
-                            ).exec(xhr.responseText)[1];
-                            $status.after(
-                                $('<p>').append(
-                                    '<a href="/edit/' + editId + '" target="_blank">edit ' + editId + '</a>'
-                                )
-                            );
-                        } else {
-                            $status.text(
-                                'Error (code ' + xhr.status + ')'
-                            ).parent().css('color', 'red');
-                        }
-                    });
-                };
-            // console.log('Fetching ' + mbid + ' edit info');
-
-            $(node).after('<span id="' + node.id + '-text">Fetching required data</span>');
             $('#' + node.id + '-text').empty();
-            requests.GET(url, function (resp) {
-                var info = new RegExp('sourceData: (.*),\n').exec(resp)[1];
-                callback(JSON.parse(info));
-            });
+            $(node).after('<span id="' + node.id + '-text">Fetching required data</span>');
+            edits.getEditParams(url, callback);
         }, 2 * idx * server.timeout);
     });
 }

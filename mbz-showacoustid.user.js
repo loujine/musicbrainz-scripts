@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show acoustids
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.21
+// @version      2016.5.31
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Show acoustids on a Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=126061
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=128923
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*
 // @grant        none
@@ -36,8 +36,8 @@ function showAcoustids() {
     $('thead > tr').append('<th>ABrainz</th>');
     $('.subh > th')[1].colSpan += 2;
 
-    requests.POST(url, params, function (resp) {
-        var resp_mbids = JSON.parse(resp.responseText).mbids;
+    requests.POST(url, params, function success(xhr) {
+        var resp_mbids = JSON.parse(xhr.responseText).mbids;
         $recordings.each(function (idx, recording) {
             var acids = resp_mbids[idx].tracks.map(function (track) {
                 return track.id;

@@ -1,11 +1,11 @@
-/* global $ requests server works sidebar */
+/* global $ requests server works sidebar edits */
 'use strict';
 var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.29
+// @version      2016.5.31
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Set attributes (lang, key) from the composer Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125995
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=128923
 // @include      http*://*musicbrainz.org/artist/*/works
 // @include      http*://*musicbrainz.org/artist/*/works?page=*
 // @grant        none
@@ -86,7 +86,7 @@ function updateJSON(json, node) {
     return json;
 }
 
-function formatEditInfo(json) {
+function formatEditData(json) {
     var data = [],
         editNote,
         encodeName = function (name) {
@@ -120,30 +120,40 @@ function formatEditInfo(json) {
 
 
 function editWork() {
-    /* in order to determine the edit parameters required by POST
-     * we first load the /edit page and parse the JSON data
-     * in the sourceData block
-     */
     $('.commit:input:checked:enabled').each(function (idx, node) {
+        var mbid = node.id.replace('edit-', ''),
+            url = edits.urlFromMbid('work', mbid);
+        function success(xhr) {
+            var $status = $('#' + node.id + '-text');
+            node.disabled = true;
+            $status.text(
+                'Success (code ' + xhr.status + ')'
+            ).parent().css('color', 'green');
+            var editId = new RegExp(
+                '/edit/(.*)">edit</a>'
+            ).exec(xhr.responseText)[1];
+            $status.after(
+                $('<p>').append(
+                    '<a href="/edit/' + editId + '" target="_blank">edit ' + editId + '</a>'
+                )
+            )
+        }
+        function fail(xhr) {
+            $('#' + node.id + '-text').text(
+                'Error (code ' + xhr.status + ')'
+            ).parent().css('color', 'red');
+        }
+        function callback(data) {
+            console.log(data);
+            $('#' + node.id + '-text').text('Sending edit data');
+            var editData = formatEditData(updateJSON(data, node));
+            console.log(editData);
+            requests.POST(url, editData, success, fail);
+        }
         setTimeout(function () {
-            var mbid = node.id.replace('edit-', ''),
-                url = '/work/' + encodeURIComponent(mbid) + '/edit',
-                callback = function (info) {
-                    var info2 = updateJSON(info, node);
-                    requests.POST(url, formatEditInfo(info2), function (xhr) {
-                        if (xhr.status === 200 || xhr.status === 0) {
-                            node.disabled = true;
-                            $(node).parent().css('background-color', 'green');
-                        } else {
-                            $(node).parent().css('background-color', 'red');
-                        }
-                    });
-                };
-
-            requests.GET(url, function (resp) {
-                var info = new RegExp('sourceData: (.*),\n').exec(resp)[1];
-                callback(JSON.parse(info));
-            });
+            $('#' + node.id + '-text').empty();
+            $(node).after('<span id="' + node.id + '-text">Fetching required data</span>');
+            edits.getEditParams(url, callback);
         }, 2 * idx * server.timeout);
     });
 }

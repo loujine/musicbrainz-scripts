@@ -1,10 +1,10 @@
-/* global $ MB */
+/* global $ _ MB */
 'use strict';
 // ==UserScript==
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.16
+// @version      2016.5.31
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -221,7 +221,7 @@ var requests = function () {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-                    callback(xhr);
+                callback(xhr);
             }
         };
         xhr.open(verb, url, true);
@@ -247,13 +247,40 @@ var requests = function () {
         });
     };
 
-    self.POST = function (url, param, callback) {
+    self.POST = function (url, param, successCallback, failCallback) {
         self._request('POST', url, param, function (xhr) {
-            callback(xhr);
+            if (xhr.status === 200 || xhr.status === 0) {
+                successCallback(xhr);
+            } else {
+                failCallback(xhr);
+            }
         });
     };
     return self;
 }();
+
+
+var edits = function () {
+    var self = {};
+
+    self.urlFromMbid = function (entityType, mbid) {
+        return '/' + entityType + '/' + encodeURIComponent(mbid) + '/edit';
+    };
+
+    /* in order to determine the edit parameters required by POST
+     * we first load the /edit page and parse the JSON data
+     * in the sourceData block
+     */
+    self.getEditParams = function (url, callback) {
+        requests.GET(url, function (resp) {
+            var data = new RegExp('sourceData: (.*),\n').exec(resp)[1];
+            callback(JSON.parse(data));
+        });
+    };
+
+    return self;
+}();
+
 
 var helper = function () {
     var self = {};
