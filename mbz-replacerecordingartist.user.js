@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.6.22
+// @version      2016.6.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -31,8 +31,9 @@ var editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
 
 function formatPerformers(relations) {
     var performers = [];
-    relations.forEach(function(rel) {
+    relations.forEach(function (rel) {
         var type;
+        var creditedName = rel['target-credit'] ? rel['target-credit'] : rel.artist.name;
         if (rel.type === 'instrument' || rel.type === 'vocal' ||
             rel.type === 'conductor' || rel.type === 'performing orchestra' ||
             rel.type === 'performer') {
@@ -43,7 +44,7 @@ function formatPerformers(relations) {
             } else {
                 type = rel.attributes[0];
             }
-            performers.push(type + ': ' + rel.artist.name);
+            performers.push(type + ': ' + creditedName);
         }
     });
     return performers.sort().join(', ');
@@ -56,7 +57,6 @@ function showPerformers(start, maxcount) {
             $allRows = $('table.tbl a[href*="/artist/"]').parents('tr'),
             $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr');
         $rows = $allRows.not($performerRows);
-        document.getElementById('loujine-locale').hidden = false;
     } else if (helper.isWorkURL) {
         var composer = $('th:contains("composer:")').parent().find('a').attr('href').split('/')[2];
         $rows = $('table.tbl a[href*="/artist/' + composer + '"]').parents('tr');
@@ -89,22 +89,18 @@ function showPerformers(start, maxcount) {
                 }
                 $(tr).append($node);
             });
-        }, idx * server.timeout);
+        }, 1.5 * idx * server.timeout);
     });
 }
 
 // Replace composer -> performer as recording artist (CSG)
 function parseArtistEditData(data, performers) {
-    var performerName,
-        mbid = helper.mbidFromURL();
     performers.sort(helper.comparefct).forEach(function (performer, idx) {
-        if (helper.isArtistURL() && performer.mbid === mbid) {
-            performerName = $('#performerAlias')[0].selectedOptions[0].text;
-        } else {
-            performerName = performer.name;
+        var creditedName = performer.name;
+        if (performer.creditedName) {
+            creditedName = performer.creditedName;
         }
-        data['artist_credit.names.' + idx + '.name'] = edits.encodeName(performerName);
-        // data['artist_credit.names.' + idx + '.name'] = edits.encodeName(creditedName);
+        data['artist_credit.names.' + idx + '.name'] = edits.encodeName(creditedName);
         data['artist_credit.names.' + idx + '.join_phrase'] = (idx === performers.length - 1) ? null : ',+';
         data['artist_credit.names.' + idx + '.artist.name'] = edits.encodeName(performer.name);
         data['artist_credit.names.' + idx + '.artist.id'] = performer.id;
@@ -130,6 +126,7 @@ function parseEditData(editData) {
                 !_.includes(uniqueIds, rel.target.id)) {
             uniqueIds.push(rel.target.id); // filter duplicates
             performers.push({'name': rel.target.name,
+                             'creditedName': rel.entity0_credit,
                              'id': rel.target.id,
                              'link': linkType,
                              'mbid': rel.target.gid
@@ -227,12 +224,6 @@ function replaceArtist() {
             'value': 'Select all'
         })
     ).append(
-        $('<p>', {
-            'id': 'loujine-locale',
-            'hidden': true
-        }).append('Primary locale alias to use:')
-        .append($('<select>', {'id': 'performerAlias'}))
-    ).append(
         $('<div>', {'class': 'auto-editor'})
         .append(
             $('<label>Make all edits votable</label>')
@@ -259,37 +250,6 @@ function replaceArtist() {
         })
     );
 })(sidebar);
-
-function parseAliases() {
-    if (helper.isArtistURL) {
-        var url = helper.wsUrl('artist', ['aliases']),
-            callback = function (aliasObject) {
-                $.each(aliasObject, function(locale, name) {
-                    $('#performerAlias').append(
-                        $('<option>', {'value': locale}).append(name)
-                    );
-                });
-            };
-
-        requests.GET(url, function (response) {
-            var resp = JSON.parse(response),
-                aliases = {'default': resp.name};
-            $('#performerAlias').append(
-                $('<option>', {'value': 'default'}).append(resp.name)
-            );
-            if (resp.aliases.length) {
-                resp.aliases.forEach(function (alias) {
-                    if (alias.locale) {
-                        aliases[alias.locale] = alias.name;
-                    }
-                });
-                callback(aliases);
-            }
-        });
-    }
-}
-
-parseAliases();
 
 $(document).ready(function () {
     $('#showperformers').click(function () {
