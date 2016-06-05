@@ -4,13 +4,16 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.31
+// @version      2016.6.5
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
+
+// bitbucket repo info
+var wikiUrl = 'https://bitbucket.org/loujine/musicbrainz-scripts/wiki/documentation.rst';
 
 // from musicbrainz-server/root/static/scripts/tests/typeInfo.js
 var server = {
@@ -369,6 +372,12 @@ var sidebar = function ($) {
                 }
             }).append(
                 $('<h2>', {'text': 'loujine GM tools'})
+            ).append(
+                $('<a>', {
+                    'href': wikiUrl,
+                    'target': '_blank',
+                    'text': 'documentation'}
+                 )
             );
         }
         $('h2.rating').before($container);
@@ -407,6 +416,12 @@ var relEditor = function (MB, $) {
                 }
             }).append(
                 $('<h2>', {'text': 'loujine GM tools'})
+            ).append(
+                $('<a>', {
+                    'href': wikiUrl,
+                    'target': '_blank',
+                    'text': 'documentation'}
+                 )
             );
         }
         return $container;
