@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.31
+// @version      2016.6.20
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -89,12 +89,15 @@ function formatEditData(json) {
     } else {
         data.push('edit-recording.make_votable=0');
     }
-    var uniqueIds = [];
+    var uniqueIds = [],
+        skippedIdx = 0;
     performers.sort(helper.comparefct).forEach(function(performer, idx) {
         if (_.includes(uniqueIds, performer.id)) {
             if (idx === performers.length - 1) {
+                // fix join_phrase
                 data[data.length - 3] = data[data.length - 3].slice(0, -2)
             }
+            skippedIdx += 1;
             return;
         }
         uniqueIds.push(performer.id);
@@ -102,14 +105,15 @@ function formatEditData(json) {
         if (performer.creditedName) {
             creditedName = performer.creditedName;
         }
-        data.push('edit-recording.artist_credit.names.' + idx + '.name=' + encodeName(creditedName));
+        var pIdx = idx - skippedIdx;
+        data.push('edit-recording.artist_credit.names.' + pIdx + '.name=' + encodeName(creditedName));
         if (idx === performers.length - 1) {
-            data.push('edit-recording.artist_credit.names.' + idx + '.join_phrase');
+            data.push('edit-recording.artist_credit.names.' + pIdx + '.join_phrase');
         } else {
-            data.push('edit-recording.artist_credit.names.' + idx + '.join_phrase=,+');
+            data.push('edit-recording.artist_credit.names.' + pIdx + '.join_phrase=,+');
         }
-        data.push('edit-recording.artist_credit.names.' + idx + '.artist.name=' + encodeName(performer.name));
-        data.push('edit-recording.artist_credit.names.' + idx + '.artist.id=' + performer.id);
+        data.push('edit-recording.artist_credit.names.' + pIdx + '.artist.name=' + encodeName(performer.name));
+        data.push('edit-recording.artist_credit.names.' + pIdx + '.artist.id=' + performer.id);
     });
     return data.join('&');
 }
