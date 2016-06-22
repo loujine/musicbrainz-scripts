@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.31
+// @version      2016.6.22
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Replace associated recording artist from an Artist or Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=128923
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=133551
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*
@@ -70,7 +70,7 @@ function showPerformers(start, maxcount) {
     $rows.each(function (idx, tr) {
         setTimeout(function () {
             var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[2],
-                url = '/ws/2/recording/' + encodeURIComponent(mbid) + '?fmt=json&inc=artist-rels';
+                url = helper.wsUrl('recording', ['artist-rels'], mbid);
             requests.GET(url, function (response) {
                 var resp = JSON.parse(response),
                     $node,
@@ -94,30 +94,41 @@ function showPerformers(start, maxcount) {
 }
 
 // Replace composer -> performer as recording artist (CSG)
-function formatEditData(json) {
-    var data = [],
-        performers = [],
-        mbid = helper.mbidFromURL(),
-        performerName,
-        encodeName = function (name) {
-            return encodeURIComponent(name).replace(/%20/g, '+');
-        };
-    data.push('edit-recording.name=' + encodeName(json.name));
-    if (!json.comment.length) {
-        data.push('edit-recording.comment');
+function parseArtistEditData(data, performers) {
+    var performerName,
+        mbid = helper.mbidFromURL();
+    performers.sort(helper.comparefct).forEach(function (performer, idx) {
+        if (helper.isArtistURL() && performer.mbid === mbid) {
+            performerName = $('#performerAlias')[0].selectedOptions[0].text;
+        } else {
+            performerName = performer.name;
+        }
+        data['artist_credit.names.' + idx + '.name'] = edits.encodeName(performerName);
+        // data['artist_credit.names.' + idx + '.name'] = edits.encodeName(creditedName);
+        data['artist_credit.names.' + idx + '.join_phrase'] = (idx === performers.length - 1) ? null : ',+';
+        data['artist_credit.names.' + idx + '.artist.name'] = edits.encodeName(performer.name);
+        data['artist_credit.names.' + idx + '.artist.id'] = performer.id;
+    });
+}
+
+function parseEditData(editData) {
+    var data = {},
+        performers = [];
+    data['name'] = edits.encodeName(editData.name);
+    data['comment'] = editData.comment ? editData.comment : null;
+    if (!editData.isrcs.length) {
+        data['isrcs.0'] = null;
     } else {
-        data.push('edit-recording.comment=' + json.comment);
-    }
-    if (!json.isrcs.length) {
-        data.push('edit-recording.isrcs.0');
-    } else {
-        json.isrcs.forEach(function(isrc, idx) {
-            data.push('edit-recording.isrcs.' + idx + '=' + isrc);
+        editData.isrcs.forEach(function (isrc, idx) {
+            data['isrcs.' + idx] = isrc;
         });
     }
-    json.relationships.forEach(function(rel) {
-        var linkType = rel.linkTypeID;
-        if (_.includes(server.performingLinkTypes(), linkType)) {
+    editData.relationships.forEach(function (rel) {
+        var linkType = rel.linkTypeID,
+            uniqueIds = [];
+        if (_.includes(server.performingLinkTypes(), linkType) &&
+                !_.includes(uniqueIds, rel.target.id)) {
+            uniqueIds.push(rel.target.id); // filter duplicates
             performers.push({'name': rel.target.name,
                              'id': rel.target.id,
                              'link': linkType,
@@ -125,24 +136,10 @@ function formatEditData(json) {
             });
         }
     });
-    var editNote = $('#batch_replace_edit_note')[0].value;
-    data.push('edit-recording.edit_note=' + editNote);
-    performers.sort(helper.comparefct).forEach(function(performer, idx) {
-        if (helper.isArtistURL() && performer.mbid === mbid) {
-            performerName = $('#performerAlias')[0].selectedOptions[0].text;
-        } else {
-            performerName = performer.name;
-        }
-        data.push('edit-recording.artist_credit.names.' + idx + '.name=' + encodeName(performerName));
-        if (idx === performers.length - 1) {
-            data.push('edit-recording.artist_credit.names.' + idx + '.join_phrase');
-        } else {
-            data.push('edit-recording.artist_credit.names.' + idx + '.join_phrase=,+');
-        }
-        data.push('edit-recording.artist_credit.names.' + idx + '.artist.name=' + encodeName(performer.name));
-        data.push('edit-recording.artist_credit.names.' + idx + '.artist.id=' + performer.id);
-    });
-    return data.join('&');
+    parseArtistEditData(data, performers.sort(helper.comparefct));
+    data['edit_note'] = $('#batch_replace_edit_note')[0].value;
+    data['make_votable'] = document.getElementById('votable').checked ? '1' : '0';
+    return data;
 }
 
 function replaceArtist() {
@@ -169,9 +166,12 @@ function replaceArtist() {
                 'Error (code ' + xhr.status + ')'
             ).parent().css('color', 'red');
         }
-        function callback(data) {
+        function callback(editData) {
             $('#' + node.id + '-text').text('Sending edit data');
-            requests.POST(url, formatEditData(data), success, fail);
+            var postData = parseEditData(editData);
+            console.info('Data ready to be posted: ', postData);
+            requests.POST(url, edits.formatEdit('edit-recording', postData),
+                          success, fail);
         }
         setTimeout(function () {
             $('#' + node.id + '-text').empty();
@@ -232,6 +232,15 @@ function replaceArtist() {
             'hidden': true
         }).append('Primary locale alias to use:')
         .append($('<select>', {'id': 'performerAlias'}))
+    ).append(
+        $('<div>', {'class': 'auto-editor'})
+        .append(
+            $('<label>Make all edits votable</label>')
+            .append($('<input>',
+                      {'type': 'checkbox',
+                       'id': 'votable'})
+            )
+        )
     ).append(
         $('<p>').append('Edit note:')
         .append(

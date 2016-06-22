@@ -342,9 +342,10 @@ var helper = function () {
         return document.URL.split('/')[4];
     };
 
-    self.wsUrl = function (entityType, options) {
-        var url = '/ws/2/' + entityType + '/'
-        url += encodeURIComponent(self.mbidFromURL())
+    self.wsUrl = function (entityType, options, mbid) {
+        var url = '/ws/2/' + entityType + '/',
+            mbid = mbid !== undefined ? mbid : self.mbidFromURL();
+        url += encodeURIComponent(mbid);
         url += '?fmt=json';
         options.forEach(function (option) {
             url += '&inc=' + option;
