@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.6.20
+// @version      2016.6.22
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Replace associated recording artist from a Release page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=128923
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=133551
 // @include      http*://*musicbrainz.org/release/*
 // @include      http*://*mbsandbox.org/release/*
 // @grant        none
@@ -52,28 +52,37 @@ function showSelectors() {
 }
 
 // Replace composer -> performer as recording artist (CSG)
-function formatEditData(json) {
-    var data = [],
-        performers = [],
-        encodeName = function (name) {
-            return encodeURIComponent(name).replace(/%20/g, '+');
-        };
-    data.push('edit-recording.name=' + encodeName(json.name));
-    if (!json.comment.length) {
-        data.push('edit-recording.comment');
+function parseArtistEditData(data, performers) {
+    performers.forEach(function (performer, idx) {
+        var creditedName = performer.name;
+        if (performer.creditedName) {
+            creditedName = performer.creditedName;
+        }
+        data['artist_credit.names.' + idx + '.name'] = edits.encodeName(creditedName);
+        data['artist_credit.names.' + idx + '.join_phrase'] = (idx === performers.length - 1) ? null : ',+';
+        data['artist_credit.names.' + idx + '.artist.name'] = edits.encodeName(performer.name);
+        data['artist_credit.names.' + idx + '.artist.id'] = performer.id;
+    });
+};
+
+function parseEditData(editData) {
+    var data = {},
+        performers = [];
+    data['name'] = edits.encodeName(editData.name);
+    data['comment'] = editData.comment ? editData.comment : null;
+    if (!editData.isrcs.length) {
+        data['isrcs.0'] = null;
     } else {
-        data.push('edit-recording.comment=' + json.comment);
-    }
-    if (!json.isrcs.length) {
-        data.push('edit-recording.isrcs.0');
-    } else {
-        json.isrcs.forEach(function(isrc, idx) {
-            data.push('edit-recording.isrcs.' + idx + '=' + isrc);
+        editData.isrcs.forEach(function (isrc, idx) {
+            data['isrcs.' + idx] = isrc;
         });
     }
-    json.relationships.forEach(function(rel) {
-        var linkType = rel.linkTypeID;
-        if (_.includes(server.performingLinkTypes(), linkType)) {
+    editData.relationships.forEach(function (rel) {
+        var linkType = rel.linkTypeID,
+            uniqueIds = [];
+        if (_.includes(server.performingLinkTypes(), linkType) &&
+                !_.includes(uniqueIds, rel.target.id)) {
+            uniqueIds.push(rel.target.id); // filter duplicates
             performers.push({'name': rel.target.name,
                              'creditedName': rel.entity0_credit,
                              'id': rel.target.id,
@@ -82,40 +91,10 @@ function formatEditData(json) {
             });
         }
     });
-    var editNote = $('#batch_replace_edit_note')[0].value;
-    data.push('edit-recording.edit_note=' + editNote);
-    if (document.getElementById('votable').checked) {
-        data.push('edit-recording.make_votable=1');
-    } else {
-        data.push('edit-recording.make_votable=0');
-    }
-    var uniqueIds = [],
-        skippedIdx = 0;
-    performers.sort(helper.comparefct).forEach(function(performer, idx) {
-        if (_.includes(uniqueIds, performer.id)) {
-            if (idx === performers.length - 1) {
-                // fix join_phrase
-                data[data.length - 3] = data[data.length - 3].slice(0, -2)
-            }
-            skippedIdx += 1;
-            return;
-        }
-        uniqueIds.push(performer.id);
-        var creditedName = performer.name;
-        if (performer.creditedName) {
-            creditedName = performer.creditedName;
-        }
-        var pIdx = idx - skippedIdx;
-        data.push('edit-recording.artist_credit.names.' + pIdx + '.name=' + encodeName(creditedName));
-        if (idx === performers.length - 1) {
-            data.push('edit-recording.artist_credit.names.' + pIdx + '.join_phrase');
-        } else {
-            data.push('edit-recording.artist_credit.names.' + pIdx + '.join_phrase=,+');
-        }
-        data.push('edit-recording.artist_credit.names.' + pIdx + '.artist.name=' + encodeName(performer.name));
-        data.push('edit-recording.artist_credit.names.' + pIdx + '.artist.id=' + performer.id);
-    });
-    return data.join('&');
+    parseArtistEditData(data, performers.sort(helper.comparefct));
+    data['edit_note'] = $('#batch_replace_edit_note')[0].value;
+    data['make_votable'] = document.getElementById('votable').checked ? '1' : '0';
+    return data;
 }
 
 function replaceArtist() {
@@ -142,9 +121,12 @@ function replaceArtist() {
                 'Error (code ' + xhr.status + ')'
             ).parent().css('color', 'red');
         }
-        function callback(data) {
+        function callback(editData) {
             $('#' + node.id + '-text').text('Sending edit data');
-            requests.POST(url, formatEditData(data), success, fail);
+            var postData = parseEditData(editData);
+            console.info('Data ready to be posted: ', postData);
+            requests.POST(url, edits.formatEdit('edit-recording', postData),
+                          success, fail);
         }
         setTimeout(function () {
             $('#' + node.id + '-text').empty();
