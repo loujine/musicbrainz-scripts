@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.6.6
+// @version      2016.6.22
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -280,6 +280,22 @@ var edits = function () {
             var data = new RegExp('sourceData: (.*),\n').exec(resp)[1];
             callback(JSON.parse(data));
         });
+    };
+
+    self.encodeName = function (name) {
+        return encodeURIComponent(name).replace(/%20/g, '+');
+    };
+
+    self.formatEdit = function (editType, info) {
+        var data = [];
+        _.forOwn(info, function (value, key) {
+            if (value === null) {
+                data.push(editType + '.' + key);
+            } else {
+                data.push(editType + '.' + key + '=' + value);
+            }
+        })
+        return data.join('&');
     };
 
     return self;

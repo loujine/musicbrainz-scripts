@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.6.1
+// @version      2016.6.22
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Set attributes (lang, key) from the composer Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=128923
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=133551
 // @include      http*://*musicbrainz.org/artist/*/works
 // @include      http*://*musicbrainz.org/artist/*/works?page=*
 // @grant        none
@@ -62,7 +62,7 @@ $rows.each(function (idx, row) {
 });
 
 
-function updateJSON(json, node) {
+function updateFromPage(editData, node) {
     var row = $(node).parents('tr')[0];
     var type = $(row.children[idxType]).find('select');
     var optionType = type.length ? type[0].value : null;
@@ -71,51 +71,46 @@ function updateJSON(json, node) {
     var key = $(row.children[idxKey]).find('select');
     var optionKey = key.length ? key[0].value : null;
     if (optionType) {
-        json.typeID = optionType;
+        editData.typeID = optionType;
     }
     if (optionLang) {
-        json.language = optionLang;
+        editData.language = optionLang;
     }
     if (optionKey) {
         var keyAttribute = {'typeID': 1, 'value': parseInt(optionKey)};
-        if (json.attributes === undefined) {
-            json.attributes = [];
+        if (editData.attributes === undefined) {
+            editData.attributes = [];
         }
-        json.attributes.push(keyAttribute);
+        editData.attributes.push(keyAttribute);
     }
-    return json;
+    return editData;
 }
 
-function formatEditData(json) {
-    var data = [],
-        editNote,
-        encodeName = function (name) {
-            return encodeURIComponent(name).replace(/%20/g, '+');
-        };
-    data.push('edit-work.name=' + encodeName(json.name));
-    data.push('edit-work.comment' + (json.comment ? '=' + json.comment : ''));
-    data.push('edit-work.type_id' + (json.typeID ? '=' + json.typeID : ''));
-    data.push('edit-work.language_id=' + (json.language ? json.language : '486'));
-    if (!json.iswcs) {
-        data.push('edit-work.iswcs.0');
+function parseEditData(editData) {
+    var data = {};
+    data['name'] = edits.encodeName(editData.name);
+    data['comment'] = editData.comment ? editData.comment : null;
+    data['type_id'] = editData.typeID ? editData.typeID : null;
+    data['language_id'] = editData.language ? editData.language : '486';
+    if (!editData.iswcs.length) {
+        data['iswcs.0'] = null;
     } else {
-        json.iswcs.forEach(function (iswc, idx) {
-            data.push('edit-work.iswcs.' + idx + '=' + iswc);
+        editData.iswcs.forEach(function (iswc, idx) {
+            data['iswcs.' + idx] = iswc;
         });
     }
     // attributes (key)
-    if (!json.attributes) {
-        data.push('edit-work.attributes.0.type_id');
-        data.push('edit-work.attributes.0.value');
+    if (!editData.attributes.length) {
+        data['attributes.0.type_id'] = null;
+        data['attributes.0.value'] = null;
     } else {
-        json.attributes.forEach(function (attr, idx) {
-            data.push('edit-work.attributes.' + idx + '.type_id=' + attr.typeID);
-            data.push('edit-work.attributes.' + idx + '.value=' + attr.value);
+        editData.attributes.forEach(function (attr, idx) {
+            data['attributes.' + idx + '.type_id'] = attr.typeID;
+            data['attributes.' + idx + '.value'] = attr.value;
         });
     }
-    editNote = $('#batch_replace_edit_note')[0].value;
-    data.push('edit-work.edit_note=' + editNote);
-    return data.join('&');
+    data['edit_note'] = $('#batch_replace_edit_note')[0].value;
+    return data
 }
 
 
@@ -143,12 +138,12 @@ function editWork() {
                 'Error (code ' + xhr.status + ')'
             ).parent().css('color', 'red');
         }
-        function callback(data) {
-            console.log(data);
+        function callback(editData) {
             $('#' + node.id + '-text').text('Sending edit data');
-            var editData = formatEditData(updateJSON(data, node));
-            console.log(editData);
-            requests.POST(url, editData, success, fail);
+            var postData = parseEditData(updateFromPage(editData, node));
+            console.info('Data ready to be posted: ', postData);
+            requests.POST(url, edits.formatEdit('edit-work', postData),
+                          success, fail);
         }
         setTimeout(function () {
             $('#' + node.id + '-text').empty();
