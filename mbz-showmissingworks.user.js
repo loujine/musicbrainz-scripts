@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show missing works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.2.5
+// @version      2016.6.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showmissingworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showmissingworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Mark recordings not linked to any work on a performer page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125991
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=133551
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @grant        none
 // @run-at       document-end
@@ -30,7 +30,8 @@ function showMissingWorks() {
 
     $recordings.each(function (idx, recording) {
         setTimeout(function () {
-            var url = helper.wsUrl('recording', ['work-rels']);
+            var mbid = recording.href.split('/')[4],
+                url = helper.wsUrl('recording', ['work-rels'], mbid);
             requests.GET(url, function (response) {
                 var resp = JSON.parse(response),
                     $node;
@@ -50,7 +51,7 @@ function showMissingWorks() {
                                'font-size': '100%'})
                 );
             });
-        }, idx * server.timeout);
+        }, 1.5 * idx * server.timeout);
     });
 }
 
