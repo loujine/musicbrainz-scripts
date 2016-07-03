@@ -5,7 +5,7 @@ var meta = function() {
 // @name         Import DG/Decca releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.6.26
+// @version      2016.8.14
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-dgdecca_importer.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-dgdecca_importer.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,9 +13,10 @@ var meta = function() {
 // @description  Add a button to import DG/Decca releases to MusicBrainz
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @include      http*://www.deutschegrammophon.com/*/cat/*
-// @include      http*://www.deccaclassics.com/*/cat/*
+// @include      http*://*deutschegrammophon.com/*/cat/*
+// @include      http*://*deccaclassics.com/*/cat/*
 // @require      https://greasyfork.org/scripts/20955-mbimport/code/mbimport.js?version=133752
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=135554
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -25,19 +26,20 @@ if (meta && meta.toString && (meta = meta.toString())) {
                 'version': meta.match(/@version\s+(.+)/)[1]};
 }
 
-var siteURL = document.URL.split('/')[2];
+var siteURL = document.URL.split('/')[2].replace('www.', '');
+
 var months = {
     'Jan.': 1, 'Feb.': 2, 'Mar.': 3, 'Apr.': 4,
     'May': 5, 'Jun.': 6, 'Jul.': 7, 'Aug.': 8,
     'Sep.': 9, 'Oct.': 10, 'Nov.': 11, 'Dec.': 12
 };
 var labels = {
-    'www.deutschegrammophon.com': {
+    'deutschegrammophon.com': {
         'name': 'Deutsche Grammophon',
         'mbid': '5a584032-dcef-41bb-9f8b-19540116fb1c',
         'catno': document.URL.split('/')[5]
     },
-    'www.deccaclassics.com': {
+    'deccaclassics.com': {
         'name': 'Decca Classics',
         'mbid': '89a9993d-1dad-4445-a3d7-1d8df04f7e7b',
         'catno': document.URL.split('/')[5]
@@ -134,17 +136,17 @@ function extract_release_data() {
         'artist_credit': _setReleaseArtists(),
         'type': 'Album',
         'status': 'Official',
-        // 'language': 'English',
-        // 'script': 'Latin',
+        'language': 'eng', // 'English',
+        'script': 'Latn', // 'Latin',
         'packaging': '',
         'country': 'XW',
         'year': date[2],
         'month': months[date[1]],
         'day': date[0],
         'labels': [labels[siteURL]],
-        'barcode': document.getElementById('upc').value, // FIXME too many 0s?
+        'barcode': document.getElementById('upc').value.replace('00', ''), // too many 0s
         'urls': [{
-            // 'link_type': 'discography',
+            'link_type': 288, // 'discography'
             'url': document.URL
         }],
         'discs': discs
@@ -194,9 +196,9 @@ function extract_track_data(node) {
         return list
     }
 
+    var schema = {};
     if (node.querySelectorAll('meta').length) {
         // https://schema.org/MusicRecording info available
-        var schema = {};
         for (var item of node.querySelectorAll('meta')) {
             var attrs = item.attributes;
             schema[attrs.itemprop.value] = attrs.content.value;
@@ -233,7 +235,7 @@ function insertMBSection(release) {
       + '</div>';
     mbContentBlock.append(innerHTML);
 
-    $('#related').prepend(mbUI[0]);
+    $('div#product-text').append(mbUI[0]);
 
     $('#mb_buttons').css({
       display: 'inline-block',
@@ -248,5 +250,11 @@ function insertMBSection(release) {
     mbUI.slideDown();
 }
 
-var release = extract_release_data();
-insertMBSection(release);
+try {
+    var release = extract_release_data();
+    insertMBSection(release);
+} catch (e) {
+    console.log(e);
+    throw e;
+}
+
