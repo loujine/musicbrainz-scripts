@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.4.25
+// @version      2016.7.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -202,6 +202,12 @@ function fillForm(wikiId) {
              + wikiId + '&format=json',
         dataType: 'jsonp'
     }).done(function (data) {
+        if (data.error) {
+            alert('wikidata returned an error:\n' +
+                  'code: ' + data.error.code + '\n' +
+                  'wikidata ID: "' + data.error.id + '"\n' +
+                  'info: ' + data.error.info);
+        }
         var entity = data.entities[wikiId];
         if (fieldInWikidata(entity, 'mbidArtist')) {
             var mbid = valueFromField(entity, 'mbidArtist');
@@ -233,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
     _.forEach(nodes, function(node) {
         node.addEventListener('input', function () {
             if (node.value.split('/')[2] === "www.wikidata.org") {
-                fillForm(node.value.split('/')[4]);
+                fillForm(node.value.split('/')[4].trim());
             }
         }, false);
     });
