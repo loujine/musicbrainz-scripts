@@ -92,11 +92,6 @@ function parseWikidata(entity) {
     document.getElementsByClassName('guesscase-sortname')[0].click();
 
 
-    // Disambiguation
-    if (entity.descriptions[lang] && entity.descriptions[lang].value) {
-        setValue('id-edit-artist.comment', entity.descriptions[lang].value);
-    }
-
     // Type and gender
     if (fieldInWikidata(entity, 'type')) {
         var type = valueFromField(entity, 'type')['numeric-id'];
