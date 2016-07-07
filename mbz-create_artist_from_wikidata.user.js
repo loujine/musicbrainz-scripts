@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.7.3
+// @version      2016.7.6
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
