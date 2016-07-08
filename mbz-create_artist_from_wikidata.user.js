@@ -88,7 +88,7 @@ function parseWikidata(entity) {
     }
     // name and sort name
     setValue('id-edit-artist.name', entity.labels[lang].value);
-    document.getElementsByClassName('guesscase-title')[0].click();
+    $(document.getElementById('id-edit-artist.name')).trigger('change');
     document.getElementsByClassName('guesscase-sortname')[0].click();
 
 
@@ -202,6 +202,7 @@ function fillForm(wikiId) {
                   'code: ' + data.error.code + '\n' +
                   'wikidata ID: "' + data.error.id + '"\n' +
                   'info: ' + data.error.info);
+            return;
         }
         var entity = data.entities[wikiId];
         if (fieldInWikidata(entity, 'mbidArtist')) {
