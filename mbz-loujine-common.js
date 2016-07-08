@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.6.22
+// @version      2016.7.8
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -203,8 +203,8 @@ var wikidata = {
         idOL: 'P648',
         idVIAF: 'P214',
         idGND: 'P227',
-        idIMSLP: 'P839',
-        idBNF: 'P268'
+        // idBNF: 'P268',
+        idIMSLP: 'P839'
     },
     'urls': {
         idDiscogs: 'http://www.discogs.com/artist/',
