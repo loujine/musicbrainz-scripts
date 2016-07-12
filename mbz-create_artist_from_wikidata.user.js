@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.7.8
+// @version      2016.7.11
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -66,8 +66,19 @@ function fillArea(data, place, nodeId, lang) {
     }
 }
 
-function fillDate(strDate, nodeId) {
-    var date = new Date(strDate.slice(1)); // remove leading "+"
+function fillDate(field, nodeId) {
+    // sometimes wikidata has invalid data for months/days
+    var invalid_date = new RegExp('(.*)-00-00T00:00:00Z').exec(field.time);
+    if (invalid_date && invalid_date.length) {
+        setValue('id-edit-artist.period.' + nodeId + '.year', invalid_date[1].slice(1));
+        return;
+    }
+    // sometimes it has valid data but meaningless
+    // cf https://www.mediawiki.org/wiki/Wikibase/DataModel#Dates_and_times
+    if (field.precision < 9 || field.before > 0 || field.after > 0) {
+        return;
+    }
+    var date = new Date(field.time.slice(1)); // remove leading "+"
     setValue('id-edit-artist.period.' + nodeId + '.year', date.getFullYear());
     var yearInput = document.getElementById('id-edit-artist.period.' + nodeId + '.year');
     if (yearInput.classList.contains('jesus2099')) {
@@ -75,8 +86,12 @@ function fillDate(strDate, nodeId) {
             // containing the year but not its id
             yearInput.nextSibling.value = date.getFullYear();
     }
-    setValue('id-edit-artist.period.' + nodeId + '.month', date.getMonth() + 1);
-    setValue('id-edit-artist.period.' + nodeId + '.day', date.getDate());
+    if (field.precision > 9) {
+        setValue('id-edit-artist.period.' + nodeId + '.month', date.getMonth() + 1);
+        if (field.precision > 10) {
+            setValue('id-edit-artist.period.' + nodeId + '.day', date.getDate());
+        }
+    }
 }
 
 
@@ -149,7 +164,7 @@ function parseWikidata(entity) {
     if (fieldInWikidata(entity, 'birthDate')
             || fieldInWikidata(entity, 'inceptionDate')) {
         var field = fieldInWikidata(entity, 'birthDate') ? 'birthDate' : 'inceptionDate';
-        fillDate(valueFromField(entity, field).time, 'begin_date');
+        fillDate(valueFromField(entity, field), 'begin_date');
     }
 
     if (fieldInWikidata(entity, 'birthPlace')
@@ -166,7 +181,7 @@ function parseWikidata(entity) {
     if (fieldInWikidata(entity, 'deathDate')
             || fieldInWikidata(entity, 'dissolutionDate')) {
         var field = fieldInWikidata(entity, 'deathDate') ? 'deathDate' : 'dissolutionDate';
-        fillDate(valueFromField(entity, field).time, 'end_date');
+        fillDate(valueFromField(entity, field), 'end_date');
     }
 
     if (fieldInWikidata(entity, 'deathPlace')) {
@@ -197,6 +212,7 @@ function fillForm(wikiId) {
              + wikiId + '&format=json',
         dataType: 'jsonp'
     }).done(function (data) {
+        console.info('wikidata returned: ', data);
         if (data.error) {
             alert('wikidata returned an error:\n' +
                   'code: ' + data.error.code + '\n' +
@@ -242,3 +258,5 @@ $(document).ready(function() {
     return false;
 });
 
+// test data: https://www.wikidata.org/wiki/Q11331342
+// test data: https://www.wikidata.org/wiki/Q3290108
