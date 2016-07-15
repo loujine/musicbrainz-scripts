@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.6.22
+// @version      2016.7.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -67,7 +67,8 @@ function parseArtistEditData(data, performers) {
 
 function parseEditData(editData) {
     var data = {},
-        performers = [];
+        performers = [],
+        uniqueIds = [];
     data['name'] = edits.encodeName(editData.name);
     data['comment'] = editData.comment ? editData.comment : null;
     if (!editData.isrcs.length) {
@@ -78,8 +79,7 @@ function parseEditData(editData) {
         });
     }
     editData.relationships.forEach(function (rel) {
-        var linkType = rel.linkTypeID,
-            uniqueIds = [];
+        var linkType = rel.linkTypeID;
         if (_.includes(server.performingLinkTypes(), linkType) &&
                 !_.includes(uniqueIds, rel.target.id)) {
             uniqueIds.push(rel.target.id); // filter duplicates
