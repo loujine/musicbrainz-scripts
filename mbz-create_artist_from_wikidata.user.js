@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.7.12
+// @version      2016.10.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -156,8 +156,20 @@ function parseWikidata(entity) {
 
     // ISNI
     if (fieldInWikidata(entity, 'isni')) {
+        var isniBlock = document.getElementsByClassName('edit-artist.isni_codes-template')[0].parentElement;
         var isni = valueFromField(entity, 'isni');
-        document.getElementsByName('edit-artist.isni_codes.0')[0].value = isni;
+        var existing_isni = [],
+            fields = isniBlock.getElementsByTagName('input');
+        for (var input of fields) {
+            existing_isni.push(input.value.split(" ").join(""));
+        }
+        existing_isni.splice(0, 1); // template
+        if (existing_isni.length === 1 && existing_isni[0] === "") {
+            document.getElementsByName('edit-artist.isni_codes.0')[0].value = isni;
+        } else if (!_.contains(existing_isni, isni.split(" ").join(""))) {
+            isniBlock.getElementsByClassName('form-row-add')[0].getElementsByTagName('button')[0].click();
+            document.getElementsByName('edit-artist.isni_codes.' + existing_isni.length)[0].value = isni;
+        }
     }
 
     // Dates & places
