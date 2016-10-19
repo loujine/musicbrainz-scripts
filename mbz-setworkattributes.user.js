@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.6.22
+// @version      2016.10.18
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -42,11 +42,11 @@ $rows.each(function (idx, row) {
     }
     if (true) {
         $(row.children[idxKey]).append($('<form>').append($(works.key).clone()));
-        if (title.toLowerCase().contains('major') ||
-            title.toLowerCase().contains('minor')) {
+        if (title.toLowerCase().includes('major') ||
+            title.toLowerCase().includes('minor')) {
             var cell = row.children[idxKey];
             $(cell).find('option').each(function (idx, option) {
-                if (title.toLowerCase().contains(option.text.toLowerCase())) {
+                if (title.toLowerCase().includes(option.text.toLowerCase())) {
                     option.selected = true;
                 }
             });
@@ -92,7 +92,7 @@ function parseEditData(editData) {
     data['comment'] = editData.comment ? editData.comment : null;
     data['type_id'] = editData.typeID ? editData.typeID : null;
     data['language_id'] = editData.language ? editData.language : '486';
-    if (!editData.iswcs.length) {
+    if (editData.iswcs === undefined || !editData.iswcs.length) {
         data['iswcs.0'] = null;
     } else {
         editData.iswcs.forEach(function (iswc, idx) {
@@ -100,7 +100,7 @@ function parseEditData(editData) {
         });
     }
     // attributes (key)
-    if (!editData.attributes.length) {
+    if (!editData.attributes || !editData.attributes.length) {
         data['attributes.0.type_id'] = null;
         data['attributes.0.value'] = null;
     } else {
