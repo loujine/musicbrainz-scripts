@@ -5,7 +5,7 @@ var meta = function() {
 // @name         Import DG/Decca releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.8.14
+// @version      2016.10.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-dgdecca_importer.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-dgdecca_importer.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -51,9 +51,43 @@ var editNote = ('Imported from '
                 + '\n —\n'
                 + 'GM script: "' + meta.name + '" (' + meta.version + ')\n\n');
 
+function _clean(s) {
+    return s
+        .replace(' In ', ' in ')
+        .replace('Minor', 'minor')
+        .replace('Major', 'major')
+        .replace('Op.', 'op. ')
+        .replace('No.', 'no. ')
+        .replace(' Flat', '-flat')
+        .replace(' flat', '-flat')
+        .replace(' Sharp', '-sharp')
+        .replace(' sharp', '-sharp')
+        .replace('1. ', 'I. ')
+        .replace('2. ', 'II. ')
+        .replace('3. ', 'III. ')
+        .replace('4. ', 'IV. ')
+        .replace('5. ', 'V. ')
+        .replace('6. ', 'VI. ')
+        .replace('7. ', 'VII. ')
+        .replace('8. ', 'VIII. ')
+        .replace('9. ', 'IX. ')
+        .replace('10. ', 'X. ')
+        .replace(' - ', ': ')
+        .replace(' | ', ': ')
+        .replace('K.', 'K. ') // Mozart
+        .replace('S.', 'S. ') // Liszt
+    ;
+}
+
 function extract_release_data() {
+    console.log('extract_release_data');
+
     function _setTitle() {
-        return $('div.works')[0].innerHTML.replace('<br><br>', ' / ');
+        var title = $('h4')[0].textContent;
+        if ($('div.works').length) {
+            title += ' ' + $('div.works')[0].innerHTML.replace(/<br><br>/g, ' / ').replace(/<br>/g, ' ');
+        }
+        return title;
     }
     function _setReleasePerformers() {
         var list = $('div.artists')[0].innerHTML.split('<br>').map(function (artist) {
@@ -91,45 +125,84 @@ function extract_release_data() {
 
     var date = document.getElementsByClassName('date')[0].textContent;
     date = date.replace('Int. Release ', '').split(' ');
-    var discs = [],
-        tracks = [];
+    var nodes = [];
     var tracklist_node = document.getElementById('tracklist');
 
-    if (tracklist_node.querySelectorAll('div.track-container').length) {
-        console.info('track-container available');
-        for (var track of tracklist_node.querySelectorAll('div.track-container')) {
-            tracks.push(extract_track_data(track));
+    $('.item,.hier0,.hier1,.hier2').each(function (idx, node) {
+        var idx;
+        var d = {};
+        if (node.classList.contains('hier0')) {
+            d['level'] = 0;
+        } else if (node.classList.contains('hier1')) {
+            d['level'] = 1;
+        } else if (node.classList.contains('hier2')) {
+            d['level'] = 2;
         }
-    } else {
-        console.info('track-container not available');
-        console.warn('not ready yet');
-    }
-    console.log('tracks', tracks);
-    if ($('div.item').length) {
-        var nb_discs = $('div.item').length;
-        console.info(nb_discs + ' media');
-        var tracks_no = $('.track-no').map(function (idx, node) {
-            return parseInt(node.textContent.trim());
-        }).toArray();
-        // find first tracks on each medium
-        var first_tracks_idx = _indices(tracks_no, 1);
-        first_tracks_idx.forEach(function (val, idx) {
-            if (idx !== first_tracks_idx.length - 1) {
-                discs.push(extract_medium_data(
-                    tracklist_node,
-                    tracks.slice(val, first_tracks_idx[idx+1]),
-                    idx
-                ));
-            } else {
-                discs.push(extract_medium_data(
-                    tracklist_node, tracks.slice(val), idx
-                ));
+        if (node.parentElement.classList.contains('track-container')) {
+            d['type'] = 'track';
+        } else if (node.parentElement.classList.contains('work-container')) {
+            d['type'] = 'work';
+        } else if (node.parentElement.classList.contains('artists-container')) {
+            d['type'] = 'artist';
+        } else {
+            d['type'] = 'medium';
+        }
+        d['title'] = node.textContent;
+        d['node'] = node.parentElement;
+        nodes.push(d);
+    });
+    console.log(nodes, tracklist_node);
+
+    // complete track titles
+    var header0, header1, idx;
+    nodes.forEach(function (node, idx) {
+        var level = node['level'],
+            type = node['type'],
+            content = node['title'];
+        if (type === 'work') {
+            if (level === 0) {
+                header0 = content;
+            } else if (level === 1) {
+                header1 = content;
             }
-        });
-    } else {
-        console.info('1 medium');
-        discs.push(extract_medium_data(tracklist_node, tracks));
-    }
+        } else if (type === 'track') {
+            if (level === 0) {
+                nodes[idx]['title'] = content;
+            } else if (level === 1) {
+                nodes[idx]['title'] = header0 + ': ' + content;
+            } else if (level === 2) {
+                nodes[idx]['title'] = header0 + ', ' + header1 + ': ' + content;
+            }
+        }
+    });
+
+    var discs = [],
+        tracks = [],
+        medium_title = '';
+    nodes.forEach(function (item, idx) {
+        if (item.type === 'track') {
+            var track = extract_track_data(item.node);
+            track.title = _clean(item.title);
+            tracks.push(track);
+        }
+        if (item.type === 'medium') {
+            if (idx > 0) {
+                discs.push({
+                    'title': '', // medium_title,
+                    'format': 'CD',
+                    'tracks': tracks
+                });
+            }
+            medium_title = item.title;
+            tracks = [];
+        }
+    });
+    // push last medium
+    discs.push({
+        'title': '', // nodes[0].title,
+        'format': 'CD',
+        'tracks': tracks
+    });
 
     return {
         'title': _setTitle(),
@@ -155,45 +228,33 @@ function extract_release_data() {
 
 
 
-function extract_medium_data(node, tracks, idx) {
-    var title;
-    console.log('track list', tracks);
-    if (node.querySelectorAll('div.item').length) {
-        title = node.querySelectorAll('div.item')[idx].textContent
-    } else {
-        title = ''
-    }
-    return {
-        'title': title,
-        'format': 'CD',
-        'tracks': tracks
-    };
-}
-
 function extract_track_data(node) {
-    function _clean(s) {
-        return s
-            .replace(' In ', ' in ')
-            .replace('Minor', 'minor')
-            .replace('Major', 'major')
-            .replace('Op.', 'op. ')
-            .replace('No.', 'no. ')
-            .replace(' Flat', '-flat')
-            .replace(' Sharp', '-sharp')
-            .replace(' - ', ': ')
-            .replace(' | ', ': ');
-    }
     function _setTrackArtists(artistString) {
-        var list = artistString.split(' | ').map(function (artist) {
-            return {
-                'credited_name': artist.split(',')[0],
-                'artist_name': artist.split(',')[0],
-                'artist_mbid': '',
-                'joinphrase': ', '
-            };
-        });
-        list[list.length - 1]['joinphrase'] = '';
-        return list
+        console.log('artistString', artistString);
+        var artists;
+        if (artistString.includes(' | ')) {
+            artists = artistString.split(' | ').map(function (artist) {
+                return {
+                    'credited_name': artist.split(',')[0],
+                    'artist_name': artist.split(',')[0],
+                    'artist_mbid': '',
+                    'joinphrase': ', '
+                };
+            });
+        } else {
+            artists = artistString.split(', ').map(function (artist, idx) {
+                var mbid = '';
+                var url = '/ws/js/artist/?q=' + artist + '&fmt=json&limit=1';
+                return {
+                    'credited_name': artist,
+                    'artist_name': artist,
+                    'artist_mbid': mbid,
+                    'joinphrase': ', '
+                };
+            });
+        }
+        artists[artists.length - 1]['joinphrase'] = '';
+        return artists
     }
 
     var schema = {};
@@ -203,19 +264,23 @@ function extract_track_data(node) {
             var attrs = item.attributes;
             schema[attrs.itemprop.value] = attrs.content.value;
         }
-        // console.info('schema', schema);
-        return {
-            'number': parseInt(node.querySelectorAll('div.track-no')[0].textContent),
-            'title': _clean(schema.name),
-            'duration': node.querySelectorAll('div.track-time')[0].textContent,
-            'artist_credit': _setTrackArtists(schema.byArtist),
-            'performer': schema.byArtist,
-            'composer': schema.creator,
-            'url': node.querySelectorAll('div.track-text > a.fancy')[0].href
-        };
+    } else {
+        console.log('no meta data on ', node);
+        schema.name = node.querySelectorAll('div.track-text > a.fancy')[0].textContent;
+        schema.byArtist = $(node).parent().nextAll('div.container-container').children('.artists-container')[0].textContent;
+        var previousComposers = $(node).parent().prevAll('div.container-container').children('.first-composer-container');
+        schema.creator = previousComposers[previousComposers.length-1].textContent;
     }
-    console.log('no meta data on ', node);
-    return;
+    console.info('schema', schema);
+    return {
+        'number': parseInt(node.querySelectorAll('div.track-no')[0].textContent),
+        'title': _clean(schema.name),
+        'duration': node.querySelectorAll('div.track-time')[0].textContent,
+        'artist_credit': _setTrackArtists(schema.byArtist), // CSG
+        'performer': schema.byArtist,
+        'composer': schema.creator,
+        'url': node.querySelectorAll('div.track-text > a.fancy')[0].href
+    };
 }
 
 
@@ -257,4 +322,3 @@ try {
     console.log(e);
     throw e;
 }
-
