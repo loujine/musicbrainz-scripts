@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.7.8
+// @version      2016.11.8
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -28,6 +28,9 @@ var server = {
         'work': 278,
         'place': 693,
         'area': 698
+    },
+    'workLinkType': {
+        'subwork': 281,
     },
     'releaseLinkTypeID': {
         44: 'instrument',
@@ -359,6 +362,16 @@ var helper = function () {
     self.isArtistURL = self._isEntityTypeURL('artist');
     self.isReleaseURL = self._isEntityTypeURL('release');
     self.isWorkURL = self._isEntityTypeURL('work');
+
+    self.sortSubworks = function (work) {
+        var rels = work.relationships;
+        rels = _.filter(rels, function (rel) {
+            return (rel.linkTypeID === server.workLinkType.subwork
+                    && rel.direction !== 'backward');
+        });
+        rels = _.sortBy(rels, function (rel) {return rel.linkOrder;});
+        return rels.map(function (rel) {return rel.target});
+    };
 
     return self;
 }();
