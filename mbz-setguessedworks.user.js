@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.10.30
+// @version      2016.11.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Set best-guess related works
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125991
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=157519
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -64,6 +64,29 @@ function guessWork() {
     });
 }
 
+function guessSubWorks(workMbid) {
+    if (workMbid.split('/').length > 1) {
+        workMbid = workMbid.split('/')[4];
+    }
+    var recordings = MB.relationshipEditor.UI.checkedRecordings(),
+        idx = 0;
+    var mainWorkUrl = '/ws/js/entity/' + workMbid + '?inc=rels';
+    requests.GET(mainWorkUrl, function (resp) {
+        var subWorks = helper.sortSubworks(JSON.parse(resp));
+        recordings.forEach(function (recording, recordingIdx) {
+            if (recordingIdx >= subWorks.length) {
+                return;
+            }
+            if (!recording.performances().length) {
+                idx += 1;
+                setTimeout(function () {
+                    setWork(recording, subWorks[recordingIdx]);
+                }, idx * server.timeout);
+            }
+        });
+    });
+}
+
 (function displayToolbar(relEditor) {
     $('div.tabs').after(
         relEditor.container().append(
@@ -71,7 +94,7 @@ function guessWork() {
         ).append(
             $('<p>You can add an optional prefix (e.g. the misssing parent work name) to help guessing the right work</p>')
         ).append(
-            $('<span>Prefix:</span>')
+            $('<span>Optional prefix:&nbsp;</span>')
         ).append(
             $('<input>', {
                 'id': 'prefix',
@@ -84,6 +107,27 @@ function guessWork() {
                 'type': 'button',
                 'value': 'Guess works'
             })
+        ).append(
+            $('<br />')
+        ).append(
+            $('<h3>Link to parts of a main Work</h3>')
+        ).append(
+            $('<p>Fill the main work mbid to link selected recordings to (ordered) parts of the work</p>')
+        ).append(
+            $('<span>Main work name:&nbsp;</span>')
+        ).append(
+            $('<input>', {
+                'id': 'mainWork',
+                'type': 'text',
+                'placeholder': 'main work mbid'
+            })
+        ).append(
+            $('<input>', {
+                'id': 'searchsubworks',
+                'type': 'button',
+                'value': 'Guess subworks'
+            })
+
         )
     );
 })(relEditor);
@@ -94,6 +138,13 @@ $(document).ready(function() {
         guessWork();
         if (!appliedNote) {
             relEditor.editNote(meta, 'Set guessed works');
+            appliedNote = true;
+        }
+    });
+    $('#searchsubworks').click(function() {
+        guessSubWorks($('#mainWork')[0].value);
+        if (!appliedNote) {
+            relEditor.editNote(meta, 'Set guessed subworks');
             appliedNote = true;
         }
     });
