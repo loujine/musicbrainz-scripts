@@ -5,7 +5,7 @@ var meta = function() {
 // @name         Import DG/Decca releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.10.26
+// @version      2016.11.13
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-dgdecca_importer.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-dgdecca_importer.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -128,7 +128,7 @@ function extract_release_data() {
     var nodes = [];
     var tracklist_node = document.getElementById('tracklist');
 
-    $('.item,.hier0,.hier1,.hier2').each(function (idx, node) {
+    $('.item,.hier0,.hier1,.hier2,.hier3').each(function (idx, node) {
         var idx;
         var d = {};
         if (node.classList.contains('hier0')) {
@@ -137,6 +137,8 @@ function extract_release_data() {
             d['level'] = 1;
         } else if (node.classList.contains('hier2')) {
             d['level'] = 2;
+        } else if (node.classList.contains('hier3')) {
+            d['level'] = 3;
         }
         if (node.parentElement.classList.contains('track-container')) {
             d['type'] = 'track';
@@ -154,7 +156,7 @@ function extract_release_data() {
     console.log(nodes, tracklist_node);
 
     // complete track titles
-    var header0, header1, idx;
+    var header0, header1, header2, idx;
     nodes.forEach(function (node, idx) {
         var level = node['level'],
             type = node['type'],
@@ -164,6 +166,8 @@ function extract_release_data() {
                 header0 = content;
             } else if (level === 1) {
                 header1 = content;
+            } else if (level === 2) {
+                header2 = content;
             }
         } else if (type === 'track') {
             if (level === 0) {
@@ -172,6 +176,8 @@ function extract_release_data() {
                 nodes[idx]['title'] = header0 + ': ' + content;
             } else if (level === 2) {
                 nodes[idx]['title'] = header0 + ', ' + header1 + ': ' + content;
+            } else if (level === 3) {
+                nodes[idx]['title'] = header0 + ', ' + header1 + ', ' + header2 + ': ' + content;
             }
         }
     });
