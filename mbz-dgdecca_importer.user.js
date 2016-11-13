@@ -218,7 +218,7 @@ function extract_release_data() {
         'language': 'eng', // 'English',
         'script': 'Latn', // 'Latin',
         'packaging': '',
-        'country': 'XW',
+        'country': '',
         'year': date[2],
         'month': months[date[1]],
         'day': date[0],
