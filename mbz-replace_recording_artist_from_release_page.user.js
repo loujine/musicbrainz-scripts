@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.11.28
+// @version      2016.11.30
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -83,8 +83,10 @@ function parseEditData(editData) {
     }
     editData.relationships.forEach(function (rel) {
         var linkType = rel.linkTypeID;
+        var filterPending = document.getElementById('pending').checked ?
+            !rel.editsPending : true;
         if (_.includes(server.performingLinkTypes(), linkType) &&
-                !_.includes(uniqueIds, rel.target.id)) {
+                !_.includes(uniqueIds, rel.target.id) && filterPending) {
             uniqueIds.push(rel.target.id); // filter duplicates
             performers.push({'name': rel.target.name,
                              'creditedName': rel.entity0_credit,
@@ -158,6 +160,15 @@ function replaceArtist() {
             'disabled': true,
             'value': 'Select all'
         })
+    ).append(
+        $('<div>')
+        .append(
+            $('<label>Exclude AR with pending edits</label>')
+            .append($('<input>',
+                      {'type': 'checkbox',
+                       'id': 'pending'})
+            )
+        )
     ).append(
         $('<div>', {'class': 'auto-editor'})
         .append(
