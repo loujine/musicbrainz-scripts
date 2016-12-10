@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.10.26
+// @version      2016.12.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -67,15 +67,15 @@ function fillArea(data, place, nodeId, lang) {
 }
 
 function fillDate(field, nodeId) {
+    // sometimes wikidata has valid data but not relevant for the mbz schema
+    // cf https://www.mediawiki.org/wiki/Wikibase/DataModel#Dates_and_times
+    if (field.precision < 9 || field.before > 0 || field.after > 0) {
+        return;
+    }
     // sometimes wikidata has invalid data for months/days
     var invalid_date = new RegExp('(.*)-00-00T00:00:00Z').exec(field.time);
     if (invalid_date && invalid_date.length) {
         setValue('id-edit-artist.period.' + nodeId + '.year', invalid_date[1].slice(1));
-        return;
-    }
-    // sometimes it has valid data but meaningless
-    // cf https://www.mediawiki.org/wiki/Wikibase/DataModel#Dates_and_times
-    if (field.precision < 9 || field.before > 0 || field.after > 0) {
         return;
     }
     var date = new Date(field.time.slice(1)); // remove leading "+"
