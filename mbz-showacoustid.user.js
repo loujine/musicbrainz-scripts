@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show acoustids
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.31
+// @version      2016.12.13
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -51,6 +51,7 @@ function showAcoustids() {
                         }).append(
                             $('<code>', {
                                 'text': acid.slice(0, 6),
+                                'data-acid': acid,
                                 'class': 'acoustID'
                             })
                         ).prepend($('<br />'))
@@ -67,9 +68,11 @@ function showAcoustids() {
             );
         });
         var nodes = document.getElementsByClassName('acoustID');
-        var ids = _.map(nodes, function (node) {return node.textContent;});
-        var duplicate_ids = _.uniq(_.filter(ids, function (refId) {
-            return _.filter(ids, function (id) {
+        var ids = _.map(nodes, function (node) {
+            return node.getAttribute('data-acid');
+        });
+        var duplicate_ids = _.uniq(_.filter(ids, function (refId, idx) {
+            return _.filter(ids.slice(idx), function (id) {
                 return id === refId;
             }).length > 1;
         }));
