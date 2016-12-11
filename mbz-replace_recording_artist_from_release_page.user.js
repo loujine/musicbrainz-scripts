@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.11.30
+// @version      2016.12.11
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -48,6 +48,20 @@ function showSelectors() {
                 })
             )
         );
+    });
+
+    var lastChecked;
+    $('.replace').click(function (evt) {
+        var currentChecked = $('.replace').index(evt.target);
+        if (evt.shiftKey && lastChecked !== undefined) {
+            if (lastChecked > currentChecked) {
+                // es6 syntax
+                [lastChecked, currentChecked] = [currentChecked, lastChecked];
+            }
+            $('.replace').slice(lastChecked,
+                currentChecked).prop('checked', evt.target.checked);
+        }
+        lastChecked = $('.replace').index(evt.target);
     });
 }
 
@@ -207,7 +221,7 @@ $(document).ready(function () {
     });
     $('#batch_replace').click(function () {replaceArtist();});
     $('#batch_select').click(function () {
-        $('.replace:input').attr('checked', true);
+        $('.replace:input').prop('checked', true);
     });
     return false;
 });
