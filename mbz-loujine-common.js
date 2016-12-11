@@ -126,6 +126,9 @@ var works = {
 '<option class="language" value="403">Swedish</option>' +
 '<option class="language" value="433">Turkish</option>' +
 '</optgroup>' +
+'<optgroup label="Other">' +
+'<option class="language" value="238">Latin</option>' +
+'</optgroup>' +
 '</select>',
     'key': '<select class="setkey">' +
 '<option selected> </option>' +
