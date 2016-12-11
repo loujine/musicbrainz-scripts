@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.11.8
+// @version      2016.12.11
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -220,6 +220,74 @@ var wikidata = {
         idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb'
     }
 };
+
+var parseWD = function () {
+    var self = {};
+
+    self.existField = function (entity, field) {
+        return entity.claims[wikidata.fields[field]] !== undefined;
+    };
+
+    self.valueFromField = function (entity, field) {
+        return entity.claims[wikidata.fields[field]][0].mainsnak.datavalue.value;
+    };
+
+    self.setValue = function (nodeId, value) {
+        var node = document.getElementById(nodeId);
+        if (!node.value) {
+            node.value = value;
+        } else if (node.value != value) {  // != to allow autocasting to int
+            $(document.getElementById(nodeId)).parent()
+            .append('<p>Wikidata suggests: "' + value + '"</p>')
+            .css('color', 'red');
+        }
+    };
+
+    self.fillArea = function (data, place, nodeId, lang) {
+        var entityArea = data.entities[place],
+            input = document.getElementById('id-edit-artist.' + nodeId + '.name');
+        if (!entityArea) {
+            return;
+        }
+        if (self.existField(entityArea, 'mbidArea')) {
+            input.value = self.valueFromField(entityArea, 'mbidArea');
+            $(input).trigger('keydown');
+        } else {
+            input.value = entityArea.labels[lang].value;
+        }
+    };
+
+    self.fillDate = function (field, nodeId) {
+        // sometimes wikidata has valid data but not relevant for the mbz schema
+        // cf https://www.mediawiki.org/wiki/Wikibase/DataModel#Dates_and_times
+        if (field.precision < 9 || field.before > 0 || field.after > 0) {
+            return;
+        }
+        // sometimes wikidata has invalid data for months/days
+        var invalid_date = new RegExp('(.*)-00-00T00:00:00Z').exec(field.time);
+        if (invalid_date && invalid_date.length) {
+            self.setValue('id-edit-artist.period.' + nodeId + '.year', invalid_date[1].slice(1));
+            return;
+        }
+        var date = new Date(field.time.slice(1)); // remove leading "+"
+        self.setValue('id-edit-artist.period.' + nodeId + '.year', date.getFullYear());
+        var yearInput = document.getElementById('id-edit-artist.period.' + nodeId + '.year');
+        if (yearInput.classList.contains('jesus2099')) {
+                // jesus2099's EASY_DATE script is shifting the input node
+                // containing the year but not its id
+                yearInput.nextSibling.value = date.getFullYear();
+        }
+        if (field.precision > 9) {
+            self.setValue('id-edit-artist.period.' + nodeId + '.month', date.getMonth() + 1);
+            if (field.precision > 10) {
+                self.setValue('id-edit-artist.period.' + nodeId + '.day', date.getDate());
+            }
+        }
+    };
+
+    return self;
+}();
+
 
 var requests = function () {
     var self = {};
