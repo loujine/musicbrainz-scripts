@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Fill artist info from wikidata
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=162598
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=162609
 // @include      http*://*musicbrainz.org/artist/create*
 // @include      http*://*musicbrainz.org/artist/*/edit
 // @exclude      http*://*musicbrainz.org/artist/*/alias/*/edit
@@ -112,7 +112,7 @@ function parseWikidata(entity) {
     if (parseWD.existField(entity, 'birthDate')
             || parseWD.existField(entity, 'inceptionDate')) {
         var field = parseWD.existField(entity, 'birthDate') ? 'birthDate' : 'inceptionDate';
-        parseWD.fillDate(parseWD.valueFromField(entity, field), 'begin_date');
+        parseWD.fillDate(entity, 'artist', field, 'begin_date');
     }
 
     if (parseWD.existField(entity, 'birthPlace')
@@ -129,7 +129,7 @@ function parseWikidata(entity) {
     if (parseWD.existField(entity, 'deathDate')
             || parseWD.existField(entity, 'dissolutionDate')) {
         var field = parseWD.existField(entity, 'deathDate') ? 'deathDate' : 'dissolutionDate';
-        parseWD.fillDate(parseWD.valueFromField(entity, field), 'end_date');
+        parseWD.fillDate(entity, 'artist', field, 'end_date');
     }
 
     if (parseWD.existField(entity, 'deathPlace')) {

@@ -188,6 +188,7 @@ var wikidata = {
         type: 'P31',
         gender: 'P21',
         citizen: 'P27',
+        coordinates: 'P625',
         country: 'P495',
         isni: 'P213',
         birthDate: 'P569',
@@ -257,7 +258,9 @@ var parseWD = function () {
         }
     };
 
-    self.fillDate = function (field, nodeId) {
+    self.fillDate = function (entity, entityType, fieldName, nodeId) {
+        var field = self.valueFromField(entity, fieldName);
+        var prefix = 'id-edit-' + entityType + '.period.' + nodeId;
         // sometimes wikidata has valid data but not relevant for the mbz schema
         // cf https://www.mediawiki.org/wiki/Wikibase/DataModel#Dates_and_times
         if (field.precision < 9 || field.before > 0 || field.after > 0) {
@@ -266,21 +269,21 @@ var parseWD = function () {
         // sometimes wikidata has invalid data for months/days
         var invalid_date = new RegExp('(.*)-00-00T00:00:00Z').exec(field.time);
         if (invalid_date && invalid_date.length) {
-            self.setValue('id-edit-artist.period.' + nodeId + '.year', invalid_date[1].slice(1));
+            self.setValue(prefix + '.year', invalid_date[1].slice(1));
             return;
         }
         var date = new Date(field.time.slice(1)); // remove leading "+"
-        self.setValue('id-edit-artist.period.' + nodeId + '.year', date.getFullYear());
-        var yearInput = document.getElementById('id-edit-artist.period.' + nodeId + '.year');
+        self.setValue(prefix + '.year', date.getFullYear());
+        var yearInput = document.getElementById(prefix + '.year');
         if (yearInput.classList.contains('jesus2099')) {
                 // jesus2099's EASY_DATE script is shifting the input node
                 // containing the year but not its id
                 yearInput.nextSibling.value = date.getFullYear();
         }
         if (field.precision > 9) {
-            self.setValue('id-edit-artist.period.' + nodeId + '.month', date.getMonth() + 1);
+            self.setValue(prefix + '.month', date.getMonth() + 1);
             if (field.precision > 10) {
-                self.setValue('id-edit-artist.period.' + nodeId + '.day', date.getDate());
+                self.setValue(prefix + '.day', date.getDate());
             }
         }
     };
