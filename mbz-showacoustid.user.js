@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show acoustids
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.12.13
+// @version      2016.12.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -76,6 +76,15 @@ function showAcoustids() {
                 return id === refId;
             }).length > 1;
         }));
+        duplicate_ids.forEach(function (acid) {
+            $('#acidForMerge').append(
+                '<option value="' + acid + '">' + acid.slice(0, 6) +
+                '</option>'
+            );
+        });
+        duplicate_ids = duplicate_ids.map(function (acid) {
+            return acid.slice(0, 6);
+        });
         $(nodes).each(function (idx, node) {
             if (_.includes(duplicate_ids, node.textContent)) {
                 $(node).css('background-color', '#' + node.textContent);
@@ -83,6 +92,33 @@ function showAcoustids() {
         });
     });
 }
+
+
+function mergeFromAcoustID() {
+    var acid = $('#acidForMerge')[0].value;
+    var url = '//api.acoustid.org/v2/lookup';
+    var application_api_key = 'P9e1TIJs7g';
+    var params = 'client=' + application_api_key;
+    params += '&meta=recordingids';
+    params += '&trackid=' + acid;
+    requests.POST(url, params, function success(xhr) {
+        var recordings = JSON.parse(xhr.responseText).results[0].recordings;
+        var ids = [];
+        recordings.forEach(function (recording) {
+            var url = '/ws/js/entity/' + recording.id;
+            requests.GET(url, function (resp) {
+                ids.push(JSON.parse(resp).id);
+            });
+        });
+        setTimeout(function () {
+            var url = '/recording/merge_queue?add-to-merge=' +
+                      ids.join('&add-to-merge=');
+            console.log('Merge URL is ' + url);
+            window.open(url);
+        }, 1000);
+    });
+}
+
 
 // display sidebar
 (function displaySidebar(sidebar) {
@@ -94,10 +130,21 @@ function showAcoustids() {
             'type': 'button',
             'value': 'Show acoustIDs'
         })
+    ).append(
+        $('<h3>Merge from acoustID<h3>')
+    ).append(
+        $('<select id="acidForMerge"><option value="">acoustID</option></select>')
+    ).append(
+        $('<input>', {
+            'id': 'merge',
+            'type': 'button',
+            'value': 'Merge'
+        })
     );
 })(sidebar);
 
 $(document).ready(function() {
     $('#showacoustids').click(function() {showAcoustids();});
+    $('#merge').click(function() {mergeFromAcoustID();});
     return false;
 });
