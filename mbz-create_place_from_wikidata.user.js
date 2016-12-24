@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Fill place info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.12.11
+// @version      2016.12.24
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_place_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_place_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Fill place info from wikidata
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=162609
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=165496
 // @include      http*://*musicbrainz.org/place/create*
 // @include      http*://*musicbrainz.org/place/*/edit
 // @exclude      http*://*musicbrainz.org/place/*/alias/*/edit

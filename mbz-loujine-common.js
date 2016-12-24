@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.12.11
+// @version      2016.12.24
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -264,18 +264,28 @@ var parseWD = function () {
     self.fillDate = function (entity, entityType, fieldName, nodeId) {
         var field = self.valueFromField(entity, fieldName);
         var prefix = 'id-edit-' + entityType + '.period.' + nodeId;
-        // sometimes wikidata has valid data but not relevant for the mbz schema
+        // sometimes wikidata has valid data but not 'translatable'
+        // to the mbz schema
         // cf https://www.mediawiki.org/wiki/Wikibase/DataModel#Dates_and_times
         if (field.precision < 9 || field.before > 0 || field.after > 0) {
             return;
         }
         // sometimes wikidata has invalid data for months/days
-        var invalid_date = new RegExp('(.*)-00-00T00:00:00Z').exec(field.time);
-        if (invalid_date && invalid_date.length) {
-            self.setValue(prefix + '.year', invalid_date[1].slice(1));
+        var date = new Date(field.time.slice(1)); // remove leading "+"
+        if (isNaN(date.getTime())) { // invalid date
+            // try to find valid fields
+            date = new RegExp('(.*)-(.*)-(.*)T').exec(field.time);
+            if (parseInt(date[1]) !== 0) {
+                self.setValue(prefix + '.year', parseInt(date[1]));
+                if (parseInt(date[2]) > 0) {
+                    self.setValue(prefix + '.month', parseInt(date[2]));
+                    if (parseInt(date[3]) > 0) {
+                        self.setValue(prefix + '.day', parseInt(date[3]));
+                    }
+                }
+            }
             return;
         }
-        var date = new Date(field.time.slice(1)); // remove leading "+"
         self.setValue(prefix + '.year', date.getFullYear());
         var yearInput = document.getElementById(prefix + '.year');
         if (yearInput.classList.contains('jesus2099')) {
