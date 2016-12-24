@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.12.24
+// @version      2016.12.25
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -299,6 +299,24 @@ var parseWD = function () {
                 self.setValue(prefix + '.day', date.getDate());
             }
         }
+    };
+
+    self.request = function(wikiId, callback) {
+        $.ajax({
+            url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
+                 + wikiId + '&format=json',
+            dataType: 'jsonp'
+        }).done(function (data) {
+            console.info('wikidata returned: ', data);
+            if (data.error) {
+                alert('wikidata returned an error:\n' +
+                      'code: ' + data.error.code + '\n' +
+                      'wikidata ID: "' + data.error.id + '"\n' +
+                      'info: ' + data.error.info);
+                return;
+            }
+            callback(data.entities[wikiId]);
+        });
     };
 
     return self;

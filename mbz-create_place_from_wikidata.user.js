@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Fill place info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.12.24
+// @version      2016.12.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_place_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_place_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Fill place info from wikidata
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=165496
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=165739
 // @include      http*://*musicbrainz.org/place/create*
 // @include      http*://*musicbrainz.org/place/*/edit
 // @exclude      http*://*musicbrainz.org/place/*/alias/*/edit
@@ -61,22 +61,7 @@ function parseWikidata(entity) {
 }
 
 function fillForm(wikiId) {
-    $.ajax({
-        url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
-             + wikiId + '&format=json',
-        dataType: 'jsonp'
-    }).done(function (data) {
-        console.info('wikidata returned: ', data);
-        if (data.error) {
-            alert('wikidata returned an error:\n' +
-                  'code: ' + data.error.code + '\n' +
-                  'wikidata ID: "' + data.error.id + '"\n' +
-                  'info: ' + data.error.info);
-            return;
-        }
-        var entity = data.entities[wikiId];
-        parseWikidata(entity);
-    });
+    parseWD.request(wikiId, parseWikidata);
     parseWD.setValue('id-edit-place.edit_note', sidebar.editNote(meta));
 }
 
