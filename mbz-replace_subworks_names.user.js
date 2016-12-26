@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace subwork titles in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.12.26
+// @version      2016.12.27
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -14,8 +14,8 @@ var meta = function() {
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=165739
-// @include      http*://*musicbrainz.org/*/edit
-// @include      http*://*mbsandbox.org/*/edit
+// @include      http*://*musicbrainz.org/work/*/edit
+// @include      http*://*mbsandbox.org/work/*/edit
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -60,9 +60,9 @@ function parseEditData(editData) {
 }
 
 
-
 function replaceSubworksTitles() {
-    $('table a[href*="/work/"]').each(function (idx, node) {
+    $('table label:contains("parts:")').parents('tr')
+            .find('a[href*="/work/"]').each(function (idx, node) {
         var searchExp = document.getElementById('search').value;
         var replaceExp = document.getElementById('replace').value;
         if (!searchExp || searchExp === replaceExp) {
@@ -105,6 +105,7 @@ function replaceSubworksTitles() {
         }, 2 * idx * server.timeout);
     });
 }
+
 
 (function displayToolbar(relEditor) {
     $('#relationship-editor').after(
