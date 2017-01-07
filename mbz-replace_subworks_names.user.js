@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace subwork titles in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.12.27
+// @version      2017.1.7
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -108,7 +108,8 @@ function replaceSubworksTitles() {
 
 
 (function displayToolbar(relEditor) {
-    $('#relationship-editor').after(
+    $('div.half-width').after(
+        $('<div>', {float: 'right'})).after(
         relEditor.container().append(
             $('<h3>Replace subworks titles</h3>')
         ).append(
@@ -136,6 +137,7 @@ function replaceSubworksTitles() {
             })
         )
     );
+    $('div#loujine-menu').css('margin-left', '550px');
 })(relEditor);
 
 
