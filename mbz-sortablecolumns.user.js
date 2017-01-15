@@ -1,15 +1,15 @@
 /* global $ sidebar */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: Make table columns sortable
+// @name         MusicBrainz: Make table columns sortable (on Work pages)
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.5.16
+// @version      2017.1.14
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-sortablecolumns.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-sortablecolumns.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org: Show performers & replace associated recording artst from a Work page
+// @description  musicbrainz.org: Make table columns sortable (on Work pages)
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125991
@@ -40,7 +40,7 @@ function comparefct(index) {
     };
 }
 
-function makeSortable() {
+function sortByClickedColumn() {
     var table = $(this).parents('table'),
         rowclass,
         rows = table.find('tr:gt(1)').toArray().sort(
@@ -74,8 +74,10 @@ function makeSortable() {
 
 $(document).ready(function() {
     $('#makesortable').click(function () {
-        $('table.tbl thead th').append('<span>↕</span>').click(makeSortable);
-        $('#makesortable').prop('disabled', true);
+        $('table.tbl thead th:not(.sortable)').append(
+            '<span>↕</span>'
+        ).click(sortByClickedColumn);
+        $('table.tbl thead th').addClass('sortable');
     });
     return false;
 });
