@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.11.8
+// @version      2017.1.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -25,6 +25,8 @@ if (meta && meta.toString && (meta = meta.toString())) {
 }
 
 // imported from mbz-loujine-common.js: requests, server, relEditor
+
+var MBID_REGEX = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
 
 function setWork(recording, work) {
     var url = '/ws/js/entity/' + work.gid + '?inc=rels';
@@ -62,6 +64,22 @@ function guessWork() {
             }, idx * server.timeout);
         }
     });
+}
+
+function autoComplete() {
+    var $input = $('input#mainWork');
+    var match = $input.val().match(MBID_REGEX);
+    if (match) {
+        var mbid = match[0];
+        requests.GET('/ws/2/work/' + mbid + '?fmt=json', function (data) {
+            data = JSON.parse(data);
+            $input.data('mbid', mbid);
+            $input.val(data.title || data.name);
+            $input.css('background', '#bbffbb');
+        });
+    } else {
+        $input.css('background', '#ffaaaa');
+    }
 }
 
 function guessSubWorks(workMbid) {
@@ -141,8 +159,9 @@ $(document).ready(function() {
             appliedNote = true;
         }
     });
-    $('#searchsubworks').click(function() {
-        guessSubWorks($('#mainWork')[0].value);
+    $('input#mainWork').on('input', autoComplete);
+    $('input#searchsubworks').click(function() {
+        guessSubWorks($('input#mainWork').data('mbid'));
         if (!appliedNote) {
             relEditor.editNote(meta, 'Set guessed subworks');
             appliedNote = true;
