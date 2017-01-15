@@ -433,6 +433,20 @@ var edits = function () {
         });
     };
 
+    self.getWorkEditParams = function (url, callback) {
+        requests.GET(url, function (resp) {
+            var data = JSON.parse(resp);
+            callback({
+                name: data.title,
+                type_id: server.workType[data.type],
+                language_id: server.language[
+                    server.languageFromISO[data.language]],
+                iswcs: data.iswcs,
+                attributes: data.attributes
+            });
+        });
+    };
+
     self.encodeName = function (name) {
         return encodeURIComponent(name).replace(/%20/g, '+');
     };

@@ -1,11 +1,11 @@
-/* global $ requests server works sidebar edits */
+/* global $ requests server works sidebar edits helper */
 'use strict';
 var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.12.24
+// @version      2017.1.20
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -64,6 +64,7 @@ $rows.each(function (idx, row) {
 
 function updateFromPage(editData, node) {
     var row = $(node).parents('tr')[0];
+
     var type = $(row.children[idxType]).find('select');
     var optionType = type.length ? type[0].value : null;
     if (optionType) {
@@ -79,21 +80,19 @@ function updateFromPage(editData, node) {
     var key = $(row.children[idxKey]).find('select');
     var optionKey = key.length ? key[0].value : null;
     if (optionKey) {
-        var keyAttribute = {'typeID': 1, 'value': parseInt(optionKey)};
-        if (editData.attributes === undefined) {
-            editData.attributes = [];
-        }
+        var keyAttribute = {'type_id': 1, 'value': parseInt(optionKey)};
         editData.attributes.push(keyAttribute);
     }
     return editData;
 }
 
-function parseEditData(editData) {
-    var data = {};
-    data['name'] = edits.encodeName(editData.name);
-    data['comment'] = editData.comment ? editData.comment : null;
-    data['type_id'] = editData.typeID ? editData.typeID : null;
-    data['language_id'] = editData.language ? editData.language : '486';
+function preparePOSTParams(editData) {
+    var data = {
+        name: edits.encodeName(editData.name),
+        type_id: editData.type_id || '',
+        language_id: editData.language_id || '',
+        edit_note: $('#batch_replace_edit_note')[0].value
+    };
     if (editData.iswcs === undefined || !editData.iswcs.length) {
         data['iswcs.0'] = null;
     } else {
@@ -102,24 +101,19 @@ function parseEditData(editData) {
         });
     }
     // attributes (key)
-    if (!editData.attributes || !editData.attributes.length) {
-        data['attributes.0.type_id'] = null;
-        data['attributes.0.value'] = null;
-    } else {
+    if (editData.attributes) {
         editData.attributes.forEach(function (attr, idx) {
-            data['attributes.' + idx + '.type_id'] = attr.typeID;
+            data['attributes.' + idx + '.type_id'] = attr.type_id;
             data['attributes.' + idx + '.value'] = attr.value;
         });
     }
-    data['edit_note'] = $('#batch_replace_edit_note')[0].value;
     return data
 }
 
 
 function editWork() {
     $('.commit:input:checked:enabled').each(function (idx, node) {
-        var mbid = node.id.replace('edit-', ''),
-            url = edits.urlFromMbid('work', mbid);
+        var mbid = node.id.replace('edit-', '');
         function success(xhr) {
             var $status = $('#' + node.id + '-text');
             node.disabled = true;
@@ -142,15 +136,18 @@ function editWork() {
         }
         function callback(editData) {
             $('#' + node.id + '-text').text('Sending edit data');
-            var postData = parseEditData(updateFromPage(editData, node));
+            var postData = preparePOSTParams(updateFromPage(editData, node));
             console.info('Data ready to be posted: ', postData);
-            requests.POST(url, edits.formatEdit('edit-work', postData),
+            requests.POST(edits.urlFromMbid('work', mbid),
+                          edits.formatEdit('edit-work', postData),
                           success, fail);
         }
         setTimeout(function () {
             $('#' + node.id + '-text').empty();
-            $(node).after('<span id="' + node.id + '-text">Fetching required data</span>');
-            edits.getEditParams(url, callback);
+            $(node).after('<span id="' + node.id + '-text">' +
+                          'Fetching required data</span>');
+            edits.getWorkEditParams(helper.wsUrl('work', [], mbid),
+                                    callback);
         }, 2 * idx * server.timeout);
     });
 }
