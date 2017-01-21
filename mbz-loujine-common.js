@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.1.16
+// @version      2017.1.17
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
@@ -28,6 +28,37 @@ var server = {
         'work': 278,
         'place': 693,
         'area': 698
+    },
+    'workType': {
+        'Song': 17,
+        'Aria': 1,
+        'Audio drama': 25,
+        'Ballet': 2,
+        'Beijing opera': 26,
+        'Cantata': 3,
+        'Concerto': 4,
+        'Étude': 20,
+        'Incidental music': 30,
+        'Madrigal': 7,
+        'Mass': 8,
+        'Motet': 9,
+        'Musical': 29,
+        'Opera': 10,
+        'Operetta': 24,
+        'Oratorio': 11,
+        'Overture': 12,
+        'Partita': 13,
+        'Play': 28,
+        'Poem': 21,
+        'Prose': 23,
+        'Quartet': 14,
+        'Sonata': 5,
+        'Song-cycle': 15,
+        'Soundtrack': 22,
+        'Suite': 6,
+        'Symphonic poem': 18,
+        'Symphony': 16,
+        'Zarzuela': 19
     },
     'workLinkType': {
         'subwork': 281,
@@ -63,116 +94,131 @@ var server = {
         'live': 578,
         'partial': 579
     },
+    'language': {
+        '[Multiple languages]': 284,
+        '[No lyrics]': 486,
+        'Arabic': 18,
+        'Chinese': 76,
+        'Czech': 98,
+        'Danish': 100,
+        'Dutch': 113,
+        'English': 120,
+        'Finnish': 131,
+        'French': 134,
+        'German': 145,
+        'Greek': 159,
+        'Italian': 195,
+        'Japanese': 198,
+        'Korean': 224,
+        'Polish': 338,
+        'Portuguese': 340,
+        'Russian': 353,
+        'Spanish': 393,
+        'Swedish': 403,
+        'Turkish': 433
+    },
+    'languageFromISO': {
+        'ara': 'Arabic',
+        'zho': 'Chinese',
+        'ces': 'Czech',
+        'dan': 'Danish',
+        'nld': 'Dutch',
+        'eng': 'English',
+        'fin': 'Finnish',
+        'fra': 'French',
+        'deu': 'German',
+        'ell': 'Greek',
+        'ita': 'Italian',
+        'jpn': 'Japanese',
+        'kor': 'Korean',
+        'mul': '[Multiple languages]',
+        'pol': 'Polish',
+        'por': 'Portuguese',
+        'rus': 'Russian',
+        'spa': 'Spanish',
+        'swe': 'Swedish',
+        'tur': 'Turkish',
+        'zxx': '[No lyrics]'
+    },
+    'workKeyAttr': {
+        'C major': 2,
+        'C minor': 3,
+        'C-sharp major': 4,
+        'C-sharp minor': 5,
+        'D-flat major': 6,
+        'D-flat minor': 7,
+        'D major': 8,
+        'D minor': 9,
+        'D-sharp minor': 10,
+        'E-flat major': 11,
+        'E-flat minor': 12,
+        'E major': 13,
+        'E minor': 14,
+        'E-sharp minor': 15,
+        'F-flat major': 16,
+        'F major': 17,
+        'F minor': 18,
+        'F-sharp major': 19,
+        'F-sharp minor': 20,
+        'G-flat major': 21,
+        'G major': 22,
+        'G minor': 23,
+        'G-sharp major': 24,
+        'G-sharp minor': 25,
+        'A-flat major': 26,
+        'A-flat minor': 27,
+        'A major': 28,
+        'A minor': 29,
+        'A-sharp minor': 30,
+        'B-flat major': 31,
+        'B-flat minor': 32,
+        'B major': 33,
+        'B minor': 34,
+        'C Dorian': 789,
+        'D Dorian': 790,
+        'E Dorian': 791,
+        'F Dorian': 792,
+        'G Dorian': 793,
+        'A Dorian': 794,
+        'B Dorian': 795
+    },
     // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
     // we wait for 'server.timeout' milliseconds between two queries
     'timeout': 1000
 };
 
 var works = {
-    'type': '<select class="setwork">' +
-'<option selected> </option>' +
-'<option value="17">Song</option>' +
-'<option value="1">Aria</option>' +
-'<option value="25">Audio drama</option>' +
-'<option value="2">Ballet</option>' +
-'<option value="26">Beijing opera</option>' +
-'<option value="3">Cantata</option>' +
-'<option value="4">Concerto</option>' +
-'<option value="20">Étude</option>' +
-'<option value="30">Incidental music</option>' +
-'<option value="7">Madrigal</option>' +
-'<option value="8">Mass</option>' +
-'<option value="9">Motet</option>' +
-'<option value="29">Musical</option>' +
-'<option value="10">Opera</option>' +
-'<option value="24">Operetta</option>' +
-'<option value="11">Oratorio</option>' +
-'<option value="12">Overture</option>' +
-'<option value="13">Partita</option>' +
-'<option value="28">Play</option>' +
-'<option value="21">Poem</option>' +
-'<option value="23">Prose</option>' +
-'<option value="14">Quartet</option>' +
-'<option value="5">Sonata</option>' +
-'<option value="15">Song-cycle</option>' +
-'<option value="22">Soundtrack</option>' +
-'<option value="6">Suite</option>' +
-'<option value="18">Symphonic poem</option>' +
-'<option value="16">Symphony</option>' +
-'<option value="19">Zarzuela</option>' +
-'</select>',
-    'lang': '<select class="setlang">' +
-'<option> </option>' +
-'<optgroup label="Frequently used">' +
-'<option class="language" value="284">[Multiple languages]</option>' +
-'<option class="language" value="486" selected="selected">[No lyrics]</option>' +
-'<option class="language" value="18">Arabic</option>' +
-'<option class="language" value="76">Chinese</option>' +
-'<option class="language" value="98">Czech</option>' +
-'<option class="language" value="100">Danish</option>' +
-'<option class="language" value="113">Dutch</option>' +
-'<option class="language" value="120">English</option>' +
-'<option class="language" value="131">Finnish</option>' +
-'<option class="language" value="134">French</option>' +
-'<option class="language" value="145">German</option>' +
-'<option class="language" value="159">Greek</option>' +
-'<option class="language" value="195">Italian</option>' +
-'<option class="language" value="198">Japanese</option>' +
-'<option class="language" value="224">Korean</option>' +
-'<option class="language" value="338">Polish</option>' +
-'<option class="language" value="340">Portuguese</option>' +
-'<option class="language" value="353">Russian</option>' +
-'<option class="language" value="393">Spanish</option>' +
-'<option class="language" value="403">Swedish</option>' +
-'<option class="language" value="433">Turkish</option>' +
-'</optgroup>' +
-'<optgroup label="Other">' +
-'<option class="language" value="238">Latin</option>' +
-'</optgroup>' +
-'</select>',
-    'key': '<select class="setkey">' +
-'<option selected> </option>' +
-'<option value="2">C major</option>' +
-'<option value="3">C minor</option>' +
-'<option value="4">C-sharp major</option>' +
-'<option value="5">C-sharp minor</option>' +
-'<option value="6">D-flat major</option>' +
-'<option value="7">D-flat minor</option>' +
-'<option value="8">D major</option>' +
-'<option value="9">D minor</option>' +
-'<option value="10">D-sharp minor</option>' +
-'<option value="11">E-flat major</option>' +
-'<option value="12">E-flat minor</option>' +
-'<option value="13">E major</option>' +
-'<option value="14">E minor</option>' +
-'<option value="15">E-sharp minor</option>' +
-'<option value="16">F-flat major</option>' +
-'<option value="17">F major</option>' +
-'<option value="18">F minor</option>' +
-'<option value="19">F-sharp major</option>' +
-'<option value="20">F-sharp minor</option>' +
-'<option value="21">G-flat major</option>' +
-'<option value="22">G major</option>' +
-'<option value="23">G minor</option>' +
-'<option value="24">G-sharp major</option>' +
-'<option value="25">G-sharp minor</option>' +
-'<option value="26">A-flat major</option>' +
-'<option value="27">A-flat minor</option>' +
-'<option value="28">A major</option>' +
-'<option value="29">A minor</option>' +
-'<option value="30">A-sharp minor</option>' +
-'<option value="31">B-flat major</option>' +
-'<option value="32">B-flat minor</option>' +
-'<option value="33">B major</option>' +
-'<option value="34">B minor</option>' +
-'<option value="789">C Dorian</option>' +
-'<option value="790">D Dorian</option>' +
-'<option value="791">E Dorian</option>' +
-'<option value="792">F Dorian</option>' +
-'<option value="793">G Dorian</option>' +
-'<option value="794">A Dorian</option>' +
-'<option value="795">B Dorian</option>' +
-'</select>'
+    'type': [
+        '<select class="setwork">',
+        '<option selected> </option>',
+        _.map(server.workType, function (code, type) {
+            return '<option value="' + code + '">' + type + '</option>';
+        }).join(''),
+        '</select>'
+    ].join(''),
+
+    'lang': [
+        '<select class="setlang">',
+        '<option> </option>',
+        '<optgroup label="Frequently used">',
+        _.map(server.language, function (code, type) {
+            return '<option class="language" value="' + code + '">' + type + '</option>';
+        }).join(''),
+        '</optgroup>',
+        '<optgroup label="Other">',
+        '<option class="language" value="238">Latin</option>',
+        '</optgroup>',
+        '</select>'
+    ].join(''),
+
+    'key': [
+        '<select class="setkey">',
+        '<option selected> </option>',
+        _.map(server.workKeyAttr, function (code, type) {
+            return '<option value="' + code + '">' + type + '</option>';
+        }).join(''),
+        '</select>'
+    ].join(''),
 };
 
 // https://www.wikidata.org/wiki/Wikidata:List_of_properties/Person
