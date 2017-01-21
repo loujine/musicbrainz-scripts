@@ -66,16 +66,18 @@ function updateFromPage(editData, node) {
     var row = $(node).parents('tr')[0];
     var type = $(row.children[idxType]).find('select');
     var optionType = type.length ? type[0].value : null;
+    if (optionType) {
+        editData.type_id = optionType;
+    }
+
     var lang = $(row.children[idxLang]).find('select');
     var optionLang = lang.length ? lang[0].value : null;
+    if (optionLang) {
+        editData.language_id = optionLang;
+    }
+
     var key = $(row.children[idxKey]).find('select');
     var optionKey = key.length ? key[0].value : null;
-    if (optionType) {
-        editData.typeID = optionType;
-    }
-    if (optionLang) {
-        editData.language = optionLang;
-    }
     if (optionKey) {
         var keyAttribute = {'typeID': 1, 'value': parseInt(optionKey)};
         if (editData.attributes === undefined) {

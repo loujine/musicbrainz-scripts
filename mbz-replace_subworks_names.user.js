@@ -24,13 +24,6 @@ if (meta && meta.toString && (meta = meta.toString())) {
     var meta = {'name': meta.match(/@name\s+(.+)/)[1],
                 'version': meta.match(/@version\s+(.+)/)[1]};
 }
-// var val = searchrep[0].match(/^\/.+\/[gi]*$/) ? tracks[t].value.replace(eval(searchrep[0]), searchrep[1]) : tracks[t].value.split(searchrep[0]).join(searchrep[1]);
-// var searchrep = localStorage.getItem(userjs + "search-replace");
-// localStorage.setItem(userjs + "search-replace", JSON.stringify(searchrep))
-// if (
-//     (searchrep[0] = prompt("search\n\neither regex (case *i*nsensitive and *g*lobal are optional flags): /\"([^\"]+)\"/g\n\nor normal (case sensitive and global): My String", searchrep[0]))
-//     && (searchrep[1] = prompt("replace\n\nif it was a regex, you can use those $1 $2 $3 etc.: “$1”", searchrep[1])) != null
-// ) {
 
 function parseEditData(editData) {
     var data = {};
