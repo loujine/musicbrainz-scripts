@@ -27,17 +27,25 @@ if (meta && meta.toString && (meta = meta.toString())) {
 
 
 function replaceSubworksTitles() {
+    var idx = 0;
     $('table label:contains("parts:")').parents('tr')
-            .find('a[href*="/work/"]').each(function (idx, node) {
+            .find('a[href*="/work/"]').each(function (_idx, node) {
         var searchExp = document.getElementById('search').value;
         var replaceExp = document.getElementById('replace').value;
         if (!searchExp || searchExp === replaceExp) {
             return;
         }
+        var name = searchExp.match(/^\/.+\/[gi]*$/) ?
+            node.textContent.replace(eval(searchExp), replaceExp) :
+            node.textContent.split(searchExp).join(replaceExp);
+        if (name === node.textContent) {
+            $(node).after('<span>nothing to replace</span>');
+            return;
+        }
         var mbid = helper.mbidFromURL(node.href);
 
         function success(xhr) {
-            var $status = $('#replace' + idx);
+            var $status = $('#replace' + _idx);
             $status.parent().css('color', 'green');
             var editId = new RegExp(
                 '/edit/(.*)">edit</a>'
@@ -49,17 +57,14 @@ function replaceSubworksTitles() {
             )
         }
         function fail(xhr) {
-            $('#replace' + idx).text(
+            $('#replace' + _idx).text(
                 'Error (code ' + xhr.status + ')'
             ).parent().css('color', 'red');
         }
         function callback(editData) {
-            $('#replace' + idx).text('Sending edit data');
-            var name = searchExp.match(/^\/.+\/[gi]*$/) ?
-                editData.name.replace(eval(searchExp), replaceExp) :
-                editData.name.split(searchExp).join(replaceExp);
-            editData.name = encodeURIComponent(name);
-            $('#replace' + idx).text(' replaced by ' + name);
+            $('#replace' + _idx).text('Sending edit data');
+            editData.name = name;
+            $('#replace' + _idx).text(' replaced by ' + name);
             var postData = edits.prepareEdit(editData);
             postData.edit_note = sidebar.editNote(meta);
             console.info('Data ready to be posted: ', postData);
@@ -68,9 +73,11 @@ function replaceSubworksTitles() {
                           success, fail);
         }
         setTimeout(function () {
-            $(node).after('<span id="replace' + idx + '">Fetching required data</span>');
+            $(node).after('<span id="replace' + _idx + '">' +
+                          'Fetching required data</span>');
             edits.getWorkEditParams(helper.wsUrl('work', [], mbid), callback);
         }, 2 * idx * server.timeout);
+        idx += 1;
     });
 }
 
