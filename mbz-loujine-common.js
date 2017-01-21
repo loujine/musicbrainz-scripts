@@ -526,8 +526,11 @@ var helper = function () {
         return order.indexOf(a.link) > order.indexOf(b.link) ? 1 : -1;
     };
 
-    self.mbidFromURL = function () {
-        return document.URL.split('/')[4];
+    self.mbidFromURL = function (url) {
+        if (url === undefined) {
+            url = document.URL;
+        }
+        return url.split('/')[4];
     };
 
     self.wsUrl = function (entityType, options, mbid) {

@@ -1,11 +1,11 @@
-/* global $ _ relEditor requests edits server sidebar */
+/* global $ _ relEditor requests edits server sidebar helper */
 'use strict';
 var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Replace subwork titles in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.1.7
+// @version      2017.1.21
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: replace subwork titles in Work edit page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=165739
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=170785
 // @include      http*://*musicbrainz.org/work/*/edit
 // @include      http*://*mbsandbox.org/work/*/edit
 // @grant        none
@@ -25,33 +25,6 @@ if (meta && meta.toString && (meta = meta.toString())) {
                 'version': meta.match(/@version\s+(.+)/)[1]};
 }
 
-function parseEditData(editData) {
-    var data = {};
-    data['name'] = edits.encodeName(editData.name);
-    data['comment'] = editData.comment ? editData.comment : null;
-    data['type_id'] = editData.typeID ? editData.typeID : null;
-    data['language_id'] = editData.language ? editData.language : '486';
-    if (editData.iswcs === undefined || !editData.iswcs.length) {
-        data['iswcs.0'] = null;
-    } else {
-        editData.iswcs.forEach(function (iswc, idx) {
-            data['iswcs.' + idx] = iswc;
-        });
-    }
-    // attributes (key)
-    if (!editData.attributes || !editData.attributes.length) {
-        data['attributes.0.type_id'] = null;
-        data['attributes.0.value'] = null;
-    } else {
-        editData.attributes.forEach(function (attr, idx) {
-            data['attributes.' + idx + '.type_id'] = attr.typeID;
-            data['attributes.' + idx + '.value'] = attr.value;
-        });
-    }
-    data['edit_note'] = sidebar.editNote(meta);
-    return data
-}
-
 
 function replaceSubworksTitles() {
     $('table label:contains("parts:")').parents('tr')
@@ -61,7 +34,8 @@ function replaceSubworksTitles() {
         if (!searchExp || searchExp === replaceExp) {
             return;
         }
-        var url = node.href + '/edit';
+        var mbid = helper.mbidFromURL(node.href);
+
         function success(xhr) {
             var $status = $('#replace' + idx);
             $status.parent().css('color', 'green');
@@ -81,20 +55,21 @@ function replaceSubworksTitles() {
         }
         function callback(editData) {
             $('#replace' + idx).text('Sending edit data');
-            var postData = parseEditData(editData);
-            var name = decodeURIComponent(postData.name).replace(/\+/g, ' ');
-            name = searchExp.match(/^\/.+\/[gi]*$/) ?
-                    name.replace(eval(searchExp), replaceExp) :
-                    name.split(searchExp).join(replaceExp);
+            var name = searchExp.match(/^\/.+\/[gi]*$/) ?
+                editData.name.replace(eval(searchExp), replaceExp) :
+                editData.name.split(searchExp).join(replaceExp);
+            editData.name = encodeURIComponent(name);
             $('#replace' + idx).text(' replaced by ' + name);
-            postData.name = encodeURIComponent(name).replace(/%20/g, '+');
+            var postData = edits.prepareEdit(editData);
+            postData.edit_note = sidebar.editNote(meta);
             console.info('Data ready to be posted: ', postData);
-            requests.POST(url, edits.formatEdit('edit-work', postData),
+            requests.POST(edits.urlFromMbid('work', mbid),
+                          edits.formatEdit('edit-work', postData),
                           success, fail);
         }
         setTimeout(function () {
             $(node).after('<span id="replace' + idx + '">Fetching required data</span>');
-            edits.getEditParams(url, callback);
+            edits.getWorkEditParams(helper.wsUrl('work', [], mbid), callback);
         }, 2 * idx * server.timeout);
     });
 }
