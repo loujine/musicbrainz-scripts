@@ -86,30 +86,6 @@ function updateFromPage(editData, node) {
     return editData;
 }
 
-function preparePOSTParams(editData) {
-    var data = {
-        name: edits.encodeName(editData.name),
-        type_id: editData.type_id || '',
-        language_id: editData.language_id || '',
-        edit_note: $('#batch_replace_edit_note')[0].value
-    };
-    if (editData.iswcs === undefined || !editData.iswcs.length) {
-        data['iswcs.0'] = null;
-    } else {
-        editData.iswcs.forEach(function (iswc, idx) {
-            data['iswcs.' + idx] = iswc;
-        });
-    }
-    // attributes (key)
-    if (editData.attributes) {
-        editData.attributes.forEach(function (attr, idx) {
-            data['attributes.' + idx + '.type_id'] = attr.type_id;
-            data['attributes.' + idx + '.value'] = attr.value;
-        });
-    }
-    return data
-}
-
 
 function editWork() {
     $('.commit:input:checked:enabled').each(function (idx, node) {
@@ -136,7 +112,8 @@ function editWork() {
         }
         function callback(editData) {
             $('#' + node.id + '-text').text('Sending edit data');
-            var postData = preparePOSTParams(updateFromPage(editData, node));
+            var postData = edits.prepareEdit(updateFromPage(editData, node));
+            postData.edit_note = $('#batch_replace_edit_note')[0].value;
             console.info('Data ready to be posted: ', postData);
             requests.POST(edits.urlFromMbid('work', mbid),
                           edits.formatEdit('edit-work', postData),
@@ -182,4 +159,3 @@ $(document).ready(function () {
     $('#batch_edit').click(function () {editWork();});
     return false;
 });
-
