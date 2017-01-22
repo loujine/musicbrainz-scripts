@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Make table columns sortable (on Work pages)
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.1.14
+// @version      2017.1.22
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-sortablecolumns.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-sortablecolumns.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -14,6 +14,7 @@
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=125991
 // @include      http*://*musicbrainz.org/work/*
+// @include      http*://*musicbrainz.org/artist/*/relationships
 // @exclude      http*://*musicbrainz.org/work/*/*
 // @grant        none
 // @run-at       document-end
