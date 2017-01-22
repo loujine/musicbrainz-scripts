@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show stats from AcousticBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.11.30
+// @version      2017.1.22
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_stats_from_acousticbrainz.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_stats_from_acousticbrainz.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -30,14 +30,16 @@ function showAcousticBrainzCount() {
     requests.GET(countUrl, function (resp) {
         var count = JSON.parse(resp).count;
         $('#count').append(count);
-    });
-    requests.GET(dataUrl, function (resp) {
-        var data = JSON.parse(resp);
-        var key = data.tonal.key_key + ' ' + data.tonal.key_scale;
-        key += ' (' + 100 * _.round(data.tonal.key_strength, 3) + '%)';
-        $('#key').append(key);
-        var bpm = _.round(data.rhythm.bpm, 1);
-        $('#bpm').append(bpm);
+        if (count > 0) {
+            requests.GET(dataUrl, function (resp) {
+                var data = JSON.parse(resp);
+                var key = data.tonal.key_key + ' ' + data.tonal.key_scale;
+                key += ' (' + 100 * _.round(data.tonal.key_strength, 3) + '%)';
+                $('#key').append(key);
+                var bpm = _.round(data.rhythm.bpm, 1);
+                $('#bpm').append(bpm);
+            });
+        }
     });
 }
 
