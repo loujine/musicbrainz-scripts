@@ -599,7 +599,7 @@ var sidebar = function ($) {
                  )
             );
         }
-        $('h2.rating').before($container);
+        $('h2.collections').before($container);
         return $container;
     };
 
