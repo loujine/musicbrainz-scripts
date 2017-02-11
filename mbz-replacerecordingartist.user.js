@@ -5,15 +5,15 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.6.25
+// @version      2017.2.11
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Replace associated recording artist from an Artist or Work page
 // @compatible   firefox+greasemonkey
-// @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=133551
+// @license      MIT
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*

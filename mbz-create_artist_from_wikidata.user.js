@@ -5,14 +5,14 @@ var meta = function() {
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.10
+// @version      2017.2.11
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Fill artist info from wikidata
 // @compatible   firefox+greasemonkey
-// @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
+// @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
 // @include      http*://*musicbrainz.org/artist/create*
 // @include      http*://*musicbrainz.org/artist/*/edit

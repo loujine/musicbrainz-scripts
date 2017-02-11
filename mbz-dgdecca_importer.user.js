@@ -5,20 +5,20 @@ var meta = function() {
 // @name         Import DG/Decca releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.9
+// @version      2017.2.11
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-dgdecca_importer.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-dgdecca_importer.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  Add a button to import DG/Decca releases to MusicBrainz
 // @compatible   firefox+greasemonkey
-// @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
+// @license      MIT
+// @require      https://greasyfork.org/scripts/20955-mbimport/code/mbimport.js?version=133752
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
 // @include      http*://*deutschegrammophon.com/*/cat/*
 // @include      http*://*deutschegrammophon.com/cat/*
 // @include      http*://*deccaclassics.com/*/cat/*
 // @include      http*://*deccaclassics.com/cat/*
-// @require      https://greasyfork.org/scripts/20955-mbimport/code/mbimport.js?version=133752
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=135554
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==

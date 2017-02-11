@@ -5,14 +5,14 @@ var meta = function() {
 // @name         MusicBrainz: Remove entities from ongoing merge
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2016.12.13
+// @version      2017.2.11
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-remove_entities_from_merge.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-remove_entities_from_merge.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Filter entities to remove during ongoing merge
 // @compatible   firefox+greasemonkey
-// @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
+// @license      MIT
 // @include      http*://*musicbrainz.org/*/merge
 // @include      http*://*mbsandbox.org/*/merge
 // @grant        none
