@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.1.23
+// @version      2017.2.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@ var meta = function() {
 // @description  musicbrainz.org: Fill artist info from wikidata
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=172509
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
 // @include      http*://*musicbrainz.org/artist/create*
 // @include      http*://*musicbrainz.org/artist/*/edit
 // @exclude      http*://*musicbrainz.org/artist/*/alias/*/edit
@@ -38,9 +38,14 @@ function parseWikidata(entity) {
         lang = Object.keys(entity.labels)[0];
     }
     // name and sort name
-    parseWD.setValue('id-edit-artist.name', entity.labels[lang].value);
-    $(document.getElementById('id-edit-artist.name')).trigger('change');
-    document.getElementsByClassName('guesscase-sortname')[0].click();
+    parseWD.setValue(
+        'id-edit-artist.name',
+        entity.labels[lang].value,
+        function cb() {
+            $(document.getElementById('id-edit-artist.name')).trigger('change');
+            document.getElementsByClassName('guesscase-sortname')[0].click();
+        }
+    );
 
 
     // Type and gender
