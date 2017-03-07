@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show acoustids
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.3.6
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -53,6 +53,7 @@ function showAcoustids() {
                             $('<code>', {
                                 'text': acid.slice(0, 6),
                                 'data-acid': acid,
+                                'data-recid': helper.mbidFromURL(recording.href),
                                 'class': 'acoustID'
                             })
                         ).prepend($('<br />'))
@@ -69,14 +70,18 @@ function showAcoustids() {
             );
         });
         var nodes = document.getElementsByClassName('acoustID');
-        var ids = _.map(nodes, function (node) {
-            return node.getAttribute('data-acid');
+        var ids = {};
+        for (var node of nodes) {
+            var acid = node.getAttribute('data-acid');
+            if (!_.includes(Object.keys(ids), acid)) {
+                ids[acid] = [];
+            }
+            ids[acid].push(node.getAttribute('data-recid'));
+        }
+        var duplicate_ids = _.filter(Object.keys(ids), function (acid) {
+            // true if distinct recordings use the same acoustID
+            return _.uniq(ids[acid]).length > 1
         });
-        var duplicate_ids = _.uniq(_.filter(ids, function (refId, idx) {
-            return _.filter(ids.slice(idx), function (id) {
-                return id === refId;
-            }).length > 1;
-        }));
         duplicate_ids.forEach(function (acid) {
             $('#acidForMerge').append(
                 '<option value="' + acid + '">' + acid.slice(0, 6) +
