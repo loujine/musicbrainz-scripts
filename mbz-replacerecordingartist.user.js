@@ -5,7 +5,7 @@ var meta = function() {
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.3.7
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -65,6 +65,7 @@ function showPerformers(start, maxcount) {
     if (!$('#ARperformerColumn').length) {
         $('thead > tr').append('<th id="ARperformerColumn">Performer AR</th>');
         $('.subh > th')[1].colSpan += 1;
+        $('table.tbl > tbody > tr:not(".subh")').append('<td>');
     }
 
     $rows.each(function (idx, tr) {
@@ -73,10 +74,10 @@ function showPerformers(start, maxcount) {
                 url = helper.wsUrl('recording', ['artist-rels'], mbid);
             requests.GET(url, function (response) {
                 var resp = JSON.parse(response),
-                    $node,
+                    $node = $(tr).find('td:last'),
                     $button;
                 if (resp.relations.length) {
-                    $node = $('<td>' + formatPerformers(resp.relations) + '</td>');
+                    $node.text(formatPerformers(resp.relations));
                     $button = $('<input>', {
                         'id': 'replace-' + mbid,
                         'class': 'replace',
@@ -85,7 +86,7 @@ function showPerformers(start, maxcount) {
                     });
                     $node.append($button);
                 } else {
-                    $node = $('<td>✗</td>').css('color', 'red');
+                    $node.text('✗').css('color', 'red');
                 }
                 $(tr).append($node);
             });

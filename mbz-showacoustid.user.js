@@ -1,10 +1,10 @@
-/* global $ _ requests sidebar */
+/* global $ _ helper requests sidebar */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Show acoustids
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.3.6
+// @version      2017.3.7
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -25,7 +25,7 @@
 function showAcoustids() {
     var $recordings = $('table a[href*="/recording/"]');
     var recording_mbids = $recordings.map(function() {
-        return this.href.split('/')[4];
+        return this.href.split('/')[4]; // eslint-disable-line no-invalid-this
     }).get();
     var url = '//api.acoustid.org/v2/track/list_by_mbid';
     var application_api_key = 'P9e1TIJs7g';
@@ -36,6 +36,7 @@ function showAcoustids() {
     $('thead > tr').append('<th>AcoustID</th>');
     $('thead > tr').append('<th>ABrainz</th>');
     $('.subh > th')[1].colSpan += 2;
+    $('table.tbl > tbody > tr:not(".subh")').append('<td>');
 
     requests.POST(url, params, function success(xhr) {
         var resp_mbids = JSON.parse(xhr.responseText).mbids;
@@ -43,23 +44,21 @@ function showAcoustids() {
             var acids = resp_mbids[idx].tracks.map(function (track) {
                 return track.id;
             });
-            $(recording).parents('tr').append(
-                $('<td>').append(
-                    acids.map(function (acid) {
-                        return $('<a>', {
-                            'href': '//acoustid.org/track/' + acid,
-                            'target': '_blank'
-                        }).append(
-                            $('<code>', {
-                                'text': acid.slice(0, 6),
-                                'data-acid': acid,
-                                'data-recid': helper.mbidFromURL(recording.href),
-                                'class': 'acoustID'
-                            })
-                        ).prepend($('<br />'))
-                    })
-                )
-            ).append(
+            $(recording).parents('tr').find('td:last').append(
+                acids.map(function (acid) {
+                    return $('<a>', {
+                        'href': '//acoustid.org/track/' + acid,
+                        'target': '_blank'
+                    }).append(
+                        $('<code>', {
+                            'text': acid.slice(0, 6),
+                            'data-acid': acid,
+                            'data-recid': helper.mbidFromURL(recording.href),
+                            'class': 'acoustID'
+                        })
+                    ).prepend($('<br />'))
+                })
+            ).after(
                 $('<td>').append(
                     $('<a>', {
                         'href': '//acousticbrainz.org/' + recording_mbids[idx],
@@ -139,7 +138,9 @@ function mergeFromAcoustID() {
     ).append(
         $('<h3>Merge from acoustID<h3>')
     ).append(
-        $('<select id="acidForMerge"><option value="">acoustID</option></select>')
+        $('<select id="acidForMerge">'
+          + '<option value="">acoustID</option>'
+          + '</select>')
     ).append(
         $('<input>', {
             'id': 'merge',
