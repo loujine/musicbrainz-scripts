@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.3.5
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -85,6 +85,11 @@ var server = {
     'performingLinkTypes': function () {
         return _.values(_.pick(server.recordingLinkType, server._performingRoles));
     },
+    'aliasType': {
+        'Artist name': 1,
+        'Legal name': 2,
+        'Search hint': 3
+    },
     'attr': {
         'strings': 69,
         'cello': 84,
@@ -140,6 +145,27 @@ var server = {
         'tur': 'Turkish',
         'zxx': '[No lyrics]'
     },
+    'locale': {
+        'Arabic': 'ar',
+        'Chinese': 'zh',
+        'Czech': 'cs',
+        'Danish': 'da',
+        'Dutch': 'nl',
+        'English': 'en',
+        'Finnish': 'fi',
+        'French': 'fr',
+        'German': 'de',
+        'Greek': 'el',
+        'Italian': 'it',
+        'Japanese': 'ja',
+        'Korean': 'ko',
+        'Polish': 'pl',
+        'Portuguese': 'pt',
+        'Russian': 'ru',
+        'Spanish': 'es',
+        'Swedish': 'sv',
+        'Turkish': 'tr'
+    },
     'workKeyAttr': {
         'C major': 2,
         'C minor': 3,
@@ -185,6 +211,26 @@ var server = {
     // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
     // we wait for 'server.timeout' milliseconds between two queries
     'timeout': 1000
+};
+
+var aliases = {
+    'type': [
+        '<select id="id-edit-alias.type_id">',
+        '<option selected> </option>',
+        _.map(server.aliasType, function (code, type) {
+            return '<option value="' + code + '">' + type + '</option>';
+        }).join(''),
+        '</select>'
+    ].join(''),
+
+    'locale': [
+        '<select id="id-edit-alias.locale">',
+        '<option> </option>',
+        _.map(server.locale, function (code, type) {
+            return '<option value="' + code + '">' + type + '</option>';
+        }).join(''),
+        '</select>'
+    ].join(''),
 };
 
 var works = {
