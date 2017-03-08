@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.3.5
+// @version      2017.3.9
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -85,10 +85,14 @@ var server = {
     'performingLinkTypes': function () {
         return _.values(_.pick(server.recordingLinkType, server._performingRoles));
     },
-    'aliasType': {
+    'aliasArtistType': {
         'Artist name': 1,
         'Legal name': 2,
         'Search hint': 3
+    },
+    'aliasType': {
+        'Name': 1,
+        'Search hint': 2
     },
     'attr': {
         'strings': 69,
@@ -152,19 +156,28 @@ var server = {
         'Danish': 'da',
         'Dutch': 'nl',
         'English': 'en',
+        'Estonian': 'et',
         'Finnish': 'fi',
         'French': 'fr',
         'German': 'de',
         'Greek': 'el',
+        'Hindi': 'hi',
         'Italian': 'it',
         'Japanese': 'ja',
         'Korean': 'ko',
+        'Norwegian Bokmål': 'nb',
+        'Norwegian Nynorsk': 'nn',
         'Polish': 'pl',
         'Portuguese': 'pt',
+        'Punjabi': 'pa',
         'Russian': 'ru',
+        'Slovak': 'sk',
         'Spanish': 'es',
         'Swedish': 'sv',
-        'Turkish': 'tr'
+        'Thai': 'th',
+        'Turkish': 'tr',
+        'Urdu': 'ur',
+        'Vietnamese': 'vi'
     },
     'workKeyAttr': {
         'C major': 2,
@@ -214,8 +227,17 @@ var server = {
 };
 
 var aliases = {
+    'artistType': [
+        '<select>',
+        '<option selected> </option>',
+        _.map(server.aliasArtistType, function (code, type) {
+            return '<option value="' + code + '">' + type + '</option>';
+        }).join(''),
+        '</select>'
+    ].join(''),
+
     'type': [
-        '<select id="id-edit-alias.type_id">',
+        '<select>',
         '<option selected> </option>',
         _.map(server.aliasType, function (code, type) {
             return '<option value="' + code + '">' + type + '</option>';
@@ -224,7 +246,7 @@ var aliases = {
     ].join(''),
 
     'locale': [
-        '<select id="id-edit-alias.locale">',
+        '<select>',
         '<option> </option>',
         _.map(server.locale, function (code, type) {
             return '<option value="' + code + '">' + type + '</option>';

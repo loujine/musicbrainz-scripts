@@ -13,10 +13,17 @@
 // @compatible   firefox+greasemonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=179395
-// @include      http*://*musicbrainz.org/artist/*/aliases
+// @include      http*://*musicbrainz.org/*/*/aliases*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
+
+var aliasType;
+if (helper.isArtistURL) {
+    aliasType = aliases.artistType;
+} else {
+    aliasType = aliases.type;
+}
 
 function addRow() {
     $($('tbody')[0]).find('tr:last').before($('<tr>').append(
@@ -28,7 +35,7 @@ function addRow() {
     ).append(
         $('<td></td>')
     ).append(
-        $('<td>').append($(aliases.type).clone())
+        $('<td>').append($(aliasType).clone())
     ).append(
         $('<td>').append($(aliases.locale).clone())
     ).append(
