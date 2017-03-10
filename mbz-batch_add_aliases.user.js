@@ -1,10 +1,10 @@
-/* global $ _ */
+/* global $ helper aliases edits sidebar requests GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Batch-add artist aliases
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.3.7
+// @version      2017.3.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Batch-add artist aliases
 // @compatible   firefox+greasemonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=179395
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=180106
 // @include      http*://*musicbrainz.org/*/*/aliases*
 // @grant        none
 // @run-at       document-end
@@ -26,7 +26,7 @@ if (helper.isArtistURL) {
 }
 
 function addRow() {
-    $($('tbody')[0]).find('tr:last').before($('<tr>').append(
+    $($('tbody')[0]).find('tr:last').after($('<tr class="newAlias">').append(
         $('<td><input value="" type="text"></td>')
     ).append(
         $('<td><input value="" type="text"></td>')
@@ -39,10 +39,16 @@ function addRow() {
     ).append(
         $('<td>').append($(aliases.locale).clone())
     ).append(
-        $('<td><input class="submitRow" value="Add alias" type="button"></td>')
+        $('<td><a href="#" class="deleteRow">×</a></td>')
     ));
-    $('.submitRow').click(function () {
-        var cols = $(this).parents('tr').children();
+    $('a.deleteRow').click(function (node) {
+        $(node.target).parents('tr').remove();
+    });
+}
+
+function submitAliases() {
+    $('.newAlias').each(function (idx, node) {
+        var cols = node.children;
         var postData = {
             name: edits.encodeName(cols[0].children[0].value),
             sort_name: edits.encodeName(cols[1].children[0].value),
@@ -69,13 +75,20 @@ function addRow() {
 }
 
 $(document).ready(function () {
-    $($('tbody')[0]).append($('<tr>').append($('<td>').append(
+    $('table:nth(0)').after(
+        $('<input>', {
+            id: 'submitAliases',
+            type: 'button',
+            value: 'submit new aliases'
+        })
+    ).after(
         $('<input>', {
             class: 'addRow',
             type: 'button',
-            value: 'Add row'
+            value: 'Add a new row'
         })
-    )));
+    );
     $('.addRow').click(addRow);
+    $('#submitAliases').click(submitAliases);
     return false;
 });
