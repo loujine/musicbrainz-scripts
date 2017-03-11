@@ -162,6 +162,7 @@ var server = {
         'German': 'de',
         'Greek': 'el',
         'Hindi': 'hi',
+        'Hungarian': 'hu',
         'Italian': 'it',
         'Japanese': 'ja',
         'Korean': 'ko',
