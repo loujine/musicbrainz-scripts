@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-add artist aliases
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.3.10
+// @version      2017.3.11
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -26,10 +26,10 @@ if (helper.isArtistURL) {
 }
 
 function addRow() {
-    $($('tbody')[0]).find('tr:last').after($('<tr class="newAlias">').append(
+    $('tbody:nth(0)').find('tr:last').after($('<tr class="newAlias">').append(
         $('<td><input value="" type="text"></td>')
     ).append(
-        $('<td><input value="" type="text"></td>')
+        $('<td><input value="" type="text" placeholder="leave empty to use the name"></td>')
     ).append(
         $('<td></td>')
     ).append(
@@ -37,11 +37,17 @@ function addRow() {
     ).append(
         $('<td>').append($(aliasType).clone())
     ).append(
-        $('<td>').append($(aliases.locale).clone())
+        $('<td>').append(
+            $(aliases.locale).clone()
+        ).append(
+            $('<input type="checkbox">')
+        ).append(
+            $('<span>primary</span>')
+        )
     ).append(
-        $('<td><a href="#" class="deleteRow">×</a></td>')
+        $('<td><a href="#" class="deleteRow" style="color:red">×</a></td>')
     ));
-    $('a.deleteRow').click(function (node) {
+    $('.newAlias:last() a.deleteRow').click(function (node) {
         $(node.target).parents('tr').remove();
     });
 }
@@ -54,8 +60,12 @@ function submitAliases() {
             sort_name: edits.encodeName(cols[1].children[0].value),
             type_id: cols[4].children[0].value,
             locale: cols[5].children[0].value,
+            primary_for_locale: cols[5].children[1].checked ? 1 : 0,
             edit_note: sidebar.editNote(GM_info.script)
         };
+        if (postData.sort_name === '') {
+            postData.sort_name = postData.name;
+        }
         $(cols[6]).text('Sending edit data');
         console.info('Data ready to be posted: ', postData);
         function success(xhr) {
@@ -71,6 +81,7 @@ function submitAliases() {
         requests.POST(document.URL.replace('aliases', 'add-alias'),
                       edits.formatEdit('edit-alias', postData),
                       success, fail);
+        $(node).removeClass('newAlias');
     });
 }
 
