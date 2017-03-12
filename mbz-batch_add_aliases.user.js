@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-add artist aliases
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.3.11
+// @version      2017.3.12
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Batch-add artist aliases
 // @compatible   firefox+greasemonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=180106
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=180506
 // @include      http*://*musicbrainz.org/*/*/aliases*
 // @grant        none
 // @run-at       document-end
@@ -86,6 +86,12 @@ function submitAliases() {
 }
 
 $(document).ready(function () {
+    // doesn't work on translated pages
+    for (var node of document.getElementById('content').getElementsByTagName('p')) {
+        if (node.innerHTML.includes('has no aliases')) {
+            node.innerHTML = '<table class="tbl"><thead><tr><th>Alias</th><th>Sort name</th><th>Begin Date</th><th>End Date</th><th>Type</th><th>Locale</th></tr></thead><tbody><tr></tr></tbody></table>';
+        }
+    }
     $('table:nth(0)').after(
         $('<input>', {
             id: 'submitAliases',
