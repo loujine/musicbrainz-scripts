@@ -171,6 +171,7 @@ var server = {
         'Korean': 'ko',
         'Norwegian Bokmål': 'nb',
         'Norwegian Nynorsk': 'nn',
+        'Persian': 'fa',
         'Polish': 'pl',
         'Portuguese': 'pt',
         'Punjabi': 'pa',
