@@ -151,6 +151,9 @@ var server = {
     },
     'locale': {
         'Arabic': 'ar',
+        'Armenian': 'hy',
+        'Bulgarian': 'bg',
+        'Catalan': 'ca',
         'Chinese': 'zh',
         'Czech': 'cs',
         'Danish': 'da',
@@ -165,6 +168,8 @@ var server = {
         'Hebrew': 'he',
         'Hindi': 'hi',
         'Hungarian': 'hu',
+        'Indonesian',: 'id',
+        'Irish': 'ga',
         'Italian': 'it',
         'Japanese': 'ja',
         'Khmer (Central)': 'km',
@@ -182,6 +187,7 @@ var server = {
         'Thai': 'th',
         'Turkish': 'tr',
         'Urdu': 'ur',
+        'Ukrainian': 'uk',
         'Vietnamese': 'vi'
     },
     'workKeyAttr': {
