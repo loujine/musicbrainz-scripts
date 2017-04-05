@@ -168,7 +168,7 @@ var server = {
         'Hebrew': 'he',
         'Hindi': 'hi',
         'Hungarian': 'hu',
-        'Indonesian',: 'id',
+        'Indonesian': 'id',
         'Irish': 'ga',
         'Italian': 'it',
         'Japanese': 'ja',
