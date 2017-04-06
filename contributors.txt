@@ -1,2 +1,3 @@
 loujine
 jesus2099 (https://github.com/jesus2099/konami-command/)
+CatQuest (https://bitbucket.org/CatCat/musicbrainz-scripts/)

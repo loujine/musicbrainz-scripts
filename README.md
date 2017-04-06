@@ -27,6 +27,10 @@ Contributors
 ------------
 
 * jesus2099
+* CatQuest
+* many MusicBrainz editors/MetaBrainz developers for suggestions and feedback
+
+!m everyone
 
 
 Installation
