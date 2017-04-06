@@ -42,7 +42,7 @@ For installation, follow the [Greasemonkey manual](https://wiki.greasespot.net/G
 License
 -------
 
-[CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/)
+[MIT](https://opensource.org/licenses/MIT)
 
 
 Reporting bugs & Contributing
