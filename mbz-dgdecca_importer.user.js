@@ -1,11 +1,10 @@
 /* global $ MBImport */
 'use strict';
-var meta = function() {
 // ==UserScript==
 // @name         Import DG/Decca releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.4.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-dgdecca_importer.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-dgdecca_importer.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -22,11 +21,6 @@ var meta = function() {
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
-};
-if (meta && meta.toString && (meta = meta.toString())) {
-    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
-                'version': meta.match(/@version\s+(.+)/)[1]};
-}
 
 var siteURL = document.URL.split('/')[2].replace('www.', '');
 
@@ -51,7 +45,8 @@ var labels = {
 var editNote = ('Imported from '
                 + document.URL
                 + '\n —\n'
-                + 'GM script: "' + meta.name + '" (' + meta.version + ')\n\n');
+                + 'GM script: "' + GM_info.script.name
+                + '" (' + GM_info.script.version + ')\n\n');
 
 function _clean(s) {
     return s

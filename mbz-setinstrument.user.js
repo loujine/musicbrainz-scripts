@@ -1,11 +1,10 @@
 /* global $ MB server relEditor */
 'use strict';
-var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Batch-set recording-artist instrument
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.4.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -18,13 +17,6 @@ var meta = function() {
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
-};
-if (meta && meta.toString && (meta = meta.toString())) {
-    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
-                'version': meta.match(/@version\s+(.+)/)[1]};
-}
-
-// imported from mbz-loujine-releditor.js: server, relEditor
 
 function setInstrument(fromType, toType, attrIds, credit) {
     function _relationships(recording, type) {
@@ -96,27 +88,26 @@ $(document).ready(function () {
     var link = server.recordingLinkType;
     $('#batch-unset-orchestra').click(function () {
         setInstrument(link.orchestra, link.performer);
-        relEditor.editNote(meta);
+        relEditor.editNote(GM_info.script);
     });
     $('#batch-unset-instrument').click(function () {
         setInstrument(link.instrument, link.performer);
-        relEditor.editNote(meta);
+        relEditor.editNote(GM_info.script);
     });
     $('#batch-set-string-quartet').click(function () {
         setInstrument(link.performer, link.instrument,
                       [server.attr.strings], 'string quartet');
-        relEditor.editNote(meta, 'Use "strings" instrument AR for a String Quartet artist');
+        relEditor.editNote(GM_info.script, 'Use "strings" instrument AR for a String Quartet artist');
     });
     $('#batch-set-piano-trio').click(function () {
         setInstrument(link.performer, link.instrument,
                       [server.attr.piano, server.attr.violin, server.attr.cello]);
-        relEditor.editNote(meta, 'Use instruments AR for a Piano Trio artist');
+        relEditor.editNote(GM_info.script, 'Use instruments AR for a Piano Trio artist');
     });
     $('#batch-set-piano').click(function () {
         setInstrument(link.performer, link.instrument,
                       [server.attr.piano]);
-        relEditor.editNote(meta);
+        relEditor.editNote(GM_info.script);
     });
     return false;
 });
-

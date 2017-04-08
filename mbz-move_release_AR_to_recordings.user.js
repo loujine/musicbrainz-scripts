@@ -1,11 +1,10 @@
 /* global $ _ MB requests server relEditor */
 'use strict';
-var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Move performer AR on release to recordings AR
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.4.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -19,13 +18,6 @@ var meta = function() {
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
-};
-if (meta && meta.toString && (meta = meta.toString())) {
-    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
-                'version': meta.match(/@version\s+(.+)/)[1]};
-}
-
-// imported from mbz-loujine-common.js: requests, server, relEditor
 
 function fetchLinkIds() {
     var ids = [MB.typeInfo['artist-release'][0].id];
@@ -100,7 +92,7 @@ $(document).ready(function() {
     var ids = fetchLinkIds();
     $('#moveAR').click(function() {
         moveAR(ids);
-        relEditor.editNote(meta, 'Move performers in release AR to individual recordings');
+        relEditor.editNote(GM_info.script, 'Move performers in release AR to individual recordings');
     });
     return false;
 });

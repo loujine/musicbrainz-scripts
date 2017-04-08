@@ -1,11 +1,10 @@
 /* global $ _ relEditor requests edits server sidebar helper */
 'use strict';
-var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Replace subwork titles in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.4.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -19,12 +18,6 @@ var meta = function() {
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
-};
-if (meta && meta.toString && (meta = meta.toString())) {
-    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
-                'version': meta.match(/@version\s+(.+)/)[1]};
-}
-
 
 function replaceSubworksTitles() {
     var idx = 0;
@@ -66,7 +59,7 @@ function replaceSubworksTitles() {
             editData.name = name;
             $('#replace' + _idx).text(' replaced by ' + name);
             var postData = edits.prepareEdit(editData);
-            postData.edit_note = sidebar.editNote(meta);
+            postData.edit_note = sidebar.editNote(GM_info.script);
             console.info('Data ready to be posted: ', postData);
             requests.POST(edits.urlFromMbid('work', mbid),
                           edits.formatEdit('edit-work', postData),

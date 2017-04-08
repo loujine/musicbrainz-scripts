@@ -1,11 +1,10 @@
 /* global $ MB server relEditor */
 'use strict';
-var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Batch-propagate recording dates
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.4.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -18,13 +17,6 @@ var meta = function() {
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
-};
-if (meta && meta.toString && (meta = meta.toString())) {
-    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
-                'version': meta.match(/@version\s+(.+)/)[1]};
-}
-
-// imported from mbz-loujine-common.js: server, relEditor
 
 function copyDate(from_date, relation) {
     ['beginDate', 'endDate'].forEach(function(date) {
@@ -109,12 +101,12 @@ $(document).ready(function() {
     var appliedNote = false;
     $('#removedates').click(function() {
         removeDates();
-        relEditor.editNote(meta);
+        relEditor.editNote(GM_info.script);
     });
     $('#copydates').click(function() {
         propagateDates();
         if (!appliedNote) {
-            relEditor.editNote(meta, 'Propagate recording dates from other advanced relationships');
+            relEditor.editNote(GM_info.script, 'Propagate recording dates from other advanced relationships');
             appliedNote = true;
         }
     });

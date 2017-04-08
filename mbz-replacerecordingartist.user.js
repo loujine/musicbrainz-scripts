@@ -1,11 +1,10 @@
 /* global $ _ requests server helper sidebar edits */
 'use strict';
-var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.3.7
+// @version      2017.4.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -20,13 +19,7 @@ var meta = function() {
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
-};
-if (meta && meta.toString && (meta = meta.toString())) {
-    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
-                'version': meta.match(/@version\s+(.+)/)[1]};
-}
 
-// imported from mbz-loujine-common.js: requests, server, sidebar
 var editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
 
 function formatPerformers(relations) {
@@ -239,7 +232,7 @@ function replaceArtist() {
             $('<textarea></textarea>', {
                 'id': 'batch_replace_edit_note',
                 'disabled': true,
-                'text': sidebar.editNote(meta, editNoteMsg)
+                'text': sidebar.editNote(GM_info.script, editNoteMsg)
             })
         )
     ).append(

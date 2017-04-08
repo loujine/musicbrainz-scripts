@@ -1,11 +1,10 @@
 /* global $ requests server works sidebar edits helper */
 'use strict';
-var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.4.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -19,13 +18,7 @@ var meta = function() {
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
-};
-if (meta && meta.toString && (meta = meta.toString())) {
-    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
-                'version': meta.match(/@version\s+(.+)/)[1]};
-}
 
-// imported from mbz-loujine-common.js: requests, server, works, sidebar
 var $rows = $('table.tbl tr:gt(0)'),
     idxType = $('table.tbl th:contains("Type")').index(),
     idxLang = $('table.tbl th:contains("Language")').index(),
@@ -141,7 +134,7 @@ function editWork() {
         ).append(
             $('<textarea>', {
                 'id': 'batch_replace_edit_note',
-                'text': sidebar.editNote(meta),
+                'text': sidebar.editNote(GM_info.script),
                 'cols': 20,
                 'rows': 7
             })

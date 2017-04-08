@@ -1,11 +1,10 @@
 /* global $ MB server relEditor */
 'use strict';
-var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Batch-set recording-work attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.4.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -18,13 +17,6 @@ var meta = function() {
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
-};
-if (meta && meta.toString && (meta = meta.toString())) {
-    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
-                'version': meta.match(/@version\s+(.+)/)[1]};
-}
-
-// imported from mbz-loujine-common.js: server, relEditor
 
 function setAttributes(attrId, toggle) {
     var recordings = MB.relationshipEditor.UI.checkedRecordings();
@@ -80,20 +72,19 @@ function setAttributes(attrId, toggle) {
 $(document).ready(function() {
     $('#setlive').click(function() {
         setAttributes(server.attr.live, false);
-        relEditor.editNote(meta);
+        relEditor.editNote(GM_info.script);
     });
     $('#setpartial').click(function() {
         setAttributes(server.attr.partial, false);
-        relEditor.editNote(meta);
+        relEditor.editNote(GM_info.script);
     });
     $('#togglelive').click(function() {
         setAttributes(server.attr.live, true);
-        relEditor.editNote(meta);
+        relEditor.editNote(GM_info.script);
     });
     $('#togglepartial').click(function() {
         setAttributes(server.attr.partial, true);
-        relEditor.editNote(meta);
+        relEditor.editNote(GM_info.script);
     });
     return false;
 });
-

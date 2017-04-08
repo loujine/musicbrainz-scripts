@@ -1,11 +1,10 @@
 /* global $ _ relEditor sidebar wikidata parseWD */
 'use strict';
-var meta = function() {
 // ==UserScript==
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.4.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -23,13 +22,6 @@ var meta = function() {
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
-};
-if (meta && meta.toString && (meta = meta.toString())) {
-    var meta = {'name': meta.match(/@name\s+(.+)/)[1],
-                'version': meta.match(/@version\s+(.+)/)[1]};
-}
-
-
 
 function parseWikidata(entity) {
     var lang = wikidata.language,
@@ -182,7 +174,7 @@ function fillForm(wikiId) {
             parseWikidata(entity);
         }
     });
-    parseWD.setValue('id-edit-artist.edit_note', sidebar.editNote(meta));
+    parseWD.setValue('id-edit-artist.edit_note', sidebar.editNote(GM_info.script));
 }
 
 (function displayToolbar(relEditor) {
