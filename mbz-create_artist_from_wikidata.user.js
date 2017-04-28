@@ -1,4 +1,4 @@
-/* global $ _ relEditor sidebar GM_info */
+/* global $ _ relEditor sidebar GM_info requests */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Fill artist info from wikidata
@@ -118,7 +118,33 @@ function setValue (nodeId, value, callback) {
         $('<dd>', {'text': `Kept "${printableValue}"`})
     );
     return false;
-};
+}
+
+
+function fillExternalLinks(url) {
+    function _addExternalLink(url) {
+        const inputs = document.getElementById('external-links-editor')
+                               .getElementsByTagName('input'),
+            input = inputs[inputs.length - 1];
+        input.value = url;
+        input.dispatchEvent(new Event('input', {'bubbles': true}));
+    }
+    let existing_domains = [];
+    for (const input of document.getElementById("external-links-editor")
+                                .querySelectorAll('input')) {
+        existing_domains.push(input.value.split('/')[2]);
+    }
+    existing_domains = existing_domains.slice(0, existing_domains.length - 1);
+    const domain = url.split('/')[2];
+    if (!_.includes(existing_domains, domain)) {
+        _addExternalLink(url);
+        $('#newFields').append(
+            $('<dt>', {'text': 'New external link added:'})
+        ).append(
+            $('<dd>', {'text': url}).css('color', 'green')
+        );
+    }
+}
 
 
 const libWD = function () {
@@ -418,6 +444,41 @@ function fillForm(wikiId) {
             .value = sidebar.editNote(GM_info.script);
 }
 
+
+function fillFormFromVIAF(viafURL) {
+
+    requests.GET(viafURL, function (resp) {
+        fillExternalLinks(viafURL);
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(resp, 'text/html');
+        setValue(
+            'id-edit-artist.name',
+            doc.getElementsByTagName('h2')[1].textContent,
+            function cb() {
+                $(document.getElementById(
+                    'id-edit-artist.name')).trigger('change');
+                document.getElementsByClassName(
+                    'guesscase-sortname')[0].click();
+            }
+        );
+        ["catalogue.bnf.fr", "d-nb.info", "wikidata.org"].forEach(
+                function (site) {
+            const url = doc.querySelector(`a[href*="${site}"]`).href;
+            if (url) {
+                fillExternalLinks(url);
+            }
+        });
+        // FIXME: works if no previous ISNI
+        const url = doc.querySelector(`a[href*="isni.org"]`).href;
+        if (url) {
+            var isniBlock = document.getElementsByClassName(
+                    'edit-artist.isni_codes-template')[0].parentElement;
+            isniBlock.getElementsByTagName('input')[1].value = url.split('/')[4];
+        }
+    })
+}
+
+
 (function displayToolbar(relEditor) {
     $('div.half-width').after(
         $('<div>', {float: 'right'})).after(
@@ -444,8 +505,13 @@ $(document).ready(function() {
     var node = document.getElementById('linkParser');
     node.addEventListener('input', function () {
         if (node.value.split('/')[2] === "www.wikidata.org") {
+            $('#linkParser').css('background-color', '#bbffbb');
             fillForm(node.value.split('/')[4].trim());
-            node.value = '';
+        } else if (node.value.split('/')[2] === "viaf.org") {
+            $('#linkParser').css('background-color', '#bbffbb');
+            fillFormFromVIAF(node.value);
+        } else {
+            $('#linkParser').css('background-color', '#ffaaaa');
         }
     }, false);
     return false;
@@ -456,3 +522,10 @@ $(document).ready(function() {
 // https://www.wikidata.org/wiki/Q1277689 invalid date with precision=10 (Y+M)
 // https://www.wikidata.org/wiki/Q3290108 invalid date with precision=9 (year)
 // https://www.wikidata.org/wiki/Q3193910 invalid date with precision=7
+
+// import viaf
+// https://viaf.org/viaf/44485204/
+
+// bnf
+// http://catalogue.bnf.fr/ark:/12148/cb13894801b.unimarc
+//  103 .. $a 19161019 19851014
