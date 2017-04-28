@@ -23,6 +23,153 @@
 // @run-at       document-end
 // ==/UserScript==
 
+// https://www.wikidata.org/wiki/Wikidata:List_of_properties/Person
+const wikidata = {
+    language: 'en',
+    entities: {
+        person: 5,
+        stringQuartet: 207338,
+        orchestra: 42998,
+        band: 215380,
+        rockBand: 5741069,
+        male: 6581097,
+        female: 6581072
+    },
+    fields: {
+        type: 'P31',
+        gender: 'P21',
+        citizen: 'P27',
+        coordinates: 'P625',
+        country: 'P495',
+        isni: 'P213',
+        birthDate: 'P569',
+        inceptionDate: 'P571',
+        birthPlace: 'P19',
+        formationLocation: 'P740',
+        deathDate: 'P570',
+        dissolutionDate: 'P576',
+        deathPlace: 'P20',
+        mbidArtist: 'P434',
+        mbidArea: 'P982',
+        members: 'P527',
+        idDiscogs: 'P1953',
+        idIMDB: 'P345',
+        idSpotify: 'P1902',
+        idOL: 'P648',
+        idVIAF: 'P214',
+        idGND: 'P227',
+        idBNF: 'P268',
+        idIMSLP: 'P839'
+    },
+    urls: {
+        idDiscogs: 'http://www.discogs.com/artist/',
+        idIMDB: 'http://www.imdb.com/name/',
+        idSpotify: 'https://open.spotify.com/artist/',
+        idOL: 'https://openlibrary.org/works/',
+        idVIAF: 'https://viaf.org/viaf/',
+        idGND: 'https://d-nb.info/gnd/',
+        idIMSLP: 'https://imslp.org/wiki/',
+        idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb'
+    }
+};
+
+
+const parseWD = function () {
+    var self = {};
+
+    self.existField = function (entity, field) {
+        return entity.claims[wikidata.fields[field]] !== undefined;
+    };
+
+    self.valueFromField = function (entity, field) {
+        return entity.claims[wikidata.fields[field]][0].mainsnak.datavalue.value;
+    };
+
+    self.setValue = function (nodeId, value, callback) {
+        var node = document.getElementById(nodeId);
+        if (!node.value.trim()) {  // field was empty
+            node.value = value;
+        } else if (node.value != value) {  // != to allow autocasting to int
+            callback();
+        }
+    };
+
+    self.fillArea = function (data, place, nodeId, lang) {
+        var entityArea = data.entities[place],
+            input = document.getElementById(`id-edit-artist.${nodeId}.name`);
+        if (!entityArea) {
+            return;
+        }
+        if (self.existField(entityArea, 'mbidArea')) {
+            input.value = self.valueFromField(entityArea, 'mbidArea');
+            $(input).trigger('keydown');
+        } else {
+            input.value = entityArea.labels[lang].value;
+        }
+    };
+
+    self.fillDate = function (entity, entityType, fieldName, nodeId) {
+        var field = self.valueFromField(entity, fieldName);
+        var prefix = `id-edit-${entityType}.period.${nodeId}`;
+        // sometimes wikidata has valid data but not 'translatable'
+        // to the mbz schema
+        // cf https://www.mediawiki.org/wiki/Wikibase/DataModel#Dates_and_times
+        if (field.precision < 9 || field.before > 0 || field.after > 0) {
+            return;
+        }
+        // sometimes wikidata has invalid data for months/days
+        var date = new Date(field.time.slice(1)); // remove leading "+"
+        if (isNaN(date.getTime())) { // invalid date
+            // try to find valid fields
+            date = new RegExp('(.*)-(.*)-(.*)T').exec(field.time);
+            if (parseInt(date[1]) !== 0) {
+                self.setValue(prefix + '.year', parseInt(date[1]));
+                if (parseInt(date[2]) > 0) {
+                    self.setValue(prefix + '.month', parseInt(date[2]));
+                    if (parseInt(date[3]) > 0) {
+                        self.setValue(prefix + '.day', parseInt(date[3]));
+                    }
+                }
+            }
+            return;
+        }
+        self.setValue(prefix + '.year', date.getFullYear());
+        var yearInput = document.getElementById(prefix + '.year');
+        if (yearInput.classList.contains('jesus2099')) {
+                // jesus2099's EASY_DATE script is shifting the input node
+                // containing the year but not its id
+                yearInput.nextSibling.value = date.getFullYear();
+        }
+        if (field.precision > 9) {
+            self.setValue(prefix + '.month', date.getMonth() + 1);
+            if (field.precision > 10) {
+                self.setValue(prefix + '.day', date.getDate());
+            }
+        }
+    };
+
+    self.request = function(wikiId, callback) {
+        $.ajax({
+            url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
+                 + wikiId + '&format=json',
+            dataType: 'jsonp'
+        }).done(function (data) {
+            console.info('wikidata returned: ', data);
+            if (data.error) {
+                alert('wikidata returned an error:\n' +
+                      'code: ' + data.error.code + '\n' +
+                      'wikidata ID: "' + data.error.id + '"\n' +
+                      'info: ' + data.error.info);
+                return;
+            }
+            callback(data.entities[wikiId]);
+        });
+    };
+
+    return self;
+}();
+
+
 function parseWikidata(entity) {
     var lang = wikidata.language,
         value;
