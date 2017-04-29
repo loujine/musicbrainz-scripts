@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.4.28
+// @version      2017.4.29
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -118,6 +118,35 @@ function setValue (nodeId, value, callback) {
         $('<dd>', {'text': `Kept "${printableValue}"`})
     );
     return false;
+}
+
+
+function fillISNI(isni) {
+    const existing_isni = [],
+          isniBlock = document.getElementsByClassName(
+            'edit-artist.isni_codes-template')[0].parentElement,
+        fields = isniBlock.getElementsByTagName('input');
+    for (const input of fields) {
+        existing_isni.push(input.value.split(" ").join(""));
+    }
+    existing_isni.splice(0, 1); // skip template
+    if (_.contains(existing_isni, isni.split(" ").join(""))) {
+        return;
+    }
+    if (existing_isni.length === 1 && existing_isni[0] === "") {
+        document.getElementsByName('edit-artist.isni_codes.0')[0]
+                .value = isni;
+    } else {
+        isniBlock.getElementsByClassName('form-row-add')[0]
+                 .getElementsByTagName('button')[0].click();
+        document.getElementsByName(
+            `edit-artist.isni_codes.${existing_isni.length}`)[0].value = isni;
+    }
+    $('#newFields').append(
+        $('<dt>', {'text': 'New ISNI code added:'})
+    ).append(
+        $('<dd>', {'text': isni}).css('color', 'green')
+    );
 }
 
 
@@ -329,30 +358,7 @@ function parseWikidata(entity) {
 
     // ISNI
     if (libWD.existField(entity, 'isni')) {
-        var isniBlock = document.getElementsByClassName(
-                'edit-artist.isni_codes-template')[0].parentElement,
-            isni = libWD.fieldValue(entity, 'isni'),
-            existing_isni = [];
-        fields = isniBlock.getElementsByTagName('input');
-        for (var input of fields) {
-            existing_isni.push(input.value.split(" ").join(""));
-        }
-        existing_isni.splice(0, 1); // template
-        if (existing_isni.length === 1 && existing_isni[0] === "") {
-            document.getElementsByName('edit-artist.isni_codes.0')[0]
-                    .value = isni;
-        } else if (!_.contains(existing_isni, isni.split(" ").join(""))) {
-            isniBlock.getElementsByClassName('form-row-add')[0]
-                     .getElementsByTagName('button')[0].click();
-            document.getElementsByName(
-                `edit-artist.isni_codes.${existing_isni.length}`)[0]
-                .value = isni;
-        }
-        $('#newFields').append(
-            $('<dt>', {'text': 'New ISNI code added:'})
-        ).append(
-            $('<dd>', {'text': isni}).css('color', 'green')
-        );
+        fillISNI(libWD.fieldValue(entity, 'isni'));
     }
 
     // Dates & places
@@ -468,12 +474,9 @@ function fillFormFromVIAF(viafURL) {
                 fillExternalLinks(url);
             }
         });
-        // FIXME: works if no previous ISNI
         const url = doc.querySelector(`a[href*="isni.org"]`).href;
         if (url) {
-            var isniBlock = document.getElementsByClassName(
-                    'edit-artist.isni_codes-template')[0].parentElement;
-            isniBlock.getElementsByTagName('input')[1].value = url.split('/')[4];
+            fillISNI(url.split('/')[4]);
         }
     })
 }
