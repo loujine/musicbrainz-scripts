@@ -1,16 +1,16 @@
-/* global $ _ helper relEditor sidebar GM_info requests */
+/* global $ _ helper relEditor sidebar GM_info requests GM_xmlhttpRequest */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.9.29
+// @version      2017.10.16
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Fill entity info from wikidata/VIAF
-// @compatible   firefox+greasemonkey
+// @compatible   firefox+greasemonkey/tampermonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
 // @include      http*://*musicbrainz.org/artist/create*
@@ -28,7 +28,7 @@
 // @include      http*://*musicbrainz.org/work/create*
 // @include      http*://*musicbrainz.org/work/*/edit
 // @exclude      http*://*musicbrainz.org/work/*/alias/*/edit
-// @grant        none
+// @grant        GM_xmlhttpRequest
 // @run-at       document-end
 // ==/UserScript==
 
@@ -323,17 +323,10 @@ const libWD = function () {
 }();
 
 
-function _fillFormFromWikidata(entity, entityType) {
-    var lang = WIKIDATA.language,
-        value, field, fields, input;
-    if (!(lang in entity.labels)) {
-        lang = Object.keys(entity.labels)[0];
-    }
-
-    // name and sort name
+function _fillEntityName(value, entityType) {
     setValue(
         `id-edit-${entityType}.name`,
-        entity.labels[lang].value,
+        value,
         function cb() {
             if (helper.isArtistURL) {
                 $(document.getElementById('id-edit-artist.name')
@@ -349,6 +342,18 @@ function _fillFormFromWikidata(entity, entityType) {
             }
         }
     );
+}
+
+
+function _fillFormFromWikidata(entity, entityType) {
+    var lang = WIKIDATA.language,
+        value, field, fields, input;
+    if (!(lang in entity.labels)) {
+        lang = Object.keys(entity.labels)[0];
+    }
+
+    // name and sort name
+    _fillEntityName(entity.labels[lang].value, entityType)
 
     // for places: Coordinates
     if (libWD.existField(entity, 'coordinates')) {
@@ -549,14 +554,40 @@ function fillFormFromVIAF(viafURL) {
 }
 
 
+function fillFormFromISNI(isniURL) {
+    const entityType = document.URL.split('/')[3];
+    GM_xmlhttpRequest({
+        method: "GET",
+        url: isniURL,
+        timeout: 1000,
+        onload: function(resp) {
+            fillISNI(isniURL.split('/')[3]);
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(resp.responseText, 'text/html');
+            const rgx = new RegExp(/ISNI [0-9]+ (.*)/).exec(doc.title);
+            _fillEntityName(rgx[1], entityType);
+            ["viaf.org", "catalogue.bnf.fr",
+             "d-nb.info", "wikidata.org"].forEach(function (site) {
+                const link = doc.querySelector(`a[href*="${site}"]`);
+                if (link && link.href) {
+                    fillExternalLinks(link.href);
+                }
+            });
+        }
+    });
+}
+
+
 (function displayToolbar(relEditor) {
     $('div.half-width').after(
         $('<div>', {float: 'right'})).after(
         relEditor.container().append(
             $('<h3>Add external link</h3>')
         ).append(
-            $('<p>Add a wikidata/VIAF ' +
-              'link here to retrieve automatically some information</p>')
+            $('<p>Add a wikidata/VIAF/ISNI ' +
+              'link here to retrieve automatically some information.' +
+              '<br />Warning: ISNI does not work with Greasemonkey ' +
+              'but only with Tampermonkey</p>')
         ).append(
             $('<input>', {
                 'id': 'linkParser',
@@ -586,6 +617,10 @@ $(document).ready(function() {
             }
             $('#linkParser').css('background-color', '#bbffbb');
             fillFormFromVIAF(node.value);
+        } else if (node.value.split('/')[2] === "www.isni.org") {
+            node.value = node.value.replace(/isni\//g, '')
+            $('#linkParser').css('background-color', '#bbffbb');
+            fillFormFromISNI(node.value);
         } else {
             $('#linkParser').css('background-color', '#ffaaaa');
         }
@@ -607,5 +642,11 @@ $(document).ready(function() {
 // http://catalogue.bnf.fr/ark:/12148/cb13894801b.unimarc
 //  103 .. $a 19161019 19851014
 
+
 // test data for places:
 // https://www.wikidata.org/wiki/Q2303621
+
+// isni
+// http://www.isni.org/isni/0000000073684002 person
+// http://www.isni.org/0000000120191498 orchestra
+// http://www.isni.org/0000000120191498 place
