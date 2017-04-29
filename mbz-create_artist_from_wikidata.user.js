@@ -1,7 +1,7 @@
 /* global $ _ relEditor sidebar GM_info requests */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: Fill artist info from wikidata
+// @name         MusicBrainz: Fill artist info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
 // @version      2017.4.29
@@ -9,7 +9,7 @@
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org: Fill artist info from wikidata
+// @description  musicbrainz.org: Fill artist info from wikidata/VIAF
 // @compatible   firefox+greasemonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
