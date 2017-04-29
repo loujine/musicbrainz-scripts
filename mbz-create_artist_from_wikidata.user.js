@@ -178,24 +178,32 @@ function fillForm(wikiId) {
 }
 
 (function displayToolbar(relEditor) {
-    $('div.half-width').prepend(
+    $('div.half-width').after(
+        $('<div>', {float: 'right'})).after(
         relEditor.container()
         .append(
-            $('<p>You can first add the wikidata link to retrieve automatically some information</p>')
+            $('<p>Add a wikidata/VIAF/BNF... link here to retrieve automatically some information</p>')
+        ).append(
+            $('<input>', {
+                'id': 'linkParser',
+                'type': 'text',
+                'value': '',
+                'placeholder': 'URL to parse',
+                'width': '400px'
+            })
         )
     );
+    $('div#loujine-menu').css('margin-left', '550px');
 })(relEditor);
 
 $(document).ready(function() {
-    var nodes = document.getElementById('external-links-editor-container')
-                .getElementsByTagName('input');
-    _.forEach(nodes, function(node) {
-        node.addEventListener('input', function () {
-            if (node.value.split('/')[2] === "www.wikidata.org") {
-                fillForm(node.value.split('/')[4].trim());
-            }
-        }, false);
-    });
+    var node = document.getElementById('linkParser');
+    node.addEventListener('input', function () {
+        if (node.value.split('/')[2] === "www.wikidata.org") {
+            fillForm(node.value.split('/')[4].trim());
+            node.value = '';
+        }
+    }, false);
     return false;
 });
 
