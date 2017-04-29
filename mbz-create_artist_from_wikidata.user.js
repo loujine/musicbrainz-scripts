@@ -1,4 +1,4 @@
-/* global $ _ relEditor sidebar wikidata parseWD */
+/* global $ _ relEditor sidebar GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Fill artist info from wikidata
@@ -98,7 +98,8 @@ const parseWD = function () {
     };
 
     self.valueFromField = function (entity, field) {
-        return entity.claims[wikidata.fields[field]][0].mainsnak.datavalue.value;
+        return entity.claims[wikidata.fields[field]][0]
+                     .mainsnak.datavalue.value;
     };
 
     self.setValue = function (nodeId, value, callback) {
@@ -111,18 +112,24 @@ const parseWD = function () {
         if (!node.value.trim()) {  // field was empty
             node.value = value;
             $('#newFields').append(
-                $('<dd>', {'text': `Added "${printableValue}"`}).css('color', 'green')
+                $('<dd>',
+                  {'text': `Added "${printableValue}"`}).css('color', 'green')
             );
-        } else if (node.value != value) {  // != to allow autocasting to int
-            $('#newFields').append(
-                $('<dd>', {'text': `Different value "${printableValue} suggested`}).css('color', 'red')
-            );
-            callback();
-        } else {  // identical value, not replaced
-            $('#newFields').append(
-                $('<dd>', {'text': `Kept "${printableValue}"`})
-            );
+            return false;
         }
+        if (node.value != value) {  // != to allow autocasting to int
+            $('#newFields').append(
+                $('<dd>',
+                  {'text': `Different value "${printableValue} suggested`}
+                ).css('color', 'red')
+            );
+            return callback();
+        }
+        // identical value, not replaced
+        $('#newFields').append(
+            $('<dd>', {'text': `Kept "${printableValue}"`})
+        );
+        return false;
     };
 
     /*
@@ -147,7 +154,8 @@ const parseWD = function () {
         }
         if (input.value !== '' && input.value !== area) {
             $('#newFields').append(
-                $('<dd>', {'text': `Different value "${area}":`}).css('color', 'red')
+                $('<dd>',
+                  {'text': `Different value "${area}":`}).css('color', 'red')
             )
             return;
         }
@@ -210,6 +218,7 @@ const parseWD = function () {
         }).done(function (data) {
             console.info('wikidata returned: ', data);
             if (data.error) {
+                // eslint-disable-next-line no-alert
                 alert('wikidata returned an error:\n' +
                       'code: ' + data.error.code + '\n' +
                       'wikidata ID: "' + data.error.id + '"\n' +
@@ -226,7 +235,7 @@ const parseWD = function () {
 
 function parseWikidata(entity) {
     var lang = wikidata.language,
-        value;
+        value, field, fields;
     if (!(lang in entity.labels)) {
         lang = Object.keys(entity.labels)[0];
     }
@@ -279,8 +288,9 @@ function parseWikidata(entity) {
     // Area
     // we need to fetch the wikidata entry of the different areas to
     // check if a musicbrainz MBID already exists
-    if (parseWD.existField(entity, 'citizen') || parseWD.existField(entity, 'country')) {
-        var field = parseWD.existField(entity, 'citizen') ? 'citizen' : 'country';
+    if (parseWD.existField(entity, 'citizen')
+            || parseWD.existField(entity, 'country')) {
+        field = parseWD.existField(entity, 'citizen') ? 'citizen' : 'country';
         var area = 'Q' + parseWD.valueFromField(entity, field)['numeric-id'];
         $.ajax({
             url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
@@ -291,19 +301,24 @@ function parseWikidata(entity) {
 
     // ISNI
     if (parseWD.existField(entity, 'isni')) {
-        var isniBlock = document.getElementsByClassName('edit-artist.isni_codes-template')[0].parentElement;
-        var isni = parseWD.valueFromField(entity, 'isni');
-        var existing_isni = [],
-            fields = isniBlock.getElementsByTagName('input');
+        var isniBlock = document.getElementsByClassName(
+                'edit-artist.isni_codes-template')[0].parentElement,
+            isni = parseWD.valueFromField(entity, 'isni'),
+            existing_isni = [];
+        fields = isniBlock.getElementsByTagName('input');
         for (var input of fields) {
             existing_isni.push(input.value.split(" ").join(""));
         }
         existing_isni.splice(0, 1); // template
         if (existing_isni.length === 1 && existing_isni[0] === "") {
-            document.getElementsByName('edit-artist.isni_codes.0')[0].value = isni;
+            document.getElementsByName('edit-artist.isni_codes.0')[0]
+                    .value = isni;
         } else if (!_.contains(existing_isni, isni.split(" ").join(""))) {
-            isniBlock.getElementsByClassName('form-row-add')[0].getElementsByTagName('button')[0].click();
-            document.getElementsByName('edit-artist.isni_codes.' + existing_isni.length)[0].value = isni;
+            isniBlock.getElementsByClassName('form-row-add')[0]
+                     .getElementsByTagName('button')[0].click();
+            document.getElementsByName(
+                `edit-artist.isni_codes.${existing_isni.length}`)[0]
+                .value = isni;
         }
         $('#newFields').append(
             $('<dt>', {'text': 'New ISNI code added:'})
@@ -315,24 +330,29 @@ function parseWikidata(entity) {
     // Dates & places
     if (parseWD.existField(entity, 'birthDate')
             || parseWD.existField(entity, 'inceptionDate')) {
-        var field = parseWD.existField(entity, 'birthDate') ? 'birthDate' : 'inceptionDate';
+        field = parseWD.existField(entity, 'birthDate') ? 'birthDate'
+                                                        : 'inceptionDate';
         parseWD.fillDate(entity, 'artist', field, 'begin_date');
     }
 
     if (parseWD.existField(entity, 'birthPlace')
             || parseWD.existField(entity, 'formationLocation')) {
-        var field = parseWD.existField(entity, 'birthPlace') ? 'birthPlace' : 'formationLocation';
+        field = parseWD.existField(entity, 'birthPlace') ? 'birthPlace'
+                                                         : 'formationLocation';
         var birthArea = 'Q' + parseWD.valueFromField(entity, field)['numeric-id'];
         $.ajax({
             url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
                  + birthArea + '&format=json',
             dataType: 'jsonp'
-        }).done(function(data) {parseWD.fillArea(data, birthArea, 'begin_area', lang)});
+        }).done(function(data) {
+            parseWD.fillArea(data, birthArea, 'begin_area', lang)
+        });
     }
 
     if (parseWD.existField(entity, 'deathDate')
             || parseWD.existField(entity, 'dissolutionDate')) {
-        var field = parseWD.existField(entity, 'deathDate') ? 'deathDate' : 'dissolutionDate';
+        field = parseWD.existField(entity, 'deathDate') ? 'deathDate'
+                                                        : 'dissolutionDate';
         parseWD.fillDate(entity, 'artist', field, 'end_date');
     }
 
@@ -342,11 +362,14 @@ function parseWikidata(entity) {
             url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
                  + deathArea + '&format=json',
             dataType: 'jsonp'
-        }).done(function(data) {parseWD.fillArea(data, deathArea, 'end_area', lang)});
+        }).done(function(data) {
+            parseWD.fillArea(data, deathArea, 'end_area', lang)
+        });
     }
 
-    var existing_domains = [],
-        fields = document.getElementById("external-links-editor").querySelectorAll('input');
+    var existing_domains = [];
+    fields = document.getElementById("external-links-editor")
+                     .querySelectorAll('input');
     for (var link of fields) {
         existing_domains.push(link.value.split('/')[2]);
     }
@@ -376,8 +399,10 @@ function fillForm(wikiId) {
     parseWD.request(wikiId, function (entity) {
         if (parseWD.existField(entity, 'mbidArtist')) {
             var mbid = parseWD.valueFromField(entity, 'mbidArtist');
-            if (window.confirm('An artist already exists linked to this wikidata id, ' +
-                               'click "ok" to redirect to their page')) {
+            // eslint-disable-next-line no-alert
+            if (window.confirm(
+                    'An artist already exists linked to this wikidata id, ' +
+                    'click "ok" to redirect to their page')) {
                 window.location.href='/artist/' + mbid;
             } else {
                 parseWikidata(entity);
@@ -386,7 +411,8 @@ function fillForm(wikiId) {
             parseWikidata(entity);
         }
     });
-    document.getElementById('id-edit-artist.edit_note').value = sidebar.editNote(GM_info.script);
+    document.getElementById('id-edit-artist.edit_note')
+            .value = sidebar.editNote(GM_info.script);
 }
 
 (function displayToolbar(relEditor) {
@@ -394,7 +420,8 @@ function fillForm(wikiId) {
         $('<div>', {float: 'right'})).after(
         relEditor.container()
         .append(
-            $('<p>Add a wikidata/VIAF/BNF... link here to retrieve automatically some information</p>')
+            $('<p>Add a wikidata/VIAF/BNF... ' +
+              'link here to retrieve automatically some information</p>')
         ).append(
             $('<input>', {
                 'id': 'linkParser',
