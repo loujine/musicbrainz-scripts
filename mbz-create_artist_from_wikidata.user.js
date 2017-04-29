@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.4.8
+// @version      2017.4.27
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -74,6 +74,22 @@ const wikidata = {
 };
 
 
+const FIELD_NAMES = {
+    'id-edit-artist.name': 'Name',
+    'id-edit-artist.type_id': 'Type',
+    'id-edit-artist.gender_id': 'Gender',
+    'id-edit-artist.period.begin_date.year': 'Birth year',
+    'id-edit-artist.period.begin_date.month': 'Birth month',
+    'id-edit-artist.period.begin_date.day': 'Birth day',
+    'id-edit-artist.period.end_date.year': 'Death year',
+    'id-edit-artist.period.end_date.month': 'Death month',
+    'id-edit-artist.period.end_date.day': 'Death day',
+    'begin_area': 'Born in',
+    'end_area': 'Died in',
+    'area': 'Area',
+};
+
+
 const parseWD = function () {
     var self = {};
 
@@ -86,26 +102,64 @@ const parseWD = function () {
     };
 
     self.setValue = function (nodeId, value, callback) {
+        callback = callback || function () {};
         var node = document.getElementById(nodeId);
+        $('#newFields').append(
+            $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
+        )
+        var printableValue = node.options ? node.options[value].text : value;
         if (!node.value.trim()) {  // field was empty
             node.value = value;
+            $('#newFields').append(
+                $('<dd>', {'text': `Added "${printableValue}"`}).css('color', 'green')
+            );
         } else if (node.value != value) {  // != to allow autocasting to int
+            $('#newFields').append(
+                $('<dd>', {'text': `Different value "${printableValue} suggested`}).css('color', 'red')
+            );
             callback();
+        } else {  // identical value, not replaced
+            $('#newFields').append(
+                $('<dd>', {'text': `Kept "${printableValue}"`})
+            );
         }
     };
 
+    /*
+     * data: wikidata json for the area
+     * place: wikidata code ('Q90', etc.)
+     */
     self.fillArea = function (data, place, nodeId, lang) {
         var entityArea = data.entities[place],
             input = document.getElementById(`id-edit-artist.${nodeId}.name`);
-        if (!entityArea) {
+        if (!entityArea) {  // no wikidata data
+            return;
+        }
+        var area = entityArea.labels[lang].value;
+        $('#newFields').append(
+            $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
+        )
+        if (input.value === area) {
+            $('#newFields').append(
+                $('<dd>', {'text': `Kept "${input.value}":`})
+            )
+            return;
+        }
+        if (input.value !== '' && input.value !== area) {
+            $('#newFields').append(
+                $('<dd>', {'text': `Different value "${area}":`}).css('color', 'red')
+            )
             return;
         }
         if (self.existField(entityArea, 'mbidArea')) {
             input.value = self.valueFromField(entityArea, 'mbidArea');
             $(input).trigger('keydown');
         } else {
-            input.value = entityArea.labels[lang].value;
+            input.value = area;
         }
+        $('#newFields').append(
+            $('<dd>', {'text': `Added "${area}":`}).css('color', 'green')
+        )
     };
 
     self.fillDate = function (entity, entityType, fieldName, nodeId) {
@@ -186,7 +240,6 @@ function parseWikidata(entity) {
         }
     );
 
-
     // Type and gender
     if (parseWD.existField(entity, 'type')) {
         var type = parseWD.valueFromField(entity, 'type')['numeric-id'];
@@ -224,6 +277,8 @@ function parseWikidata(entity) {
     }
 
     // Area
+    // we need to fetch the wikidata entry of the different areas to
+    // check if a musicbrainz MBID already exists
     if (parseWD.existField(entity, 'citizen') || parseWD.existField(entity, 'country')) {
         var field = parseWD.existField(entity, 'citizen') ? 'citizen' : 'country';
         var area = 'Q' + parseWD.valueFromField(entity, field)['numeric-id'];
@@ -250,6 +305,11 @@ function parseWikidata(entity) {
             isniBlock.getElementsByClassName('form-row-add')[0].getElementsByTagName('button')[0].click();
             document.getElementsByName('edit-artist.isni_codes.' + existing_isni.length)[0].value = isni;
         }
+        $('#newFields').append(
+            $('<dt>', {'text': 'New ISNI code added:'})
+        ).append(
+            $('<dd>', {'text': isni}).css('color', 'green')
+        );
     }
 
     // Dates & places
@@ -302,6 +362,11 @@ function parseWikidata(entity) {
             input.value = wikidata.urls[externalLink]
                           + parseWD.valueFromField(entity, externalLink);
             input.dispatchEvent(new Event('input', {'bubbles': true}));
+            $('#newFields').append(
+                $('<dt>', {'text': 'New external link added:'})
+            ).append(
+                $('<dd>', {'text': input.value}).css('color', 'green')
+            );
         }
     });
 
@@ -321,7 +386,7 @@ function fillForm(wikiId) {
             parseWikidata(entity);
         }
     });
-    parseWD.setValue('id-edit-artist.edit_note', sidebar.editNote(GM_info.script));
+    document.getElementById('id-edit-artist.edit_note').value = sidebar.editNote(GM_info.script);
 }
 
 (function displayToolbar(relEditor) {
@@ -338,6 +403,8 @@ function fillForm(wikiId) {
                 'placeholder': 'URL to parse',
                 'width': '400px'
             })
+        ).append(
+            $('<dl>', {'id': 'newFields'})
         )
     );
     $('div#loujine-menu').css('margin-left', '550px');
