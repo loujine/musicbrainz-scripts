@@ -90,6 +90,37 @@ const FIELD_NAMES = {
 };
 
 
+function setValue (nodeId, value, callback) {
+    callback = callback || function () {};
+    var node = document.getElementById(nodeId);
+    $('#newFields').append(
+        $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
+    )
+    var printableValue = node.options ? node.options[value].text : value;
+    if (!node.value.trim()) {  // field was empty
+        node.value = value;
+        $('#newFields').append(
+            $('<dd>',
+              {'text': `Added "${printableValue}"`}).css('color', 'green')
+        );
+        return callback();
+    }
+    if (node.value != value) {  // != to allow autocasting to int
+        $('#newFields').append(
+            $('<dd>',
+              {'text': `Different value "${printableValue} suggested`}
+            ).css('color', 'red')
+        );
+        return callback();
+    }
+    // identical value, not replaced
+    $('#newFields').append(
+        $('<dd>', {'text': `Kept "${printableValue}"`})
+    );
+    return false;
+};
+
+
 const libWD = function () {
     var self = {};
 
@@ -100,36 +131,6 @@ const libWD = function () {
     self.fieldValue = function (entity, field) {
         return entity.claims[WIKIDATA.fields[field]][0]
                      .mainsnak.datavalue.value;
-    };
-
-    self.setValue = function (nodeId, value, callback) {
-        callback = callback || function () {};
-        var node = document.getElementById(nodeId);
-        $('#newFields').append(
-            $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
-        )
-        var printableValue = node.options ? node.options[value].text : value;
-        if (!node.value.trim()) {  // field was empty
-            node.value = value;
-            $('#newFields').append(
-                $('<dd>',
-                  {'text': `Added "${printableValue}"`}).css('color', 'green')
-            );
-            return false;
-        }
-        if (node.value != value) {  // != to allow autocasting to int
-            $('#newFields').append(
-                $('<dd>',
-                  {'text': `Different value "${printableValue} suggested`}
-                ).css('color', 'red')
-            );
-            return callback();
-        }
-        // identical value, not replaced
-        $('#newFields').append(
-            $('<dd>', {'text': `Kept "${printableValue}"`})
-        );
-        return false;
     };
 
     /*
@@ -185,17 +186,17 @@ const libWD = function () {
             // try to find valid fields
             date = new RegExp('(.*)-(.*)-(.*)T').exec(field.time);
             if (parseInt(date[1]) !== 0) {
-                self.setValue(prefix + '.year', parseInt(date[1]));
+                setValue(prefix + '.year', parseInt(date[1]));
                 if (parseInt(date[2]) > 0) {
-                    self.setValue(prefix + '.month', parseInt(date[2]));
+                    setValue(prefix + '.month', parseInt(date[2]));
                     if (parseInt(date[3]) > 0) {
-                        self.setValue(prefix + '.day', parseInt(date[3]));
+                        setValue(prefix + '.day', parseInt(date[3]));
                     }
                 }
             }
             return;
         }
-        self.setValue(prefix + '.year', date.getFullYear());
+        setValue(prefix + '.year', date.getFullYear());
         var yearInput = document.getElementById(prefix + '.year');
         if (yearInput.classList.contains('jesus2099')) {
                 // jesus2099's EASY_DATE script is shifting the input node
@@ -203,9 +204,9 @@ const libWD = function () {
                 yearInput.nextSibling.value = date.getFullYear();
         }
         if (field.precision > 9) {
-            self.setValue(prefix + '.month', date.getMonth() + 1);
+            setValue(prefix + '.month', date.getMonth() + 1);
             if (field.precision > 10) {
-                self.setValue(prefix + '.day', date.getDate());
+                setValue(prefix + '.day', date.getDate());
             }
         }
     };
@@ -241,7 +242,7 @@ function parseWikidata(entity) {
     }
 
     // name and sort name
-    libWD.setValue(
+    setValue(
         'id-edit-artist.name',
         entity.labels[lang].value,
         function cb() {
@@ -267,7 +268,7 @@ function parseWikidata(entity) {
                 value = 0;
                 break;
         }
-        libWD.setValue('id-edit-artist.type_id', value);
+        setValue('id-edit-artist.type_id', value);
     }
 
     if (libWD.existField(entity, 'gender')) {
@@ -283,7 +284,7 @@ function parseWikidata(entity) {
                 value = 3;
                 break;
         }
-        libWD.setValue('id-edit-artist.gender_id', value);
+        setValue('id-edit-artist.gender_id', value);
     }
 
     // Area
