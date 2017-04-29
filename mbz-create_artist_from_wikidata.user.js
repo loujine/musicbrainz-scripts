@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill artist info from wikidata
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.4.27
+// @version      2017.4.28
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -24,7 +24,7 @@
 // ==/UserScript==
 
 // https://www.wikidata.org/wiki/Wikidata:List_of_properties/Person
-const wikidata = {
+const WIKIDATA = {
     language: 'en',
     entities: {
         person: 5,
@@ -90,15 +90,15 @@ const FIELD_NAMES = {
 };
 
 
-const parseWD = function () {
+const libWD = function () {
     var self = {};
 
     self.existField = function (entity, field) {
-        return entity.claims[wikidata.fields[field]] !== undefined;
+        return entity.claims[WIKIDATA.fields[field]] !== undefined;
     };
 
-    self.valueFromField = function (entity, field) {
-        return entity.claims[wikidata.fields[field]][0]
+    self.fieldValue = function (entity, field) {
+        return entity.claims[WIKIDATA.fields[field]][0]
                      .mainsnak.datavalue.value;
     };
 
@@ -160,7 +160,7 @@ const parseWD = function () {
             return;
         }
         if (self.existField(entityArea, 'mbidArea')) {
-            input.value = self.valueFromField(entityArea, 'mbidArea');
+            input.value = self.fieldValue(entityArea, 'mbidArea');
             $(input).trigger('keydown');
         } else {
             input.value = area;
@@ -171,7 +171,7 @@ const parseWD = function () {
     };
 
     self.fillDate = function (entity, entityType, fieldName, nodeId) {
-        var field = self.valueFromField(entity, fieldName);
+        var field = self.fieldValue(entity, fieldName);
         var prefix = `id-edit-${entityType}.period.${nodeId}`;
         // sometimes wikidata has valid data but not 'translatable'
         // to the mbz schema
@@ -234,13 +234,14 @@ const parseWD = function () {
 
 
 function parseWikidata(entity) {
-    var lang = wikidata.language,
+    var lang = WIKIDATA.language,
         value, field, fields;
     if (!(lang in entity.labels)) {
         lang = Object.keys(entity.labels)[0];
     }
+
     // name and sort name
-    parseWD.setValue(
+    libWD.setValue(
         'id-edit-artist.name',
         entity.labels[lang].value,
         function cb() {
@@ -250,60 +251,60 @@ function parseWikidata(entity) {
     );
 
     // Type and gender
-    if (parseWD.existField(entity, 'type')) {
-        var type = parseWD.valueFromField(entity, 'type')['numeric-id'];
+    if (libWD.existField(entity, 'type')) {
+        var type = libWD.fieldValue(entity, 'type')['numeric-id'];
         switch(type) {
-            case wikidata.entities.person:
+            case WIKIDATA.entities.person:
                 value = 1;
                 break;
-            case wikidata.entities.stringQuartet:
-            case wikidata.entities.orchestra:
-            case wikidata.entities.band:
-            case wikidata.entities.rockBand:
+            case WIKIDATA.entities.stringQuartet:
+            case WIKIDATA.entities.orchestra:
+            case WIKIDATA.entities.band:
+            case WIKIDATA.entities.rockBand:
                 value = 2;
                 break;
             default:
                 value = 0;
                 break;
         }
-        parseWD.setValue('id-edit-artist.type_id', value);
+        libWD.setValue('id-edit-artist.type_id', value);
     }
 
-    if (parseWD.existField(entity, 'gender')) {
-        var gender = parseWD.valueFromField(entity, 'gender')['numeric-id'];
+    if (libWD.existField(entity, 'gender')) {
+        var gender = libWD.fieldValue(entity, 'gender')['numeric-id'];
         switch(gender) {
-            case wikidata.entities.male:
+            case WIKIDATA.entities.male:
                 value = 1;
                 break;
-            case wikidata.entities.female:
+            case WIKIDATA.entities.female:
                 value = 2;
                 break;
             default:
                 value = 3;
                 break;
         }
-        parseWD.setValue('id-edit-artist.gender_id', value);
+        libWD.setValue('id-edit-artist.gender_id', value);
     }
 
     // Area
     // we need to fetch the wikidata entry of the different areas to
     // check if a musicbrainz MBID already exists
-    if (parseWD.existField(entity, 'citizen')
-            || parseWD.existField(entity, 'country')) {
-        field = parseWD.existField(entity, 'citizen') ? 'citizen' : 'country';
-        var area = 'Q' + parseWD.valueFromField(entity, field)['numeric-id'];
+    if (libWD.existField(entity, 'citizen')
+            || libWD.existField(entity, 'country')) {
+        field = libWD.existField(entity, 'citizen') ? 'citizen' : 'country';
+        var area = 'Q' + libWD.fieldValue(entity, field)['numeric-id'];
         $.ajax({
             url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
                  + area + '&format=json',
             dataType: 'jsonp'
-        }).done(function(data) {parseWD.fillArea(data, area, 'area', lang)});
+        }).done(function(data) {libWD.fillArea(data, area, 'area', lang)});
     }
 
     // ISNI
-    if (parseWD.existField(entity, 'isni')) {
+    if (libWD.existField(entity, 'isni')) {
         var isniBlock = document.getElementsByClassName(
                 'edit-artist.isni_codes-template')[0].parentElement,
-            isni = parseWD.valueFromField(entity, 'isni'),
+            isni = libWD.fieldValue(entity, 'isni'),
             existing_isni = [];
         fields = isniBlock.getElementsByTagName('input');
         for (var input of fields) {
@@ -328,42 +329,43 @@ function parseWikidata(entity) {
     }
 
     // Dates & places
-    if (parseWD.existField(entity, 'birthDate')
-            || parseWD.existField(entity, 'inceptionDate')) {
-        field = parseWD.existField(entity, 'birthDate') ? 'birthDate'
-                                                        : 'inceptionDate';
-        parseWD.fillDate(entity, 'artist', field, 'begin_date');
+    if (libWD.existField(entity, 'birthDate')
+            || libWD.existField(entity, 'inceptionDate')) {
+        field = libWD.existField(entity, 'birthDate') ? 'birthDate'
+                                                      : 'inceptionDate';
+        libWD.fillDate(entity, 'artist', field, 'begin_date');
     }
 
-    if (parseWD.existField(entity, 'birthPlace')
-            || parseWD.existField(entity, 'formationLocation')) {
-        field = parseWD.existField(entity, 'birthPlace') ? 'birthPlace'
-                                                         : 'formationLocation';
-        var birthArea = 'Q' + parseWD.valueFromField(entity, field)['numeric-id'];
+    if (libWD.existField(entity, 'birthPlace')
+            || libWD.existField(entity, 'formationLocation')) {
+        field = libWD.existField(entity, 'birthPlace') ? 'birthPlace'
+                                                       : 'formationLocation';
+        var birthArea = 'Q' + libWD.fieldValue(entity, field)['numeric-id'];
         $.ajax({
             url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
                  + birthArea + '&format=json',
             dataType: 'jsonp'
         }).done(function(data) {
-            parseWD.fillArea(data, birthArea, 'begin_area', lang)
+            libWD.fillArea(data, birthArea, 'begin_area', lang)
         });
     }
 
-    if (parseWD.existField(entity, 'deathDate')
-            || parseWD.existField(entity, 'dissolutionDate')) {
-        field = parseWD.existField(entity, 'deathDate') ? 'deathDate'
-                                                        : 'dissolutionDate';
-        parseWD.fillDate(entity, 'artist', field, 'end_date');
+    if (libWD.existField(entity, 'deathDate')
+            || libWD.existField(entity, 'dissolutionDate')) {
+        field = libWD.existField(entity, 'deathDate') ? 'deathDate'
+                                                      : 'dissolutionDate';
+        libWD.fillDate(entity, 'artist', field, 'end_date');
     }
 
-    if (parseWD.existField(entity, 'deathPlace')) {
-        var deathArea = 'Q' + parseWD.valueFromField(entity, 'deathPlace')['numeric-id'];
+    if (libWD.existField(entity, 'deathPlace')) {
+        var deathArea = 'Q' + libWD.fieldValue(entity,
+                                               'deathPlace')['numeric-id'];
         $.ajax({
             url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
                  + deathArea + '&format=json',
             dataType: 'jsonp'
         }).done(function(data) {
-            parseWD.fillArea(data, deathArea, 'end_area', lang)
+            libWD.fillArea(data, deathArea, 'end_area', lang)
         });
     }
 
@@ -375,15 +377,15 @@ function parseWikidata(entity) {
     }
     existing_domains = existing_domains.slice(0, existing_domains.length - 1);
 
-    Object.keys(wikidata.urls).forEach(function(externalLink) {
-        var domain = wikidata.urls[externalLink].split('/')[2];
-        if (parseWD.existField(entity, externalLink) &&
+    Object.keys(WIKIDATA.urls).forEach(function(externalLink) {
+        var domain = WIKIDATA.urls[externalLink].split('/')[2];
+        if (libWD.existField(entity, externalLink) &&
             !_.includes(existing_domains, domain)) {
             var inputs = document.getElementById('external-links-editor')
                          .getElementsByTagName('input'),
                 input = inputs[inputs.length - 1];
-            input.value = wikidata.urls[externalLink]
-                          + parseWD.valueFromField(entity, externalLink);
+            input.value = WIKIDATA.urls[externalLink]
+                          + libWD.fieldValue(entity, externalLink);
             input.dispatchEvent(new Event('input', {'bubbles': true}));
             $('#newFields').append(
                 $('<dt>', {'text': 'New external link added:'})
@@ -396,9 +398,9 @@ function parseWikidata(entity) {
 }
 
 function fillForm(wikiId) {
-    parseWD.request(wikiId, function (entity) {
-        if (parseWD.existField(entity, 'mbidArtist')) {
-            var mbid = parseWD.valueFromField(entity, 'mbidArtist');
+    libWD.request(wikiId, function (entity) {
+        if (libWD.existField(entity, 'mbidArtist')) {
+            var mbid = libWD.fieldValue(entity, 'mbidArtist');
             // eslint-disable-next-line no-alert
             if (window.confirm(
                     'An artist already exists linked to this wikidata id, ' +
