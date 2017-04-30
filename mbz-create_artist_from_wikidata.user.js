@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill artist info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.4.29
+// @version      2017.4.30
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -52,6 +52,8 @@ const WIKIDATA = {
         mbidArtist: 'P434',
         mbidArea: 'P982',
         members: 'P527',
+        student: 'P802',
+        teacher: 'P1066',
         idDiscogs: 'P1953',
         idIMDB: 'P345',
         idSpotify: 'P1902',
@@ -428,6 +430,19 @@ function _fillFormFromWikidata(entity) {
         }
     });
 
+    for (const role of ['student', 'teacher']) {
+        if (libWD.existField(entity, role)) {
+            libWD.request(libWD.fieldValue(entity, role).id,
+                          function (data) {
+                const name = data.labels[lang].value;
+                $('#newFields').append(
+                    $('<dt>', {'text': `${role} suggestion:`})
+                ).append(
+                    $('<dd>', {'text': name}).css('color', 'orange')
+                );
+            });
+        }
+    }
 }
 
 function fillFormFromWikidata(wikiId) {
