@@ -289,7 +289,7 @@ const libWD = function () {
 }();
 
 
-function parseWikidata(entity) {
+function _fillFormFromWikidata(entity) {
     var lang = WIKIDATA.language,
         value, field, fields;
     if (!(lang in entity.labels)) {
@@ -430,7 +430,7 @@ function parseWikidata(entity) {
 
 }
 
-function fillForm(wikiId) {
+function fillFormFromWikidata(wikiId) {
     libWD.request(wikiId, function (entity) {
         if (libWD.existField(entity, 'mbidArtist')) {
             var mbid = libWD.fieldValue(entity, 'mbidArtist');
@@ -440,10 +440,10 @@ function fillForm(wikiId) {
                     'click "ok" to redirect to their page')) {
                 window.location.href='/artist/' + mbid;
             } else {
-                parseWikidata(entity);
+                _fillFormFromWikidata(entity);
             }
         } else {
-            parseWikidata(entity);
+            _fillFormFromWikidata(entity);
         }
     });
     document.getElementById('id-edit-artist.edit_note')
@@ -509,7 +509,7 @@ $(document).ready(function() {
     node.addEventListener('input', function () {
         if (node.value.split('/')[2] === "www.wikidata.org") {
             $('#linkParser').css('background-color', '#bbffbb');
-            fillForm(node.value.split('/')[4].trim());
+            fillFormFromWikidata(node.value.split('/')[4].trim());
         } else if (node.value.split('/')[2] === "viaf.org") {
             $('#linkParser').css('background-color', '#bbffbb');
             fillFormFromVIAF(node.value);
