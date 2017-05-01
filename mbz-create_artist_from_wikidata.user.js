@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill artist info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.4.30
+// @version      2017.5.1
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -524,6 +524,7 @@ $(document).ready(function() {
     node.addEventListener('input', function () {
         if (node.value.split('/')[2] === "www.wikidata.org") {
             $('#linkParser').css('background-color', '#bbffbb');
+            fillExternalLinks(node.value);
             fillFormFromWikidata(node.value.split('/')[4].trim());
         } else if (node.value.split('/')[2] === "viaf.org") {
             $('#linkParser').css('background-color', '#bbffbb');
