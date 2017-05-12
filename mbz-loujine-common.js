@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.4.6
+// @version      2017.5.12
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -563,11 +563,18 @@ var relEditor = function (MB, $) {
     // edit note
     self.editNote = function (meta, msg) {
         msg = msg || '';
+        const separator = '\n —\n',
+            signature = `GM script: "${meta.name}" (${meta.version})\n`;
         var vm = MB.releaseRelationshipEditor,
             existingMsg = vm.editNote(),
-            signature = '\n —\n' +
-                        'GM script: "' + meta.name + '" (' + meta.version + ')\n\n';
-        vm.editNote(existingMsg + msg + signature);
+            existingSign;
+        if (existingMsg.includes('\n —\n')) {
+            [existingMsg, existingSign] = existingMsg.split(separator);
+            vm.editNote(existingMsg + '\n' + msg
+                        + separator + existingSign + signature);
+        } else {
+            vm.editNote(existingMsg + msg + separator + signature);
+        }
     };
 
     self.container = function () {
