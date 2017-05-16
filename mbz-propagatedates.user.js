@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-propagate recording dates
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.12
+// @version      2017.5.16
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -18,21 +18,21 @@
 // @run-at       document-end
 // ==/UserScript==
 
-function copyDate(from_date, relation) {
-    ['beginDate', 'endDate'].forEach(function(date) {
+function copyDate(from_relation, relation) {
+    ['begin_date', 'end_date'].forEach(function(date) {
         ['day', 'month', 'year'].forEach(function(unit) {
-            relation.period[date][unit](from_date[date][unit]());
+            relation[date][unit](from_relation[date][unit]());
         });
     });
 }
 
 function removeDate(relation) {
-    ['beginDate', 'endDate'].forEach(function(date) {
+    ['begin_date', 'end_date'].forEach(function(date) {
         ['day', 'month', 'year'].forEach(function(unit) {
-            relation.period[date][unit]('');
+            relation[date][unit]('');
         });
     });
-    relation.period.ended(false);
+    relation.ended(false);
 }
 
 function referenceDate(relations) {
@@ -41,7 +41,7 @@ function referenceDate(relations) {
     // give priority to the most precise one (day > month > year)
     ['day', 'month', 'year'].forEach(function(unit) {
         relations.forEach(function(rel, idx) {
-            if (idx_ref === -1 && rel.period.endDate[unit]() > 0) {
+            if (idx_ref === -1 && rel.end_date[unit]() > 0) {
                 idx_ref = idx;
             }
         });
@@ -55,11 +55,10 @@ function propagateDates() {
         var relations = recording.relationships(),
             idx = referenceDate(relations);
         if (idx !== -1) {
-            var from_period = relations[idx].period;
             relations.forEach(function(rel) {
                 var linkType = parseInt(rel.linkTypeID());
                 if (_.includes(_.values(server.recordingLinkType), linkType)) {
-                    copyDate(from_period, rel);
+                    copyDate(relations[idx], rel);
                 }
             });
         }
