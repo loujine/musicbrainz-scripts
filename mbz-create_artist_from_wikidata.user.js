@@ -1,4 +1,4 @@
-/* global $ _ relEditor sidebar GM_info requests */
+/* global $ _ helper relEditor sidebar GM_info requests */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
@@ -19,6 +19,12 @@
 // @include      http*://*mbsandbox.org/artist/create*
 // @include      http*://*mbsandbox.org/artist/*/edit
 // @exclude      http*://*mbsandbox.org/artist/*/alias/*/edit
+// @include      http*://*musicbrainz.org/place/create*
+// @include      http*://*musicbrainz.org/place/*/edit
+// @exclude      http*://*musicbrainz.org/place/*/alias/*/edit
+// @include      http*://*mbsandbox.org/place/create*
+// @include      http*://*mbsandbox.org/place/*/edit
+// @exclude      http*://*mbsandbox.org/place/*/alias/*/edit
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -51,6 +57,7 @@ const WIKIDATA = {
         deathPlace: 'P20',
         mbidArtist: 'P434',
         mbidArea: 'P982',
+        mbidPlace: 'P1004',
         members: 'P527',
         student: 'P802',
         teacher: 'P1066',
@@ -90,6 +97,12 @@ const FIELD_NAMES = {
     'end_area': 'Died in',
     'area': 'Area',
 };
+
+_.forOwn(FIELD_NAMES, function (v, k) {
+    if (k.includes('artist')) {
+        FIELD_NAMES[k.replace('artist', 'place')] = v;
+    }
+});
 
 
 function setValue (nodeId, value, callback) {
@@ -303,10 +316,21 @@ function _fillFormFromWikidata(entity, entityType) {
         `id-edit-${entityType}.name`,
         entity.labels[lang].value,
         function cb() {
-            $(document.getElementById('id-edit-artist.name')).trigger('change');
-            document.getElementsByClassName('guesscase-sortname')[0].click();
+            if (helper.isArtistURL) {
+                $(document.getElementById('id-edit-artist.name')
+                    ).trigger('change');
+                document.getElementsByClassName(
+                    'guesscase-sortname')[0].click();
+            }
         }
     );
+
+    // for places: Coordinates
+    if (libWD.existField(entity, 'coordinates')) {
+        input = document.getElementById('id-edit-place.coordinates');
+        const coord = libWD.fieldValue(entity, 'coordinates');
+        input.value = coord.latitude + ', ' + coord.longitude;
+    }
 
     // Type and gender
     if (libWD.existField(entity, 'type')) {
@@ -448,8 +472,11 @@ function _fillFormFromWikidata(entity, entityType) {
 function fillFormFromWikidata(wikiId) {
     const entityType = document.URL.split('/')[3];
     libWD.request(wikiId, function (entity) {
-        if (libWD.existField(entity, 'mbidArtist')) {
-            var mbid = libWD.fieldValue(entity, 'mbidArtist');
+        if (libWD.existField(entity, 'mbidArtist')
+                || libWD.existField(entity, 'mbidPlace')) {
+            const mbid = libWD.existField(entity, 'mbidArtist') ?
+                libWD.fieldValue(entity, 'mbidArtist') :
+                libWD.fieldValue(entity, 'mbidPlace');
             // eslint-disable-next-line no-alert
             if (window.confirm(
                     'An entity already exists linked to this wikidata id, ' +
@@ -546,3 +573,6 @@ $(document).ready(function() {
 // bnf
 // http://catalogue.bnf.fr/ark:/12148/cb13894801b.unimarc
 //  103 .. $a 19161019 19851014
+
+// test data for places:
+// https://www.wikidata.org/wiki/Q2303621
