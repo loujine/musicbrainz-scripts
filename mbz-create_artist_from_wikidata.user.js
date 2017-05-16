@@ -1,15 +1,15 @@
 /* global $ _ relEditor sidebar GM_info requests */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: Fill artist info from wikidata/VIAF
+// @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.1
+// @version      2017.5.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org: Fill artist info from wikidata/VIAF
+// @description  musicbrainz.org: Fill entity info from wikidata/VIAF
 // @compatible   firefox+greasemonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
@@ -291,16 +291,16 @@ const libWD = function () {
 }();
 
 
-function _fillFormFromWikidata(entity) {
+function _fillFormFromWikidata(entity, entityType) {
     var lang = WIKIDATA.language,
-        value, field, fields;
+        value, field, fields, input;
     if (!(lang in entity.labels)) {
         lang = Object.keys(entity.labels)[0];
     }
 
     // name and sort name
     setValue(
-        'id-edit-artist.name',
+        `id-edit-${entityType}.name`,
         entity.labels[lang].value,
         function cb() {
             $(document.getElementById('id-edit-artist.name')).trigger('change');
@@ -325,7 +325,7 @@ function _fillFormFromWikidata(entity) {
                 value = 0;
                 break;
         }
-        setValue('id-edit-artist.type_id', value);
+        setValue(`id-edit-${entityType}.type_id`, value);
     }
 
     if (libWD.existField(entity, 'gender')) {
@@ -368,7 +368,7 @@ function _fillFormFromWikidata(entity) {
             || libWD.existField(entity, 'inceptionDate')) {
         field = libWD.existField(entity, 'birthDate') ? 'birthDate'
                                                       : 'inceptionDate';
-        libWD.fillDate(entity, 'artist', field, 'begin_date');
+        libWD.fillDate(entity, entityType, field, 'begin_date');
     }
 
     if (libWD.existField(entity, 'birthPlace')
@@ -389,7 +389,7 @@ function _fillFormFromWikidata(entity) {
             || libWD.existField(entity, 'dissolutionDate')) {
         field = libWD.existField(entity, 'deathDate') ? 'deathDate'
                                                       : 'dissolutionDate';
-        libWD.fillDate(entity, 'artist', field, 'end_date');
+        libWD.fillDate(entity, entityType, field, 'end_date');
     }
 
     if (libWD.existField(entity, 'deathPlace')) {
@@ -417,8 +417,8 @@ function _fillFormFromWikidata(entity) {
         if (libWD.existField(entity, externalLink) &&
             !_.includes(existing_domains, domain)) {
             var inputs = document.getElementById('external-links-editor')
-                         .getElementsByTagName('input'),
-                input = inputs[inputs.length - 1];
+                         .getElementsByTagName('input');
+            input = inputs[inputs.length - 1];
             input.value = WIKIDATA.urls[externalLink]
                           + libWD.fieldValue(entity, externalLink);
             input.dispatchEvent(new Event('input', {'bubbles': true}));
@@ -446,22 +446,20 @@ function _fillFormFromWikidata(entity) {
 }
 
 function fillFormFromWikidata(wikiId) {
+    const entityType = document.URL.split('/')[3];
     libWD.request(wikiId, function (entity) {
         if (libWD.existField(entity, 'mbidArtist')) {
             var mbid = libWD.fieldValue(entity, 'mbidArtist');
             // eslint-disable-next-line no-alert
             if (window.confirm(
-                    'An artist already exists linked to this wikidata id, ' +
+                    'An entity already exists linked to this wikidata id, ' +
                     'click "ok" to redirect to their page')) {
-                window.location.href='/artist/' + mbid;
-            } else {
-                _fillFormFromWikidata(entity);
+                window.location.href = `/${entityType}/${mbid}`;
             }
-        } else {
-            _fillFormFromWikidata(entity);
         }
+        _fillFormFromWikidata(entity, entityType);
     });
-    document.getElementById('id-edit-artist.edit_note')
+    document.getElementById(`id-edit-${entityType}.edit_note`)
             .value = sidebar.editNote(GM_info.script);
 }
 
