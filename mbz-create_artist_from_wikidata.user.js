@@ -383,7 +383,7 @@ function _fillFormFromWikidata(entity, entityType) {
     }
 
     // ISNI
-    if (libWD.existField(entity, 'isni')) {
+    if (entityType === 'artist' && libWD.existField(entity, 'isni')) {
         fillISNI(libWD.fieldValue(entity, 'isni'));
     }
 
