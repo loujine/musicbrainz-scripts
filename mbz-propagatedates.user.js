@@ -1,4 +1,4 @@
-/* global $ MB server relEditor */
+/* global $ _ MB server relEditor GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Batch-propagate recording dates
@@ -106,10 +106,10 @@ $(document).ready(function() {
     $('#copydates').click(function() {
         propagateDates();
         if (!appliedNote) {
-            relEditor.editNote(GM_info.script, 'Propagate recording dates from other advanced relationships');
+            relEditor.editNote(GM_info.script,
+                'Propagate recording dates from other advanced relationships');
             appliedNote = true;
         }
     });
     return false;
 });
-
