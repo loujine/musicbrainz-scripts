@@ -552,6 +552,10 @@ $(document).ready(function() {
             fillExternalLinks(node.value);
             fillFormFromWikidata(node.value.split('/')[4].trim());
         } else if (node.value.split('/')[2] === "viaf.org") {
+            node.value = node.value.replace(/http:/g, 'https:')
+            if (!node.value.endsWith('/')) {
+                node.value = node.value + '/';
+            }
             $('#linkParser').css('background-color', '#bbffbb');
             fillFormFromVIAF(node.value);
         } else {
@@ -569,6 +573,7 @@ $(document).ready(function() {
 
 // import viaf
 // https://viaf.org/viaf/44485204/
+// https://viaf.org/viaf/80111787/
 
 // bnf
 // http://catalogue.bnf.fr/ark:/12148/cb13894801b.unimarc
