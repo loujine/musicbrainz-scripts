@@ -492,7 +492,7 @@ function fillFormFromWikidata(wikiId) {
 
 
 function fillFormFromVIAF(viafURL) {
-
+    const entityType = document.URL.split('/')[3];
     requests.GET(viafURL, function (resp) {
         fillExternalLinks(viafURL);
         const parser = new DOMParser();
@@ -518,6 +518,8 @@ function fillFormFromVIAF(viafURL) {
         if (link && link.href) {
             fillISNI(link.href.split('/')[4]);
         }
+    document.getElementById(`id-edit-${entityType}.edit_note`)
+            .value = sidebar.editNote(GM_info.script);
     })
 }
 
