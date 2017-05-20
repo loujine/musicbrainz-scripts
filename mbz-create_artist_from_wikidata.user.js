@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.15
+// @version      2017.5.20
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -509,14 +509,14 @@ function fillFormFromVIAF(viafURL) {
         );
         ["catalogue.bnf.fr", "d-nb.info", "wikidata.org"].forEach(
                 function (site) {
-            const url = doc.querySelector(`a[href*="${site}"]`).href;
-            if (url) {
-                fillExternalLinks(url);
+            const link = doc.querySelector(`a[href*="${site}"]`);
+            if (link && link.href) {
+                fillExternalLinks(link.href);
             }
         });
-        const url = doc.querySelector(`a[href*="isni.org"]`).href;
-        if (url) {
-            fillISNI(url.split('/')[4]);
+        const link = doc.querySelector(`a[href*="isni.org"]`);
+        if (link && link.href) {
+            fillISNI(link.href.split('/')[4]);
         }
     })
 }
