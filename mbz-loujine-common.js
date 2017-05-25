@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.12
+// @version      2017.5.24
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -387,8 +387,7 @@ var edits = function () {
             callback({
                 name: data.title,
                 type_id: server.workType[data.type],
-                language_id: server.language[
-                    server.languageFromISO[data.language]],
+                languages: data.languages.map(l => server.languageFromISO[l]),
                 iswcs: data.iswcs,
                 attributes: data.attributes
             });
@@ -402,9 +401,11 @@ var edits = function () {
     self.prepareEdit = function (editData) {
         var data = {
             name: self.encodeName(editData.name),
-            type_id: editData.type_id || '',
-            language_id: editData.language_id || '',
+            type_id: editData.type_id || ' ',
         };
+        editData.languages.forEach(function (lang, idx) {
+            data['languages.' + idx] = server.language[lang];
+        });
         if (editData.iswcs === undefined || !editData.iswcs.length) {
             data['iswcs.0'] = null;
         } else {

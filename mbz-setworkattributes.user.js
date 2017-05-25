@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.22
+// @version      2017.5.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Set attributes (lang, key) from the composer Work page
 // @compatible   firefox+greasemonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=196935
 // @include      http*://*musicbrainz.org/artist/*/works
 // @include      http*://*musicbrainz.org/artist/*/works?page=*
 // @grant        none
@@ -70,7 +70,7 @@ function updateFromPage(editData, node) {
     var lang = $(row.children[idxLang]).find('select');
     var optionLang = lang.length ? lang[0].value : null;
     if (optionLang) {
-        editData.language_id = optionLang;
+        editData.languages = [optionLang];
     }
 
     var key = $(row.children[idxKey]).find('select');
