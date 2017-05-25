@@ -1,10 +1,10 @@
-/* global $ requests server works sidebar edits helper */
+/* global $ requests server works sidebar edits helper GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.4.8
+// @version      2017.5.22
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -28,13 +28,16 @@ $rows.each(function (idx, row) {
     var mbid = $(row).find('a[href*="/work/"]').attr('href').split('/')[2],
         title = $(row).find('a[href*="/work/"]')[0].text;
     if (!row.children[idxType].textContent.trim()) {
-        $(row.children[idxType]).append($('<form>').append($(works.type).clone()));
+        $(row.children[idxType]).append($('<form>')
+                                .append($(works.type).clone()));
     }
     if (!row.children[idxLang].textContent.trim()) {
-        $(row.children[idxLang]).append($('<form>').append($(works.lang).clone()));
+        $(row.children[idxLang]).append($('<form>')
+                                .append($(works.lang).clone()));
     }
     if (!row.children[idxKey].textContent.trim()) {
-        $(row.children[idxKey]).append($('<form>').append($(works.key).clone()));
+        $(row.children[idxKey]).append($('<form>')
+                               .append($(works.key).clone()));
         if (title.toLowerCase().includes('major') ||
             title.toLowerCase().includes('minor')) {
             var cell = row.children[idxKey];
