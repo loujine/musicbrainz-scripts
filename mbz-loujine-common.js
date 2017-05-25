@@ -332,8 +332,6 @@ var requests = function () {
         xhr.open(verb, url, true);
         if (verb === 'POST') {
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.setRequestHeader('Content-length', param.length);
-            xhr.setRequestHeader('Connection', 'close');
         }
         xhr.timeout = 10000;
         xhr.ontimeout = function () {
