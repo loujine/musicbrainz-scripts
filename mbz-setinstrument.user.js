@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-set recording-artist instrument
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.12
+// @version      2017.6.22
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -33,13 +33,14 @@ function setInstrument(fromType, toType, attrIds, credit) {
         var relationships = _relationships(recording, fromType);
         relationships.forEach(function(relation) {
             var attrs = relation.attributes();
+            let offset = attrs.length;
             relation.linkTypeID(toType);
             attrIds.forEach(function (attrId) {
                 attrs.push({type: MB.attrInfoByID[attrId]});
             });
             relation.setAttributes(attrs);
             attrIds.forEach(function (attrId, idx) {
-                relation.attributes()[idx].creditedAs(credit);
+                relation.attributes()[idx + offset].creditedAs(credit);
             });
          });
     });
