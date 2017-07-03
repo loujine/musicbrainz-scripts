@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.4.28
+// @version      2017.6.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Replace associated recording artist from a Release page
 // @compatible   firefox+greasemonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=204016
 // @include      http*://*musicbrainz.org/release/*
 // @include      http*://*mbsandbox.org/release/*
 // @grant        none
@@ -60,6 +60,18 @@ function showSelectors() {
 
 // Replace composer -> performer as recording artist (CSG)
 function parseArtistEditData(data, performers) {
+    if (performers.length === 0
+        && !document.getElementById('set-unknown').checked) {
+        // erase completely data to prevent the POST request
+        return null;
+    } else if (performers.length === 0) {
+        // set [unknown] artist credit
+        data['artist_credit.names.0.name'] = '[unknown]';
+        data['artist_credit.names.0.join_phrase'] = '';
+        data['artist_credit.names.0.artist.name'] = '[unknown]';
+        data['artist_credit.names.0.artist.id'] = server.unknownArtistId;
+        return data;
+    }
     performers.forEach(function (performer, idx) {
         var creditedName = performer.name;
         if (performer.creditedName) {
@@ -70,6 +82,7 @@ function parseArtistEditData(data, performers) {
         data['artist_credit.names.' + idx + '.artist.name'] = edits.encodeName(performer.name);
         data['artist_credit.names.' + idx + '.artist.id'] = performer.id;
     });
+    return data;
 };
 
 function parseEditData(editData) {
@@ -104,10 +117,9 @@ function parseEditData(editData) {
             });
         }
     });
-    parseArtistEditData(data, performers.sort(helper.comparefct));
     data['edit_note'] = $('#batch_replace_edit_note')[0].value;
     data['make_votable'] = document.getElementById('votable').checked ? '1' : '0';
-    return data;
+    return parseArtistEditData(data, performers.sort(helper.comparefct));
 }
 
 function replaceArtist() {
@@ -138,6 +150,10 @@ function replaceArtist() {
             $('#' + node.id + '-text').text('Sending edit data');
             var postData = parseEditData(editData);
             console.info('Data ready to be posted: ', postData);
+            if (postData === null) {
+                $('#' + node.id + '-text').text('No artist data to send');
+                return;
+            }
             requests.POST(url, edits.formatEdit('edit-recording', postData),
                           success, fail);
         }
@@ -184,6 +200,15 @@ function replaceArtist() {
             .append($('<input>',
                       {'type': 'checkbox',
                        'id': 'votable'})
+            )
+        )
+    ).append(
+        $('<div>')
+        .append(
+            $('<label>Set [unknown] artist if no AR</label>')
+            .append($('<input>',
+                      {'type': 'checkbox',
+                       'id': 'set-unknown'})
             )
         )
     ).append(

@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.24
+// @version      2017.6.3
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -250,6 +250,7 @@ var server = {
         'A Dorian': 794,
         'B Dorian': 795
     },
+    'unknownArtistId': 97546,
     // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
     // we wait for 'server.timeout' milliseconds between two queries
     'timeout': 1000
