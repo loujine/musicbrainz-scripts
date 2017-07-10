@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.6.3
+// @version      2017.6.8
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -488,8 +488,9 @@ var helper = function () {
             mbid = mbid !== undefined ? mbid : self.mbidFromURL();
         url += encodeURIComponent(mbid);
         url += '?fmt=json';
-        options.forEach(function (option) {
-            url += '&inc=' + option;
+        options.forEach(function (option, idx) {
+            let prefix = idx === 0 ? '&inc=' : encodeURIComponent(' ');
+            url += prefix + option;
         });
         return url;
     };
