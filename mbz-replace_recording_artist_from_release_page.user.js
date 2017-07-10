@@ -1,4 +1,4 @@
-/* global $ _ requests server helper sidebar edits */
+/* global $ _ requests server helper sidebar edits GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Replace recording artists from a release page
@@ -19,7 +19,8 @@
 // @run-at       document-end
 // ==/UserScript==
 
-var editNoteMsg = 'CSG: Set performer(s) in recording AR as recording artist\n';
+const editNoteMsg =
+    'CSG: Set performer(s) in recording relations as recording artist\n';
 
 function showSelectors() {
     var $rows = $(
@@ -30,7 +31,8 @@ function showSelectors() {
     }
 
     $rows.each(function (idx, tr) {
-        var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[2];
+        const mbid = $(tr).find('a[href*="/recording/"]')
+                          .attr('href').split('/')[2];
         $(tr).append(
             $('<td>').append(
                 $('<input>', {
@@ -83,7 +85,7 @@ function parseArtistEditData(data, performers) {
         data['artist_credit.names.' + idx + '.artist.id'] = performer.id;
     });
     return data;
-};
+}
 
 function parseEditData(editData) {
     var data = {},
@@ -118,7 +120,7 @@ function parseEditData(editData) {
         }
     });
     data['edit_note'] = $('#batch_replace_edit_note')[0].value;
-    data['make_votable'] = document.getElementById('votable').checked ? '1' : '0';
+    data.make_votable = document.getElementById('votable').checked ? '1' : '0';
     return parseArtistEditData(data, performers.sort(helper.comparefct));
 }
 
@@ -137,7 +139,8 @@ function replaceArtist() {
             ).exec(xhr.responseText)[1];
             $status.after(
                 $('<p>').append(
-                    '<a href="/edit/' + editId + '" target="_blank">edit ' + editId + '</a>'
+                    `<a href="/edit/${editId}" target="_blank">` +
+                    `edit ${editId}</a>`
                 )
             )
         }
@@ -159,7 +162,8 @@ function replaceArtist() {
         }
         setTimeout(function () {
             $('#' + node.id + '-text').empty();
-            $(node).after('<span id="' + node.id + '-text">Fetching required data</span>');
+            $(node).after(
+                `<span id="${node.id}-text">Fetching required data</span>`);
             edits.getEditParams(url, callback);
         }, 2 * idx * server.timeout);
     });
@@ -187,7 +191,7 @@ function replaceArtist() {
     ).append(
         $('<div>')
         .append(
-            $('<label>Exclude AR with pending edits</label>')
+            $('<label>Exclude relations with pending edits</label>')
             .append($('<input>',
                       {'type': 'checkbox',
                        'id': 'pending'})
@@ -205,7 +209,7 @@ function replaceArtist() {
     ).append(
         $('<div>')
         .append(
-            $('<label>Set [unknown] artist if no AR</label>')
+            $('<label>Set [unknown] artist if no relation</label>')
             .append($('<input>',
                       {'type': 'checkbox',
                        'id': 'set-unknown'})
