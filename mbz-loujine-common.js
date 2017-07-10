@@ -61,7 +61,10 @@ var server = {
         'Zarzuela': 19
     },
     'workLinkType': {
+        'arrangement': 350,
+        'composer': 168,
         'subwork': 281,
+        'writer': 167,
     },
     'releaseLinkTypeID': {
         44: 'instrument',
@@ -421,7 +424,7 @@ var edits = function () {
                 data['attributes.' + idx + '.value'] = attr.value;
             });
         }
-        return data
+        return data;
     };
 
     self.formatEdit = function (editType, info) {
@@ -484,7 +487,7 @@ var helper = function () {
     };
 
     self.wsUrl = function (entityType, options, mbid) {
-        var url = '/ws/2/' + entityType + '/',
+        var url = `/ws/2/${entityType}/`,
             mbid = mbid !== undefined ? mbid : self.mbidFromURL();
         url += encodeURIComponent(mbid);
         url += '?fmt=json';
