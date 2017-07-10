@@ -39,16 +39,16 @@ function referenceDate(relations) {
     var idx_ref = -1;
     // look for one recording link with a date
     // give priority to the most precise one (day > month > year)
-    ['day', 'month', 'year'].forEach(function(unit) {
-        relations.forEach(function(rel, idx) {
-            if (idx_ref === -1 && rel.end_date[unit]() > 0
+    for (const unit of ['day', 'month', 'year']) {
+        for (const [idx, rel] of relations.entries()) {
+            if (rel.end_date[unit]() > 0
                 && _.includes(_.values(server.recordingLinkType),
                               parseInt(rel.linkTypeID()))) {
-                idx_ref = idx;
+                return idx;
             }
-        });
-    });
-    return idx_ref;
+        }
+    }
+    return -1;
 }
 
 function propagateDates() {
