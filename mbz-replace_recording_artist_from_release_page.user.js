@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.6.3
+// @version      2017.7.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -120,6 +120,10 @@ function parseEditData(editData) {
         }
     });
     data['edit_note'] = $('#batch_replace_edit_note')[0].value;
+    if (document.getElementById('set-unknown').checked) {
+        data['edit_note'] = data['edit_note'].replace(
+            editNoteMsg, 'Set [unknown] performer when no relation');
+    }
     data.make_votable = document.getElementById('votable').checked ? '1' : '0';
     return parseArtistEditData(data, performers.sort(helper.comparefct));
 }
