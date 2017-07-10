@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Create work arrangement from existing work
 // @compatible   firefox+greasemonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=204016
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=205232
 // @include      http*://*musicbrainz.org/work/*
 // @grant        none
 // @run-at       document-end
