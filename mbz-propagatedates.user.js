@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-propagate recording dates
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.16
+// @version      2017.7.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -41,7 +41,9 @@ function referenceDate(relations) {
     // give priority to the most precise one (day > month > year)
     ['day', 'month', 'year'].forEach(function(unit) {
         relations.forEach(function(rel, idx) {
-            if (idx_ref === -1 && rel.end_date[unit]() > 0) {
+            if (idx_ref === -1 && rel.end_date[unit]() > 0
+                && _.includes(_.values(server.recordingLinkType),
+                              parseInt(rel.linkTypeID()))) {
                 idx_ref = idx;
             }
         });
