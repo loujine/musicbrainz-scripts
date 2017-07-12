@@ -1,19 +1,20 @@
 /* global $ helper aliases edits sidebar requests GM_info */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: Batch-add artist aliases
+// @name         MusicBrainz: Batch-add aliases
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.4.6
+// @version      2017.7.12
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org: Batch-add artist aliases
+// @description  musicbrainz.org: Batch-add aliases
 // @compatible   firefox+greasemonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=186415
 // @include      http*://*musicbrainz.org/*/*/aliases*
+// @exclude      http*://*musicbrainz.org/doc/*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
