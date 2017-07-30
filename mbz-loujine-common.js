@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.7.9
+// @version      2017.8.29
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -103,8 +103,12 @@ var server = {
         'violin': 86,
         'piano': 180,
         'bowedStrings': 275,
+        'cover': 567,
         'live': 578,
-        'partial': 579
+        'partial': 579,
+        'instrumental': 580,
+        'video': 582,
+        'solo': 596
     },
     'language': {
         '[Multiple languages]': 284,
