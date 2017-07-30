@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.20
+// @version      2017.7.29
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -328,8 +328,14 @@ function _fillFormFromWikidata(entity, entityType) {
             if (helper.isArtistURL) {
                 $(document.getElementById('id-edit-artist.name')
                     ).trigger('change');
-                document.getElementsByClassName(
-                    'guesscase-sortname')[0].click();
+                if (!document.getElementById('id-edit-artist.sort_name')
+                             .value.length) {
+                    $('#newFields').append(
+                        $('<p>',
+                          {'text': 'You must set the sort name to '
+                                   + 'save the edit'}).css('color', 'red');
+                    );
+                }
             }
         }
     );
