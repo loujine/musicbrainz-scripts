@@ -131,7 +131,7 @@ function setValue (nodeId, value, callback) {
     if (node.value != value) {  // != to allow autocasting to int
         $('#newFields').append(
             $('<dd>',
-              {'text': `Different value "${printableValue} suggested`}
+              {'text': `Different value "${printableValue}" suggested`}
             ).css('color', 'red')
         );
         return callback();
@@ -241,6 +241,7 @@ const libWD = function () {
         if (self.existField(entityArea, 'mbidArea')) {
             input.value = self.fieldValue(entityArea, 'mbidArea');
             $(input).trigger('keydown');
+            $('#area-bubble').remove();
         } else {
             input.value = area;
         }
