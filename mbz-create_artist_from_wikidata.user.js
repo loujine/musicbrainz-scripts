@@ -61,24 +61,32 @@ const WIKIDATA = {
         members: 'P527',
         student: 'P802',
         teacher: 'P1066',
-        idDiscogs: 'P1953',
-        idIMDB: 'P345',
-        idSpotify: 'P1902',
-        idOL: 'P648',
-        idVIAF: 'P214',
-        idGND: 'P227',
+        idAllMusic: 'P1728',
         idBNF: 'P268',
-        idIMSLP: 'P839'
+        idDiscogs: 'P1953',
+        idFacebook: 'P2013',
+        idGND: 'P227',
+        idIMDB: 'P345',
+        idIMSLP: 'P839',
+        idInstagram: 'P2003',
+        idOL: 'P648',
+        idSpotify: 'P1902',
+        idTwitter: 'P2002',
+        idVIAF: 'P214'
     },
     urls: {
-        idDiscogs: 'http://www.discogs.com/artist/',
-        idIMDB: 'http://www.imdb.com/name/',
-        idSpotify: 'https://open.spotify.com/artist/',
-        idOL: 'https://openlibrary.org/works/',
-        idVIAF: 'https://viaf.org/viaf/',
+        idAllMusic: 'http://www.allmusic.com/artist/',
+        idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
+        idDiscogs: 'https://www.discogs.com/artist/',
+        idFacebook: 'https://www.facebook.com/',
         idGND: 'https://d-nb.info/gnd/',
+        idIMDB: 'http://www.imdb.com/name/',
         idIMSLP: 'https://imslp.org/wiki/',
-        idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb'
+        idInstagram: 'https://www.instagram.com/',
+        idOL: 'https://openlibrary.org/works/',
+        idSpotify: 'https://open.spotify.com/artist/',
+        idTwitter: 'https://www.twitter.com/',
+        idVIAF: 'https://viaf.org/viaf/'
     }
 };
 
