@@ -333,7 +333,7 @@ function _fillFormFromWikidata(entity, entityType) {
                     $('#newFields').append(
                         $('<p>',
                           {'text': 'You must set the sort name to '
-                                   + 'save the edit'}).css('color', 'red');
+                                   + 'save the edit'}).css('color', 'red')
                     );
                 }
             }
