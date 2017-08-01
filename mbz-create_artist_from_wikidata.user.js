@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.7.29
+// @version      2017.8.1
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
