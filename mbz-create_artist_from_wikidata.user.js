@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.8.1
+// @version      2017.8.7
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -25,6 +25,9 @@
 // @include      http*://*mbsandbox.org/place/create*
 // @include      http*://*mbsandbox.org/place/*/edit
 // @exclude      http*://*mbsandbox.org/place/*/alias/*/edit
+// @include      http*://*musicbrainz.org/work/create*
+// @include      http*://*musicbrainz.org/work/*/edit
+// @exclude      http*://*musicbrainz.org/work/*/alias/*/edit
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
@@ -109,6 +112,7 @@ const FIELD_NAMES = {
 _.forOwn(FIELD_NAMES, function (v, k) {
     if (k.includes('artist')) {
         FIELD_NAMES[k.replace('artist', 'place')] = v;
+        FIELD_NAMES[k.replace('artist', 'work')] = v;
     }
 });
 
@@ -116,6 +120,9 @@ _.forOwn(FIELD_NAMES, function (v, k) {
 function setValue (nodeId, value, callback) {
     callback = callback || function () {};
     var node = document.getElementById(nodeId);
+    if (!node) {
+        return;
+    }
     $('#newFields').append(
         $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
     )
@@ -218,7 +225,7 @@ const libWD = function () {
     self.fillArea = function (data, place, nodeId, lang) {
         var entityArea = data.entities[place],
             input = document.getElementById(`id-edit-artist.${nodeId}.name`);
-        if (!entityArea) {  // no wikidata data
+        if (!entityArea || !input) {  // no wikidata data
             return;
         }
         var area = entityArea.labels[lang].value;
@@ -277,6 +284,9 @@ const libWD = function () {
         }
         setValue(prefix + '.year', date.getFullYear());
         var yearInput = document.getElementById(prefix + '.year');
+        if (!yearInput) {
+            return;
+        }
         if (yearInput.classList.contains('jesus2099')) {
                 // jesus2099's EASY_DATE script is shifting the input node
                 // containing the year but not its id
@@ -542,8 +552,9 @@ function fillFormFromVIAF(viafURL) {
 (function displayToolbar(relEditor) {
     $('div.half-width').after(
         $('<div>', {float: 'right'})).after(
-        relEditor.container()
-        .append(
+        relEditor.container().append(
+            $('<h3>Add external link</h3>')
+        ).append(
             $('<p>Add a wikidata/VIAF/BNF... ' +
               'link here to retrieve automatically some information</p>')
         ).append(
