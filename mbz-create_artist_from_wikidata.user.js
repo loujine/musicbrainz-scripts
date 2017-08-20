@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.8.7
+// @version      2017.8.20
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -290,12 +290,12 @@ const libWD = function () {
         if (yearInput.classList.contains('jesus2099')) {
                 // jesus2099's EASY_DATE script is shifting the input node
                 // containing the year but not its id
-                yearInput.nextSibling.value = date.getFullYear();
+                yearInput.nextSibling.value = date.getUTCFullYear();
         }
         if (field.precision > 9) {
-            setValue(prefix + '.month', date.getMonth() + 1);
+            setValue(prefix + '.month', date.getUTCMonth() + 1);
             if (field.precision > 10) {
-                setValue(prefix + '.day', date.getDate());
+                setValue(prefix + '.day', date.getUTCDate());
             }
         }
     };
