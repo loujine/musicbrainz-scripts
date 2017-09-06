@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.12
+// @version      2017.9.6
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -25,7 +25,7 @@ function setWork(recording, work) {
     requests.GET(url, function (resp) {
         var vm = MB.releaseRelationshipEditor;
         var target = JSON.parse(resp);
-        var dialog = MB.relationshipEditor.UI.AddDialog({
+        var dialog = new MB.relationshipEditor.UI.AddDialog({
             source: recording,
             target: target,
             viewModel: vm
