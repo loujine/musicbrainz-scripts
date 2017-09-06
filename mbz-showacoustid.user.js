@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show acoustids
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.3.8
+// @version      2017.9.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -15,6 +15,8 @@
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
 // @include      http*://*musicbrainz.org/work/*
 // @include      http*://*musicbrainz.org/artist/*/relationships
+// @include      http*://*musicbrainz.org/artist/*/recordings
+// @include      http*://*musicbrainz.org/artist/*/recordings?page=*
 // @exclude      http*://*musicbrainz.org/work/*/*
 // @grant        none
 // @run-at       document-end
@@ -34,7 +36,9 @@ function showAcoustids() {
     params += '&batch=1&disabled=0';
 
     $('thead > tr').append('<th>AcoustID</th>');
-    $('.subh > th')[1].colSpan += 1;
+    if ($('.subh > th').length > 1) {
+        $('.subh > th')[1].colSpan += 1;
+    }
     $('table.tbl > tbody > tr:not(".subh")').append('<td>');
 
     requests.POST(url, params, function success(xhr) {
