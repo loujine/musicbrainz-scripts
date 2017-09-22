@@ -120,7 +120,7 @@ function setSubworksAttributes(attrIdx) {
             $('<input>', {
                 'id': 'batch-set-subworks-attributes',
                 'type': 'button',
-                'value': 'Set as movements',
+                'value': 'Set attribute on all subworks',
             })
         )
     );
