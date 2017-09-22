@@ -1,15 +1,15 @@
 /* global $ _ relEditor requests edits server sidebar helper */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: Replace subwork titles in Work edit page
+// @name         MusicBrainz: Replace subwork titles and attributes in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.25
+// @version      2017.9.22
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org: replace subwork titles in Work edit page
+// @description  musicbrainz.org: replace subwork titles/attributes in Work edit page
 // @compatible   firefox+greasemonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=196935
@@ -75,6 +75,15 @@ function replaceSubworksTitles() {
 }
 
 
+function setSubworksAttributes(attrIdx) {
+    $('table label:contains("parts:")').parents('tr').find('button[class*="edit-item"]').each(function (_idx, node) {
+        node.click();
+        $('.attribute-container input')[attrIdx].click();
+        $('.rel-editor-dialog button.positive').click();
+    });
+}
+
+
 (function displayToolbar(relEditor) {
     $('div.half-width').after(
         $('<div>', {float: 'right'})).after(
@@ -103,6 +112,16 @@ function replaceSubworksTitles() {
                 'value': 'Apply',
                 'disabled': true
             })
+        ).append(
+            $('<h3>Set subworks attributes</h3>')
+        ).append(
+            $('<select id="subwork_attribute"> <option value=""></option> <option value=0>act</option> <option value=1>movement</option> <option value=2>number</option> <option value=3>part of collection</option> </select>')
+        ).append(
+            $('<input>', {
+                'id': 'batch-set-subworks-attributes',
+                'type': 'button',
+                'value': 'Set as movements',
+            })
         )
     );
     $('div#loujine-menu').css('margin-left', '550px');
@@ -115,6 +134,11 @@ $(document).ready(function () {
     });
     $('#batch-replace-titles').click(function () {
         replaceSubworksTitles();
+    });
+    $('#batch-set-subworks-attributes').click(function () {
+        setSubworksAttributes($('select#subwork_attribute')[0].value);
+        document.getElementById('id-edit-work.edit_note')
+            .value = sidebar.editNote(GM_info.script, 'Set subworks attributes');
     });
     return false;
 });
