@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.8.20
+// @version      2017.9.29
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -555,7 +555,7 @@ function fillFormFromVIAF(viafURL) {
         relEditor.container().append(
             $('<h3>Add external link</h3>')
         ).append(
-            $('<p>Add a wikidata/VIAF/BNF... ' +
+            $('<p>Add a wikidata/VIAF ' +
               'link here to retrieve automatically some information</p>')
         ).append(
             $('<input>', {
