@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show stats from AcousticBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.2.11
+// @version      2017.10.2
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_stats_from_acousticbrainz.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_stats_from_acousticbrainz.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -34,7 +34,7 @@ function showAcousticBrainzCount() {
             requests.GET(dataUrl, function (resp) {
                 var data = JSON.parse(resp);
                 var key = data.tonal.key_key + ' ' + data.tonal.key_scale;
-                key += ' (' + 100 * _.round(data.tonal.key_strength, 3) + '%)';
+                key += ' (' + _.round(100 * data.tonal.key_strength, 1) + '%)';
                 $('#key').append(key);
                 var bpm = _.round(data.rhythm.bpm, 1);
                 $('#bpm').append(bpm);
