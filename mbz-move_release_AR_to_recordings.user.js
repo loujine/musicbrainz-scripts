@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Move performer AR on release to recordings AR
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.5.12
+// @version      2017.10.16
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -52,7 +52,7 @@ function moveAR(ids) {
                 }), performer.id)) {
                     return;
                 }
-                var dialog = MB.relationshipEditor.UI.AddDialog({
+                var dialog = new MB.relationshipEditor.UI.AddDialog({
                     source: recording,
                     target: performer,
                     viewModel: vm
