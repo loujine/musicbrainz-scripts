@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display release timeline
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.14
+// @version      2017.10.16
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-release_timeline.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-release_timeline.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -19,6 +19,7 @@
 // @resource     slickcss https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css
 // @resource     slicktheme https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css
 // @include      http*://*musicbrainz.org/artist/*
+// @exclude      http*://*musicbrainz.org/artist/create
 // @exclude      http*://*musicbrainz.org/artist/*/*
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
