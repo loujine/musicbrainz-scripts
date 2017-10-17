@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.7.9
+// @version      2017.10.17
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_work_arrangement.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_work_arrangement.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -19,6 +19,7 @@
 // ==/UserScript==
 
 function createArrangement(mbid, parentMbid) {
+    $('#create-arrangement-text').empty();
     fetch(helper.wsUrl('work', ['artist-rels', 'work-rels'], mbid))
         .then(resp => resp.json())
         .then(function(data) {
@@ -65,15 +66,22 @@ function createArrangement(mbid, parentMbid) {
 
             function success(xhr) {
                 const newMbid = helper.mbidFromURL(xhr.responseURL);
-                const editId = new RegExp(
+                let editId = new RegExp(
                     '/edit/(.*)">edit</a>'
                 ).exec(xhr.responseText);
                 if (editId && editId.length) {
-                    $('#create-arrangement').after(
-                        $('<p><a href="/edit/' + editId[1]
-                            + '" target="_blank">edit '
-                            + editId[1] + '</a></p>')
-                    );
+                    $('#create-arrangement-text').append(
+                        '<a href="/edit/' + editId[1]
+                        + '" target="_blank">edit ' + editId[1] + '</a>');
+                } else if (editId === null) {
+                    editId = new RegExp(
+                        'href="(.*)">edits</a> (.*) have'
+                    ).exec(xhr.responseText);
+                    if (editId && editId.length) {
+                        $('#create-arrangement-text').append(
+                            '<a href="' + editId[1]
+                            + '" target="_blank">' + editId[2] + '</a>');
+                    }
                 }
                 if (document.getElementById('subworks').checked) {
                     idx = 0;
@@ -88,6 +96,7 @@ function createArrangement(mbid, parentMbid) {
                     });
                 }
             }
+            $('#create-arrangement-text').text('Creating arrangement(s)');
             requests.POST(
                 '/work/create',
                 edits.formatEdit('edit-work', postData),
@@ -124,6 +133,9 @@ function createArrangement(mbid, parentMbid) {
                 'type': 'button',
                 'value': 'Apply',
                 'disabled': true})
+        ).append(
+            $('<span>', {
+                'id': 'create-arrangement-text'})
     );
     $('div#loujine-menu').css('margin-left', '550px');
 })(sidebar);
