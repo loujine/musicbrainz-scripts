@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.16
+// @version      2017.10.21
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -28,7 +28,7 @@
 // @include      http*://*musicbrainz.org/work/create*
 // @include      http*://*musicbrainz.org/work/*/edit
 // @exclude      http*://*musicbrainz.org/work/*/alias/*/edit
-// @grant        GM_xmlhttpRequest
+// @grant        none
 // @run-at       document-end
 // ==/UserScript==
 
