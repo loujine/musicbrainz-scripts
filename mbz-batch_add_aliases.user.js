@@ -106,6 +106,8 @@ $(document).ready(function () {
             type: 'button',
             value: 'submit new aliases'
         })
+    ).after(
+        $('<h3>Add aliases manually</h3>')
     );
     $('.addRow').click(addRow);
     $('#submitAliases').click(submitAliases);
