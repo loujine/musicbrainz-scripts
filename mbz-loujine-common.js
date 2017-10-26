@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.26
+// @version      2017.10.29
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -456,30 +456,6 @@ var edits = function () {
 
 var helper = function () {
     var self = {};
-
-    // musicbrainz-server/root/static/scripts/common/utility/formatTrackLength.js
-    self.formatTrackLength = function(milliseconds) {
-        if (!milliseconds) {
-            return '';
-        }
-        if (milliseconds < 1000) {
-            return milliseconds + ' ms';
-        }
-        var oneMinute = 60;
-        var oneHour = 60 * oneMinute;
-        var seconds = Math.round(milliseconds / 1000.0);
-        var hours = Math.floor(seconds / oneHour);
-        seconds = seconds % oneHour;
-        var minutes = Math.floor(seconds / oneMinute);
-        seconds = seconds % oneMinute;
-        var result = ('00' + seconds).slice(-2);
-        if (hours > 0) {
-            result = hours + ':' + ('00' + minutes).slice(-2) + ':' + result;
-        } else {
-            result = minutes + ':' + result;
-        }
-        return result;
-    };
 
     self.comparefct = function(a, b) {
         // Sort function for performers in the recording artist list
