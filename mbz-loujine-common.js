@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.8.29
+// @version      2017.10.26
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -157,6 +157,8 @@ var server = {
         'zxx': '[No lyrics]'
     },
     'locale': {
+        'Afrikaans': 'af',
+        'Azerbaijani': 'az',
         'Albanian': 'sq',
         'Arabic': 'ar',
         'Armenian': 'hy',
@@ -187,12 +189,16 @@ var server = {
         'Irish': 'ga',
         'Italian': 'it',
         'Japanese': 'ja',
+        'Javanese': 'jv',
         'Kazakh': 'kk',
         'Khmer (Central)': 'km',
         'Korean': 'ko',
+        'Latvian': 'lv',
         'Lithuanian': 'lt',
         'Macedonian': 'mk',
         'Malay': 'ms',
+        'Malayam': 'ml',
+        'Nepali': 'ne',
         'Norwegian Bokmål': 'nb',
         'Norwegian Nynorsk': 'nn',
         'Persian (Farsi)': 'fa',
@@ -206,6 +212,7 @@ var server = {
         'Slovakian': 'sk',
         'Slovenian': 'sl',
         'Spanish': 'es',
+        'Swahili': 'sw',
         'Swedish': 'sv',
         'Thai': 'th',
         'Turkish': 'tr',
