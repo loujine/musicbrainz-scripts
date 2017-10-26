@@ -57,20 +57,27 @@ function submitRecordingsAliases() {
         const $editNode = $(node.parentElement).find(':last');
         $editNode.text(' → Sending edit data');
         console.info('Data ready to be posted: ', postData);
-        function success(xhr) {
+
+        fetch(document.URL.replace('aliases', 'add-alias'), {
+            method: 'post',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: edits.formatEdit('edit-alias', postData),
+        }).then(resp => {
+            if (!resp.ok) {
+                throw Error(resp.statusText);
+            }
             node.disabled = true;
             $editNode.text(
-                ' → Success (code ' + xhr.status + ')'
+                ` → Success (code ${resp.status})`
             ).parent().css('color', 'green');
-        }
-        function fail(xhr) {
+        }).catch(error => {
             $editNode.text(
-                ' → Error (code ' + xhr.status + ')'
+                ` → Error (code ${error.status})`
             ).parent().css('color', 'red');
-        }
-        requests.POST(document.URL.replace('aliases', 'add-alias'),
-                      edits.formatEdit('edit-alias', postData),
-                      success, fail);
+        });
     });
 }
 
