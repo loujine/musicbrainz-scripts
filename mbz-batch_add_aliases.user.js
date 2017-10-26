@@ -93,17 +93,18 @@ $(document).ready(function () {
             node.innerHTML = '<table class="tbl"><thead><tr><th>Alias</th><th>Sort name</th><th>Begin Date</th><th>End Date</th><th>Type</th><th>Locale</th></tr></thead><tbody><tr></tr></tbody></table>';
         }
     }
+    $('table').before(
+        $('<input>', {
+            class: 'addRow',
+            type: 'button',
+            value: 'Add a new row'
+        })
+    );
     $('table:nth(0)').after(
         $('<input>', {
             id: 'submitAliases',
             type: 'button',
             value: 'submit new aliases'
-        })
-    ).after(
-        $('<input>', {
-            class: 'addRow',
-            type: 'button',
-            value: 'Add a new row'
         })
     );
     $('.addRow').click(addRow);
