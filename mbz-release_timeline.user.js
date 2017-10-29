@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display release timeline
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.16
+// @version      2017.10.29
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-release_timeline.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-release_timeline.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -16,8 +16,8 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.js
 // @resource     viscss https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis-timeline-graph2d.min.css
 // @require      https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js
-// @resource     slickcss https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css
-// @resource     slicktheme https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css
+// @resource     slickcss https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css
+// @resource     slicktheme https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css
 // @include      http*://*musicbrainz.org/artist/*
 // @exclude      http*://*musicbrainz.org/artist/create
 // @exclude      http*://*musicbrainz.org/artist/*/*
@@ -54,6 +54,7 @@ $(document).ready(function () {
     const data = [];
     $('.release-group-list tbody tr').each(function (idx, row) {
         const mbid = row.children[2].children[0].href.split('/')[4],
+            year = row.children[1].textContent,
             cover_url =  `https://coverartarchive.org/release-group/${mbid}/front-250.jpg`,
             rg_url = `https://musicbrainz.org/release-group/${mbid}`;
         let artists = '';
@@ -63,6 +64,7 @@ $(document).ready(function () {
               <a href="${rg_url}">
                 <img src="${cover_url}" width="150" height="150">
               </a>
+              <p style="text-align: center;">${year}</p>
             </div>`
         );
 
@@ -83,8 +85,9 @@ $(document).ready(function () {
         centerMode: true,
         infinite: true,
         slidesToShow: 3,
-        slidesToScroll: 3
+        slidesToScroll: 1,
     });
+    $('.slick-arrow').css('background-color', 'black');
     new vis.Timeline(
         document.getElementById('timeline'),
         new vis.DataSet(data),
