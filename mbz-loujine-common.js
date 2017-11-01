@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.29
+// @version      2017.11.1
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -549,16 +549,14 @@ var sidebar = function ($) {
 }($);
 
 
-var relEditor = function (MB, $) {
-    var self = {};
+class RelationshipEditor {
 
-    // edit note
-    self.editNote = function (meta, msg) {
+    editNote(meta, msg) {
         msg = msg || '';
         const separator = '\n —\n',
-            signature = `GM script: "${meta.name}" (${meta.version})\n`;
-        var vm = MB.releaseRelationshipEditor,
-            existingMsg = vm.editNote(),
+            signature = `GM script: "${meta.name}" (${meta.version})\n`,
+            vm = MB.releaseRelationshipEditor;
+        let existingMsg = vm.editNote(),
             existingSign;
         if (existingMsg.includes('\n —\n')) {
             [existingMsg, existingSign] = existingMsg.split(separator);
@@ -567,10 +565,10 @@ var relEditor = function (MB, $) {
         } else {
             vm.editNote(existingMsg + msg + separator + signature);
         }
-    };
+    }
 
-    self.container = function () {
-        var $container;
+    container() {
+        let $container;
         if ($('div#loujine-menu').length) {
             $container = $('div#loujine-menu');
         } else {
@@ -593,7 +591,7 @@ var relEditor = function (MB, $) {
             );
         }
         return $container;
-    };
+    }
+}
 
-    return self;
-}(MB, $);
+const relEditor = new RelationshipEditor();
