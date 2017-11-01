@@ -524,7 +524,7 @@ function fillFormFromWikidata(wikiId) {
 
 function fillFormFromVIAF(viafURL) {
     const entityType = document.URL.split('/')[3];
-    requests.GET(viafURL, function (resp) {
+    fetch(viafURL).then(resp => {
         fillExternalLinks(viafURL);
         const parser = new DOMParser();
         const doc = parser.parseFromString(resp, 'text/html');
@@ -538,20 +538,19 @@ function fillFormFromVIAF(viafURL) {
                     'guesscase-sortname')[0].click();
             }
         );
-        ["catalogue.bnf.fr", "d-nb.info", "wikidata.org"].forEach(
-                function (site) {
+        for (const site of ["catalogue.bnf.fr", "d-nb.info", "wikidata.org"]) {
             const link = doc.querySelector(`a[href*="${site}"]`);
             if (link && link.href) {
                 fillExternalLinks(link.href);
             }
-        });
+        }
         const link = doc.querySelector(`a[href*="isni.org"]`);
         if (link && link.href) {
             fillISNI(link.href.split('/')[4]);
         }
-    document.getElementById(`id-edit-${entityType}.edit_note`)
-            .value = sidebar.editNote(GM_info.script);
-    })
+        document.getElementById(`id-edit-${entityType}.edit_note`)
+                .value = sidebar.editNote(GM_info.script);
+    });
 }
 
 
@@ -604,23 +603,23 @@ function fillFormFromISNI(isniURL) {
     $('div#loujine-menu').css('margin-left', '550px');
 })(relEditor);
 
+
 $(document).ready(function() {
-    var node = document.getElementById('linkParser');
-    node.addEventListener('input', function () {
-        if (node.value.split('/')[2] === "www.wikidata.org") {
-            $('#linkParser').css('background-color', '#bbffbb');
+    const node = document.getElementById('linkParser');
+    node.addEventListener('input', () => {
+        const domain = node.value.split('/')[2];
+        $('#linkParser').css('background-color', '#bbffbb');
+        if (domain === "www.wikidata.org") {
             fillExternalLinks(node.value);
             fillFormFromWikidata(node.value.split('/')[4].trim());
-        } else if (node.value.split('/')[2] === "viaf.org") {
+        } else if (domain === "viaf.org") {
             node.value = node.value.replace(/http:/g, 'https:')
             if (!node.value.endsWith('/')) {
-                node.value = node.value + '/';
+                node.value += '/';
             }
-            $('#linkParser').css('background-color', '#bbffbb');
             fillFormFromVIAF(node.value);
-        } else if (node.value.split('/')[2] === "www.isni.org") {
+        } else if (domain === "www.isni.org") {
             node.value = node.value.replace(/isni\//g, '')
-            $('#linkParser').css('background-color', '#bbffbb');
             fillFormFromISNI(node.value);
         } else {
             $('#linkParser').css('background-color', '#ffaaaa');
