@@ -489,9 +489,9 @@ var helper = function () {
     self._isEntityTypeURL = function(entityType) {
         return document.URL.split('/')[3] === entityType;
     };
-    self.isArtistURL = self._isEntityTypeURL('artist');
-    self.isReleaseURL = self._isEntityTypeURL('release');
-    self.isWorkURL = self._isEntityTypeURL('work');
+    self.isArtistURL = () => self._isEntityTypeURL('artist');
+    self.isReleaseURL = () => self._isEntityTypeURL('release');
+    self.isWorkURL = () => self._isEntityTypeURL('work');
 
     self.sortSubworks = function (work) {
         var rels = work.relationships;

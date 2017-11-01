@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.4.8
+// @version      2017.11.1
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -45,12 +45,12 @@ function formatPerformers(relations) {
 
 function showPerformers(start, maxcount) {
     var $rows;
-    if (helper.isArtistURL) {
+    if (helper.isArtistURL()) {
         var performer = helper.mbidFromURL(),
             $allRows = $('table.tbl a[href*="/artist/"]').parents('tr'),
             $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr');
         $rows = $allRows.not($performerRows);
-    } else if (helper.isWorkURL) {
+    } else if (helper.isWorkURL()) {
         var composer = $('th:contains("composer:")').parent().find('a').attr('href').split('/')[2];
         $rows = $('table.tbl a[href*="/artist/' + composer + '"]').parents('tr');
     }

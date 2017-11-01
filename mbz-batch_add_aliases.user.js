@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-add aliases
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.26
+// @version      2017.11.1
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -20,7 +20,7 @@
 // ==/UserScript==
 
 var aliasType;
-if (helper.isArtistURL) {
+if (helper.isArtistURL()) {
     aliasType = aliases.artistType;
 } else {
     aliasType = aliases.type;

@@ -326,7 +326,7 @@ function fillExternalLinks(url) {
 
 function _fillEntityName(value, entityType) {
     function callback() {
-        if (helper.isArtistURL) {
+        if (helper.isArtistURL()) {
             $(document.getElementById('id-edit-artist.name')
                 ).trigger('change');
             if (!document.getElementById('id-edit-artist.sort_name')
