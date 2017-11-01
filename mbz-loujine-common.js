@@ -507,19 +507,15 @@ var helper = function () {
 }();
 
 
-var sidebar = function ($) {
-    var self = {};
-
-    // edit notes
-    self.editNote = function (meta, msg) {
+class Sidebar {
+    editNote(meta, msg) {
         msg = msg || '';
-        var signature = '\n —\n' +
-                        'GM script: "' + meta.name + '" (' + meta.version + ')\n\n';
+        const signature = `\n —\nGM script: "${meta.name}" (${meta.version})\n`;
         return (msg + signature);
-    };
+    }
 
-    self.container = function () {
-        var $container;
+    container() {
+        let $container;
         if ($('div#loujine-sidebar').length) {
             $container = $('div#loujine-sidebar');
         } else {
@@ -543,10 +539,10 @@ var sidebar = function ($) {
         }
         $('h2.collections').before($container);
         return $container;
-    };
+    }
+}
 
-    return self;
-}($);
+const sidebar = new Sidebar();
 
 
 class RelationshipEditor {
