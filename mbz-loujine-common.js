@@ -454,57 +454,62 @@ var edits = function () {
 }();
 
 
-var helper = function () {
-    var self = {};
+class Helper {
 
-    self.comparefct = function(a, b) {
+    comparefct(a, b) {
         // Sort function for performers in the recording artist list
-        var link = server.recordingLinkType,
+        const link = server.recordingLinkType,
             order = [link.vocals, link.instrument, link.orchestra,
                      link.conductor, link.performer];
         if (a.link === b.link) {return 0;}
         return order.indexOf(a.link) > order.indexOf(b.link) ? 1 : -1;
-    };
+    }
 
-    self.mbidFromURL = function (url) {
-        if (url === undefined) {
-            url = document.URL;
-        }
-        return url.split('/')[4];
-    };
+    mbidFromURL(url) {
+        return (url || document.URL).split('/')[4];
+    }
 
-    self.wsUrl = function (entityType, options, mbid) {
-        var url = `/ws/2/${entityType}/`,
-            mbid = mbid !== undefined ? mbid : self.mbidFromURL();
+    wsUrl(entityType, options, mbid) {
+        let url = `/ws/2/${entityType}/`;
+        mbid = mbid || this.mbidFromURL();
         url += encodeURIComponent(mbid);
         url += '?fmt=json';
-        options.forEach(function (option, idx) {
-            let prefix = idx === 0 ? '&inc=' : encodeURIComponent(' ');
+        options.forEach((option, idx) => {
+            const prefix = idx === 0 ? '&inc=' : encodeURIComponent(' ');
             url += prefix + option;
         });
         return new URL(
             url, document.location.protocol + '//' + document.location.host);
-    };
+    }
 
-    self._isEntityTypeURL = function(entityType) {
+    _isEntityTypeURL(entityType) {
         return document.URL.split('/')[3] === entityType;
-    };
-    self.isArtistURL = () => self._isEntityTypeURL('artist');
-    self.isReleaseURL = () => self._isEntityTypeURL('release');
-    self.isWorkURL = () => self._isEntityTypeURL('work');
+    }
 
-    self.sortSubworks = function (work) {
-        var rels = work.relationships;
-        rels = _.filter(rels, function (rel) {
-            return (rel.linkTypeID === server.workLinkType.subwork
-                    && rel.direction !== 'backward');
+    isArtistURL() {
+        return this._isEntityTypeURL('artist')
+    }
+
+    isReleaseURL() {
+        return this._isEntityTypeURL('release')
+    }
+
+    isWorkURL() {
+        return this._isEntityTypeURL('work')
+    }
+
+    sortSubworks(work) {
+        let rels = work.relationships;
+        rels = _.filter(rels, rel => {
+            (rel.linkTypeID === server.workLinkType.subwork
+             && rel.direction !== 'backward')
         });
-        rels = _.sortBy(rels, function (rel) {return rel.linkOrder;});
-        return rels.map(function (rel) {return rel.target});
-    };
+        rels = _.sortBy(rels, rel => rel.linkOrder);
+        return rels.map(rel => rel.target);
+    }
+}
 
-    return self;
-}();
+const helper = new Helper();
 
 
 class Sidebar {
