@@ -502,8 +502,9 @@ function _fillFormFromWikidata(entity, entityType) {
 function fillFormFromWikidata(wikiId) {
     const entityType = document.URL.split('/')[3];
     libWD.request(wikiId, function (entity) {
-        if (libWD.existField(entity, 'mbidArtist')
-                || libWD.existField(entity, 'mbidPlace')) {
+        if (document.URL.split('/')[3] == 'create' && (
+            (libWD.existField(entity, 'mbidArtist')
+                || libWD.existField(entity, 'mbidPlace')))) {
             const mbid = libWD.existField(entity, 'mbidArtist') ?
                 libWD.fieldValue(entity, 'mbidArtist') :
                 libWD.fieldValue(entity, 'mbidPlace');
