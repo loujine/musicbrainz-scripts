@@ -108,7 +108,7 @@ class WikiDataHelpers {
      * data: wikidata json for the area
      * place: wikidata code ('Q90', etc.)
      */
-    fillArea(data, place, nodeId, lang) {
+    _fillArea(data, place, nodeId, lang) {
         const entityArea = data.entities[place],
             input = document.getElementById(`id-edit-artist.${nodeId}.name`);
         if (!entityArea || !input) {  // no wikidata data
@@ -141,6 +141,15 @@ class WikiDataHelpers {
         $('#newFields').append(
             $('<dd>', {'text': `Added "${area}":`}).css('color', 'green')
         )
+    }
+
+    fillArea(entity, field, areaField, lang) {
+        const area = 'Q' + this.fieldValue(entity, field)['numeric-id'];
+        $.ajax({
+            url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
+                 + area + '&format=json',
+            dataType: 'jsonp'
+        }).done(data => this._fillArea(data, area, areaField, lang));
     }
 
     fillDate(entity, entityType, fieldName, nodeId) {
@@ -405,12 +414,7 @@ function _fillFormFromWikidata(entity, entityType) {
     if (libWD.existField(entity, 'citizen')
             || libWD.existField(entity, 'country')) {
         field = libWD.existField(entity, 'citizen') ? 'citizen' : 'country';
-        var area = 'Q' + libWD.fieldValue(entity, field)['numeric-id'];
-        $.ajax({
-            url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
-                 + area + '&format=json',
-            dataType: 'jsonp'
-        }).done(function(data) {libWD.fillArea(data, area, 'area', lang)});
+        libWD.fillArea(entity, field, 'area', lang);
     }
 
     // ISNI
@@ -430,14 +434,7 @@ function _fillFormFromWikidata(entity, entityType) {
             || libWD.existField(entity, 'formationLocation')) {
         field = libWD.existField(entity, 'birthPlace') ? 'birthPlace'
                                                        : 'formationLocation';
-        var birthArea = 'Q' + libWD.fieldValue(entity, field)['numeric-id'];
-        $.ajax({
-            url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
-                 + birthArea + '&format=json',
-            dataType: 'jsonp'
-        }).done(function(data) {
-            libWD.fillArea(data, birthArea, 'begin_area', lang)
-        });
+        libWD.fillArea(entity, field, 'begin_area', lang);
     }
 
     if (libWD.existField(entity, 'deathDate')
@@ -448,15 +445,7 @@ function _fillFormFromWikidata(entity, entityType) {
     }
 
     if (libWD.existField(entity, 'deathPlace')) {
-        var deathArea = 'Q' + libWD.fieldValue(entity,
-                                               'deathPlace')['numeric-id'];
-        $.ajax({
-            url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
-                 + deathArea + '&format=json',
-            dataType: 'jsonp'
-        }).done(function(data) {
-            libWD.fillArea(data, deathArea, 'end_area', lang)
-        });
+        libWD.fillArea(entity, 'deathPlace', 'end_area', lang);
     }
 
     let existing_domains = [];
