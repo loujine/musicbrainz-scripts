@@ -334,9 +334,48 @@ function _fillEntityName(value, entityType) {
 }
 
 
+function _fillEntityType(entity, entityType) {
+    let value;
+    const type = libWD.fieldValue(entity, 'type')['numeric-id'];
+    switch(type) {
+        case libWD.entities.person:
+            value = 1;
+            break;
+        case libWD.entities.stringQuartet:
+        case libWD.entities.orchestra:
+        case libWD.entities.band:
+        case libWD.entities.rockBand:
+            value = 2;
+            break;
+        default:
+            value = 0;
+            break;
+    }
+    setValue(`id-edit-${entityType}.type_id`, value);
+}
+
+
+function _fillEntityGender(entity) {
+    let value;
+    const gender = libWD.fieldValue(entity, 'gender')['numeric-id'];
+    switch(gender) {
+        case libWD.entities.male:
+            value = 1;
+            break;
+        case libWD.entities.female:
+            value = 2;
+            break;
+        default:
+            value = 3;
+            break;
+    }
+    setValue('id-edit-artist.gender_id', value);
+}
+
+
 function _fillFormFromWikidata(entity, entityType) {
-    var lang = libWD.language,
-        value, field, input;
+    let lang = libWD.language,
+        field, input;
     if (!(lang in entity.labels)) {
         lang = Object.keys(entity.labels)[0];
     }
@@ -353,38 +392,11 @@ function _fillFormFromWikidata(entity, entityType) {
 
     // Type and gender
     if (libWD.existField(entity, 'type')) {
-        var type = libWD.fieldValue(entity, 'type')['numeric-id'];
-        switch(type) {
-            case libWD.entities.person:
-                value = 1;
-                break;
-            case libWD.entities.stringQuartet:
-            case libWD.entities.orchestra:
-            case libWD.entities.band:
-            case libWD.entities.rockBand:
-                value = 2;
-                break;
-            default:
-                value = 0;
-                break;
-        }
-        setValue(`id-edit-${entityType}.type_id`, value);
+        _fillEntityType(entity, entityType);
     }
 
     if (libWD.existField(entity, 'gender')) {
-        var gender = libWD.fieldValue(entity, 'gender')['numeric-id'];
-        switch(gender) {
-            case libWD.entities.male:
-                value = 1;
-                break;
-            case libWD.entities.female:
-                value = 2;
-                break;
-            default:
-                value = 3;
-                break;
-        }
-        setValue('id-edit-artist.gender_id', value);
+        _fillEntityGender(entity);
     }
 
     // Area
