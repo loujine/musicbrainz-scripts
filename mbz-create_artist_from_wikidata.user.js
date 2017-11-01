@@ -191,7 +191,7 @@ class WikiDataHelpers {
             url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
                  + wikiId + '&format=json',
             dataType: 'jsonp'
-        }).done(function (data) {
+        }).done(data => {
             console.info('wikidata returned: ', data);
             if (data.error) {
                 // eslint-disable-next-line no-alert
@@ -224,7 +224,7 @@ const FIELD_NAMES = {
     'area': 'Area',
 };
 
-_.forOwn(FIELD_NAMES, function (v, k) {
+_.forOwn(FIELD_NAMES, (v, k) => {
     if (k.includes('artist')) {
         FIELD_NAMES[k.replace('artist', 'place')] = v;
         FIELD_NAMES[k.replace('artist', 'work')] = v;
@@ -233,7 +233,7 @@ _.forOwn(FIELD_NAMES, function (v, k) {
 
 
 function setValue(nodeId, value, callback) {
-    callback = callback || function () {};
+    callback = callback || (() => {});
     const node = document.getElementById(nodeId);
     if (!node) {
         return false;
@@ -302,7 +302,7 @@ function fillExternalLinks(url) {
         existing_domains.push(input.value.split('/')[2]);
     }
     existing_domains = existing_domains.slice(0, existing_domains.length - 1);
-    if (!_.includes(existing_domains, domain)) {
+    if (!existing_domains.includes(domain)) {
         const input = inputs[inputs.length - 1];
         input.value = url;
         input.dispatchEvent(new Event('input', {'bubbles': true}));
@@ -336,7 +336,7 @@ function _fillEntityName(value, entityType) {
 
 function _fillFormFromWikidata(entity, entityType) {
     var lang = libWD.language,
-        value, field, fields, input;
+        value, field, input;
     if (!(lang in entity.labels)) {
         lang = Object.keys(entity.labels)[0];
     }
@@ -447,10 +447,10 @@ function _fillFormFromWikidata(entity, entityType) {
         });
     }
 
-    var existing_domains = [];
-    fields = document.getElementById("external-links-editor")
-                     .querySelectorAll('input');
-    for (var link of fields) {
+    let existing_domains = [];
+    const fields = document.getElementById("external-links-editor")
+                           .querySelectorAll('input');
+    for (const link of fields) {
         existing_domains.push(link.value.split('/')[2]);
     }
     existing_domains = existing_domains.slice(0, existing_domains.length - 1);
@@ -476,7 +476,7 @@ function _fillFormFromWikidata(entity, entityType) {
     for (const role of ['student', 'teacher']) {
         if (libWD.existField(entity, role)) {
             libWD.request(libWD.fieldValue(entity, role).id,
-                          function (data) {
+                          data => {
                 const name = data.labels[lang].value;
                 $('#newFields').append(
                     $('<dt>', {'text': `${role} suggestion:`})
@@ -490,7 +490,7 @@ function _fillFormFromWikidata(entity, entityType) {
 
 function fillFormFromWikidata(wikiId) {
     const entityType = document.URL.split('/')[3];
-    libWD.request(wikiId, function (entity) {
+    libWD.request(wikiId, entity => {
         if (document.URL.split('/')[3] == 'create' && (
             (libWD.existField(entity, 'mbidArtist')
                 || libWD.existField(entity, 'mbidPlace')))) {
@@ -515,12 +515,12 @@ function fillFormFromVIAF(viafURL) {
     const entityType = document.URL.split('/')[3];
     fetch(viafURL).then(resp => {
         fillExternalLinks(viafURL);
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(resp, 'text/html');
+        const parser = new DOMParser(),
+            doc = parser.parseFromString(resp, 'text/html');
         setValue(
             'id-edit-artist.name',
             doc.getElementsByTagName('h2')[1].textContent,
-            function cb() {
+            () => {
                 $(document.getElementById(
                     'id-edit-artist.name')).trigger('change');
                 document.getElementsByClassName(
