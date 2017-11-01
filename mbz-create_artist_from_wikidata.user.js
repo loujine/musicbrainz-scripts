@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.21
+// @version      2017.10.31
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -88,7 +88,7 @@ const WIKIDATA = {
         idInstagram: 'https://www.instagram.com/',
         idOL: 'https://openlibrary.org/works/',
         idSpotify: 'https://open.spotify.com/artist/',
-        idTwitter: 'https://www.twitter.com/',
+        idTwitter: 'https://twitter.com/',
         idVIAF: 'https://viaf.org/viaf/'
     }
 };
