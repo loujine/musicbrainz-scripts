@@ -33,65 +33,180 @@
 // ==/UserScript==
 
 // https://www.wikidata.org/wiki/Wikidata:List_of_properties/Person
-const WIKIDATA = {
-    language: 'en',
-    entities: {
-        person: 5,
-        stringQuartet: 207338,
-        orchestra: 42998,
-        band: 215380,
-        rockBand: 5741069,
-        male: 6581097,
-        female: 6581072
-    },
-    fields: {
-        type: 'P31',
-        gender: 'P21',
-        citizen: 'P27',
-        coordinates: 'P625',
-        country: 'P495',
-        isni: 'P213',
-        birthDate: 'P569',
-        inceptionDate: 'P571',
-        birthPlace: 'P19',
-        formationLocation: 'P740',
-        deathDate: 'P570',
-        dissolutionDate: 'P576',
-        deathPlace: 'P20',
-        mbidArtist: 'P434',
-        mbidArea: 'P982',
-        mbidPlace: 'P1004',
-        members: 'P527',
-        student: 'P802',
-        teacher: 'P1066',
-        idAllMusic: 'P1728',
-        idBNF: 'P268',
-        idDiscogs: 'P1953',
-        idFacebook: 'P2013',
-        idGND: 'P227',
-        idIMDB: 'P345',
-        idIMSLP: 'P839',
-        idInstagram: 'P2003',
-        idOL: 'P648',
-        idSpotify: 'P1902',
-        idTwitter: 'P2002',
-        idVIAF: 'P214'
-    },
-    urls: {
-        idAllMusic: 'http://www.allmusic.com/artist/',
-        idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
-        idDiscogs: 'https://www.discogs.com/artist/',
-        idFacebook: 'https://www.facebook.com/',
-        idGND: 'https://d-nb.info/gnd/',
-        idIMDB: 'http://www.imdb.com/name/',
-        idIMSLP: 'https://imslp.org/wiki/',
-        idInstagram: 'https://www.instagram.com/',
-        idOL: 'https://openlibrary.org/works/',
-        idSpotify: 'https://open.spotify.com/artist/',
-        idTwitter: 'https://twitter.com/',
-        idVIAF: 'https://viaf.org/viaf/'
+class WikiDataHelpers {
+
+    constructor() {
+        this.language = 'en';
+        this.entities = {
+            person: 5,
+            stringQuartet: 207338,
+            orchestra: 42998,
+            band: 215380,
+            rockBand: 5741069,
+            male: 6581097,
+            female: 6581072
+        };
+        this.fields = {
+            type: 'P31',
+            gender: 'P21',
+            citizen: 'P27',
+            coordinates: 'P625',
+            country: 'P495',
+            isni: 'P213',
+            birthDate: 'P569',
+            inceptionDate: 'P571',
+            birthPlace: 'P19',
+            formationLocation: 'P740',
+            deathDate: 'P570',
+            dissolutionDate: 'P576',
+            deathPlace: 'P20',
+            mbidArtist: 'P434',
+            mbidArea: 'P982',
+            mbidPlace: 'P1004',
+            members: 'P527',
+            student: 'P802',
+            teacher: 'P1066',
+            idAllMusic: 'P1728',
+            idBNF: 'P268',
+            idDiscogs: 'P1953',
+            idFacebook: 'P2013',
+            idGND: 'P227',
+            idIMDB: 'P345',
+            idIMSLP: 'P839',
+            idInstagram: 'P2003',
+            idOL: 'P648',
+            idSpotify: 'P1902',
+            idTwitter: 'P2002',
+            idVIAF: 'P214'
+        };
+        this.urls = {
+            idAllMusic: 'http://www.allmusic.com/artist/',
+            idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
+            idDiscogs: 'https://www.discogs.com/artist/',
+            idFacebook: 'https://www.facebook.com/',
+            idGND: 'https://d-nb.info/gnd/',
+            idIMDB: 'http://www.imdb.com/name/',
+            idIMSLP: 'https://imslp.org/wiki/',
+            idInstagram: 'https://www.instagram.com/',
+            idOL: 'https://openlibrary.org/works/',
+            idSpotify: 'https://open.spotify.com/artist/',
+            idTwitter: 'https://twitter.com/',
+            idVIAF: 'https://viaf.org/viaf/'
+        };
     }
-};
+
+    existField(entity, field) {
+        return entity.claims[this.fields[field]] !== undefined;
+    }
+
+    fieldValue(entity, field) {
+        return entity.claims[this.fields[field]][0]
+                     .mainsnak.datavalue.value;
+    }
+
+    /*
+     * data: wikidata json for the area
+     * place: wikidata code ('Q90', etc.)
+     */
+    fillArea(data, place, nodeId, lang) {
+        const entityArea = data.entities[place],
+            input = document.getElementById(`id-edit-artist.${nodeId}.name`);
+        if (!entityArea || !input) {  // no wikidata data
+            return;
+        }
+        const area = entityArea.labels[lang].value;
+        $('#newFields').append(
+            $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
+        )
+        if (input.value === area) {
+            $('#newFields').append(
+                $('<dd>', {'text': `Kept "${input.value}":`})
+            )
+            return;
+        }
+        if (input.value !== '' && input.value !== area) {
+            $('#newFields').append(
+                $('<dd>',
+                  {'text': `Different value "${area}":`}).css('color', 'red')
+            )
+            return;
+        }
+        if (this.existField(entityArea, 'mbidArea')) {
+            input.value = this.fieldValue(entityArea, 'mbidArea');
+            $(input).trigger('keydown');
+            $('#area-bubble').remove();
+        } else {
+            input.value = area;
+        }
+        $('#newFields').append(
+            $('<dd>', {'text': `Added "${area}":`}).css('color', 'green')
+        )
+    }
+
+    fillDate(entity, entityType, fieldName, nodeId) {
+        const field = this.fieldValue(entity, fieldName),
+            prefix = `id-edit-${entityType}.period.${nodeId}`;
+        // sometimes wikidata has valid data but not 'translatable'
+        // to the mbz schema
+        // cf https://www.mediawiki.org/wiki/Wikibase/DataModel#Dates_and_times
+        if (field.precision < 9 || field.before > 0 || field.after > 0) {
+            return;
+        }
+        // sometimes wikidata has invalid data for months/days
+        let date = new Date(field.time.slice(1)); // remove leading "+"
+        if (isNaN(date.getTime())) { // invalid date
+            // try to find valid fields
+            date = new RegExp('(.*)-(.*)-(.*)T').exec(field.time);
+            if (parseInt(date[1]) !== 0) {
+                setValue(prefix + '.year', parseInt(date[1]));
+                if (parseInt(date[2]) > 0) {
+                    setValue(prefix + '.month', parseInt(date[2]));
+                    if (parseInt(date[3]) > 0) {
+                        setValue(prefix + '.day', parseInt(date[3]));
+                    }
+                }
+            }
+            return;
+        }
+        setValue(prefix + '.year', date.getFullYear());
+        const yearInput = document.getElementById(prefix + '.year');
+        if (!yearInput) {
+            return;
+        }
+        if (yearInput.classList.contains('jesus2099')) {
+                // jesus2099's EASY_DATE script is shifting the input node
+                // containing the year but not its id
+                yearInput.nextSibling.value = date.getUTCFullYear();
+        }
+        if (field.precision > 9) {
+            setValue(prefix + '.month', date.getUTCMonth() + 1);
+            if (field.precision > 10) {
+                setValue(prefix + '.day', date.getUTCDate());
+            }
+        }
+    }
+
+    request(wikiId, callback) {
+        $.ajax({
+            url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
+                 + wikiId + '&format=json',
+            dataType: 'jsonp'
+        }).done(function (data) {
+            console.info('wikidata returned: ', data);
+            if (data.error) {
+                // eslint-disable-next-line no-alert
+                alert('wikidata returned an error:\n' +
+                      'code: ' + data.error.code + '\n' +
+                      'wikidata ID: "' + data.error.id + '"\n' +
+                      'info: ' + data.error.info);
+                return;
+            }
+            callback(data.entities[wikiId]);
+        });
+    }
+}
+
+const libWD = new WikiDataHelpers();
 
 
 const FIELD_NAMES = {
@@ -200,123 +315,6 @@ function fillExternalLinks(url) {
 }
 
 
-const libWD = function () {
-    var self = {};
-
-    self.existField = function (entity, field) {
-        return entity.claims[WIKIDATA.fields[field]] !== undefined;
-    };
-
-    self.fieldValue = function (entity, field) {
-        return entity.claims[WIKIDATA.fields[field]][0]
-                     .mainsnak.datavalue.value;
-    };
-
-    /*
-     * data: wikidata json for the area
-     * place: wikidata code ('Q90', etc.)
-     */
-    self.fillArea = function (data, place, nodeId, lang) {
-        var entityArea = data.entities[place],
-            input = document.getElementById(`id-edit-artist.${nodeId}.name`);
-        if (!entityArea || !input) {  // no wikidata data
-            return;
-        }
-        var area = entityArea.labels[lang].value;
-        $('#newFields').append(
-            $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
-        )
-        if (input.value === area) {
-            $('#newFields').append(
-                $('<dd>', {'text': `Kept "${input.value}":`})
-            )
-            return;
-        }
-        if (input.value !== '' && input.value !== area) {
-            $('#newFields').append(
-                $('<dd>',
-                  {'text': `Different value "${area}":`}).css('color', 'red')
-            )
-            return;
-        }
-        if (self.existField(entityArea, 'mbidArea')) {
-            input.value = self.fieldValue(entityArea, 'mbidArea');
-            $(input).trigger('keydown');
-            $('#area-bubble').remove();
-        } else {
-            input.value = area;
-        }
-        $('#newFields').append(
-            $('<dd>', {'text': `Added "${area}":`}).css('color', 'green')
-        )
-    };
-
-    self.fillDate = function (entity, entityType, fieldName, nodeId) {
-        var field = self.fieldValue(entity, fieldName);
-        var prefix = `id-edit-${entityType}.period.${nodeId}`;
-        // sometimes wikidata has valid data but not 'translatable'
-        // to the mbz schema
-        // cf https://www.mediawiki.org/wiki/Wikibase/DataModel#Dates_and_times
-        if (field.precision < 9 || field.before > 0 || field.after > 0) {
-            return;
-        }
-        // sometimes wikidata has invalid data for months/days
-        var date = new Date(field.time.slice(1)); // remove leading "+"
-        if (isNaN(date.getTime())) { // invalid date
-            // try to find valid fields
-            date = new RegExp('(.*)-(.*)-(.*)T').exec(field.time);
-            if (parseInt(date[1]) !== 0) {
-                setValue(prefix + '.year', parseInt(date[1]));
-                if (parseInt(date[2]) > 0) {
-                    setValue(prefix + '.month', parseInt(date[2]));
-                    if (parseInt(date[3]) > 0) {
-                        setValue(prefix + '.day', parseInt(date[3]));
-                    }
-                }
-            }
-            return;
-        }
-        setValue(prefix + '.year', date.getFullYear());
-        var yearInput = document.getElementById(prefix + '.year');
-        if (!yearInput) {
-            return;
-        }
-        if (yearInput.classList.contains('jesus2099')) {
-                // jesus2099's EASY_DATE script is shifting the input node
-                // containing the year but not its id
-                yearInput.nextSibling.value = date.getUTCFullYear();
-        }
-        if (field.precision > 9) {
-            setValue(prefix + '.month', date.getUTCMonth() + 1);
-            if (field.precision > 10) {
-                setValue(prefix + '.day', date.getUTCDate());
-            }
-        }
-    };
-
-    self.request = function(wikiId, callback) {
-        $.ajax({
-            url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
-                 + wikiId + '&format=json',
-            dataType: 'jsonp'
-        }).done(function (data) {
-            console.info('wikidata returned: ', data);
-            if (data.error) {
-                // eslint-disable-next-line no-alert
-                alert('wikidata returned an error:\n' +
-                      'code: ' + data.error.code + '\n' +
-                      'wikidata ID: "' + data.error.id + '"\n' +
-                      'info: ' + data.error.info);
-                return;
-            }
-            callback(data.entities[wikiId]);
-        });
-    };
-
-    return self;
-}();
-
-
 function _fillEntityName(value, entityType) {
     function callback() {
         if (helper.isArtistURL) {
@@ -337,7 +335,7 @@ function _fillEntityName(value, entityType) {
 
 
 function _fillFormFromWikidata(entity, entityType) {
-    var lang = WIKIDATA.language,
+    var lang = libWD.language,
         value, field, fields, input;
     if (!(lang in entity.labels)) {
         lang = Object.keys(entity.labels)[0];
@@ -357,13 +355,13 @@ function _fillFormFromWikidata(entity, entityType) {
     if (libWD.existField(entity, 'type')) {
         var type = libWD.fieldValue(entity, 'type')['numeric-id'];
         switch(type) {
-            case WIKIDATA.entities.person:
+            case libWD.entities.person:
                 value = 1;
                 break;
-            case WIKIDATA.entities.stringQuartet:
-            case WIKIDATA.entities.orchestra:
-            case WIKIDATA.entities.band:
-            case WIKIDATA.entities.rockBand:
+            case libWD.entities.stringQuartet:
+            case libWD.entities.orchestra:
+            case libWD.entities.band:
+            case libWD.entities.rockBand:
                 value = 2;
                 break;
             default:
@@ -376,10 +374,10 @@ function _fillFormFromWikidata(entity, entityType) {
     if (libWD.existField(entity, 'gender')) {
         var gender = libWD.fieldValue(entity, 'gender')['numeric-id'];
         switch(gender) {
-            case WIKIDATA.entities.male:
+            case libWD.entities.male:
                 value = 1;
                 break;
-            case WIKIDATA.entities.female:
+            case libWD.entities.female:
                 value = 2;
                 break;
             default:
@@ -457,14 +455,14 @@ function _fillFormFromWikidata(entity, entityType) {
     }
     existing_domains = existing_domains.slice(0, existing_domains.length - 1);
 
-    Object.keys(WIKIDATA.urls).forEach(function(externalLink) {
-        var domain = WIKIDATA.urls[externalLink].split('/')[2];
+    Object.keys(libWD.urls).forEach(function(externalLink) {
+        var domain = libWD.urls[externalLink].split('/')[2];
         if (libWD.existField(entity, externalLink) &&
             !_.includes(existing_domains, domain)) {
             var inputs = document.getElementById('external-links-editor')
                          .getElementsByTagName('input');
             input = inputs[inputs.length - 1];
-            input.value = WIKIDATA.urls[externalLink]
+            input.value = libWD.urls[externalLink]
                           + libWD.fieldValue(entity, externalLink);
             input.dispatchEvent(new Event('input', {'bubbles': true}));
             $('#newFields').append(
