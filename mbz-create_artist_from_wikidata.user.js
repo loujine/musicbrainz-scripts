@@ -1,10 +1,10 @@
-/* global $ _ helper relEditor sidebar GM_info requests GM_xmlhttpRequest */
+/* global $ _ helper relEditor sidebar GM_info GM_xmlhttpRequest */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.31
+// @version      2017.11.1
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -117,31 +117,30 @@ _.forOwn(FIELD_NAMES, function (v, k) {
 });
 
 
-function setValue (nodeId, value, callback) {
+function setValue(nodeId, value, callback) {
     callback = callback || function () {};
-    var node = document.getElementById(nodeId);
+    const node = document.getElementById(nodeId);
     if (!node) {
-        return;
+        return false;
     }
     $('#newFields').append(
         $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
     )
-    var printableValue = node.options ? node.options[value].text : value;
+    const printableValue = node.options ? node.options[value].text : value;
     if (!node.value.trim()) {  // field was empty
         node.value = value;
         $('#newFields').append(
             $('<dd>',
               {'text': `Added "${printableValue}"`}).css('color', 'green')
         );
-        return callback();
+        return callback(); // eslint-disable-line consistent-return
     }
     if (node.value != value) {  // != to allow autocasting to int
         $('#newFields').append(
-            $('<dd>',
-              {'text': `Different value "${printableValue}" suggested`}
+            $('<dd>', {'text': `Different value "${printableValue}" suggested`}
             ).css('color', 'red')
         );
-        return callback();
+        return callback(); // eslint-disable-line consistent-return
     }
     // identical value, not replaced
     $('#newFields').append(
@@ -153,19 +152,18 @@ function setValue (nodeId, value, callback) {
 
 function fillISNI(isni) {
     const existing_isni = [],
-          isniBlock = document.getElementsByClassName(
+        isniBlock = document.getElementsByClassName(
             'edit-artist.isni_codes-template')[0].parentElement,
         fields = isniBlock.getElementsByTagName('input');
     for (const input of fields) {
         existing_isni.push(input.value.split(" ").join(""));
     }
     existing_isni.splice(0, 1); // skip template
-    if (_.contains(existing_isni, isni.split(" ").join(""))) {
+    if (existing_isni.includes(isni.split(" ").join(""))) {
         return;
     }
     if (existing_isni.length === 1 && existing_isni[0] === "") {
-        document.getElementsByName('edit-artist.isni_codes.0')[0]
-                .value = isni;
+        document.getElementsByName('edit-artist.isni_codes.0')[0].value = isni;
     } else {
         isniBlock.getElementsByClassName('form-row-add')[0]
                  .getElementsByTagName('button')[0].click();
@@ -181,22 +179,18 @@ function fillISNI(isni) {
 
 
 function fillExternalLinks(url) {
-    function _addExternalLink(url) {
-        const inputs = document.getElementById('external-links-editor')
-                               .getElementsByTagName('input'),
-            input = inputs[inputs.length - 1];
-        input.value = url;
-        input.dispatchEvent(new Event('input', {'bubbles': true}));
-    }
+    const inputs = document.getElementById('external-links-editor')
+                           .getElementsByTagName('input');
+    const domain = url.split('/')[2];
     let existing_domains = [];
-    for (const input of document.getElementById("external-links-editor")
-                                .querySelectorAll('input')) {
+    for (const input of inputs) {
         existing_domains.push(input.value.split('/')[2]);
     }
     existing_domains = existing_domains.slice(0, existing_domains.length - 1);
-    const domain = url.split('/')[2];
     if (!_.includes(existing_domains, domain)) {
-        _addExternalLink(url);
+        const input = inputs[inputs.length - 1];
+        input.value = url;
+        input.dispatchEvent(new Event('input', {'bubbles': true}));
         $('#newFields').append(
             $('<dt>', {'text': 'New external link added:'})
         ).append(
@@ -324,24 +318,21 @@ const libWD = function () {
 
 
 function _fillEntityName(value, entityType) {
-    setValue(
-        `id-edit-${entityType}.name`,
-        value,
-        function cb() {
-            if (helper.isArtistURL) {
-                $(document.getElementById('id-edit-artist.name')
-                    ).trigger('change');
-                if (!document.getElementById('id-edit-artist.sort_name')
-                             .value.length) {
-                    $('#newFields').append(
-                        $('<p>',
-                          {'text': 'You must set the sort name to '
-                                   + 'save the edit'}).css('color', 'red')
-                    );
-                }
+    function callback() {
+        if (helper.isArtistURL) {
+            $(document.getElementById('id-edit-artist.name')
+                ).trigger('change');
+            if (!document.getElementById('id-edit-artist.sort_name')
+                         .value.length) {
+                $('#newFields').append(
+                    $('<p>',
+                      {'text': 'You must set the sort name to '
+                               + 'save the edit'}).css('color', 'red')
+                );
             }
         }
-    );
+    }
+    setValue(`id-edit-${entityType}.name`, value, callback);
 }
 
 
