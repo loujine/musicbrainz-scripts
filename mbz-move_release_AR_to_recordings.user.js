@@ -1,10 +1,10 @@
-/* global $ _ MB requests server relEditor */
+/* global $ _ MB server relEditor GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Move performer AR on release to recordings AR
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.16
+// @version      2017.11.1
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -20,39 +20,35 @@
 // ==/UserScript==
 
 function fetchLinkIds() {
-    var ids = [MB.typeInfo['artist-release'][0].id];
-    MB.typeInfo['artist-release'][0].children.forEach(function (rel) {
+    const ids = [MB.typeInfo['artist-release'][0].id];
+    for (const rel of MB.typeInfo['artist-release'][0].children) {
         ids.push(rel.id);
         if (rel.children && rel.children.length) {
-            rel.children.forEach(function (subrel) {
+            for (const subrel of rel.children) {
                 ids.push(subrel.id);
-            });
+            }
         }
-    });
+    }
     return ids;
 }
 
 function moveAR(ids) {
-    var vm = MB.releaseRelationshipEditor;
-    vm.source.relationships().forEach(function (rel, idx) {
+    const vm = MB.releaseRelationshipEditor;
+    vm.source.relationships().forEach((rel, idx) => {
         if (rel.entityTypes === "artist-release"
-                && _.contains(ids, rel.linkTypeID())) {
-            var performer = rel.entities()[0];
-            var releaseLinkType = rel.linkTypeID();
-            var releaseLinkAttributes = rel.attributes();
-
-            var recordings = MB.relationshipEditor.UI.checkedRecordings();
-            recordings.forEach(function (recording) {
-                if (_.includes(_.filter(
-                    recording.relationships(), function (rel) {
-                        return rel.entityTypes === "artist-recording"
-                    }
-                ).map(function (rel) {
-                    return rel.entities()[0].id
-                }), performer.id)) {
+                && ids.includes(rel.linkTypeID())) {
+            const performer = rel.entities()[0],
+                releaseLinkType = rel.linkTypeID(),
+                releaseLinkAttributes = rel.attributes(),
+                recordings = MB.relationshipEditor.UI.checkedRecordings();
+            for (const recording of recordings) {
+                if (_.filter(
+                    recording.relationships(),
+                    rel => rel.entityTypes === "artist-recording"
+                ).map(rel => rel.entities()[0].id).includes(performer.id)) {
                     return;
                 }
-                var dialog = new MB.relationshipEditor.UI.AddDialog({
+                const dialog = new MB.relationshipEditor.UI.AddDialog({
                     source: recording,
                     target: performer,
                     viewModel: vm
@@ -64,7 +60,7 @@ function moveAR(ids) {
                 if (releaseLinkAttributes.length) {
                     dialog.relationship().setAttributes(releaseLinkAttributes);
                 }
-            });
+            }
             if (recordings.length) {
                 $('#release-rels .remove-button')[idx].click();
             }
@@ -89,10 +85,13 @@ function moveAR(ids) {
 
 
 $(document).ready(function() {
-    var ids = fetchLinkIds();
-    $('#moveAR').click(function() {
+    const ids = fetchLinkIds();
+    $('#moveAR').click(() => {
         moveAR(ids);
-        relEditor.editNote(GM_info.script, 'Move performers in release AR to individual recordings');
+        relEditor.editNote(
+            GM_info.script,
+            'Move performers in release AR to individual recordings'
+        );
     });
     return false;
 });
