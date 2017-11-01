@@ -378,27 +378,26 @@ var requests = function () {
 }();
 
 
-var edits = function () {
-    var self = {};
+class Edits {
 
-    self.urlFromMbid = function (entityType, mbid) {
-        return '/' + entityType + '/' + encodeURIComponent(mbid) + '/edit';
-    };
+    urlFromMbid(entityType, mbid) {
+        return `/${entityType}/${encodeURIComponent(mbid)}/edit`;
+    }
 
     /* in order to determine the edit parameters required by POST
      * we first load the /edit page and parse the JSON data
      * in the sourceData block
      */
-    self.getEditParams = function (url, callback) {
-        requests.GET(url, function (resp) {
-            var data = new RegExp('sourceData: (.*),\n').exec(resp)[1];
+    getEditParams(url, callback) {
+        requests.GET(url, resp => {
+            const data = new RegExp(/sourceData: (.*),\n/).exec(resp)[1];
             callback(JSON.parse(data));
         });
-    };
+    }
 
-    self.getWorkEditParams = function (url, callback) {
-        requests.GET(url, function (resp) {
-            var data = JSON.parse(resp);
+    getWorkEditParams(url, callback) {
+        requests.GET(url, resp => {
+            const data = JSON.parse(resp);
             callback({
                 name: data.title,
                 type_id: server.workType[data.type],
@@ -407,40 +406,40 @@ var edits = function () {
                 attributes: data.attributes
             });
         });
-    };
+    }
 
-    self.encodeName = function (name) {
+    encodeName(name) {
         return encodeURIComponent(name).replace(/%20/g, '+');
-    };
+    }
 
-    self.prepareEdit = function (editData) {
-        var data = {
+    prepareEdit(editData) {
+        const data = {
             name: self.encodeName(editData.name),
             type_id: editData.type_id || ' ',
         };
-        editData.languages.forEach(function (lang, idx) {
+        editData.languages.forEach((lang, idx) => {
             data['languages.' + idx] = server.language[lang];
         });
         if (editData.iswcs === undefined || !editData.iswcs.length) {
             data['iswcs.0'] = null;
         } else {
-            editData.iswcs.forEach(function (iswc, idx) {
+            editData.iswcs.forEach((iswc, idx) => {
                 data['iswcs.' + idx] = iswc;
             });
         }
         // attributes (key)
         if (editData.attributes) {
-            editData.attributes.forEach(function (attr, idx) {
+            editData.attributes.forEach((attr, idx) => {
                 data['attributes.' + idx + '.type_id'] = attr.type_id;
                 data['attributes.' + idx + '.value'] = attr.value;
             });
         }
         return data;
-    };
+    }
 
-    self.formatEdit = function (editType, info) {
-        var data = [];
-        _.forOwn(info, function (value, key) {
+    formatEdit(editType, info) {
+        const data = [];
+        _.forOwn(info, (value, key) => {
             if (value === null) {
                 data.push(editType + '.' + key);
             } else {
@@ -448,10 +447,10 @@ var edits = function () {
             }
         })
         return data.join('&');
-    };
+    }
+}
 
-    return self;
-}();
+const edits = new Edits();
 
 
 class Helper {
