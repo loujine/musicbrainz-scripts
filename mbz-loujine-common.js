@@ -270,52 +270,57 @@ var server = {
     'timeout': 1000
 };
 
-var aliases = {
-    'artistType': [
+const aliases = {
+    artistType: [
         '<select>',
         '<option selected> </option>',
-        _.map(server.aliasArtistType, function (code, type) {
-            return '<option value="' + code + '">' + type + '</option>';
-        }).join(''),
+        _.map(
+            server.aliasArtistType,
+            (code, type) => `<option value="${code}">${type}</option>`
+        ).join(''),
         '</select>'
     ].join(''),
 
-    'type': [
+    type: [
         '<select>',
         '<option selected> </option>',
-        _.map(server.aliasType, function (code, type) {
-            return '<option value="' + code + '">' + type + '</option>';
-        }).join(''),
+        _.map(
+            server.aliasType,
+            (code, type) => `<option value="${code}">${type}</option>`
+        ).join(''),
         '</select>'
     ].join(''),
 
-    'locale': [
+    locale: [
         '<select>',
         '<option> </option>',
-        _.map(server.locale, function (code, type) {
-            return '<option value="' + code + '">' + type + '</option>';
-        }).join(''),
+        _.map(
+            server.locale,
+            (code, type) => `<option value="${code}">${type}</option>`
+        ).join(''),
         '</select>'
     ].join(''),
 };
 
-var works = {
-    'type': [
+const works = {
+    type: [
         '<select class="setwork">',
         '<option selected> </option>',
-        _.map(server.workType, function (code, type) {
-            return '<option value="' + code + '">' + type + '</option>';
-        }).join(''),
+        _.map(
+            server.workType,
+            (code, type) => `<option value="${code}">${type}</option>`
+        ).join(''),
         '</select>'
     ].join(''),
 
-    'lang': [
+    lang: [
         '<select class="setlang">',
         '<option> </option>',
         '<optgroup label="Frequently used">',
-        _.map(server.language, function (code, type) {
-            return '<option class="language" value="' + code + '">' + type + '</option>';
-        }).join(''),
+        _.map(
+            server.language,
+            (code, type) => `<option class="language" value="${code}">${type}</option>`
+        ).join(''),
         '</optgroup>',
         '<optgroup label="Other">',
         '<option class="language" value="238">Latin</option>',
@@ -323,12 +328,13 @@ var works = {
         '</select>'
     ].join(''),
 
-    'key': [
+    key: [
         '<select class="setkey">',
         '<option selected> </option>',
-        _.map(server.workKeyAttr, function (code, type) {
-            return '<option value="' + code + '">' + type + '</option>';
-        }).join(''),
+        _.map(
+            server.workKeyAttr,
+            (code, type) => `<option value="${code}">${type}</option>`
+        ).join(''),
         '</select>'
     ].join(''),
 };
