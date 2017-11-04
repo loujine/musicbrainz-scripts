@@ -107,8 +107,8 @@ function parseEditData(editData) {
         var linkType = rel.linkTypeID;
         var filterPending = document.getElementById('pending').checked ?
             !rel.editsPending : true;
-        if (_.includes(server.performingLinkTypes(), linkType) &&
-                !_.includes(uniqueIds, rel.target.id) && filterPending &&
+        if (server.performingLinkTypes().includes(linkType) &&
+                uniqueIds.includes(rel.target.id) && filterPending &&
                 rel.target.name !== '[unknown]') {
             uniqueIds.push(rel.target.id); // filter duplicates
             performers.push({'name': rel.target.name,

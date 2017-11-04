@@ -1,4 +1,4 @@
-/* global $ _ MB server relEditor GM_info */
+/* global $ MB server relEditor GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Move performer AR on release to recordings AR
@@ -42,10 +42,11 @@ function moveAR(ids) {
                 releaseLinkAttributes = rel.attributes(),
                 recordings = MB.relationshipEditor.UI.checkedRecordings();
             for (const recording of recordings) {
-                if (_.filter(
-                    recording.relationships(),
+                if (recording.relationships().filter(
                     rel => rel.entityTypes === "artist-recording"
-                ).map(rel => rel.entities()[0].id).includes(performer.id)) {
+                ).map(
+                    rel => rel.entities()[0].id
+                ).includes(performer.id)) {
                     return;
                 }
                 const dialog = new MB.relationshipEditor.UI.AddDialog({

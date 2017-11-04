@@ -67,15 +67,15 @@ function showAcoustids() {
         var ids = {};
         for (var node of nodes) {
             var acid = node.getAttribute('data-acid');
-            if (!_.includes(Object.keys(ids), acid)) {
+            if (!Object.keys(ids).includes(acid)) {
                 ids[acid] = [];
             }
             ids[acid].push(node.getAttribute('data-recid'));
         }
-        var duplicate_ids = _.filter(Object.keys(ids), function (acid) {
+        var duplicate_ids = Object.keys(ids).filter(
             // true if distinct recordings use the same acoustID
-            return _.uniq(ids[acid]).length > 1
-        });
+            acid => _.uniq(ids[acid]).length > 1
+        );
         duplicate_ids.forEach(function (acid) {
             $('#acidForMerge').append(
                 '<option value="' + acid + '">' + acid.slice(0, 6) +
@@ -86,7 +86,7 @@ function showAcoustids() {
             return acid.slice(0, 6);
         });
         $(nodes).each(function (idx, node) {
-            if (_.includes(duplicate_ids, node.textContent)) {
+            if (duplicate_ids.includes(node.textContent)) {
                 $(node).css('background-color', '#' + node.textContent);
             }
         });

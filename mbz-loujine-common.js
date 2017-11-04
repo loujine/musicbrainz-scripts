@@ -513,7 +513,7 @@ class Helper {
 
     sortSubworks(work) {
         let rels = work.relationships;
-        rels = _.filter(rels, rel => {
+        rels = rels.filter(rel => {
             (rel.linkTypeID === server.workLinkType.subwork
              && rel.direction !== 'backward')
         });

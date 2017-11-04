@@ -41,8 +41,8 @@ function referenceDate(relations) {
     for (const unit of ['day', 'month', 'year']) {
         for (const [idx, rel] of relations.entries()) {
             if (rel.end_date[unit]() > 0
-                && _.includes(_.values(server.recordingLinkType),
-                              parseInt(rel.linkTypeID()))) {
+                && _.values(server.recordingLinkType).includes(
+                    parseInt(rel.linkTypeID()))) {
                 return idx;
             }
         }
@@ -58,7 +58,7 @@ function propagateDates() {
         if (idx !== -1) {
             relations.forEach(function(rel) {
                 var linkType = parseInt(rel.linkTypeID());
-                if (_.includes(_.values(server.recordingLinkType), linkType)) {
+                if (_.values(server.recordingLinkType).includes(linkType)) {
                     copyDate(relations[idx], rel);
                 }
             });

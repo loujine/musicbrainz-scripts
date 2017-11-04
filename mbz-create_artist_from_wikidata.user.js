@@ -459,7 +459,7 @@ function _fillFormFromWikidata(entity, entityType) {
     Object.keys(libWD.urls).forEach(function(externalLink) {
         var domain = libWD.urls[externalLink].split('/')[2];
         if (libWD.existField(entity, externalLink) &&
-            !_.includes(existing_domains, domain)) {
+            !existing_domains.includes(domain)) {
             var inputs = document.getElementById('external-links-editor')
                          .getElementsByTagName('input');
             input = inputs[inputs.length - 1];

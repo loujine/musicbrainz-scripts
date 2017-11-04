@@ -116,8 +116,8 @@ function parseEditData(editData) {
     editData.relationships.forEach(function (rel) {
         var linkType = rel.linkTypeID,
             uniqueIds = [];
-        if (_.includes(server.performingLinkTypes(), linkType) &&
-                !_.includes(uniqueIds, rel.target.id)) {
+        if (server.performingLinkTypes().includes(linkType) &&
+                !uniqueIds.includes(rel.target.id)) {
             uniqueIds.push(rel.target.id); // filter duplicates
             performers.push({'name': rel.target.name,
                              'creditedName': rel.entity0_credit,
