@@ -1,4 +1,4 @@
-/* global $ MB requests server relEditor */
+/* global $ MB requests helper server relEditor GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Batch-set guessed works
@@ -161,4 +161,3 @@ $(document).ready(function() {
     });
     return false;
 });
-

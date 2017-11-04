@@ -1,4 +1,4 @@
-/* global $ _ requests server helper sidebar edits GM_info */
+/* global $ requests server helper sidebar edits GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Replace recording artists from a release page

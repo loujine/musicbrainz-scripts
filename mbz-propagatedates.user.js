@@ -36,7 +36,6 @@ function removeDate(relation) {
 }
 
 function referenceDate(relations) {
-    var idx_ref = -1;
     // look for one recording link with a date
     // give priority to the most precise one (day > month > year)
     for (const unit of ['day', 'month', 'year']) {

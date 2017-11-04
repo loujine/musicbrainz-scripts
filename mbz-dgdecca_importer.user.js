@@ -1,4 +1,4 @@
-/* global $ MBImport */
+/* global $ MBImport GM_info */
 'use strict';
 // ==UserScript==
 // @name         Import DG/Decca releases to MusicBrainz
@@ -109,23 +109,12 @@ function extract_release_data() {
         return list.concat(_setReleasePerformers());
     }
 
-    function _indices(array, element) {
-        var indices = [];
-        var idx = array.indexOf(element);
-        while (idx != -1) {
-            indices.push(idx);
-            idx = array.indexOf(element, idx + 1);
-        }
-        return indices;
-    }
-
     var date = document.getElementsByClassName('date')[0].textContent;
     date = date.replace('Int. Release ', '').split(' ');
     var nodes = [];
     var tracklist_node = document.getElementById('tracklist');
 
     $('.item,.hier0,.hier1,.hier2,.hier3').each(function (idx, node) {
-        var idx;
         var d = {};
         if (node.classList.contains('hier0')) {
             d['level'] = 0;
@@ -152,7 +141,7 @@ function extract_release_data() {
     console.log(nodes, tracklist_node);
 
     // complete track titles
-    var header0, header1, header2, idx;
+    var header0, header1, header2;
     nodes.forEach(function (node, idx) {
         var level = node['level'],
             type = node['type'],
@@ -244,9 +233,8 @@ function extract_track_data(node) {
                 };
             });
         } else {
-            artists = artistString.split(', ').map(function (artist, idx) {
+            artists = artistString.split(', ').map(function (artist) {
                 var mbid = '';
-                var url = '/ws/js/artist/?q=' + artist + '&fmt=json&limit=1';
                 return {
                     'credited_name': artist,
                     'artist_name': artist,

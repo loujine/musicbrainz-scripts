@@ -1,4 +1,4 @@
-/* global $ */
+/* global $ jQuery GM_info MBImport */
 'use strict';
 // ==UserScript==
 // @name         Import Naxos Music Library releases to MusicBrainz
@@ -139,8 +139,7 @@ function extract_release_data() {
         };
     }
 
-    var trackArtist,
-        parentWork;
+    var parentWork;
     $tracklist_node.find('tbody > tr').each(function (idx, trnode) {
         if (trnode.children.length > 1) {
             if (trnode.children[1].innerHTML.replace('&nbsp;', '').trim() == '') {

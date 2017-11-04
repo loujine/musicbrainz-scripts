@@ -1,4 +1,4 @@
-/* global $ MB server relEditor */
+/* global $ MB server relEditor GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Batch-set recording-artist instrument
@@ -33,7 +33,7 @@ function setInstrument(fromType, toType, attrIds, credit) {
         var relationships = _relationships(recording, fromType);
         relationships.forEach(function(relation) {
             var attrs = relation.attributes();
-            let offset = attrs.length;
+            const offset = attrs.length;
             relation.linkTypeID(toType);
             attrIds.forEach(function (attrId) {
                 attrs.push({type: MB.attrInfoByID[attrId]});

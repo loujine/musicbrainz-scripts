@@ -1,4 +1,4 @@
-/* global $ helper edits sidebar requests GM_info */
+/* global $ helper edits sidebar GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Set recording names as work aliases
