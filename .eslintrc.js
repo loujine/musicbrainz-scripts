@@ -5,7 +5,10 @@ module.exports = {
         "mocha": true,
         "node": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+        "eslint:recommended",
+        "plugin:you-dont-need-lodash-underscore/compatible"
+    ],
     "parserOptions": {
         "ecmaFeatures": {
             "arrowFunctions": true,
@@ -92,8 +95,8 @@ module.exports = {
         "lines-around-comment": 2,
         "max-depth": 2,
         "max-len": [
-            2,
             80,
+            1,
             4,
             {"ignoreUrls": true,
              "ignoreComments": true}
