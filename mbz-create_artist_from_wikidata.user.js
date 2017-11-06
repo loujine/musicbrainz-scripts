@@ -120,7 +120,7 @@ class WikiDataHelpers {
         )
         if (input.value === area) {
             $('#newFields').append(
-                $('<dd>', {'text': `Kept "${input.value}":`})
+                $('<dd>', {'text': `Kept "${input.value}"`})
             )
             return;
         }
@@ -139,7 +139,7 @@ class WikiDataHelpers {
             input.value = area;
         }
         $('#newFields').append(
-            $('<dd>', {'text': `Added "${area}":`}).css('color', 'green')
+            $('<dd>', {'text': `Added "${area}"`}).css('color', 'green')
         )
     }
 
