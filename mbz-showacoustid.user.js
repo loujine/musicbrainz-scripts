@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show acoustids
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.9.5
+// @version      2017.11.1
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Show acoustids on a Work page
 // @compatible   firefox+greasemonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
 // @include      http*://*musicbrainz.org/work/*
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/artist/*/recordings

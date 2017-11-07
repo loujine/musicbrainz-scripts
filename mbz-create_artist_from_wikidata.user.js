@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Fill entity info from wikidata/VIAF
 // @compatible   firefox+greasemonkey/tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
 // @include      http*://*musicbrainz.org/artist/create*
 // @include      http*://*musicbrainz.org/artist/*/edit
 // @exclude      http*://*musicbrainz.org/artist/*/alias/*/edit

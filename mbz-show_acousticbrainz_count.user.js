@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show acousticbrainz count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.3.8
+// @version      2017.11.1
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_acousticbrainz_count.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-shhowacousticbrainz_count.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Show acousticbrainz count on Work page
 // @compatible   firefox+greasemonkey
 // @licence      CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/)
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=170785
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*
 // @grant        none

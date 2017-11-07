@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.17
+// @version      2017.11.1
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_work_arrangement.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_work_arrangement.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Create work arrangement from existing work
 // @compatible   firefox+greasemonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=205232
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
 // @include      http*://*musicbrainz.org/work/*
 // @grant        none
 // @run-at       document-end

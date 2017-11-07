@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show stats from AcousticBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.2
+// @version      2017.11.1
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_stats_from_acousticbrainz.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_stats_from_acousticbrainz.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Show stats from AcousticBrainz
 // @compatible   firefox+greasemonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=174522
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
 // @include      http*://*musicbrainz.org/recording/*
 // @exclude      http*://*musicbrainz.org/recording/merge
 // @exclude      http*://*musicbrainz.org/recording/*/*

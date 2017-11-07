@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Batch-add aliases
 // @compatible   firefox+greasemonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=226403
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
 // @include      http*://*musicbrainz.org/*/*/aliases*
 // @exclude      http*://*musicbrainz.org/doc/*
 // @grant        none

@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Move performer AR on release to recordings AR
 // @compatible   firefox+greasemonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=195378
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @include      http*://*mbsandbox.org/release/*/edit-relationships
 // @grant        none

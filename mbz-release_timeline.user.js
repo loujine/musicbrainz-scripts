@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display release timeline
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.10.29
+// @version      2017.11.1
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-release_timeline.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-release_timeline.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
