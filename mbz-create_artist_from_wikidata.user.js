@@ -313,20 +313,25 @@ function _existingDomains() {
 }
 
 
-function fillExternalLinks(url) {
-    const inputs = document.getElementById('external-links-editor')
+function _fillExternalLinks(url, ) {
+    const fields = document.getElementById('external-links-editor')
                            .getElementsByTagName('input');
+    const input = fields[fields.length - 1];
+    input.value = url;
+    input.dispatchEvent(new Event('input', {'bubbles': true}));
+    $('#newFields').append(
+        $('<dt>', {'text': 'New external link added:'})
+    ).append(
+        $('<dd>', {'text': url}).css('color', 'green')
+    );
+}
+
+
+function fillExternalLinks(url) {
     const existingDomains = _existingDomains();
     const domain = url.split('/')[2];
     if (!existingDomains.includes(domain)) {
-        const input = inputs[inputs.length - 1];
-        input.value = url;
-        input.dispatchEvent(new Event('input', {'bubbles': true}));
-        $('#newFields').append(
-            $('<dt>', {'text': 'New external link added:'})
-        ).append(
-            $('<dd>', {'text': url}).css('color', 'green')
-        );
+        _fillExternalLinks(url);
     }
 }
 
@@ -455,22 +460,13 @@ function _fillFormFromWikidata(entity, entityType) {
         libWD.fillArea(entity, 'deathPlace', 'end_area', lang);
     }
 
-
     const existingDomains = _existingDomains();
-    Object.keys(libWD.urls).forEach(function(externalLink) {
-        var domain = libWD.urls[externalLink].split('/')[2];
+    _.forOwn(libWD.urls, (url, externalLink) => {
+        const domain = url.split('/')[2];
         if (libWD.existField(entity, externalLink) &&
-            !existingDomains.includes(domain)) {
-            var inputs = document.getElementById('external-links-editor')
-                         .getElementsByTagName('input');
-            input = inputs[inputs.length - 1];
-            input.value = libWD.urls[externalLink]
-                          + libWD.fieldValue(entity, externalLink);
-            input.dispatchEvent(new Event('input', {'bubbles': true}));
-            $('#newFields').append(
-                $('<dt>', {'text': 'New external link added:'})
-            ).append(
-                $('<dd>', {'text': input.value}).css('color', 'green')
+                !existingDomains.includes(domain)) {
+            _fillExternalLinks(
+                url + libWD.fieldValue(entity, externalLink)
             );
         }
     });
