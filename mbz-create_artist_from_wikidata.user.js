@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.11.1
+// @version      2017.11.7
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -314,10 +314,26 @@ function _existingDomains() {
 
 
 function _fillExternalLinks(url, ) {
+    /* React16 adapter
+     *
+     * from https://github.com/facebook/react/issues/10135#issuecomment-314441175
+     * React considers DOM events as duplicate of synthetic events
+     */
+
+    function _setNativeValue(element, value) {
+        const valueSetter = Object.getOwnPropertyDescriptor(element, 'value').set;
+        const prototype = Object.getPrototypeOf(element);
+        const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
+        if (valueSetter && valueSetter !== prototypeValueSetter) {
+            prototypeValueSetter.call(element, value);
+        } else {
+            valueSetter.call(element, value);
+        }
+    }
     const fields = document.getElementById('external-links-editor')
                            .getElementsByTagName('input');
     const input = fields[fields.length - 1];
-    input.value = url;
+    _setNativeValue(input, url);
     input.dispatchEvent(new Event('input', {'bubbles': true}));
     $('#newFields').append(
         $('<dt>', {'text': 'New external link added:'})
