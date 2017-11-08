@@ -302,16 +302,23 @@ function fillISNI(isni) {
 }
 
 
+function _existingDomains() {
+    let existingDomains = [];
+    const fields = document.getElementById("external-links-editor")
+                           .getElementsByTagName('input');
+    for (const link of fields) {
+        existingDomains.push(link.value.split('/')[2]);
+    }
+    return existingDomains.slice(0, existingDomains.length - 1);
+}
+
+
 function fillExternalLinks(url) {
     const inputs = document.getElementById('external-links-editor')
                            .getElementsByTagName('input');
+    const existingDomains = _existingDomains();
     const domain = url.split('/')[2];
-    let existing_domains = [];
-    for (const input of inputs) {
-        existing_domains.push(input.value.split('/')[2]);
-    }
-    existing_domains = existing_domains.slice(0, existing_domains.length - 1);
-    if (!existing_domains.includes(domain)) {
+    if (!existingDomains.includes(domain)) {
         const input = inputs[inputs.length - 1];
         input.value = url;
         input.dispatchEvent(new Event('input', {'bubbles': true}));
@@ -448,18 +455,12 @@ function _fillFormFromWikidata(entity, entityType) {
         libWD.fillArea(entity, 'deathPlace', 'end_area', lang);
     }
 
-    let existing_domains = [];
-    const fields = document.getElementById("external-links-editor")
-                           .querySelectorAll('input');
-    for (const link of fields) {
-        existing_domains.push(link.value.split('/')[2]);
-    }
-    existing_domains = existing_domains.slice(0, existing_domains.length - 1);
 
+    const existingDomains = _existingDomains();
     Object.keys(libWD.urls).forEach(function(externalLink) {
         var domain = libWD.urls[externalLink].split('/')[2];
         if (libWD.existField(entity, externalLink) &&
-            !existing_domains.includes(domain)) {
+            !existingDomains.includes(domain)) {
             var inputs = document.getElementById('external-links-editor')
                          .getElementsByTagName('input');
             input = inputs[inputs.length - 1];
