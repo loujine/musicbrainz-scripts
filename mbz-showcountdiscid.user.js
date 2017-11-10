@@ -1,10 +1,10 @@
-/* global $ requests helper */
+/* global $ helper */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Show discid count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.11.1
+// @version      2017.11.9
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountdiscid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountdiscid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -22,8 +22,6 @@
 
 // adapted from jesus2099  mb. INLINE STUFF
 
-// imported from mbz-loujine-common.js: requests, helper
-
 function parseCount(resp, tab) {
     var cnt = 0;
     resp.media.forEach(function (medium) {
@@ -38,7 +36,7 @@ function parseCount(resp, tab) {
 (function showCountDiscid() {
     var tab = $("a[href$='/discids']")[0],
         url = helper.wsUrl('release', ['discids']);
-    requests.GET(url, function (resp) {
-        parseCount(JSON.parse(resp), tab);
+    fetch(url).then(resp => resp.json()).then(resp => {
+        parseCount(resp, tab);
     });
 })();
