@@ -63,7 +63,7 @@ function fetchRelatedRecordings(mbid, props) {
         }
         for (let rel of json.releases) {
             counts[rel.id] = counts[rel.id] || [];
-            props['artists'] = json.relations[0].artist.name;
+            props['artists'] = json.relations.map(rel => rel.artist.name).join(', ');
             counts[rel.id].push(props);
         }
     })
@@ -131,22 +131,22 @@ function fetchWork(mbid) {
                 $('#tmpSubworks').remove();
                 for (let [mbid, ar] of Object.entries(counts)) {
                     if (ar.length == nbSubworks && !uniques.includes(ar[0].mbid)) {
-                        let obj = ar[0];
+                        let {begin, end, artists} = ar[0];
                         $('#split').append($(
-                            `<tr>` +
-                            `<td>${formatDate(obj.begin, obj.end)}</td>` +
-                            `<td></td>` +
-                            `<td>${obj.artists}</td>` +
-                            `<td>${formatTrackLength(ar.map(obj => obj.duration).reduce((a,b)=>a+b, 0))}</td>` +
-                            `</tr>`));
-                        for (let obj of ar) {
+                            `<tr>
+                            <td>${formatDate(begin, end)}</td>
+                            <td></td>
+                            <td>${artists}</td>
+                            <td>${formatTrackLength(ar.map(obj => obj.duration).reduce((a,b)=>a+b, 0))}</td>
+                            </tr>`));
+                        for (let {mbid, title, artists, duration} of ar) {
                             $('#split').append($(
-                                `<tr>` +
-                                `<td></td>` +
-                                `<td><a href="/recording/${obj.mbid}">${obj.title}</a></td>` +
-                                `<td></td>` +
-                                `<td>${formatTrackLength(obj.duration)}</td>` +
-                                `</tr>`))
+                                `<tr>
+                                <td></td>
+                                <td><a href="/recording/${mbid}">${title}</a></td>
+                                <td>${artists}</td>
+                                <td>${formatTrackLength(duration)}</td>
+                                </tr>`))
                         }
                         $('#split').append($('<tr><th colspan="4"></th></tr>'));
                         uniques.push(ar[0].mbid);
