@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.11.9
+// @version      2017.11.17
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -428,7 +428,7 @@ class Edits {
 
     prepareEdit(editData) {
         const data = {
-            name: self.encodeName(editData.name),
+            name: this.encodeName(editData.name),
             type_id: editData.type_id || ' ',
         };
         editData.languages.forEach((lang, idx) => {
