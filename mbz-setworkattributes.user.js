@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.11.17
+// @version      2017.11.18
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -68,7 +68,7 @@ function updateFromPage(editData, node) {
     }
 
     var lang = $(row.children[idxLang]).find('select');
-    var optionLang = lang.length ? lang[0].value : null;
+    var optionLang = lang.length ? lang[0].selectedOptions[0].text : null;
     if (optionLang) {
         editData.languages = [optionLang];
     }
