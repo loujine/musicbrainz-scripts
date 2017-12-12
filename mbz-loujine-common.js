@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.11.17
+// @version      2017.12.9
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -537,23 +537,14 @@ class Sidebar {
         if ($('div#loujine-sidebar').length) {
             $container = $('div#loujine-sidebar');
         } else {
-            $container = $('<div>', {
-                'id': 'loujine-sidebar',
-                'css': {
-                    'background-color': 'white',
-                    'padding': '8px',
-                    'margin': '0px -6px 6px',
-                    'border': '2px dotted #736DAB'
-                }
-            }).append(
-                $('<h2>', {'text': 'loujine GM tools'})
-            ).append(
-                $('<a>', {
-                    'href': wikiUrl,
-                    'target': '_blank',
-                    'text': 'documentation'}
-                 )
-            );
+            $container = $(`
+                <div id="loujine-sidebar"
+                     style="background-color: white; padding: 8px; margin: 0px -6px 6px;
+                            border: 2px dotted rgb(115, 109, 171);">
+                <h2>loujine GM tools</h2>
+                <a href="${wikiUrl}" target="_blank">documentation</a>
+                </div>
+            `);
         }
         $('h2.collections').before($container);
         return $container;
@@ -586,23 +577,14 @@ class RelationshipEditor {
         if ($('div#loujine-menu').length) {
             $container = $('div#loujine-menu');
         } else {
-            $container = $('<div>', {
-                'id': 'loujine-menu',
-                'css': {
-                    'background-color': 'white',
-                    'padding': '8px',
-                    'margin': '0px -6px 6px',
-                    'border': '5px dotted #736DAB'
-                }
-            }).append(
-                $('<h2>', {'text': 'loujine GM tools'})
-            ).append(
-                $('<a>', {
-                    'href': wikiUrl,
-                    'target': '_blank',
-                    'text': 'documentation'}
-                 )
-            );
+            $container = $(`
+                <div id="loujine-menu"
+                     style="background-color: white; padding: 8px; margin: 0px -6px 6px;
+                            border: 5px dotted rgb(115, 109, 171);">
+                <h2>loujine GM tools</h2>
+                <a href="${wikiUrl}" target="_blank">documentation</a>
+                </div>
+            `);
         }
         return $container;
     }
