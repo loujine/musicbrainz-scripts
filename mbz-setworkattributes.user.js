@@ -4,13 +4,13 @@
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.11.18
+// @version      2017.12.9
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Set attributes (lang, key) from the composer Work page
-// @compatible   firefox+greasemonkey
+// @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=231192
 // @include      http*://*musicbrainz.org/artist/*/works

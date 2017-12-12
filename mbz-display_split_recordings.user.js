@@ -4,13 +4,13 @@
 // @name         MusicBrainz: Show recordings of subworks on Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.11.11
+// @version      2017.12.9
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_split_recordings.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_split_recordings.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Show recordings of subworks on Work page
-// @compatible   firefox+greasemonkey
+// @compatible   firefox+tampermonkey
 // @license      MIT
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*

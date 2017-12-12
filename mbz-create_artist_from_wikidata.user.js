@@ -4,13 +4,13 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.11.7
+// @version      2017.12.9
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Fill entity info from wikidata/VIAF
-// @compatible   firefox+greasemonkey/tampermonkey
+// @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
 // @include      http*://*musicbrainz.org/artist/create*
@@ -28,7 +28,7 @@
 // @include      http*://*musicbrainz.org/work/create*
 // @include      http*://*musicbrainz.org/work/*/edit
 // @exclude      http*://*musicbrainz.org/work/*/alias/*/edit
-// @grant        none
+// @grant        GM_xmlhttpRequest
 // @run-at       document-end
 // ==/UserScript==
 
@@ -588,9 +588,7 @@ function fillFormFromISNI(isniURL) {
             $('<h3>Add external link</h3>')
         ).append(
             $('<p>Add a wikidata/VIAF/ISNI ' +
-              'link here to retrieve automatically some information.' +
-              '<br />Warning: ISNI does not work with Greasemonkey ' +
-              'but only with Tampermonkey</p>')
+              'link here to retrieve automatically some information.</p>')
         ).append(
             $('<input>', {
                 'id': 'linkParser',

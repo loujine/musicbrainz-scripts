@@ -4,13 +4,13 @@
 // @name         MusicBrainz: Show discid count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.11.9
+// @version      2017.12.9
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountdiscid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountdiscid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Show discid number on main release pages
-// @compatible   firefox+greasemonkey
+// @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
 // @include      http*://*musicbrainz.org/release/*

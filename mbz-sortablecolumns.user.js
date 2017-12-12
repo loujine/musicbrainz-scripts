@@ -4,13 +4,13 @@
 // @name         MusicBrainz: Make table columns sortable
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.11.1
+// @version      2017.12.9
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-sortablecolumns.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-sortablecolumns.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Make table columns sortable (tested on Work pages)
-// @compatible   firefox+greasemonkey
+// @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
 // @include      http*://*musicbrainz.org/work/*

@@ -4,13 +4,13 @@
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.11.22
+// @version      2017.12.9
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
 // @description  musicbrainz.org: Replace associated recording artist from an Artist or Work page
-// @compatible   firefox+greasemonkey
+// @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=231192
 // @include      http*://*musicbrainz.org/artist/*/relationships
