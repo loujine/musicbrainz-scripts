@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Move performer AR on release to recordings AR
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -33,38 +33,36 @@ function fetchLinkIds() {
 
 function moveAR(ids) {
     const vm = MB.releaseRelationshipEditor;
-    vm.source.relationships().forEach((rel, idx) => {
-        if (rel.entityTypes === "artist-release"
-                && ids.includes(rel.linkTypeID())) {
-            const performer = rel.entities()[0],
-                releaseLinkType = rel.linkTypeID(),
-                releaseLinkAttributes = rel.attributes(),
-                recordings = MB.relationshipEditor.UI.checkedRecordings();
-            for (const recording of recordings) {
-                if (recording.relationships().filter(
-                    rel => rel.entityTypes === "artist-recording"
-                ).map(
-                    rel => rel.entities()[0].id
-                ).includes(performer.id)) {
-                    return;
-                }
-                const dialog = new MB.relationshipEditor.UI.AddDialog({
-                    source: recording,
-                    target: performer,
-                    viewModel: vm
-                });
-                dialog.relationship().linkTypeID(
-                    server.releaseToRecordingLink(releaseLinkType)
-                );
-                dialog.accept();
-                if (releaseLinkAttributes.length) {
-                    dialog.relationship().setAttributes(releaseLinkAttributes);
-                }
+    vm.source.relationships().filter(
+        rel => rel.entityTypes === "artist-release" && ids.includes(rel.linkTypeID())
+    ).forEach((rel, idx) => {
+        const performer = rel.entities()[0],
+            releaseLinkType = rel.linkTypeID(),
+            releaseLinkAttributes = rel.attributes(),
+            recordings = MB.relationshipEditor.UI.checkedRecordings();
+        for (const recording of recordings) {
+            if (recording.relationships().filter(
+                rel => rel.entityTypes === "artist-recording"
+            ).map(
+                rel => rel.entities()[0].id
+            ).includes(performer.id)) {
+                return;
             }
-            if (recordings.length) {
-                document.querySelectorAll('#release-rels .remove-button')[idx].click();
+            const dialog = new MB.relationshipEditor.UI.AddDialog({
+                source: recording,
+                target: performer,
+                viewModel: vm
+            });
+            dialog.relationship().linkTypeID(
+                server.releaseToRecordingLink(releaseLinkType)
+            );
+            dialog.accept();
+            if (releaseLinkAttributes.length) {
+                dialog.relationship().setAttributes(releaseLinkAttributes);
             }
-
+        }
+        if (recordings.length) {
+            document.querySelectorAll('#release-rels .remove-button')[idx].click();
         }
     });
 }
@@ -80,7 +78,7 @@ function moveAR(ids) {
 
 $(document).ready(function() {
     const ids = fetchLinkIds();
-    document.getElementById('moveAR').click(() => {
+    document.getElementById('moveAR').addEventListener('click', () => {
         moveAR(ids);
         relEditor.editNote(
             GM_info.script,
