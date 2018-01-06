@@ -14,7 +14,6 @@
 // @license      MIT
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*
-// @include      http*://*mbsandbox.org/*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==

@@ -16,15 +16,9 @@
 // @include      http*://*musicbrainz.org/artist/create*
 // @include      http*://*musicbrainz.org/artist/*/edit
 // @exclude      http*://*musicbrainz.org/artist/*/alias/*/edit
-// @include      http*://*mbsandbox.org/artist/create*
-// @include      http*://*mbsandbox.org/artist/*/edit
-// @exclude      http*://*mbsandbox.org/artist/*/alias/*/edit
 // @include      http*://*musicbrainz.org/place/create*
 // @include      http*://*musicbrainz.org/place/*/edit
 // @exclude      http*://*musicbrainz.org/place/*/alias/*/edit
-// @include      http*://*mbsandbox.org/place/create*
-// @include      http*://*mbsandbox.org/place/*/edit
-// @exclude      http*://*mbsandbox.org/place/*/alias/*/edit
 // @include      http*://*musicbrainz.org/work/create*
 // @include      http*://*musicbrainz.org/work/*/edit
 // @exclude      http*://*musicbrainz.org/work/*/alias/*/edit

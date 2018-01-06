@@ -14,7 +14,6 @@
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/release/*
-// @include      http*://*mbsandbox.org/release/*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==

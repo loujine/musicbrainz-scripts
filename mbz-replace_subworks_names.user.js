@@ -15,7 +15,6 @@
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/work/*/edit
 // @exclude      http*://*musicbrainz.org/work/*/alias/*/edit
-// @include      http*://*mbsandbox.org/work/*/edit
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
