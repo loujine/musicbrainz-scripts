@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.2
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -313,7 +313,7 @@ function _existingDomains() {
 }
 
 
-function _fillExternalLinks(url, ) {
+function _fillExternalLinks(url) {
     /* React16 adapter
      *
      * from https://github.com/facebook/react/issues/10135#issuecomment-314441175
