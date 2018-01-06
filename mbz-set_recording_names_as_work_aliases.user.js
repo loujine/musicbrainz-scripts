@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Set recording names as work aliases
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.6
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-set_recording_names_as_work_aliases.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-set_recording_names_as_work_aliases.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Set recording names as work aliases
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/work/*/aliases
 // @grant        none
 // @run-at       document-end
@@ -25,20 +25,21 @@ function loadRecordings() {
         resp => resp.json()
     ).then(
         json => {
-            const existingAliases = $('tbody tr').find('td:first bdi')
-                .toArray().map(node => node.textContent);
-            const names = new Set(json.relations.map(
-                rel => rel.recording.title));
-            for (const name of names) {
-                if (!existingAliases.includes(name)) {
-                    $('#recordingAliases').append(
-                        $('<div>').append(
-                            $(`<input type="checkbox" data-name="${name}">`)
-                        ).append(
-                            $(`<span>${name}</span>`)
-                        )
-                    )
-                }
+            const existingAliases = Array.prototype.map.call(
+                document.querySelectorAll('tbody tr bdi'),
+                node => node.textContent);
+            const names = Array.from(
+                new Set(json.relations.map(rel => rel.recording.title).filter(
+                    name => !existingAliases.includes(name))
+                )
+            ).sort();
+            for (const name of new Set(names)) {
+                document.getElementById('recordingAliases').insertAdjacentHTML('beforeend', `
+                    <div>
+                      <input type="checkbox" data-name="${name}">
+                      <span>${name}</span>
+                    </div>
+                `)
             }
         }
     );
@@ -46,16 +47,16 @@ function loadRecordings() {
 
 
 function submitRecordingsAliases() {
-    $('#recordingAliases input:checked').each(function (idx, node) {
+    document.querySelectorAll('#recordingAliases input:checked').forEach(node => {
         const postData = {
             name: node.dataset.name,
             sort_name: node.dataset.name,
             type_id: 1,
             edit_note: sidebar.editNote(GM_info.script)
         };
-        $(node.parentElement).append('<span>');
-        const $editNode = $(node.parentElement).find(':last');
-        $editNode.text(' → Sending edit data');
+        node.parentElement.insertAdjacentHTML('beforeend', '<span></span>');
+        const editNode = node.parentElement.children[2];
+        editNode.textContent = ' → Sending edit data';
         console.info('Data ready to be posted: ', postData);
 
         fetch(document.URL.replace('aliases', 'add-alias'), {
@@ -70,31 +71,25 @@ function submitRecordingsAliases() {
                 throw Error(resp.statusText);
             }
             node.disabled = true;
-            $editNode.text(
-                ` → Success (code ${resp.status})`
-            ).parent().css('color', 'green');
+            editNode.textContent = ` → Success (code ${resp.status})`;
+            node.parentElement.style.color = 'green';
         }).catch(error => {
-            $editNode.text(
-                ` → Error (code ${error.status})`
-            ).parent().css('color', 'red');
+            editNode.textContent = ` → Error (code ${error.status})`;
+            node.parentElement.style.color = 'red';
         });
     });
 }
 
 
 $(document).ready(function () {
-    $('table:nth(0)').after(
-        $('<input>', {
-            id: 'submitRecordingsAliases',
-            type: 'button',
-            value: 'submit recording names as new aliases'
-        })
-    ).after(
-        $('<div id="recordingAliases"></div>')
-    ).after(
-        $('<h3>Add aliases from recordings</h3>')
-    );
+    document.getElementsByTagName('table')[0].insertAdjacentHTML('afterend', `
+        <h3>Add aliases from recordings</h3>
+        <div id="recordingAliases"></div>
+        <input type="button" id="submitRecordingsAliases"
+               value="Submit recording names as new aliases">
+    `);
     loadRecordings();
-    $('#submitRecordingsAliases').click(submitRecordingsAliases);
+    document.getElementById('submitRecordingsAliases').addEventListener(
+        'click', submitRecordingsAliases);
     return false;
 });
