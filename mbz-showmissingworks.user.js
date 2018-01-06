@@ -19,9 +19,6 @@
 // @run-at       document-end
 // ==/UserScript==
 
-// imported from mbz-loujine-common.js: requests, server, sidebar, helper
-
-
 function showMissingWorks() {
     var $recordings = $('table a[href*="/recording/"]');
     if (!$('#workColumn').length) {

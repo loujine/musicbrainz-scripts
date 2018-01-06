@@ -20,8 +20,6 @@
 // @run-at       document-end
 // ==/UserScript==
 
-// imported from mbz-loujine-common.js: requests, sidebar
-
 function showAcousticBrainzCount() {
     var mbid = helper.mbidFromURL();
     var countUrl = '//acousticbrainz.org/api/v1/' + mbid + '/count';

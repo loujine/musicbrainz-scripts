@@ -22,8 +22,6 @@
 // @run-at       document-end
 // ==/UserScript==
 
-// imported from mbz-loujine-common.js: requests, sidebar
-
 function showAcoustids() {
     var $recordings = $('table a[href*="/recording/"]');
     var recording_mbids = $recordings.map(function() {
