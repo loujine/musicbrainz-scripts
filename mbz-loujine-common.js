@@ -1,10 +1,10 @@
-/* global $ _ MB */
+/* global _ MB */
 'use strict';
 // ==UserScript==
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -533,21 +533,20 @@ class Sidebar {
     }
 
     container() {
-        let $container;
-        if ($('div#loujine-sidebar').length) {
-            $container = $('div#loujine-sidebar');
-        } else {
-            $container = $(`
-                <div id="loujine-sidebar"
-                     style="background-color: white; padding: 8px; margin: 0px -6px 6px;
-                            border: 2px dotted rgb(115, 109, 171);">
-                <h2>loujine GM tools</h2>
-                <a href="${wikiUrl}" target="_blank">documentation</a>
-                </div>
-            `);
+        let container = document.getElementById('loujine-sidebar');
+        if (container !== null) {
+            return container;
         }
-        $('h2.collections').before($container);
-        return $container;
+        document.querySelector('h2.collections').insertAdjacentHTML('afterend', `
+            <div id="loujine-sidebar"
+                 style="background-color: white;
+                        padding: 8px; margin: 0px -6px 6px;
+                        border: 5px dotted rgb(115, 109, 171);">
+              <h2>loujine GM tools</h2>
+              <a href="${wikiUrl}" target="_blank">documentation</a>
+            </div>
+        `);
+        return document.getElementById('loujine-sidebar');
     }
 }
 
@@ -572,21 +571,21 @@ class RelationshipEditor {
         }
     }
 
-    container() {
-        let $container;
-        if ($('div#loujine-menu').length) {
-            $container = $('div#loujine-menu');
-        } else {
-            $container = $(`
-                <div id="loujine-menu"
-                     style="background-color: white; padding: 8px; margin: 0px -6px 6px;
-                            border: 5px dotted rgb(115, 109, 171);">
-                <h2>loujine GM tools</h2>
-                <a href="${wikiUrl}" target="_blank">documentation</a>
-                </div>
-            `);
+    container(node) {
+        let container = document.getElementById('loujine-menu');
+        if (container !== null) {
+            return container;
         }
-        return $container;
+        node.insertAdjacentHTML('afterend', `
+            <div id="loujine-menu"
+                 style="background-color: white;
+                        padding: 8px; margin: 0px -6px 6px;
+                        border: 5px dotted rgb(115, 109, 171);">
+              <h2>loujine GM tools</h2>
+              <a href="${wikiUrl}" target="_blank">documentation</a>
+            </div>
+        `);
+        return document.getElementById('loujine-menu');
     }
 }
 
