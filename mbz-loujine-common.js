@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.4
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -271,80 +271,76 @@ class Server {
     }
 
     performingLinkTypes() {
-        return _.values(_.pick(this.recordingLinkType, this._performingRoles));
+        return this._performingRoles.map(role => this.recordingLinkType[role])
     }
 }
 
 const server = new Server();
 
 
+function buildOptions(obj) {
+    // to be replaced by Object.entries when all supported browser versions
+    // recognize it
+    return _.toPairs(obj).map(
+        ([type, code]) => `<option value="${code}">${type}</option>`
+    ).join('');
+}
+
+function buildLanguageOptions(obj) {
+    return _.toPairs(obj).map(
+        ([type, code]) => `<option class="language" value="${code}">${type}</option>`
+    ).join('');
+}
+
 const aliases = {
-    artistType: [
-        '<select>',
-        '<option selected> </option>',
-        _.map(
-            server.aliasArtistType,
-            (code, type) => `<option value="${code}">${type}</option>`
-        ).join(''),
-        '</select>'
-    ].join(''),
+    artistType: `
+        <select>
+          <option selected> </option>
+          ${buildOptions(server.aliasArtistType)}
+        </select>
+    `,
 
-    type: [
-        '<select>',
-        '<option selected> </option>',
-        _.map(
-            server.aliasType,
-            (code, type) => `<option value="${code}">${type}</option>`
-        ).join(''),
-        '</select>'
-    ].join(''),
+    type: `
+        <select>
+          <option selected> </option>
+          ${buildOptions(server.aliasType)}
+        </select>
+    `,
 
-    locale: [
-        '<select>',
-        '<option> </option>',
-        _.map(
-            server.locale,
-            (code, type) => `<option value="${code}">${type}</option>`
-        ).join(''),
-        '</select>'
-    ].join(''),
+    locale: `
+        <select>
+          <option> </option>
+          ${buildOptions(server.locale)}
+        </select>
+    `,
 };
 
 const works = {
-    type: [
-        '<select class="setwork">',
-        '<option selected> </option>',
-        _.map(
-            server.workType,
-            (code, type) => `<option value="${code}">${type}</option>`
-        ).join(''),
-        '</select>'
-    ].join(''),
+    type: `
+        <select class="setwork">
+          <option selected> </option>
+          ${buildOptions(server.workType)}
+        </select>
+    `,
 
-    lang: [
-        '<select class="setlang">',
-        '<option> </option>',
-        '<optgroup label="Frequently used">',
-        _.map(
-            server.language,
-            (code, type) => `<option class="language" value="${code}">${type}</option>`
-        ).join(''),
-        '</optgroup>',
-        '<optgroup label="Other">',
-        '<option class="language" value="238">Latin</option>',
-        '</optgroup>',
-        '</select>'
-    ].join(''),
+    lang: `
+        <select class="setlang">
+          <option> </option>
+          <optgroup label="Frequently used">
+            ${buildLanguageOptions(server.language)}
+          </optgroup>
+          <optgroup label="Other">
+            <option class="language" value="238">Latin</option>
+          </optgroup>
+        </select>
+    `,
 
-    key: [
-        '<select class="setkey">',
-        '<option selected> </option>',
-        _.map(
-            server.workKeyAttr,
-            (code, type) => `<option value="${code}">${type}</option>`
-        ).join(''),
-        '</select>'
-    ].join(''),
+    key: `
+        <select class="setkey">
+          <option selected> </option>
+          ${buildOptions(server.workKeyAttr)}
+        </select>
+    `,
 };
 
 
@@ -452,15 +448,9 @@ class Edits {
     }
 
     formatEdit(editType, info) {
-        const data = [];
-        _.forOwn(info, (value, key) => {
-            if (value === null) {
-                data.push(editType + '.' + key);
-            } else {
-                data.push(editType + '.' + key + '=' + value);
-            }
-        })
-        return data.join('&');
+        return _.toPairs(info).map(
+            ([prop, val]) => val === null ? `${editType}.${prop}` : `${editType}.${prop}=${val}`
+        ).join('&');
     }
 }
 
