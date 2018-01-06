@@ -95,8 +95,8 @@ module.exports = {
         "lines-around-comment": 2,
         "max-depth": 2,
         "max-len": [
-            80,
             1,
+            80,
             4,
             {"ignoreUrls": true,
              "ignoreComments": true}
