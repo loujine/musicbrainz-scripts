@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_work_arrangement.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_work_arrangement.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Create work arrangement from existing work
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=231192
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/work/*
 // @grant        none
 // @run-at       document-end
@@ -107,36 +107,16 @@ function createArrangement(mbid, parentMbid) {
 
 
 (function displaySidebar(sidebar) {
-    sidebar.container()
-        .append(
-            $('<h3>Create work arrangement</h3>')
-        ).append(
-            $('<input>', {
-                'id': 'disambiguation',
-                'type': 'text',
-                'placeholder': 'disambiguation text',
-                'value': ''
-            })
-        ).append(
-            $('<div>')
-            .append(
-                $('<label>Create arr. for subworks</label>')
-                .append($('<input>', {
-                    'id': 'subworks',
-                    'type': 'checkbox',
-                    'value': ''})
-                )
-            )
-        ).append(
-            $('<input>', {
-                'id': 'create-arrangement',
-                'type': 'button',
-                'value': 'Apply',
-                'disabled': true})
-        ).append(
-            $('<span>', {
-                'id': 'create-arrangement-text'})
-    );
+    sidebar.container().insertAdjacentHTML('beforeend', `
+        <h3>Create work arrangement</h3>
+        <input type="text" id="disambiguation" value="" placeholder="disambiguation text">
+        <div>
+          <label>Create arr. for subworks</label>
+          <input type="checkbox" id="subworks" value="">
+        </div>
+        <input type="button" id="create-arrangement" value="Apply" disabled=true>
+        <span id="create-arrangement-text">
+    `);
     $('div#loujine-menu').css('margin-left', '550px');
 })(sidebar);
 

@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show acoustids
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Show acoustids on a Work page
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/work/*
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/artist/*/recordings
@@ -120,33 +120,18 @@ function mergeFromAcoustID() {
 }
 
 
-// display sidebar
 (function displaySidebar(sidebar) {
-    sidebar.container().append(
-        $('<h3>Show acoustIDs<h3>')
-    ).append(
-        $('<input>', {
-            'id': 'showacoustids',
-            'type': 'button',
-            'value': 'Show acoustIDs'
-        })
-    ).append(
-        $('<h3>Merge from acoustID<h3>')
-    ).append(
-        $('<select id="acidForMerge">'
-          + '<option value="">acoustID</option>'
-          + '</select>')
-    ).append(
-        $('<input>', {
-            'id': 'merge',
-            'type': 'button',
-            'value': 'Merge'
-        })
-    );
+    sidebar.container().insertAdjacentHTML('beforeend', `
+        <h3>Show acoustIDs</h3>
+        <input type="button" id="showAcoustids" value="Show acoustIDs">
+        <h3>Merge from acoustID</h3>
+        <select id="acidForMerge"><option value="">acoustID</option></select>
+        <input type="button" id="merge" value="Merge">
+    `);
 })(sidebar);
 
 $(document).ready(function() {
-    $('#showacoustids').click(function() {showAcoustids();});
-    $('#merge').click(function() {mergeFromAcoustID();});
+    document.getElementById('showAcoustids').addEventListener('click', showAcoustids);
+    document.getElementById('merge').addEventListener('click', mergeFromAcoustID);
     return false;
 });

@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show stats from AcousticBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_stats_from_acousticbrainz.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_stats_from_acousticbrainz.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Show stats from AcousticBrainz
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/recording/*
 // @exclude      http*://*musicbrainz.org/recording/merge
 // @exclude      http*://*musicbrainz.org/recording/*/*
@@ -43,33 +43,15 @@ function showAcousticBrainzCount() {
     });
 }
 
-// display sidebar
 (function displaySidebar(sidebar) {
-    var mbid = helper.mbidFromURL();
-    sidebar.container().append(
-        $('<h3>Show statistics<h3>')
-    ).append(
-        $('<a>', {
-            'href': '//acousticbrainz.org/' + mbid,
-            'target': '_blank',
-            'text': 'AcousticBrainz entry'
-        })
-    ).append(
-        $('<p>', {
-            'text': 'Number of submissions: ',
-            'id': 'count'
-        })
-    ).append(
-        $('<p>', {
-            'text': 'Key: ',
-            'id': 'key'
-        })
-    ).append(
-        $('<p>', {
-            'text': 'BPM: ',
-            'id': 'bpm'
-        })
-    );
+    const mbid = helper.mbidFromURL();
+    sidebar.container().insertAdjacentHTML('beforeend', `
+        <h3>Show statistics</h3>
+        <a href="//acousticbrainz.org/${mbid} target="_blank">AcousticBrainz entry</a>
+        <p id="count">Number of submissions:&nbsp;</p>
+        <p id="key">Key:&nbsp;</p>
+        <p id="bpm">BPM:&nbsp;</p>
+    `);
 })(sidebar);
 
 $(document).ready(function() {

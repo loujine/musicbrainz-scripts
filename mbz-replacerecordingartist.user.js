@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Replace associated recording artist from an Artist or Work page
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=231192
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*
@@ -173,80 +173,32 @@ function replaceArtist() {
 }
 
 (function displaySidebar(sidebar) {
-    sidebar.container()
-    .append(
-        $('<h3>Show performers</h3>')
-    ).append(
-        $('<p>Show performers present in recording AR, for recordings not respecting the CSG</p>')
-    ).append(
-        $('<div>')
-        .append('First row:')
-        .append(
-            $('<input>', {
-                'id': 'offset',
-                'type': 'number',
-                'style': 'width: 50px',
-                'value': '1'
-            })
-        )
-    ).append(
-        $('<div>')
-        .append('Rows to query:')
-        .append(
-            $('<input>', {
-                'id': 'max',
-                'type': 'number',
-                'style': 'width: 50px',
-                'value': '10'
-            })
-        )
-    ).append(
-        $('<input>', {
-            'id': 'showperformers',
-            'type': 'button',
-            'value': 'Show performer AR'
-        })
-    ).append(
-        $('<h3>Replace artists</h3>')
-    ).append(
-        $('<p>First click "Show performer AR" then check boxes to select artists</p>')
-    ).append(
-        $('<input>', {
-            'id': 'batch_select',
-            'type': 'button',
-            'disabled': true,
-            'value': 'Select all'
-        })
-    ).append(
-        $('<div>', {'class': 'auto-editor'})
-        .append(
-            $('<label>Make all edits votable</label>')
-            .append($('<input>',
-                      {'type': 'checkbox',
-                       'id': 'votable'})
-            )
-        )
-    ).append(
-        $('<p>').append('Edit note:')
-        .append(
-            $('<textarea></textarea>', {
-                'id': 'batch_replace_edit_note',
-                'disabled': true,
-                'text': sidebar.editNote(GM_info.script, editNoteMsg)
-            })
-        )
-    ).append(
-        $('<input>', {
-            'id': 'batch_replace',
-            'type': 'button',
-            'disabled': true,
-            'value': 'Replace selected artists'
-        })
-    );
+    sidebar.container().insertAdjacentHTML('beforeend', `
+        <h3>Show performers</h3>
+        <p>Show performers present in recording AR, for recordings not respecting the CSG</p>
+        <div>First row:
+          <input type="number" id="offset" value="1" style="width: 50px;">
+        </div>
+        <div>Rows to query:
+          <input type="number" id="max" value="10" style="width: 50px;">
+        </div>
+        <input type="button" id="showPerformers" value="Show performer AR">
+        <h3>Replace artists</h3>
+        <p>First click "Show performer AR" then check boxes to select artists</p>
+        <input type="button" id="batch_select" value="Select all" disabled="true">
+        <div class="auto-editor">
+          <label>Make all edits votable</label>
+          <input type="checkbox" id="votable">
+        </div>
+        <p>Edit note:</p>
+        <textarea id="batch_replace_edit_note" disabled="true"
+                  text=${sidebar.editNote(GM_info.script, editNoteMsg)}></textarea>
+        <input type="button" id="batch_replace" value="Replace selected artists" disabled="true">
+    `);
 })(sidebar);
 
 $(document).ready(function () {
-    $('#showperformers').click(function () {
+    document.getElementById('showPerformers').addEventListener('click', () => {
         var start = $('#offset')[0].value,
             maxcount = $('#max')[0].value;
         showPerformers(parseInt(start - 1), parseInt(maxcount));

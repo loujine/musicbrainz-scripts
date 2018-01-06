@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Show acousticbrainz count on Work page
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*
 // @grant        none
@@ -56,17 +56,11 @@ function showABids() {
 }
 
 
-// display sidebar
 (function displaySidebar(sidebar) {
-    sidebar.container().append(
-        $('<h3>Show AcousticBrainz IDs<h3>')
-    ).append(
-        $('<input>', {
-            'id': 'showABids',
-            'type': 'button',
-            'value': 'Show AcousticBrainz IDs'
-        })
-    );
+    sidebar.container().insertAdjacentHTML('beforeend', `
+        <h3>Show AcousticBrainz IDs</h3>
+        <input type="button" id="showABids" value="Show AcousticBrainz IDs">
+    `);
 })(sidebar);
 
 $(document).ready(function() {

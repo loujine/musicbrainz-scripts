@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Set work attributes from the composer page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Set attributes (lang, key) from the composer Work page
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=231192
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/artist/*/works
 // @include      http*://*musicbrainz.org/artist/*/works?page=*
 // @grant        none
@@ -128,27 +128,13 @@ function editWork() {
 
 (function displaySidebar(sidebar) {
     $('h2.rating').before(
-        sidebar.container().append(
-            $('<h3>Edit works</h3>')
-        ).append(
-            $('<p>Warning: this is experimental! Bogus data could be sent in the edit. Please check carefully your edit history after use, and help by reporting bugs</p>')
-        ).append(
-            $('<p>Edit note:</p>')
-        ).append(
-            $('<textarea>', {
-                'id': 'batch_replace_edit_note',
-                'text': sidebar.editNote(GM_info.script),
-                'cols': 20,
-                'rows': 7
-            })
-        ).append(
-            $('<input>', {
-                'id': 'batch_edit',
-                'type': 'button',
-                'value': 'Edit selected works'
-            })
-        )
-    );
+    sidebar.container().insertAdjacentHTML('beforeend', `
+        <h3>Edit works</h3>
+        <p>Edit note:</p>
+        <textarea id="batch_replace_edit_note" text=${sidebar.editNote(GM_info.script)}
+                  cols="20" rows="7" />
+        <input type="button" id="batch_edit" value="Edit selected works">
+    `);
 })(sidebar);
 
 $(document).ready(function () {

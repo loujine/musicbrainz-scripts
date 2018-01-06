@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Replace associated recording artist from a Release page
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=231192
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/release/*
 // @include      http*://*mbsandbox.org/release/*
 // @grant        none
@@ -174,68 +174,28 @@ function replaceArtist() {
 }
 
 (function displaySidebar(sidebar) {
-    sidebar.container()
-    .append(
-        $('<input>', {
-            'id': 'selectors',
-            'type': 'button',
-            'value': 'Show checkboxes'
-        })
-    ).append(
-        $('<h3>Replace artists</h3>')
-    ).append(
-        $('<p>First click "Show checkboxes" then select recordings to update</p>')
-    ).append(
-        $('<input>', {
-            'id': 'batch_select',
-            'type': 'button',
-            'disabled': true,
-            'value': 'Select all'
-        })
-    ).append(
-        $('<div>')
-        .append(
-            $('<label>Exclude relations with pending edits</label>')
-            .append($('<input>',
-                      {'type': 'checkbox',
-                       'id': 'pending'})
-            )
-        )
-    ).append(
-        $('<div>', {'class': 'auto-editor'})
-        .append(
-            $('<label>Make all edits votable</label>')
-            .append($('<input>',
-                      {'type': 'checkbox',
-                       'id': 'votable'})
-            )
-        )
-    ).append(
-        $('<div>')
-        .append(
-            $('<label>Set [unknown] artist if no relation</label>')
-            .append($('<input>',
-                      {'type': 'checkbox',
-                       'id': 'set-unknown'})
-            )
-        )
-    ).append(
-        $('<p>').append('Edit note:')
-        .append(
-            $('<textarea></textarea>', {
-                'id': 'batch_replace_edit_note',
-                'disabled': true,
-                'text': sidebar.editNote(GM_info.script, editNoteMsg)
-            })
-        )
-    ).append(
-        $('<input>', {
-            'id': 'batch_replace',
-            'type': 'button',
-            'disabled': true,
-            'value': 'Replace selected artists'
-        })
-    );
+    sidebar.container().insertAdjacentHTML('beforeend', `
+        <input type="button" id="selectors" value="Show checkboxes">
+        <h3>Replace artists</h3>
+        <p>First click "Show checkboxes" then select recordings to update</p>
+        <input type="button" id="batch_select" value="Select all" disabled="true">
+        <div>
+          <label>Exclude relations with pending edits</label>
+          <input type="checkbox" id="pending">
+        </div>
+        <div class="auto-editor">
+          <label>Make all edits votable</label>
+          <input type="checkbox" id="votable">
+        </div>
+        <div>
+          <label>Set [unknown] artist if no relation</label>
+          <input type="checkbox" id="set-unknown">
+        </div>
+        <p>Edit note:</p>
+        <textarea id="batch_replace_edit_note" disabled="true"
+                  text=${sidebar.editNote(GM_info.script, editNoteMsg)}></textarea>
+        <input type="button" id="batch_replace" value="Replace selected artists" disabled="true">
+    `);
 })(sidebar);
 
 $(document).ready(function () {

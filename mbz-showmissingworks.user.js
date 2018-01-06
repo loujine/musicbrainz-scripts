@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show missing works on an artist page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showmissingworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showmissingworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Mark recordings not linked to any work on an artist recordings or relationships page
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/artist/*/recordings*
 // @grant        none
@@ -57,24 +57,19 @@ function showMissingWorks() {
 }
 
 (function displaySidebar(sidebar) {
-    sidebar.container().append(
-        $('<h3>Linked works</h3>')
-    ).append(
-        $('<input>', {
-            'id': 'showmissingworks',
-            'type': 'button',
-            'value': 'Show missing works'
-        })
-    ).append(
-        $('<p>Display:</p>')
-    ).append(
-        $('<ul><li>✓: linked work with date</li>' +
-              '<li>⚠: linked work without date</li>' +
-              '<li>✗: no work linked</li></ul>')
-    );
+    sidebar.container().insertAdjacentHTML('beforeend', `
+        <h3>Linked works</h3>
+        <input type="button" id="showMissingWorks" value="Show missing works">
+        <p>Display:</p>
+        <ul>
+          <li>✓: linked work with date</li>
+          <li>⚠: linked work without date</li>
+          <li>✗: no work linked</li>
+        </ul>
+    `);
 })(sidebar);
 
 $(document).ready(function () {
-    $('#showmissingworks').click(function () {showMissingWorks();});
+    document.getElementById('showMissingWorks').addEventListener('click', showMissingWorks);
     return false;
 });

@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Make table columns sortable
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-sortablecolumns.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-sortablecolumns.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Make table columns sortable (tested on Work pages)
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/work/*
 // @include      http*://*musicbrainz.org/instrument/*/recordings
 // @include      http*://*musicbrainz.org/instrument/*/recordings?page=*
@@ -62,21 +62,15 @@ function sortByClickedColumn() {
     });
 }
 
-// display sidebar
 (function displaySidebar(sidebar) {
-    sidebar.container().append(
-        $('<h3>Sortable columns<h3>')
-    ).append(
-        $('<input>', {
-            'id': 'makesortable',
-            'type': 'button',
-            'value': 'Make columns sortable'
-        })
-    );
+    sidebar.container().insertAdjacentHTML('beforeend', `
+        <h3>Sortable columns<h3>
+        <input type="button" id="makeSortable" value="Make columns sortable">
+    `);
 })(sidebar);
 
 $(document).ready(function() {
-    $('#makesortable').click(function () {
+    document.getElementById('makeSortable').addEventListener('click', () => {
         $('table.tbl thead th:not(.sortable)').append(
             '<span>↕</span>'
         ).click(sortByClickedColumn);
