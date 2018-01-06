@@ -62,7 +62,7 @@ function moveAR(ids) {
                 }
             }
             if (recordings.length) {
-                $('#release-rels .remove-button')[idx].click();
+                document.querySelectorAll('#release-rels .remove-button')[idx].click();
             }
 
         }
@@ -80,7 +80,7 @@ function moveAR(ids) {
 
 $(document).ready(function() {
     const ids = fetchLinkIds();
-    $('#moveAR').click(() => {
+    document.getElementById('moveAR').click(() => {
         moveAR(ids);
         relEditor.editNote(
             GM_info.script,

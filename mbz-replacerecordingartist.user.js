@@ -206,8 +206,8 @@ $(document).ready(function () {
         $('#batch_replace_edit_note').prop('disabled', false);
         $('#batch_replace').prop('disabled', false);
     });
-    $('#batch_replace').click(function () {replaceArtist();});
-    $('#batch_select').click(function () {
+    document.getElementById('batch_replace').addEventListener('click', replaceArtist);
+    document.getElementById('batch_select').addEventListener('click', () => {
         $('.replace:input').attr('checked', true);
     });
     return false;

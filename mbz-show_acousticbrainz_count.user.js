@@ -64,6 +64,6 @@ function showABids() {
 })(sidebar);
 
 $(document).ready(function() {
-    $('#showABids').click(function() {showABids();});
+    document.getElementById('showABids').addEventListener('click', showABids);
     return false;
 });

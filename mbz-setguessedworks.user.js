@@ -43,7 +43,7 @@ function guessWork() {
         idx = 0;
     recordings.forEach(function (recording) {
         var url = '/ws/js/work/?q=' +
-                  encodeURIComponent($('#prefix')[0].value) + ' ' +
+                  encodeURIComponent(document.getElementById('prefix').value) + ' ' +
                   encodeURIComponent(recording.name) +
                   '&artist=' + encodeURIComponent(recording.artist) +
                   '&fmt=json&limit=1';
@@ -97,6 +97,7 @@ function guessSubWorks(workMbid) {
     });
 }
 
+
 (function displayToolbar(relEditor) {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
@@ -113,6 +114,7 @@ function guessSubWorks(workMbid) {
         <input type="button" id="searchSubworks" value="Guess subworks">
     `);
 })(relEditor);
+
 
 $(document).ready(function() {
     let appliedNote = false;

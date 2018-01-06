@@ -1,10 +1,10 @@
-/* global $ requests helper */
+/* global requests helper */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Show alias count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountalias.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountalias.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Show alias number on work/artist pages
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/add*
 // @exclude      http*://*musicbrainz.org/work/create*
@@ -24,8 +24,6 @@
 // ==/UserScript==
 
 // adapted from jesus2099  mb. INLINE STUFF
-
-// imported from mbz-loujine-common.js: requests, helper
 
 function parseCount(resp, tab) {
     var cnt = resp.aliases.length,
@@ -45,11 +43,10 @@ function parseCount(resp, tab) {
 }
 
 (function showCountAliases() {
-    var tab = $("a[href$='/aliases']")[0],
+    var tab = document.querySelector("a[href$='/aliases']"),
         entityType = document.URL.split('/')[3],
         url = helper.wsUrl(entityType, ['aliases']);
     requests.GET(url, function (resp) {
         parseCount(JSON.parse(resp), tab);
     });
 })();
-

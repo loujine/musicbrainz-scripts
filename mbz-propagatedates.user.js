@@ -87,8 +87,8 @@ function removeDates() {
 
 
 $(document).ready(function() {
-    var appliedNote = false;
-    $('#removedates').click(function() {
+    let appliedNote = false;
+    document.getElementById('removeDates').addEventListener('click', () => {
         removeDates();
         relEditor.editNote(GM_info.script);
     });

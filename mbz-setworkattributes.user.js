@@ -138,6 +138,6 @@ function editWork() {
 })(sidebar);
 
 $(document).ready(function () {
-    $('#batch_edit').click(function () {editWork();});
+    document.getElementById('batch_edit').addEventListener('click', editWork);
     return false;
 });

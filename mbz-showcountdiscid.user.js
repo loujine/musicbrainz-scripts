@@ -1,10 +1,10 @@
-/* global $ helper */
+/* global helper */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Show discid count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountdiscid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountdiscid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Show discid number on main release pages
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/release/*
 // @exclude      http*://*musicbrainz.org/release/add*
 // @exclude      http*://*musicbrainz.org/release/*/*
@@ -34,7 +34,7 @@ function parseCount(resp, tab) {
 }
 
 (function showCountDiscid() {
-    var tab = $("a[href$='/discids']")[0],
+    var tab = document.querySelector("a[href$='/discids']"),
         url = helper.wsUrl('release', ['discids']);
     fetch(url).then(resp => resp.json()).then(resp => {
         parseCount(resp, tab);

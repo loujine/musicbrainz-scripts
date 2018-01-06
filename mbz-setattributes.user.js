@@ -56,6 +56,7 @@ function setAttributes(relationType, attrId, toggle) {
     `);
 })(relEditor);
 
+
 $(document).ready(function() {
     for (let attr of ['Live', 'Partial', 'Instrumental']) {
         document.getElementById(`set${attr}`).addEventListener('click', () => {

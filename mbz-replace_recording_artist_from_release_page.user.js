@@ -198,15 +198,15 @@ function replaceArtist() {
 })(sidebar);
 
 $(document).ready(function () {
-    $('#selectors').click(function () {
+    document.getElementById('selectors').addEventListener('click', () => {
         showSelectors();
         $('#batch_select').prop('disabled', false);
         $('#batch_replace_edit_note').prop('disabled', false);
         $('#batch_replace').prop('disabled', false);
         $('#selectors').prop('disabled', true);
     });
-    $('#batch_replace').click(function () {replaceArtist();});
-    $('#batch_select').click(function () {
+    document.getElementById('batch_replace').addEventListener('click', replaceArtist);
+    document.getElementById('batch_select').addEventListener('click', () => {
         $('.replace:input').prop('checked', true);
     });
     return false;

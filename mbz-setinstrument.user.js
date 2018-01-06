@@ -59,6 +59,7 @@ function setInstrument(fromType, toType, attrIds, credit) {
     `);
 })(relEditor);
 
+
 // imported from mbz-loujine-common.js: server
 $(document).ready(function () {
     const link = server.recordingLinkType;
