@@ -122,7 +122,7 @@ function parseEditData(editData) {
     data['edit_note'] = $('#batch_replace_edit_note')[0].value;
     if (document.getElementById('set-unknown').checked) {
         data['edit_note'] = data['edit_note'].replace(
-            editNoteMsg, 'Set [unknown] performer when no relation');
+            editNoteMsg, 'Set [unknown] performer when no rel');
     }
     data.make_votable = document.getElementById('votable').checked ? '1' : '0';
     return parseArtistEditData(data, performers.sort(helper.comparefct));
@@ -180,7 +180,7 @@ function replaceArtist() {
         <p>First click "Show checkboxes" then select recordings to update</p>
         <input type="button" id="batch_select" value="Select all" disabled="true">
         <div>
-          <label>Exclude relations with pending edits</label>
+          <label>Exclude rels with pending edits</label>
           <input type="checkbox" id="pending">
         </div>
         <div class="auto-editor">
@@ -188,7 +188,7 @@ function replaceArtist() {
           <input type="checkbox" id="votable">
         </div>
         <div>
-          <label>Set [unknown] artist if no relation</label>
+          <label>Set [unknown] artist if no rel</label>
           <input type="checkbox" id="set-unknown">
         </div>
         <p>Edit note:</p>
