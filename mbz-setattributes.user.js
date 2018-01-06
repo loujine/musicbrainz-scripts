@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Set relation attributes in relationships editor
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.29
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Set attributes (live, partial, solo) in relationships editor
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -42,19 +42,18 @@ function setAttributes(relationType, attrId, toggle) {
 
 
 (function displayToolbar(relEditor) {
-    $('div.tabs').after(
-        relEditor.container().append(`
-            <h3>Recording-Work relation attributes</h3>
-            <input type="button" id="setLive" value="Set live">
-            <input type="button" id="setPartial" value="Set partial">
-            <input type="button" id="setInstrumental" value="Set instrumental">
-            <input type="button" id="toggleLive" value="Toggle live">
-            <input type="button" id="togglePartial" value="Toggle partial">
-            <input type="button" id="toggleInstrumental" value="Toggle instrumental">
-            <h3>Recording-Artist relation attributes</h3>
-            <input type="button" id="toggleSolo" value="Toggle solo">
-        `)
-    );
+    relEditor.container(document.querySelector('div.tabs'))
+             .insertAdjacentHTML('beforeend', `
+        <h3>Recording-Work relation attributes</h3>
+        <input type="button" id="setLive" value="Set live">
+        <input type="button" id="setPartial" value="Set partial">
+        <input type="button" id="setInstrumental" value="Set instrumental">
+        <input type="button" id="toggleLive" value="Toggle live">
+        <input type="button" id="togglePartial" value="Toggle partial">
+        <input type="button" id="toggleInstrumental" value="Toggle instrumental">
+        <h3>Recording-Artist relation attributes</h3>
+        <input type="button" id="toggleSolo" value="Toggle solo">
+    `);
 })(relEditor);
 
 $(document).ready(function() {

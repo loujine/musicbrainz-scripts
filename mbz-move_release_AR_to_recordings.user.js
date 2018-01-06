@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Move performer AR on release to recordings AR
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Move performer AR on release to recordings AR
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @include      http*://*mbsandbox.org/release/*/edit-relationships
 // @grant        none
@@ -71,17 +71,11 @@ function moveAR(ids) {
 }
 
 (function displayToolbar(relEditor) {
-    $('div.tabs').after(
-        relEditor.container().append(
-            $('<h3>Move AR to recordings</h3>')
-        ).append(
-            $('<input>', {
-                'id': 'moveAR',
-                'type': 'button',
-                'value': 'Move AR to selected recordings'
-            })
-        )
-    );
+    relEditor.container(document.querySelector('div.tabs'))
+             .insertAdjacentHTML('beforeend', `
+        <h3>Move AR to recordings</h3>
+        <input type="button" id="moveAR" value="Move AR to selected recordings">
+    `);
 })(relEditor);
 
 

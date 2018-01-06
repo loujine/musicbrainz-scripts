@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-propagate recording dates
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Copy dates on relevant recording AR fields
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -77,25 +77,14 @@ function removeDates() {
 }
 
 (function displayToolbar(relEditor) {
-    $('div.tabs').after(
-        relEditor.container()
-        .append(
-            $('<h3>Dates</h3>')
-        ).append(
-            $('<input>', {
-                'id': 'copydates',
-                'type': 'button',
-                'value': 'Copy dates'
-            })
-        ).append(
-            $('<input>', {
-                'id': 'removedates',
-                'type': 'button',
-                'value': 'Remove dates'
-            })
-        )
-    );
+    relEditor.container(document.querySelector('div.tabs'))
+    .insertAdjacentHTML('beforeend', `
+        <h3>Dates</h3>
+        <input type="button" id="copyDates" value="Copy dates">
+        <input type="button" id="removeDates" value="Removes dates">
+    `);
 })(relEditor);
+
 
 $(document).ready(function() {
     var appliedNote = false;
@@ -103,11 +92,13 @@ $(document).ready(function() {
         removeDates();
         relEditor.editNote(GM_info.script);
     });
-    $('#copydates').click(function() {
+    document.getElementById('copyDates').addEventListener('click', () => {
         propagateDates();
         if (!appliedNote) {
-            relEditor.editNote(GM_info.script,
-                'Propagate recording dates from other advanced relationships');
+            relEditor.editNote(
+                GM_info.script,
+                'Propagate recording dates from other relationships'
+            );
             appliedNote = true;
         }
     });

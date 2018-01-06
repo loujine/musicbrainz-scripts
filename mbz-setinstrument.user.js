@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-set recording-artist instrument
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Convert to "string" instrument AR on selected recordings
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -46,66 +46,41 @@ function setInstrument(fromType, toType, attrIds, credit) {
     });
 }
 
+
 (function displayToolbar(relEditor) {
-    $('div.tabs').after(
-        relEditor.container().append(
-            $('<h3>Recording-performer instrument attributes</h3>')
-        ).append(
-            $('<input>', {
-                'id': 'batch-unset-orchestra',
-                'type': 'button',
-                'value': 'Unset "Orchestra"'
-            })
-        ).append(
-            $('<input>', {
-                'id': 'batch-unset-instrument',
-                'type': 'button',
-                'value': 'Unset instrument'
-            })
-        ).append(
-            $('<input>', {
-                'id': 'batch-set-string-quartet',
-                'type': 'button',
-                'value': 'Set "String Quartet"'
-            })
-        ).append(
-            $('<input>', {
-                'id': 'batch-set-piano-trio',
-                'type': 'button',
-                'value': 'Set "Piano Trio"'
-            })
-        ).append(
-            $('<input>', {
-                'id': 'batch-set-piano',
-                'type': 'button',
-                'value': 'Set "Piano"'
-            })
-        )
-    );
+    relEditor.container(document.querySelector('div.tabs'))
+             .insertAdjacentHTML('beforeend', `
+        <h3>Recording-performer instrument attributes</h3>
+        <input type="button" id="unsetOrchestra" value='Unset "orchestra"'>
+        <input type="button" id="unsetInstrument" value='Unset "instrument"'>
+        <input type="button" id="setSQ" value='Set "String Quartet"'>
+        <input type="button" id="setPianoTrio" value='Set "Piano Trio"'>
+        <input type="button" id="setPiano" value='Set "Piano"'>
+    `);
 })(relEditor);
 
 // imported from mbz-loujine-common.js: server
 $(document).ready(function () {
-    var link = server.recordingLinkType;
-    $('#batch-unset-orchestra').click(function () {
+    const link = server.recordingLinkType;
+    document.getElementById('unsetOrchestra').addEventListener('click', () => {
         setInstrument(link.orchestra, link.performer);
         relEditor.editNote(GM_info.script);
     });
-    $('#batch-unset-instrument').click(function () {
+    document.getElementById('unsetInstrument').addEventListener('click', () => {
         setInstrument(link.instrument, link.performer);
         relEditor.editNote(GM_info.script);
     });
-    $('#batch-set-string-quartet').click(function () {
+    document.getElementById('setSQ').addEventListener('click', () => {
         setInstrument(link.performer, link.instrument,
                       [server.attr.strings], 'string quartet');
         relEditor.editNote(GM_info.script, 'Use "strings" instrument AR for a String Quartet artist');
     });
-    $('#batch-set-piano-trio').click(function () {
+    document.getElementById('setPianoTrio').addEventListener('click', () => {
         setInstrument(link.performer, link.instrument,
                       [server.attr.piano, server.attr.violin, server.attr.cello]);
         relEditor.editNote(GM_info.script, 'Use instruments AR for a Piano Trio artist');
     });
-    $('#batch-set-piano').click(function () {
+    document.getElementById('setPiano').addEventListener('click', () => {
         setInstrument(link.performer, link.instrument,
                       [server.attr.piano]);
         relEditor.editNote(GM_info.script);

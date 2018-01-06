@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2017.12.9
+// @version      2018.1.3
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Set best-guess related works
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=229943
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -98,53 +98,25 @@ function guessSubWorks(workMbid) {
 }
 
 (function displayToolbar(relEditor) {
-    $('div.tabs').after(
-        relEditor.container().append(
-            $('<h3>Search for works</h3>')
-        ).append(
-            $('<p>You can add an optional prefix (e.g. the misssing parent work name) to help guessing the right work</p>')
-        ).append(
-            $('<span>Optional prefix:&nbsp;</span>')
-        ).append(
-            $('<input>', {
-                'id': 'prefix',
-                'type': 'text',
-                'value': ''
-            })
-        ).append(
-            $('<input>', {
-                'id': 'searchwork',
-                'type': 'button',
-                'value': 'Guess works'
-            })
-        ).append(
-            $('<br />')
-        ).append(
-            $('<h3>Link to parts of a main Work</h3>')
-        ).append(
-            $('<p>Fill the main work mbid to link selected recordings to (ordered) parts of the work</p>')
-        ).append(
-            $('<span>Main work name:&nbsp;</span>')
-        ).append(
-            $('<input>', {
-                'id': 'mainWork',
-                'type': 'text',
-                'placeholder': 'main work mbid'
-            })
-        ).append(
-            $('<input>', {
-                'id': 'searchsubworks',
-                'type': 'button',
-                'value': 'Guess subworks'
-            })
-
-        )
-    );
+    relEditor.container(document.querySelector('div.tabs'))
+             .insertAdjacentHTML('beforeend', `
+        <h3>Search for works</h3>
+        <p>You can add an optional prefix (e.g. the misssing parent work name) to help guessing the right work</p>
+        <span>Optional prefix:&nbsp;</span>
+        <input type="text" id="prefix" value="">
+        <input type="button" id="searchWork" value="Guess works">
+        <br />
+        <h3>Link to parts of a main Work</h3>
+        <p>Fill the main work mbid to link selected recordings to (ordered) parts of the work</p>
+        <span>Main work name:&nbsp;</span>
+        <input type="text" id="mainWork" placeholder="main work mbid">
+        <input type="button" id="searchSubworks" value="Guess subworks">
+    `);
 })(relEditor);
 
 $(document).ready(function() {
-    var appliedNote = false;
-    $('#searchwork').click(function() {
+    let appliedNote = false;
+    document.getElementById('searchWork').addEventListener('click', () => {
         guessWork();
         if (!appliedNote) {
             relEditor.editNote(GM_info.script, 'Set guessed works');
@@ -152,7 +124,7 @@ $(document).ready(function() {
         }
     });
     $('input#mainWork').on('input', autoComplete);
-    $('input#searchsubworks').click(function() {
+    document.querySelector('input#searchSubworks').addEventListener('click', () => {
         guessSubWorks($('input#mainWork').data('mbid'));
         if (!appliedNote) {
             relEditor.editNote(GM_info.script, 'Set guessed subworks');
