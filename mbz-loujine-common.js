@@ -292,6 +292,7 @@ function buildLanguageOptions(obj) {
     ).join('');
 }
 
+// eslint-disable-next-line no-unused-vars
 const aliases = {
     artistType: `
         <select>
@@ -315,6 +316,7 @@ const aliases = {
     `,
 };
 
+// eslint-disable-next-line no-unused-vars
 const works = {
     type: `
         <select class="setwork">
@@ -449,11 +451,13 @@ class Edits {
 
     formatEdit(editType, info) {
         return _.toPairs(info).map(
-            ([prop, val]) => val === null ? `${editType}.${prop}` : `${editType}.${prop}=${val}`
+            ([prop, val]) => val === null ? `${editType}.${prop}`
+                                          : `${editType}.${prop}=${val}`
         ).join('&');
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 const edits = new Edits();
 
 
@@ -512,6 +516,7 @@ class Helper {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 const helper = new Helper();
 
 
@@ -523,7 +528,7 @@ class Sidebar {
     }
 
     container() {
-        let container = document.getElementById('loujine-sidebar');
+        const container = document.getElementById('loujine-sidebar');
         if (container !== null) {
             return container;
         }
@@ -540,6 +545,7 @@ class Sidebar {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 const sidebar = new Sidebar();
 
 
@@ -562,7 +568,7 @@ class RelationshipEditor {
     }
 
     container(node) {
-        let container = document.getElementById('loujine-menu');
+        const container = document.getElementById('loujine-menu');
         if (container !== null) {
             return container;
         }
@@ -579,4 +585,5 @@ class RelationshipEditor {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 const relEditor = new RelationshipEditor();
