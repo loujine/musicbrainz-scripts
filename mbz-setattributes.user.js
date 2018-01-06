@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Set relation attributes in relationships editor
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.4
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -20,24 +20,20 @@
 
 function setAttributes(relationType, attrId, toggle) {
     const recordings = MB.relationshipEditor.UI.checkedRecordings();
-    recordings.forEach(function(recording) {
-        recording.relationships().forEach(function(relation) {
-            if (relation.entityTypes !== relationType) {
-                return;
-            }
-            var attrs = relation.attributes(),
-                attr = attrs.filter(
-                    // attrId already in relation attributes
-                    el => el.type.id === attrId
-                );
+    for (const recording of recordings) {
+        for (const relation of recording.relationships().filter(
+            rel => rel.entityTypes === relationType
+        )) {
+            const attrs = relation.attributes(),
+                attr = attrs.filter(el => el.type.id === attrId);
             if (!attr.length) {
                 attrs.push({type: MB.attrInfoByID[attrId]});
             } else if (toggle) {
                 attrs.splice(attrs.indexOf(attr), 1);
             }
             relation.setAttributes(attrs);
-        });
-    });
+        }
+    }
 }
 
 
@@ -58,7 +54,7 @@ function setAttributes(relationType, attrId, toggle) {
 
 
 $(document).ready(function() {
-    for (let attr of ['Live', 'Partial', 'Instrumental']) {
+    for (const attr of ['Live', 'Partial', 'Instrumental']) {
         document.getElementById(`set${attr}`).addEventListener('click', () => {
             setAttributes('recording-work', server.attr[attr.toLowerCase()], false);
             relEditor.editNote(GM_info.script);
