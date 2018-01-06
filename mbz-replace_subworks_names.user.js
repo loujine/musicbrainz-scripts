@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Replace subwork titles and attributes in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -84,7 +84,7 @@ function setSubworksAttributes(attrIdx) {
 }
 
 
-(function displayToolbar(relEditor) {
+(function displayToolbar() {
     $('div.half-width').after(
         $('<div>', {float: 'right'})).after(
         relEditor.container().append(
@@ -125,7 +125,7 @@ function setSubworksAttributes(attrIdx) {
         )
     );
     $('div#loujine-menu').css('margin-left', '550px');
-})(relEditor);
+})();
 
 
 $(document).ready(function () {

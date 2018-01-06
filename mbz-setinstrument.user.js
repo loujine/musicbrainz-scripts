@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-set recording-artist instrument
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -47,7 +47,7 @@ function setInstrument(fromType, toType, attrIds, credit) {
 }
 
 
-(function displayToolbar(relEditor) {
+(function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
         <h3>Recording-performer instrument attributes</h3>
@@ -57,7 +57,7 @@ function setInstrument(fromType, toType, attrIds, credit) {
         <input type="button" id="setPianoTrio" value='Set "Piano Trio"'>
         <input type="button" id="setPiano" value='Set "Piano"'>
     `);
-})(relEditor);
+})();
 
 
 // imported from mbz-loujine-common.js: server

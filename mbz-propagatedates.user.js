@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-propagate recording dates
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -76,14 +76,14 @@ function removeDates() {
     });
 }
 
-(function displayToolbar(relEditor) {
+(function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
     .insertAdjacentHTML('beforeend', `
         <h3>Dates</h3>
         <input type="button" id="copyDates" value="Copy dates">
         <input type="button" id="removeDates" value="Removes dates">
     `);
-})(relEditor);
+})();
 
 
 $(document).ready(function() {

@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show missing works on an artist page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showmissingworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showmissingworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -56,7 +56,7 @@ function showMissingWorks() {
     });
 }
 
-(function displaySidebar(sidebar) {
+(function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Linked works</h3>
         <input type="button" id="showMissingWorks" value="Show missing works">
@@ -67,7 +67,7 @@ function showMissingWorks() {
           <li>✗: no work linked</li>
         </ul>
     `);
-})(sidebar);
+})();
 
 $(document).ready(function () {
     document.getElementById('showMissingWorks').addEventListener('click', showMissingWorks);

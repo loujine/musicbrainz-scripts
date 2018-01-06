@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Replace recording artists from an artist or work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -172,7 +172,7 @@ function replaceArtist() {
     });
 }
 
-(function displaySidebar(sidebar) {
+(function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Show performers</h3>
         <p>Show performers present in recording AR, for recordings not respecting the CSG</p>
@@ -195,7 +195,7 @@ function replaceArtist() {
                   text=${sidebar.editNote(GM_info.script, editNoteMsg)}></textarea>
         <input type="button" id="batch_replace" value="Replace selected artists" disabled="true">
     `);
-})(sidebar);
+})();
 
 $(document).ready(function () {
     document.getElementById('showPerformers').addEventListener('click', () => {

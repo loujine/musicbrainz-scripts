@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_work_arrangement.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_work_arrangement.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -106,7 +106,7 @@ function createArrangement(mbid, parentMbid) {
 }
 
 
-(function displaySidebar(sidebar) {
+(function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Create work arrangement</h3>
         <input type="text" id="disambiguation" value="" placeholder="disambiguation text">
@@ -118,7 +118,7 @@ function createArrangement(mbid, parentMbid) {
         <span id="create-arrangement-text">
     `);
     $('div#loujine-menu').css('margin-left', '550px');
-})(sidebar);
+})();
 
 
 $(document).ready(function () {

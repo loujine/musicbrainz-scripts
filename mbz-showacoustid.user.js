@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show acoustids
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -120,7 +120,7 @@ function mergeFromAcoustID() {
 }
 
 
-(function displaySidebar(sidebar) {
+(function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Show acoustIDs</h3>
         <input type="button" id="showAcoustids" value="Show acoustIDs">
@@ -128,7 +128,7 @@ function mergeFromAcoustID() {
         <select id="acidForMerge"><option value="">acoustID</option></select>
         <input type="button" id="merge" value="Merge">
     `);
-})(sidebar);
+})();
 
 $(document).ready(function() {
     document.getElementById('showAcoustids').addEventListener('click', showAcoustids);

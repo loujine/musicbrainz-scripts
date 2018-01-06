@@ -67,13 +67,13 @@ function moveAR(ids) {
     });
 }
 
-(function displayToolbar(relEditor) {
+(function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
         <h3>Move AR to recordings</h3>
         <input type="button" id="moveAR" value="Move AR to selected recordings">
     `);
-})(relEditor);
+})();
 
 
 $(document).ready(function() {

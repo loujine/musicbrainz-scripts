@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Replace recording artists from a release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -172,7 +172,7 @@ function replaceArtist() {
     });
 }
 
-(function displaySidebar(sidebar) {
+(function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
         <input type="button" id="selectors" value="Show checkboxes">
         <h3>Replace artists</h3>
@@ -195,7 +195,7 @@ function replaceArtist() {
                   text=${sidebar.editNote(GM_info.script, editNoteMsg)}></textarea>
         <input type="button" id="batch_replace" value="Replace selected artists" disabled="true">
     `);
-})(sidebar);
+})();
 
 $(document).ready(function () {
     document.getElementById('selectors').addEventListener('click', () => {

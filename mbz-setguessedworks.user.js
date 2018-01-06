@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Batch-set guessed works
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -98,7 +98,7 @@ function guessSubWorks(workMbid) {
 }
 
 
-(function displayToolbar(relEditor) {
+(function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
         <h3>Search for works</h3>
@@ -113,7 +113,7 @@ function guessSubWorks(workMbid) {
         <input type="text" id="mainWork" placeholder="main work mbid">
         <input type="button" id="searchSubworks" value="Guess subworks">
     `);
-})(relEditor);
+})();
 
 
 $(document).ready(function() {

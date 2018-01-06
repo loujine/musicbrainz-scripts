@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show acousticbrainz count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.4
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_acousticbrainz_count.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-shhowacousticbrainz_count.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -56,12 +56,12 @@ function showABids() {
 }
 
 
-(function displaySidebar(sidebar) {
+(function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Show AcousticBrainz IDs</h3>
         <input type="button" id="showABids" value="Show AcousticBrainz IDs">
     `);
-})(sidebar);
+})();
 
 $(document).ready(function() {
     document.getElementById('showABids').addEventListener('click', showABids);

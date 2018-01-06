@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Make table columns sortable
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.3
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-sortablecolumns.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-sortablecolumns.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -62,12 +62,12 @@ function sortByClickedColumn() {
     });
 }
 
-(function displaySidebar(sidebar) {
+(function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Sortable columns<h3>
         <input type="button" id="makeSortable" value="Make columns sortable">
     `);
-})(sidebar);
+})();
 
 $(document).ready(function() {
     document.getElementById('makeSortable').addEventListener('click', () => {

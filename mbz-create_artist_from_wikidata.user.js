@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Fill entity info from wikidata/VIAF
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.2
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -575,7 +575,7 @@ function fillFormFromISNI(isniURL) {
 }
 
 
-(function displayToolbar(relEditor) {
+(function displayToolbar() {
     $('div.half-width').after(
         $('<div>', {float: 'right'})).after(
         relEditor.container().append(
@@ -596,7 +596,7 @@ function fillFormFromISNI(isniURL) {
         )
     );
     $('div#loujine-menu').css('margin-left', '550px');
-})(relEditor);
+})();
 
 
 $(document).ready(function() {

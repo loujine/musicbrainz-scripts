@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Set relation attributes in relationships editor
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.4
+// @version      2018.1.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -37,7 +37,7 @@ function setAttributes(relationType, attrId, toggle) {
 }
 
 
-(function displayToolbar(relEditor) {
+(function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
         <h3>Recording-Work relation attributes</h3>
@@ -50,7 +50,7 @@ function setAttributes(relationType, attrId, toggle) {
         <h3>Recording-Artist relation attributes</h3>
         <input type="button" id="toggleSolo" value="Toggle solo">
     `);
-})(relEditor);
+})();
 
 
 $(document).ready(function() {
