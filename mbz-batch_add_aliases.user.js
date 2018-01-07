@@ -1,15 +1,14 @@
-/* global $ helper aliases edits sidebar requests GM_info */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: Batch-add aliases
+// @name         MusicBrainz edit: Add entity aliases in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.5
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
-// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js
+// @version      2018.1.6
+// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-add_aliases.user.js
+// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-add_aliases.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org: Batch-add aliases
+// @description  musicbrainz.org edit: Add entity aliases in batch
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
@@ -19,88 +18,4 @@
 // @run-at       document-end
 // ==/UserScript==
 
-const aliasType = helper.isArtistURL() ? aliases.artistType : aliases.type;
-
-function addRow() {
-    document.querySelector('tbody :last-child').insertAdjacentHTML('afterend', `
-        <tr class="newAlias">
-          <td><input type="text" value=""></td>
-          <td><input type="text" value=""
-                     placeholder="leave empty to use the name"></td>
-          <td></td>
-          <td></td>
-          <td>${aliasType}</td>
-          <td>
-            ${aliases.locale}
-            <input type="checkbox">
-            <span>primary</span>
-          </td>
-          <td><a href="#" class="deleteRow" style="color:red;">×</a></td>
-    `);
-    document.querySelector('a.deleteRow').addEventListener('click', evt => {
-        evt.target.parentElement.parentElement.remove();
-    });
-}
-
-function submitAliases() {
-    for (const node of document.getElementsByClassName('newAlias')) {
-        const cols = node.children,
-            postData = {
-                name: edits.encodeName(cols[0].children[0].value),
-                sort_name: edits.encodeName(cols[1].children[0].value),
-                type_id: cols[4].children[0].value,
-                locale: cols[5].children[0].value,
-                primary_for_locale: cols[5].children[1].checked ? 1 : 0,
-                edit_note: sidebar.editNote(GM_info.script)
-            };
-        if (postData.sort_name === '') {
-            postData.sort_name = postData.name;
-        }
-        cols[6].textContent = 'Sending edit data';
-        console.info('Data ready to be posted: ', postData);
-        function success(xhr) {
-            cols[6].textContent = `Success (code ${xhr.status})`;
-            cols[6].parentElement.style.color = 'green';
-        }
-        function fail(xhr) {
-            cols[6].textContent = `Error (code ${xhr.status})`;
-            cols[6].parentElement.style.color = 'red';
-        }
-        requests.POST(document.URL.replace('aliases', 'add-alias'),
-                      edits.formatEdit('edit-alias', postData),
-                      success, fail);
-        node.classList.remove('newAlias');
-    }
-}
-
-$(document).ready(function () {
-    // doesn't work on translated pages
-    for (const node of document.getElementById('content').getElementsByTagName('p')) {
-        if (node.innerHTML.includes('has no aliases')) {
-            node.innerHTML = `
-                <table class="tbl">
-                  <thead>
-                    <tr>
-                      <th>Alias</th>
-                      <th>Sort name</th>
-                      <th>Begin Date</th>
-                      <th>End Date</th>
-                      <th>Type</th>
-                      <th>Locale</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr></tr>
-                  </tbody>
-                </table>`;
-        }
-    }
-    document.getElementsByTagName('table')[0].insertAdjacentHTML('beforebegin', `
-        <h3>Add aliases manually</h3>
-        <input type="button" id="addRow" value="+ Add a new row">
-        <input type="button" id="submitAliases" value="Submit new aliases">
-    `);
-    document.getElementById('addRow').click(addRow);
-    document.getElementById('submitAliases').click(submitAliases);
-    return false;
-});
+// legacy file, replaced by mb-edit-add_aliases.user.js

@@ -1,3 +1,4 @@
+/* global helper */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Display discid count
@@ -19,4 +20,18 @@
 // @run-at       document-end
 // ==/UserScript==
 
-// legacy file, replaced by mb-display_count_discid.user.js
+// adapted from jesus2099  mb. INLINE STUFF
+
+function parseCount(data, tab) {
+    const cnt = data.media.reduce((cnt, medium) => cnt + medium.discs.length, 0);
+    if (cnt > 0) {
+        tab.style.backgroundColor = '#6f9';
+    }
+    tab.append(` (${cnt})`);
+}
+
+(function showCountDiscid() {
+    const tab = document.querySelector("a[href$='/discids']"),
+        url = helper.wsUrl('release', ['discids']);
+    fetch(url).then(resp => resp.json()).then(data => parseCount(data, tab));
+})();
