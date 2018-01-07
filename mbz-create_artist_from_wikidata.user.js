@@ -1,18 +1,18 @@
 /* global $ _ helper relEditor sidebar GM_info GM_xmlhttpRequest */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: Fill entity info from wikidata/VIAF
+// @name         MusicBrainz: Fill entity info from wikidata/VIAF/ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.5
+// @version      2018.1.6
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org: Fill entity info from wikidata/VIAF
+// @description  musicbrainz.org: Fill entity info from wikidata/VIAF/ISNI
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=228700
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
 // @include      http*://*musicbrainz.org/artist/create*
 // @include      http*://*musicbrainz.org/artist/*/edit
 // @exclude      http*://*musicbrainz.org/artist/*/alias/*/edit
@@ -297,7 +297,7 @@ function fillISNI(isni) {
 
 
 function _existingDomains() {
-    let existingDomains = [];
+    const existingDomains = [];
     const fields = document.getElementById("external-links-editor")
                            .getElementsByTagName('input');
     for (const link of fields) {
@@ -308,6 +308,7 @@ function _existingDomains() {
 
 
 function _fillExternalLinks(url) {
+
     /* React16 adapter
      *
      * from https://github.com/facebook/react/issues/10135#issuecomment-314441175
@@ -404,6 +405,7 @@ function _fillEntityGender(entity) {
 }
 
 
+// eslint-disable-next-line complexity
 function _fillFormFromWikidata(entity, entityType) {
     let lang = libWD.language,
         field, input;
@@ -521,10 +523,10 @@ function fillFormFromWikidata(wikiId) {
 
 function fillFormFromVIAF(viafURL) {
     const entityType = document.URL.split('/')[3];
-    fetch(viafURL).then(resp => {
+    fetch(viafURL).then(resp => resp.text()).then(html => {
         fillExternalLinks(viafURL);
         const parser = new DOMParser(),
-            doc = parser.parseFromString(resp, 'text/html');
+            doc = parser.parseFromString(html, 'text/html');
         setValue(
             'id-edit-artist.name',
             doc.getElementsByTagName('h2')[1].textContent,
@@ -576,34 +578,26 @@ function fillFormFromISNI(isniURL) {
 
 
 (function displayToolbar() {
-    $('div.half-width').after(
-        $('<div>', {float: 'right'})).after(
-        relEditor.container().append(
-            $('<h3>Add external link</h3>')
-        ).append(
-            $('<p>Add a wikidata/VIAF/ISNI ' +
-              'link here to retrieve automatically some information.</p>')
-        ).append(
-            $('<input>', {
-                'id': 'linkParser',
-                'type': 'text',
-                'value': '',
-                'placeholder': 'URL to parse',
-                'width': '400px'
-            })
-        ).append(
-            $('<dl>', {'id': 'newFields'})
-        )
-    );
-    $('div#loujine-menu').css('margin-left', '550px');
+    document.getElementsByClassName('.half-width')[0].insertAdjacentHTML(
+        'afterend', '<div id="side-col" style="float: right;"></div>');
+    relEditor.container(document.getElementById('side-col')).insertAdjacentHTML(
+        'beforeend', `
+        <h3>Add external link</h3>
+        <p>Add a wikidata/VIAF/ISNI link here to retrieve automatically some information.</p>
+        <input type="text" id="linkParser" value="" placeholder="paste URL here"
+               style="width: 400px;">
+        <dl id="newFields">
+    `);
+    document.getElementById('loujine-menu').style.marginLeft = '550px';
 })();
 
 
 $(document).ready(function() {
     const node = document.getElementById('linkParser');
     node.addEventListener('input', () => {
+        node.value = node.value.trim();
         const domain = node.value.split('/')[2];
-        $('#linkParser').css('background-color', '#bbffbb');
+        node.style.backgroundColor = '#bbffbb';
         if (domain === "www.wikidata.org") {
             fillExternalLinks(node.value);
             fillFormFromWikidata(node.value.split('/')[4].trim());
@@ -617,7 +611,7 @@ $(document).ready(function() {
             node.value = node.value.replace(/isni\//g, '')
             fillFormFromISNI(node.value);
         } else {
-            $('#linkParser').css('background-color', '#ffaaaa');
+            node.style.backgroundColor = '#ffaaaa';
         }
     }, false);
     return false;
