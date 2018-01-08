@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display discid count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.6
+// @version      2018.1.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_count_discid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_count_discid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts

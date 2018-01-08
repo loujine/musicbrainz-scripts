@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display (missing) work relations for an artist recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.7
+// @version      2018.1.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_work_relations_for_artist_recordings.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_work_relations_for_artist_recordings.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts

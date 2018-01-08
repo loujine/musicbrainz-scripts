@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.6
+// @version      2018.1.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_work_arrangement.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_work_arrangement.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts

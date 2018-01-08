@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Display acoustIDs and merge recordings with common acoustID
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.7
+// @version      2018.1.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-merge_from_acoustid.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-merge_from_acoustid.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts

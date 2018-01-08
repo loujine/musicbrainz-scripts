@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display sort button on table columns
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.7
+// @version      2018.1.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_sortable_table.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_sortable_table.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts

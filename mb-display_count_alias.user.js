@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display alias count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.6
+// @version      2018.1.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_count_alias.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_count_alias.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
