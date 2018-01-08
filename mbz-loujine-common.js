@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.4
+// @version      2018.1.9
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -88,6 +88,11 @@ class Server {
             'Artist name': 1,
             'Legal name': 2,
             'Search hint': 3
+        };
+        this.aliasInstrumentType = {
+            'Instrument name': 1,
+            'Search hint': 2,
+            'Brand name': 3
         };
         this.aliasType = {
             'Name': 1,
@@ -300,14 +305,18 @@ const aliases = {
           ${buildOptions(server.aliasArtistType)}
         </select>
     `,
-
+    instrumentType: `
+        <select>
+          <option selected> </option>
+          ${buildOptions(server.aliasInstrumentType)}
+        </select>
+    `,
     type: `
         <select>
           <option selected> </option>
           ${buildOptions(server.aliasType)}
         </select>
     `,
-
     locale: `
         <select>
           <option> </option>
@@ -495,6 +504,10 @@ class Helper {
 
     isArtistURL() {
         return this._isEntityTypeURL('artist')
+    }
+
+    isInstrumentURL() {
+        return this._isEntityTypeURL('instrument')
     }
 
     isReleaseURL() {

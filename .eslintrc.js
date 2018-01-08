@@ -145,7 +145,7 @@ module.exports = {
         "no-multiple-empty-lines": 0,
         "no-native-reassign": 0,
         "no-negated-condition": 0,
-        "no-nested-ternary": 2,
+        "no-nested-ternary": 0,
         "no-new": 2,
         "no-new-func": 2,
         "no-new-object": 2,
