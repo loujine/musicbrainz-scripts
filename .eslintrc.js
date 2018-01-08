@@ -96,7 +96,7 @@ module.exports = {
         "max-depth": 2,
         "max-len": [
             1,
-            80,
+            100,
             4,
             {"ignoreUrls": true,
              "ignoreComments": true}
