@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display AcousticBrainz data on recording page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.8
+// @version      2018.1.9
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_acousticbrainz_data_for_recording.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_acousticbrainz_data_for_recording.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -32,9 +32,12 @@ function showAcousticBrainzData() {
                 resp => resp.json()
             ).then(data => {
                 document.getElementById('ABkey').append(
-                    `${data.tonal.key_key} ${data.tonal.key_scale} (${_.round(100 * data.tonal.key_strength, 1)}%)`
+                    `${data.tonal.key_key} ${data.tonal.key_scale} (${_.round(
+                        100 * data.tonal.key_strength, 1)}%)`
                 );
+                document.getElementById('ABfreq').append(_.round(data.tonal.tuning_frequency, 2));
                 document.getElementById('ABbpm').append(_.round(data.rhythm.bpm, 1));
+                document.getElementById('ABbeatcount').append(data.rhythm.beats_count);
             });
         }
     });
@@ -45,9 +48,13 @@ function showAcousticBrainzData() {
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Show statistics</h3>
         <a href="//acousticbrainz.org/${mbid} target="_blank">AcousticBrainz entry</a>
-        <p id="ABcount">Number of submissions:&nbsp;</p>
-        <p id="ABkey">Key:&nbsp;</p>
-        <p id="ABbpm">BPM:&nbsp;</p>
+        <dl>
+          <dt>Number of submissions:</dt><dd id="ABcount"></dd>
+          <dt>Key:</dt><dd id="ABkey"></dd>
+          <dt>Tuning frequency:</dt><dd id="ABfreq"></dd>
+          <dt>BPM:</dt><dd id="ABbpm"></dd>
+          <dt>Beats count:</dt><dd id="ABbeatcount"></dd>
+        </dl>
     `);
     showAcousticBrainzData();
 })();
