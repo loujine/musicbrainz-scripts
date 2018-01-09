@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.8
+// @version      2018.1.9
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-guess_works.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-guess_works.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -21,14 +21,12 @@
 var MBID_REGEX = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
 
 function setWork(recording, work) {
-    var url = '/ws/js/entity/' + work.gid + '?inc=rels';
-    requests.GET(url, function (resp) {
-        var vm = MB.releaseRelationshipEditor;
+    requests.GET(`/ws/js/entity/${work.gid}?inc=rels`, function (resp) {
         var target = JSON.parse(resp);
         var dialog = new MB.relationshipEditor.UI.AddDialog({
             source: recording,
             target: target,
-            viewModel: vm
+            viewModel: MB.releaseRelationshipEditor
         });
         target.relationships.forEach(function (rel) {
             // apparently necessary to fill MB.entityCache with rels
@@ -39,9 +37,8 @@ function setWork(recording, work) {
 }
 
 function guessWork() {
-    var recordings = MB.relationshipEditor.UI.checkedRecordings(),
-        idx = 0;
-    recordings.forEach(function (recording) {
+    let idx = 0;
+    MB.relationshipEditor.UI.checkedRecordings().forEach(function (recording) {
         var url = '/ws/js/work/?q=' +
                   encodeURIComponent(document.getElementById('prefix').value) + ' ' +
                   encodeURIComponent(recording.name) +
@@ -63,7 +60,7 @@ function autoComplete() {
     var match = $input.val().match(MBID_REGEX);
     if (match) {
         var mbid = match[0];
-        requests.GET('/ws/2/work/' + mbid + '?fmt=json', function (data) {
+        requests.GET(`/ws/2/work/${mbid}?fmt=json`, function (data) {
             data = JSON.parse(data);
             $input.data('mbid', mbid);
             $input.val(data.title || data.name);
@@ -78,19 +75,33 @@ function guessSubWorks(workMbid) {
     if (workMbid.split('/').length > 1) {
         workMbid = workMbid.split('/')[4];
     }
-    var recordings = MB.relationshipEditor.UI.checkedRecordings(),
-        idx = 0;
-    var mainWorkUrl = '/ws/js/entity/' + workMbid + '?inc=rels';
-    requests.GET(mainWorkUrl, function (resp) {
-        var subWorks = helper.sortSubworks(JSON.parse(resp));
-        recordings.forEach(function (recording, recordingIdx) {
-            if (recordingIdx >= subWorks.length) {
+    let idx = 0;
+    requests.GET(`/ws/js/entity/${workMbid}?inc=rels`, function (resp) {
+        let repeats = document.getElementById('repeats').value.trim();
+        let total;
+        const subWorks = helper.sortSubworks(JSON.parse(resp));
+        if (repeats) {
+            repeats = repeats.split(/[,; ]/).filter(s => s != '').map(s => Number.parseInt(s));
+            total = repeats.reduce((n,m) => n+m, 0);
+        } else {
+            repeats = subWorks.map(() => 1);
+            total = subWorks.length;
+        }
+        const repeatedSubWorks = Array(total);
+        let start = 0;
+        subWorks.forEach((sb, sbIdx) => {
+            repeatedSubWorks.fill(sb, start, start + repeats[sbIdx]);
+            start += repeats[sbIdx];
+        })
+
+        MB.relationshipEditor.UI.checkedRecordings().forEach((recording, recIdx) => {
+            if (recIdx >= repeatedSubWorks.length) {
                 return;
             }
             if (!recording.performances().length) {
                 idx += 1;
                 setTimeout(function () {
-                    setWork(recording, subWorks[recordingIdx]);
+                    setWork(recording, repeatedSubWorks[recIdx]);
                 }, idx * server.timeout);
             }
         });
@@ -102,16 +113,25 @@ function guessSubWorks(workMbid) {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
         <h3>Search for works</h3>
-        <p>You can add an optional prefix (e.g. the misssing parent work name) to help guessing the right work</p>
-        <span>Optional prefix:&nbsp;</span>
-        <input type="text" id="prefix" value="">
+        <p>
+          You can add an optional prefix (e.g. the misssing parent work name)
+          to help guessing the right work
+        </p>
+        <span>prefix:&nbsp;</span>
+        <input type="text" id="prefix" value="" placeholder="optional">
         <input type="button" id="searchWork" value="Guess works">
         <br />
         <h3>Link to parts of a main Work</h3>
-        <p>Fill the main work mbid to link selected recordings to (ordered) parts of the work</p>
+        <p>
+          Fill the main work mbid to link selected recordings to (ordered) parts of the work.
+          Use the repeats fields to use the same subwork on successive recordings (e.g. for opera acts)
+        </p>
         <span>Main work name:&nbsp;</span>
         <input type="text" id="mainWork" placeholder="main work mbid">
         <input type="button" id="searchSubworks" value="Guess subworks">
+        <br />
+        <span>Repeats:&nbsp;</span>
+        <input type="text" id="repeats" placeholder="n1,n2,n3... (optional)">
     `);
 })();
 
