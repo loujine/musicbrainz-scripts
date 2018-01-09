@@ -1,6 +1,8 @@
 Musicbrainz scripts
 ===================
 
+Important note: as of December 2017 the scripts are not compatible with Firefox 57 + Greasemonkey 4. Using TamperMonkey or ViolentMonkey seems to work fine.
+
 Collection of greasemonkey scripts I wrote for [MusicBrainz](https://musicbrainz.org) display and editing.
 
 Contact me for bug reports/suggestions/patches: [loujine](https://bitbucket.org/loujine/) on bitbucket, [loujin](https://musicbrainz.org/user/loujin) on Musicbrainz (sadly 'loujine' was already taken)
@@ -19,23 +21,121 @@ Discussions on these scripts sometimes take place on the [musicbrainz forums](ht
 Installing
 ----------
 
+### Scripts to add/modify information display
+
+Show count on alias tab header on work/artist pages
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-display_count_alias.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_count_alias.user.js)
+
+
+Show count on discid tab header on main release pages
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-display_count_discid.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_count_discid.user.js)
+
+
+Mark recordings not linked to any work on an artist recordings or relationships page
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-display_work_relations_for_artist_recordings.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_work_relations_for_artist_recordings.user.js)
+
+
+Show stats from AcousticBrainz on a Recording page
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-display_acousticbrainz_data_for_recording.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_acousticbrainz_data_for_recording.user.js)
+
+
+Make table columns sortable (tested on Work pages)
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-display_sortable_table.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_sortable_table.user.js)
+
+
+Show acousticbrainz links to recordings on Work page
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-display_acousticbrainz_dataset_for_work.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_acousticbrainz_dataset_for_work.user.js)
+
+
+### Scripts to edit entities
+
+Fill artist/place info from wikidata
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-edit-create_from_wikidata.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js)
+
+
 Batch-add artist aliases
 
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-batch_add_aliases.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-batch_add_aliases.user.js)
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-edit-add_aliases.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-add_aliases.user.js)
 
 
-Fill artist info from wikidata
+Replace associated recording artist from a Release page
 
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-create_artist_from_wikidata.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_artist_from_wikidata.user.js)
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-edit-replace_rec_artist_from_release_page.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_release_page.user.js)
 
 
-Fill place info from wikidata
+Replace associated recording artist from an Artist or Work page
 
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-create_place_from_wikidata.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-create_place_from_wikidata.user.js)
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-edit-replace_rec_artist_from_work_page.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_work_page.user.js)
 
+
+Show acoustids and merge recordings with the same acoustid on a Work page
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-edit-merge_from_acoustid.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-merge_from_acoustid.user.js)
+
+
+Replace subwork titles in Work edit page
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-replace_subworks_names.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js)
+
+
+Set attributes (lang, key) from the composer Work page
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-edit-set_work_attributes.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-set_work_attributes.user.js)
+
+
+### Scripts to edit relations
+
+Move performer relation on release to recordings relations
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-reledit-release_rel_to_recording_rel.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-release_rel_to_recording_rel.user.js)
+
+
+Copy dates on relevant recording relations
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-reledit-copy_dates.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-copy_dates.user.js)
+
+
+Set attributes (live, partial, solo...) on selected recordings
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-reledit-set_work_rel_attrs.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_work_rel_attrs.user.js)
+
+
+Set best-guess related works
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-reledit-guess_works.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-guess_works.user.js)
+
+
+Convert relations to "string quartet", piano... instruments on selected recordings
+
+[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-reledit-set_instruments.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_instruments.user.js)
+
+
+### Importer scripts
 
 Add a button to import DG/Decca releases to MusicBrainz
 
@@ -43,112 +143,10 @@ Add a button to import DG/Decca releases to MusicBrainz
 [![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-dgdecca_importer.user.js)
 
 
-Move performer AR on release to recordings AR
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-move_release_AR_to_recordings.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-move_release_AR_to_recordings.user.js)
-
-
 Add a button to import Naxos Music Library releases to MusicBrainz
 
 [![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/mbz-naxos_library_importer.user.js)
 [![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/mbz-naxos_library_importer.user.js)
-
-
-Copy dates on relevant recording AR fields
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-propagatedates.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-propagatedates.user.js)
-
-
-Replace associated recording artist from a Release page
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-replace_recording_artist_from_release_page.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_recording_artist_from_release_page.user.js)
-
-
-Replace associated recording artist from an Artist or Work page
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-replacerecordingartist.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replacerecordingartist.user.js)
-
-
-replace subwork titles in Work edit page
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-replace_subworks_names.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-replace_subworks_names.user.js)
-
-
-Set attributes (live, partial) on selected recordings
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-setattributes.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setattributes.user.js)
-
-
-Set best-guess related works
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-setguessedworks.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setguessedworks.user.js)
-
-
-Convert to "string" instrument AR on selected recordings
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-setinstrument.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setinstrument.user.js)
-
-
-Set attributes (lang, key) from the composer Work page
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-setworkattributes.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-setworkattributes.user.js)
-
-
-Show acousticbrainz count on Work page
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-show_acousticbrainz_count.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_acousticbrainz_count.user.js)
-
-
-Show acoustids on a Work page
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-showacoustid.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showacoustid.user.js)
-
-
-Show alias number on work/artist pages
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-showcountalias.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountalias.user.js)
-
-
-Show discid number on main release pages
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-showcountdiscid.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showcountdiscid.user.js)
-
-
-Mark recordings not linked to any work on an artist recordings or relationships page
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-showmissingworks.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showmissingworks.user.js)
-
-
-Show performance durations on a Work page
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-showperformancedurations.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-showperformancedurations.user.js)
-
-
-Show stats from AcousticBrainz
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-show_stats_from_acousticbrainz.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-show_stats_from_acousticbrainz.user.js)
-
-
-Make table columns sortable (tested on Work pages)
-
-[![Source](https://github.com/jerone/UserScripts/blob/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-sortablecolumns.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-sortablecolumns.user.js)
 
 
 Notes
