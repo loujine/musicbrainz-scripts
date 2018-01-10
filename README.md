@@ -119,8 +119,8 @@ Copy dates on relevant recording relations
 
 Set attributes (live, partial, solo...) on selected recordings
 
-[![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-reledit-set_work_rel_attrs.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_work_rel_attrs.user.js)
+[![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-reledit-set_relation_attrs.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_relation_attrs.user.js)
 
 
 Set best-guess related works
