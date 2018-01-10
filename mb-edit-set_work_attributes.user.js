@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Set work attributes from the composer Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.8
+// @version      2018.1.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-set_work_attributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-set_work_attributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -130,8 +130,8 @@ function editWork() {
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Edit works</h3>
         <p>Edit note:</p>
-        <textarea id="batch_replace_edit_note" text=${sidebar.editNote(GM_info.script)}
-                  cols="20" rows="7"></textarea>
+        <textarea id="batch_replace_edit_note"
+                  cols="20" rows="7">${sidebar.editNote(GM_info.script)}</textarea>
         <input type="button" id="batch_edit" value="Edit selected works">
     `);
     document.querySelector('h2.rating').insertAdjacentElement(

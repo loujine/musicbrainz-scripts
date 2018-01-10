@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from a Release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.9
+// @version      2018.1.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -192,8 +192,8 @@ function replaceArtist() {
           <input type="checkbox" id="set-unknown">
         </div>
         <p>Edit note:</p>
-        <textarea id="batch_replace_edit_note" disabled="true"
-                  text=${sidebar.editNote(GM_info.script, editNoteMsg)}></textarea>
+        <textarea id="batch_replace_edit_note"
+                  disabled="true">${sidebar.editNote(GM_info.script, editNoteMsg)}</textarea>
         <input type="button" id="batch_replace" value="Replace selected artists" disabled="true">
     `);
 })();
