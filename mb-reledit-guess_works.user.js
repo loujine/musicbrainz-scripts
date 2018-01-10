@@ -81,7 +81,7 @@ function guessSubWorks(workMbid) {
         let total;
         const subWorks = helper.sortSubworks(JSON.parse(resp));
         if (repeats) {
-            repeats = repeats.split(/[,; ]/).filter(s => s != '').map(s => Number.parseInt(s));
+            repeats = repeats.split(/[,; ]+/).map(s => Number.parseInt(s));
             total = repeats.reduce((n,m) => n+m, 0);
         } else {
             repeats = subWorks.map(() => 1);
