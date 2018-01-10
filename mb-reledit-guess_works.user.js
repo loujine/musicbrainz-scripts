@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.9
+// @version      2018.1.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-guess_works.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-guess_works.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -75,17 +75,15 @@ function guessSubWorks(workMbid) {
     if (workMbid.split('/').length > 1) {
         workMbid = workMbid.split('/')[4];
     }
-    let idx = 0;
     requests.GET(`/ws/js/entity/${workMbid}?inc=rels`, function (resp) {
         let repeats = document.getElementById('repeats').value.trim();
-        let total;
         const subWorks = helper.sortSubworks(JSON.parse(resp));
+        let total = subWorks.length;
         if (repeats) {
             repeats = repeats.split(/[,; ]+/).map(s => Number.parseInt(s));
             total = repeats.reduce((n,m) => n+m, 0);
         } else {
             repeats = subWorks.map(() => 1);
-            total = subWorks.length;
         }
         const repeatedSubWorks = Array(total);
         let start = 0;
@@ -99,10 +97,7 @@ function guessSubWorks(workMbid) {
                 return;
             }
             if (!recording.performances().length) {
-                idx += 1;
-                setTimeout(function () {
-                    setWork(recording, repeatedSubWorks[recIdx]);
-                }, idx * server.timeout);
+                setWork(recording, repeatedSubWorks[recIdx]);
             }
         });
     });
