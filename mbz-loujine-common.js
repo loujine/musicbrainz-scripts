@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.9
+// @version      2018.1.11
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -536,7 +536,7 @@ const helper = new Helper();
 class Sidebar {
     editNote(meta, msg) {
         msg = msg || '';
-        const signature = `\n —\nGM script: "${meta.name}" (${meta.version})\n`;
+        const signature = `\n —\nGM script: "${meta.name}" (${meta.version})`;
         return (msg + signature);
     }
 
