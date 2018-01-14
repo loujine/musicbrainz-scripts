@@ -85,46 +85,31 @@ function setSubworksAttributes(attrIdx) {
 
 
 (function displayToolbar() {
-    $('div.half-width').after(
-        $('<div>', {float: 'right'})).after(
-        relEditor.container().append(
-            $('<h3>Replace subworks titles</h3>')
-        ).append(
-            $('<p>Search for a string or regular expression (e.g. /sonata Op.(.+)/i). Replace with a string that can call groups from the search regexp ($1, $2...).</p>')
-        ).append(
-            $('<input>', {
-                'id': 'search',
-                'type': 'text',
-                'placeholder': 'Searched string or regexp',
-                'value': ''
-            })
-        ).append(
-            $('<input>', {
-                'id': 'replace',
-                'type': 'text',
-                'value': '',
-                'placeholder': 'Replacing string'
-            })
-        ).append(
-            $('<input>', {
-                'id': 'replaceTitles',
-                'type': 'button',
-                'value': 'Apply',
-                'disabled': true
-            })
-        ).append(
-            $('<h3>Set subworks attributes</h3>')
-        ).append(
-            $('<select id="subwork_attribute"> <option value=""></option> <option value=0>act</option> <option value=1>movement</option> <option value=2>number</option> <option value=3>part of collection</option> </select>')
-        ).append(
-            $('<input>', {
-                'id': 'setSubworksAttributes',
-                'type': 'button',
-                'value': 'Set attribute on all subworks',
-            })
-        )
-    );
-    $('div#loujine-menu').css('margin-left', '550px');
+    document.getElementsByClassName('half-width')[0].insertAdjacentHTML(
+        'afterend', '<div id="side-col" style="float: right;"></div>');
+    relEditor.container(document.getElementById('side-col')).insertAdjacentHTML(
+        'beforeend', `
+        <h3>Replace subworks titles</h3>
+        <p>
+          Search for a string or regular expression (e.g. /sonata Op.(.+)/i).
+          Replace with a string that can call groups from the search regexp ($1, $2...).
+        </p>
+        <input type="text" id="search" value="" placeholder="Searched string or regexp">
+        <input type="text" id="replace" value="" placeholder="Replacing string">
+        <input type="button" id="replaceTitles" value="Apply" disabled="True">
+
+        <h3>Set subworks attributes</h3>
+        <select id="subwork_attribute">
+          <option value=""></option>
+          <option value=0>act</option>
+          <option value=1>movement</option>
+          <option value=2>number</option>
+          <option value=3>part of collection</option>
+        </select>
+        <input type="button" id="setSubworksAttributes" value="Set attribute on all subworks">
+
+    `);
+    document.getElementById('loujine-menu').style.marginLeft = '550px';
 })();
 
 
