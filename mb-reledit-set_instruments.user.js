@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set instrument in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.8
+// @version      2018.1.19
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_instruments.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_instruments.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -73,12 +73,12 @@ $(document).ready(function () {
     document.getElementById('setSQ').addEventListener('click', () => {
         setInstrument(link.performer, link.instrument,
                       [server.attr.strings], 'string quartet');
-        relEditor.editNote(GM_info.script, 'Use "strings" instrument AR for a String Quartet artist');
+        relEditor.editNote(GM_info.script, 'Use "strings" instrument rel for a String Quartet artist');
     });
     document.getElementById('setPianoTrio').addEventListener('click', () => {
         setInstrument(link.performer, link.instrument,
                       [server.attr.piano, server.attr.violin, server.attr.cello]);
-        relEditor.editNote(GM_info.script, 'Use instruments AR for a Piano Trio artist');
+        relEditor.editNote(GM_info.script, 'Use instruments rel for a Piano Trio artist');
     });
     document.getElementById('setPiano').addEventListener('click', () => {
         setInstrument(link.performer, link.instrument,

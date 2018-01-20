@@ -70,8 +70,8 @@ function moveAR(ids) {
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
-        <h3>Move AR to recordings</h3>
-        <input type="button" id="moveAR" value="Move AR to selected recordings">
+        <h3>Move relations to recordings</h3>
+        <input type="button" id="moveAR" value="Move relations to selected recordings">
     `);
 })();
 
@@ -82,7 +82,7 @@ $(document).ready(function() {
         moveAR(ids);
         relEditor.editNote(
             GM_info.script,
-            'Move performers in release AR to individual recordings'
+            'Move performers in release relations to individual recordings'
         );
     });
     return false;

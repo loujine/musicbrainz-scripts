@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from an Artist or Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.10
+// @version      2018.1.19
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_work_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_work_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -56,7 +56,7 @@ function showPerformers(start, maxcount) {
     }
     $rows = $($rows.get().reverse().splice(start, maxcount));
     if (!$('#ARperformerColumn').length) {
-        $('thead > tr').append('<th id="ARperformerColumn">Performer AR</th>');
+        $('thead > tr').append('<th id="ARperformerColumn">Performer rels</th>');
         $('.subh > th')[1].colSpan += 1;
         $('table.tbl > tbody > tr:not(".subh")').append('<td>');
     }
@@ -175,16 +175,16 @@ function replaceArtist() {
 (function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Show performers</h3>
-        <p>Show performers present in recording AR, for recordings not respecting the CSG</p>
+        <p>Show performers present in recording rels, for recordings not respecting the CSG</p>
         <div>First row:
           <input type="number" id="offset" value="1" style="width: 50px;">
         </div>
         <div>Rows to query:
           <input type="number" id="max" value="10" style="width: 50px;">
         </div>
-        <input type="button" id="showPerformers" value="Show performer AR">
+        <input type="button" id="showPerformers" value="Show performer rels">
         <h3>Replace artists</h3>
-        <p>First click "Show performer AR" then check boxes to select artists</p>
+        <p>First click "Show performer rels" then check boxes to select artists</p>
         <input type="button" id="batch_select" value="Select all" disabled="true">
         <div class="auto-editor">
           <label>Make all edits votable</label>
