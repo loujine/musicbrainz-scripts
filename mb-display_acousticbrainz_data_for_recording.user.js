@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display AcousticBrainz data on recording page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.9
+// @version      2018.2.4
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_acousticbrainz_data_for_recording.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_acousticbrainz_data_for_recording.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -47,7 +47,7 @@ function showAcousticBrainzData() {
     const mbid = helper.mbidFromURL();
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Show statistics</h3>
-        <a href="//acousticbrainz.org/${mbid} target="_blank">AcousticBrainz entry</a>
+        <a href="//acousticbrainz.org/${mbid}" target="_blank">AcousticBrainz entry</a>
         <dl>
           <dt>Number of submissions:</dt><dd id="ABcount"></dd>
           <dt>Key:</dt><dd id="ABkey"></dd>
