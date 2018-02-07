@@ -4,7 +4,7 @@
 // @name         Import Hyperion/Helios releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.2.5
+// @version      2018.2.6
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -78,8 +78,9 @@ function extract_track_data(node) {
     if (work != null) {
         title = work.textContent;
     } else {
-        // title = $(node).prev('.hyp-worktitle a')
-        title = node.querySelector('.hyp-subworktitle a').textContent;
+        title = $(node).prevAll('tr:has(.hyp-work)').first().find('.hyp-worktitle a').text();
+        title += ': ';
+        title += node.querySelector('.hyp-subworktitle a').textContent;
     }
     return {
         'number': parseInt(node.querySelector('.hyp-td-trackno a').textContent),
