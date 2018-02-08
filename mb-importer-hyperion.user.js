@@ -4,7 +4,7 @@
 // @name         Import Hyperion/Helios releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.2.7
+// @version      2018.2.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -133,8 +133,14 @@ function extract_release_data() {
         'tracks': tracks,
     }];
 
-    const release_date = new RegExp(/Release date: (\w*) (\d*)\n/).exec(
-        document.querySelector('div.panel-body.hyp-anorak').textContent);
+    let year, month, day;
+    const release_info = document.querySelector('div.panel-body.hyp-anorak').textContent;
+    const release_date = new RegExp(/Release date: (\d*) *(\w*) (\d*)\n/).exec(release_info);
+    if (release_date) {
+        year = release_date[3];
+        month = months[release_date[2]];
+        day = release_date[1];
+    }
 
     return {
         'title': document.querySelector('h3.hyp-title').textContent,
@@ -145,8 +151,9 @@ function extract_release_data() {
         'script': 'Latn',
         'packaging': '',
         'country': 'GB',
-        'year': release_date[2],
-        'month': months[release_date[1]],
+        'year': year,
+        'month': month,
+        'day': day,
         'labels': [labels[catno.slice(0,3)]],
         'urls': [{
             'link_type': 288, // 'discography'
