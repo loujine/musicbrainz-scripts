@@ -4,7 +4,7 @@
 // @name         Import Hyperion/Helios releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.2.6
+// @version      2018.2.7
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -20,13 +20,19 @@
 
 const catno = document.URL.split('/')[3].replace('dc.asp?dc=D_', '');
 
+const months = {
+    'January': 1, 'February': 2, 'March': 3, 'April': 4,
+    'May': 5, 'June': 6, 'July': 7, 'August': 8,
+    'September': 9, 'October': 10, 'November': 11, 'December': 12
+};
+
 const labels = {
-    'CDH': {
+    'CDA': {
         'name': 'hyperion',
         'mbid': '08e6c3c8-81ab-405f-9cff-10f6b8db064c',
         'catno': catno,
     },
-    'CDA': {
+    'CDH': {
         'name': 'helios',
         'mbid': '0a94e96a-9219-4dd7-a529-18d34e77f50f',
         'catno': catno,
@@ -38,11 +44,8 @@ const labels = {
     },
 }
 
-var editNote = ('Imported from '
-                + document.URL
-                + '\n —\n'
-                + 'GM script: "' + GM_info.script.name
-                + '" (' + GM_info.script.version + ')\n\n');
+const editNote = `Imported from ${document.URL}\n—\n` +
+    `GM script: "${GM_info.script.name}" (${GM_info.script.version})\n\n`;
 
 function _clean(s) {
     return s
@@ -106,7 +109,7 @@ function extract_release_data() {
 
     function _setReleaseArtists() {
         let composer = document.querySelector('div.hyp-albumdetail h4');
-        composer = composer ? composer.textContent : '';
+        composer = composer ? composer.textContent.split(' (')[0] : '';
         const list = [{
             'credited_name': composer,
             'artist_name': composer,
@@ -130,6 +133,9 @@ function extract_release_data() {
         'tracks': tracks,
     }];
 
+    const release_date = new RegExp(/Release date: (\w*) (\d*)\n/).exec(
+        document.querySelector('div.panel-body.hyp-anorak').textContent);
+
     return {
         'title': document.querySelector('h3.hyp-title').textContent,
         'artist_credit': _setReleaseArtists(),
@@ -138,7 +144,9 @@ function extract_release_data() {
         'language': 'eng',
         'script': 'Latn',
         'packaging': '',
-        'country': '',
+        'country': 'GB',
+        'year': release_date[2],
+        'month': months[release_date[1]],
         'labels': [labels[catno.slice(0,3)]],
         'urls': [{
             'link_type': 288, // 'discography'
