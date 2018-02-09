@@ -4,7 +4,7 @@
 // @name         Import Hyperion/Helios releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.2.8
+// @version      2018.2.9
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -119,19 +119,32 @@ function extract_release_data() {
         return list.concat(_setReleasePerformers());
     }
 
-    const tracks = Array.prototype.map.call(
-        Array.prototype.filter.call(
-            document.querySelectorAll(`.dc-d_${catno.toLowerCase()}`),
-            node => node.classList.length > 2),
-        extract_track_data
+    let discsNb = new RegExp(/(\d*)CDs/).exec(document.querySelector('.hyp-notice-album').textContent);
+    discsNb = discsNb === null ? 1 : parseInt(discsNb[1]);
+
+    const trackNodes = Array.prototype.filter.call(
+        document.querySelectorAll(`.dc-d_${catno.toLowerCase()},
+                                   .dc-d_${catno.toLowerCase()}_${discsNb}`),
+        node => node.classList.length > 2
     );
 
-    // push last medium
-    const discs = [{
+    const discTracks = [];
+    if (discsNb === 1) {
+        discTracks.push(trackNodes);
+    } else {
+        for (let node of trackNodes) {
+            if (node.children[0].children[0].textContent.startsWith('CD')) {
+                discTracks.push([]);
+            }
+            discTracks[discTracks.length - 1].push(node);
+        }
+    }
+
+    const discs = discTracks.map(tracks => ({
         'title': '',
         'format': 'CD',
-        'tracks': tracks,
-    }];
+        'tracks': tracks.map(extract_track_data),
+    }));
 
     let year, month, day;
     const release_info = document.querySelector('div.panel-body.hyp-anorak').textContent;
