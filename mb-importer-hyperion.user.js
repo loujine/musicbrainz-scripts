@@ -4,7 +4,7 @@
 // @name         Import Hyperion/Helios releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.2.9
+// @version      2018.2.10
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -119,8 +119,8 @@ function extract_release_data() {
         return list.concat(_setReleasePerformers());
     }
 
-    let discsNb = new RegExp(/(\d*)CDs/).exec(document.querySelector('.hyp-notice-album').textContent);
-    discsNb = discsNb === null ? 1 : parseInt(discsNb[1]);
+    let discsNb = document.querySelector('.hyp-notice-album') && new RegExp(/(\d*)CDs/).exec(document.querySelector('.hyp-notice-album').textContent);
+    discsNb = discsNb == null ? 1 : parseInt(discsNb[1]);
 
     const trackNodes = Array.prototype.filter.call(
         document.querySelectorAll(`.dc-d_${catno.toLowerCase()},
