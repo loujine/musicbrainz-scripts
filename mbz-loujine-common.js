@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.11
+// @version      2018.2.16
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -30,6 +30,19 @@ class Server {
             work: 278,
             place: 693,
             area: 698
+        };
+        this.instrumentType = {
+            strings: 69,
+            cello: 84,
+            violin: 86,
+            piano: 180,
+        };
+        this.vocalType = {
+            alto: 5,
+            bass: 7,
+            soprano: 10,
+            tenor: 11,
+            choir: 13,
         };
         this.workType = {
             'Song': 17,
@@ -351,6 +364,60 @@ const works = {
           <option selected> </option>
           ${buildOptions(server.workKeyAttr)}
         </select>
+    `,
+};
+
+// eslint-disable-next-line no-unused-vars
+const roles = {
+    roles: `
+        <option value="122" disabled="">performance</option>
+        <option value="156">&nbsp;&nbsp;performer</option>
+        <option value="148">&nbsp;&nbsp;&nbsp;&nbsp;instruments</option>
+        <option value="149">&nbsp;&nbsp;&nbsp;&nbsp;vocals</option>
+        <option value="150">&nbsp;&nbsp;orchestra</option>
+        <option value="151">&nbsp;&nbsp;conductor</option>
+        <option value="152">&nbsp;&nbsp;chorus master</option>
+        <option value="760">&nbsp;&nbsp;concertmaster</option>
+        <option value="297">arranger</option>
+        <option value="158">&nbsp;&nbsp;instruments arranger</option>
+        <option value="300">&nbsp;&nbsp;&nbsp;&nbsp;orchestrator</option>
+        <option value="298">&nbsp;&nbsp;vocals arranger</option>
+        <option value="157" disabled="">remixes and compilations</option>
+        <option value="153">&nbsp;&nbsp;remixer</option>
+        <option value="147">&nbsp;&nbsp;compiler</option>
+        <option value="155">&nbsp;&nbsp;DJ-mixer</option>
+        <option value="154">&nbsp;&nbsp;contains samples by</option>
+        <option value="160" disabled="">production</option>
+        <option value="141">&nbsp;&nbsp;producer</option>
+        <option value="138">&nbsp;&nbsp;engineer</option>
+        <option value="140">&nbsp;&nbsp;&nbsp;&nbsp;audio engineer</option>
+        <option value="136">&nbsp;&nbsp;&nbsp;&nbsp;mastering</option>
+        <option value="133">&nbsp;&nbsp;&nbsp;&nbsp;sound engineer</option>
+        <option value="143">&nbsp;&nbsp;&nbsp;&nbsp;mixer</option>
+        <option value="128">&nbsp;&nbsp;&nbsp;&nbsp;recording engineer</option>
+        <option value="132">&nbsp;&nbsp;&nbsp;&nbsp;programming</option>
+        <option value="144">&nbsp;&nbsp;&nbsp;&nbsp;editor</option>
+        <option value="726">&nbsp;&nbsp;&nbsp;&nbsp;balance engineer</option>
+        <option value="129">&nbsp;&nbsp;miscellaneous support</option>
+        <option value="142">&nbsp;&nbsp;&nbsp;&nbsp;legal representation</option>
+        <option value="869">&nbsp;&nbsp;&nbsp;&nbsp;phonographic copyright by</option>
+        <option value="858">&nbsp;&nbsp;&nbsp;&nbsp;visual appearances</option>
+        <option value="134">&nbsp;&nbsp;&nbsp;&nbsp;booking</option>
+        <option value="135">&nbsp;&nbsp;&nbsp;&nbsp;artist &amp; repertoire support</option>
+        <option value="146">&nbsp;&nbsp;&nbsp;&nbsp;creative direction</option>
+        <option value="137">&nbsp;&nbsp;&nbsp;&nbsp;art direction</option>
+        <option value="130">&nbsp;&nbsp;&nbsp;&nbsp;design/illustration</option>
+        <option value="125">&nbsp;&nbsp;&nbsp;&nbsp;graphic design</option>
+        <option value="123">&nbsp;&nbsp;&nbsp;&nbsp;photography</option>
+        <option value="931">&nbsp;&nbsp;&nbsp;&nbsp;piano technician</option>
+        <option value="127">&nbsp;&nbsp;&nbsp;&nbsp;publisher</option>
+    `,
+    roleAttrs: `
+        <option selected> </option>
+        <option disabled="">instruments</option>
+        ${buildOptions(server.instrumentType)}
+        <option disabled="">vocals</option>
+        ${buildOptions(server.vocalType)}
     `,
 };
 
