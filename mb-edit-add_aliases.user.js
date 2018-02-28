@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Add entity aliases in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.9
+// @version      2018.2.28
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-add_aliases.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-add_aliases.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -23,7 +23,7 @@ const aliasType = helper.isArtistURL() ? aliases.artistType :
                   helper.isInstrumentURL() ? aliases.instrumentType : aliases.type;
 
 function addRow() {
-    document.querySelector('tbody :last-child').insertAdjacentHTML('afterend', `
+    document.querySelector('tbody tr:last-child').insertAdjacentHTML('afterend', `
         <tr class="newAlias">
           <td><input type="text" value=""></td>
           <td><input type="text" value=""
@@ -101,7 +101,7 @@ $(document).ready(function () {
         <input type="button" id="addRow" value="+ Add a new row">
         <input type="button" id="submitAliases" value="Submit new aliases">
     `);
-    document.getElementById('addRow').click(addRow);
-    document.getElementById('submitAliases').click(submitAliases);
+    document.getElementById('addRow').addEventListener('click', addRow);
+    document.getElementById('submitAliases').addEventListener('click', submitAliases);
     return false;
 });
