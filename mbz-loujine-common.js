@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.2.16
+// @version      2018.3.19
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -94,6 +94,7 @@ class Server {
             'vocals',
             'orchestra',
             'conductor',
+            'concertmaster',
             'chorusmaster',
             'performer',
         ];
