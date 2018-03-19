@@ -4,7 +4,7 @@
 // @name         Import Hyperion/Helios releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.2.10
+// @version      2018.3.5
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-importer-hyperion.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -14,11 +14,13 @@
 // @license      MIT
 // @require      https://greasyfork.org/scripts/20955-mbimport/code/mbimport.js?version=133752
 // @include      http*://www.hyperion-records.co.uk/dc.asp?dc=D_*
+// @include      http*://www.hyperion-records.co.uk/al.asp?al=*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
 
-const catno = document.URL.split('/')[3].replace('dc.asp?dc=D_', '');
+const catno = document.URL.split('/')[3].replace('dc.asp?dc=D_', '')
+                                        .replace('al.asp?al=', '');
 
 const months = {
     'January': 1, 'February': 2, 'March': 3, 'April': 4,
@@ -27,6 +29,11 @@ const months = {
 };
 
 const labels = {
+    'SAC': {
+        'name': 'hyperion',
+        'mbid': '08e6c3c8-81ab-405f-9cff-10f6b8db064c',
+        'catno': catno,
+    },
     'CDA': {
         'name': 'hyperion',
         'mbid': '08e6c3c8-81ab-405f-9cff-10f6b8db064c',
