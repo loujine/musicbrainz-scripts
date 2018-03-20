@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.3.19
+// @version      2018.3.20
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -36,6 +36,7 @@ class Server {
             cello: 84,
             violin: 86,
             piano: 180,
+            'string quartet': 1067,
         };
         this.vocalType = {
             alto: 5,
