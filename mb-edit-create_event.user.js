@@ -48,6 +48,7 @@ function autoComplete() {
         <input type="text" id="lookupEntity" placeholder="artist or work mbid">
         <input type="button" id="copyEntity" value="Copy entity">
     `);
+    document.getElementById('loujine-menu').style.marginLeft = '550px';
 })();
 
 
