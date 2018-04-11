@@ -145,8 +145,8 @@ Add a button to import DG/Decca releases to MusicBrainz
 
 Add a button to import Naxos Music Library releases to MusicBrainz
 
-[![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/mbz-naxos_library_importer.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/mbz-naxos_library_importer.user.js)
+[![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mbz-naxos_library_importer.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-naxos_library_importer.user.js)
 
 
 Notes
