@@ -103,6 +103,12 @@ Set attributes (lang, key) from the composer Work page
 [![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-set_work_attributes.user.js)
 
 
+Autofill artists and works on Event setlists
+
+[![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/src/default/mb-edit-create_event.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_event.user.js)
+
+
 ### Scripts to edit relations
 
 Move performer relation on release to recordings relations
