@@ -4,7 +4,7 @@
 // @name         Import Naxos Music Library releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.4
+// @version      2018.4.12
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/mbz-naxos_library_importer.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/mbz-naxos_library_importer.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,8 +12,8 @@
 // @description  Add a button to import Naxos Music Library releases to MusicBrainz
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @include      http*://*.naxosmusiclibrary.com/catalogue/item.asp*
-// @require      https://greasyfork.org/scripts/20955-mbimport/code/mbimport.js?version=228700
+// @include      http*://*naxosmusiclibrary.com/catalogue/item.asp*
+// @require      https://greasyfork.org/scripts/20955-mbimport/code/mbimport.js?version=264826
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
