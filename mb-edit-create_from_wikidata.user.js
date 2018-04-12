@@ -63,6 +63,7 @@ class WikiDataHelpers {
             //authorities
             idVIAF: 'P214',
             idGND: 'P227',
+            idWorldCat: 'P244',
             idBNF: 'P268',
             idTrove: 'P1315',
             //databases
@@ -92,6 +93,7 @@ class WikiDataHelpers {
             //authorities
             idVIAF: 'https://viaf.org/viaf/',
             idGND: 'https://d-nb.info/gnd/',
+            idWorldCat: 'https://www.worldcat.org/identities/lccn-',
             idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
             idTrove: 'https://trove.nla.gov.au/people/',
             //databases
