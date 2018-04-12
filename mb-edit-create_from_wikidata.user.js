@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.9
+// @version      2018.4.11
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -60,32 +60,62 @@ class WikiDataHelpers {
             members: 'P527',
             student: 'P802',
             teacher: 'P1066',
-            idAllMusic: 'P1728',
-            idBNF: 'P268',
-            idDiscogs: 'P1953',
-            idFacebook: 'P2013',
+            //authorities
+            idVIAF: 'P214',
             idGND: 'P227',
+            idBNF: 'P268',
+            idTrove: 'P1315',
+            //databases
             idIMDB: 'P345',
-            idIMSLP: 'P839',
-            idInstagram: 'P2003',
             idOL: 'P648',
+            idIMSLP: 'P839',
+            idIDBD: 'P1220',
+            idAllMusic: 'P1728',
             idSpotify: 'P1902',
+            idDiscogs: 'P1953',
+            idGenius: 'P2373',
+            idiTunes: 'P2850',
+            idSecondHandSongs: 'P2909',
+            idSoundCloud: 'P3040',
+            idLastFM: 'P3192',
+            idSongkick: 'P3478',
+            //social media
             idTwitter: 'P2002',
-            idVIAF: 'P214'
+            idInstagram: 'P2003',
+            idFacebook: 'P2013',
+            idYoutube: 'P2397',
+            idGooglePlus: 'P2847',
+            idMyspace: 'P3265',
+            idWeibo: 'P3579',
         };
         this.urls = {
-            idAllMusic: 'http://www.allmusic.com/artist/',
-            idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
-            idDiscogs: 'https://www.discogs.com/artist/',
-            idFacebook: 'https://www.facebook.com/',
+            //authorities
+            idVIAF: 'https://viaf.org/viaf/',
             idGND: 'https://d-nb.info/gnd/',
+            idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
+            idTrove: 'https://trove.nla.gov.au/people/',
+            //databases
             idIMDB: 'http://www.imdb.com/name/',
-            idIMSLP: 'https://imslp.org/wiki/',
-            idInstagram: 'https://www.instagram.com/',
             idOL: 'https://openlibrary.org/works/',
+            idIMSLP: 'https://imslp.org/wiki/',
+            idIDBD: 'https://ibdb.com/person.php?id=',
+            idAllMusic: 'https://www.allmusic.com/artist/',
             idSpotify: 'https://open.spotify.com/artist/',
+            idDiscogs: 'https://www.discogs.com/artist/',
+            idGenius: 'https://genius.com/artists/',
+            idiTunes: 'https://itunes.apple.com/artist/',
+            idSecondHandSongs: 'https://secondhandsongs.com/artist/',
+            idSoundCloud: 'https://soundcloud.com/',
+            idLastFM: 'https://www.last.fm/music/',
+            idSongkick: 'https://www.songkick.com/artists/',
+            //social media
             idTwitter: 'https://twitter.com/',
-            idVIAF: 'https://viaf.org/viaf/'
+            idInstagram: 'https://www.instagram.com/',
+            idFacebook: 'https://www.facebook.com/',
+            idYoutube: 'https://www.youtube.com/channel/',
+            idGooglePlus: 'https://plus.google.com/u/0/',
+            idMyspace: 'https://myspace.com/',
+            idWeibo: 'https://weibo.com/',
         };
     }
 
