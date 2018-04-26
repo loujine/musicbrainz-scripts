@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.4.11
+// @version      2018.4.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -73,12 +73,16 @@ class WikiDataHelpers {
             idIDBD: 'P1220',
             idAllMusic: 'P1728',
             idSpotify: 'P1902',
+            idMetalArchivesBand: 'P1952',
             idDiscogs: 'P1953',
+            idMetalArchivesArtist: 'P1989',
             idGenius: 'P2373',
+            idDeezer: 'P2722',
             idiTunes: 'P2850',
             idSecondHandSongs: 'P2909',
             idSoundCloud: 'P3040',
             idLastFM: 'P3192',
+            idVGMDB: 'P3435',
             idSongkick: 'P3478',
             //social media
             idTwitter: 'P2002',
@@ -86,8 +90,12 @@ class WikiDataHelpers {
             idFacebook: 'P2013',
             idYoutube: 'P2397',
             idGooglePlus: 'P2847',
+            idDailymotion: 'P2942',
             idMyspace: 'P3265',
             idWeibo: 'P3579',
+            idPinterest: 'P3836',
+            idVimeo: 'P4015',
+            // missing: Tumblr (P3943), Bandcamp (P3283)
         };
         this.urls = {
             //authorities
