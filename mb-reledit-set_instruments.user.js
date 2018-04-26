@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.3.20
+// @version      2018.4.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_instruments.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_instruments.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -18,6 +18,11 @@
 // @run-at       document-end
 // ==/UserScript==
 
+const src = document.scripts[document.scripts.length - 1].text;
+                    // .text.replace(/\n/g, '').replace(/ +/g, ' ');
+const jsonSource = new RegExp(/RE.exportTypeInfo\(\n.*\n(.*)\n/).exec(src)[1];
+const attrInfo = _.values(JSON.parse(jsonSource));
+
 function setInstrument(fromType, toType, fromAttrId, toAttrId) {
     for (const recording of MB.relationshipEditor.UI.checkedRecordings()) {
         recording.relationships().filter(
@@ -29,7 +34,8 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
             const attrs = relation.attributes();
             relation.linkTypeID(toType);
             if (!isNaN(toAttrId)) {
-                attrs.push({type: MB.attrInfoByID[toAttrId]});
+                const attrType = attrInfo.filter(attr => attr.id == toAttrId)[0];
+                attrs.push({type: attrType});
             }
             relation.setAttributes(attrs);
         });

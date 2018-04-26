@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Replace release relations by recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.19
+// @version      2018.4.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-release_rel_to_recording_rel.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-release_rel_to_recording_rel.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -18,9 +18,14 @@
 // @run-at       document-end
 // ==/UserScript==
 
+const src = document.scripts[document.scripts.length - 1].text;
+                    // .text.replace(/\n/g, '').replace(/ +/g, ' ');
+const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*),\n.*\n/).exec(src)[1];
+const typeInfo = JSON.parse(jsonSource);
+
 function fetchLinkIds() {
-    const ids = [MB.typeInfo['artist-release'][0].id];
-    for (const rel of MB.typeInfo['artist-release'][0].children) {
+    const ids = [typeInfo['artist-release'][0].id];
+    for (const rel of typeInfo['artist-release'][0].children) {
         ids.push(rel.id);
         if (rel.children && rel.children.length) {
             for (const subrel of rel.children) {

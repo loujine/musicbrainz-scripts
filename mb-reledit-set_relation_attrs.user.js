@@ -1,10 +1,10 @@
-/* global $ MB server relEditor GM_info */
+/* global $ _ MB server relEditor GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.10
+// @version      2018.4.25
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -18,6 +18,11 @@
 // @run-at       document-end
 // ==/UserScript==
 
+const src = document.scripts[document.scripts.length - 1].text;
+                    // .text.replace(/\n/g, '').replace(/ +/g, ' ');
+const jsonSource = new RegExp(/RE.exportTypeInfo\(\n.*\n(.*)\n/).exec(src)[1];
+const attrInfo = _.values(JSON.parse(jsonSource));
+
 function setAttributes(relationType, attrId, toggle) {
     const recordings = MB.relationshipEditor.UI.checkedRecordings();
     for (const recording of recordings) {
@@ -27,7 +32,8 @@ function setAttributes(relationType, attrId, toggle) {
             const attrs = relation.attributes(),
                 attr = attrs.filter(el => el.type.id === attrId);
             if (!attr.length) {
-                attrs.push({type: MB.attrInfoByID[attrId]});
+                const attrType = attrInfo.filter(attr => attr.id == attrId)[0];
+                attrs.push({type: attrType});
             } else if (toggle) {
                 attrs.splice(attrs.indexOf(attr), 1);
             }
