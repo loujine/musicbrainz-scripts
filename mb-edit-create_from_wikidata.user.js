@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.4.25
+// @version      2018.4.29
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -60,6 +60,7 @@ class WikiDataHelpers {
             members: 'P527',
             student: 'P802',
             teacher: 'P1066',
+            officialWebsite: 'P856',
             //authorities
             idVIAF: 'P214',
             idGND: 'P227',
@@ -72,60 +73,74 @@ class WikiDataHelpers {
             idIMSLP: 'P839',
             idIDBD: 'P1220',
             idAllMusic: 'P1728',
-            idSpotify: 'P1902',
             idMetalArchivesBand: 'P1952',
             idDiscogs: 'P1953',
             idMetalArchivesArtist: 'P1989',
-            idGenius: 'P2373',
-            idDeezer: 'P2722',
-            idiTunes: 'P2850',
             idSecondHandSongs: 'P2909',
-            idSoundCloud: 'P3040',
-            idLastFM: 'P3192',
             idVGMDB: 'P3435',
-            idSongkick: 'P3478',
+            idOperabase: 'P4869',
             //social media
             idTwitter: 'P2002',
             idInstagram: 'P2003',
             idFacebook: 'P2013',
-            idYoutube: 'P2397',
+            idGenius: 'P2373',
             idGooglePlus: 'P2847',
-            idDailymotion: 'P2942',
             idMyspace: 'P3265',
             idWeibo: 'P3579',
             idPinterest: 'P3836',
+            //other
+            idSpotify: 'P1902',
+            idYoutube: 'P2397',
+            idDeezer: 'P2722',
+            idiTunes: 'P2850',
+            idDailymotion: 'P2942',
+            idSoundCloud: 'P3040',
+            idLastFM: 'P3192',
+            idSongkick: 'P3478',
             idVimeo: 'P4015',
+            idPatreon: 'P4175',
             // missing: Tumblr (P3943), Bandcamp (P3283)
         };
         this.urls = {
+            officialWebsite: '',
             //authorities
             idVIAF: 'https://viaf.org/viaf/',
             idGND: 'https://d-nb.info/gnd/',
             idWorldCat: 'https://www.worldcat.org/identities/lccn-',
             idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
-            idTrove: 'https://trove.nla.gov.au/people/',
+            idTrove: 'http://nla.gov.au/nla.party-',
             //databases
             idIMDB: 'http://www.imdb.com/name/',
             idOL: 'https://openlibrary.org/works/',
             idIMSLP: 'https://imslp.org/wiki/',
             idIDBD: 'https://ibdb.com/person.php?id=',
             idAllMusic: 'https://www.allmusic.com/artist/',
-            idSpotify: 'https://open.spotify.com/artist/',
+            idMetalArchivesBand: 'http://www.metal-archives.com/band.php?id=',
             idDiscogs: 'https://www.discogs.com/artist/',
+            idMetalArchivesArtist: 'http://www.metal-archives.com/artist.php?id=',
             idGenius: 'https://genius.com/artists/',
-            idiTunes: 'https://itunes.apple.com/artist/',
             idSecondHandSongs: 'https://secondhandsongs.com/artist/',
-            idSoundCloud: 'https://soundcloud.com/',
-            idLastFM: 'https://www.last.fm/music/',
-            idSongkick: 'https://www.songkick.com/artists/',
+            idVGMDB: 'https://vgmdb.net/artist/',
+            idOperabase: 'http://operabase.com/a/',
             //social media
             idTwitter: 'https://twitter.com/',
             idInstagram: 'https://www.instagram.com/',
             idFacebook: 'https://www.facebook.com/',
-            idYoutube: 'https://www.youtube.com/channel/',
             idGooglePlus: 'https://plus.google.com/u/0/',
             idMyspace: 'https://myspace.com/',
             idWeibo: 'https://weibo.com/',
+            idPinterest: 'https://www.pinterest.com/',
+            //other
+            idSpotify: 'https://open.spotify.com/artist/',
+            idYoutube: 'https://www.youtube.com/channel/',
+            idDeezer: 'https://www.deezer.com/artist/',
+            idiTunes: 'https://itunes.apple.com/artist/',
+            idDailymotion: 'http://www.dailymotion.com/',
+            idSoundCloud: 'https://soundcloud.com/',
+            idLastFM: 'https://www.last.fm/music/',
+            idSongkick: 'https://www.songkick.com/artists/',
+            idVimeo: 'https://vimeo.com/',
+            idPatreon: 'https://www.patreon.com/',
         };
     }
 
