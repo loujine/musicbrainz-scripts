@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.4.29
+// @version      2018.5.30
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -64,6 +64,7 @@ class WikiDataHelpers {
             //authorities
             idVIAF: 'P214',
             idGND: 'P227',
+            idLoC: 'P244',
             idWorldCat: 'P244',
             idBNF: 'P268',
             idTrove: 'P1315',
@@ -106,6 +107,7 @@ class WikiDataHelpers {
             //authorities
             idVIAF: 'https://viaf.org/viaf/',
             idGND: 'https://d-nb.info/gnd/',
+            idLoC: 'https://id.loc.gov/authorities/names/',
             idWorldCat: 'https://www.worldcat.org/identities/lccn-',
             idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
             idTrove: 'http://nla.gov.au/nla.party-',
@@ -592,7 +594,7 @@ function fillFormFromVIAF(viafURL) {
                     'guesscase-sortname')[0].click();
             }
         );
-        for (const site of ["catalogue.bnf.fr", "d-nb.info", "wikidata.org"]) {
+        for (const site of ["catalogue.bnf.fr", "d-nb.info", "wikidata.org", "id.loc.gov"]) {
             const link = doc.querySelector(`a[href*="${site}"]`);
             if (link && link.href) {
                 fillExternalLinks(link.href);
