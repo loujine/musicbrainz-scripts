@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.3.20
+// @version      2018.4.29
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -32,13 +32,17 @@ class Server {
             area: 698
         };
         this.instrumentType = {
+            instrument: 14,
             strings: 69,
             cello: 84,
             violin: 86,
             piano: 180,
-            'string quartet': 1067,
+            string_quartet: 1067,
+            piano_trio: 1070,
+            string_trio: 1074,
         };
         this.vocalType = {
+            vocal: 3,
             alto: 5,
             bass: 7,
             soprano: 10,
@@ -119,6 +123,9 @@ class Server {
             violin: 86,
             piano: 180,
             bowedStrings: 275,
+            string_quartet: 1067,
+            piano_trio: 1070,
+            string_trio: 1074,
             cover: 567,
             live: 578,
             partial: 579,
@@ -292,6 +299,25 @@ class Server {
 
     performingLinkTypes() {
         return this._performingRoles.map(role => this.recordingLinkType[role])
+    }
+
+    getRelationshipTypeInfo() {
+        const scriptSrc = document.scripts[document.scripts.length - 1].text;
+        const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*)\n(.*)\n/).exec(scriptSrc);
+        return JSON.parse(jsonSource[1]);
+
+    }
+
+    getRelationshipAttrInfo() {
+        const scriptSrc = document.scripts[document.scripts.length - 1].text;
+        const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*)\n(.*)\n/).exec(scriptSrc);
+        return _.values(JSON.parse(jsonSource[2]));
+    }
+
+    getInstrumentRelationshipAttrInfo() {
+        return this.getRelationshipAttrInfo().filter(
+            attr => [this.instrumentType.instrument, this.instrumentType.vocal].includes(attr.id)
+        )[0].children;
     }
 }
 

@@ -1,4 +1,4 @@
-/* global $ MB roles relEditor GM_info */
+/* global $ MB roles server relEditor GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz relation editor: set role in recording-artist relation
@@ -12,30 +12,33 @@
 // @description  musicbrainz.org relation editor: set/unset role relations on selected recordings
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=260222
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=272024
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
 
-const src = document.scripts[document.scripts.length - 1].text;
-                    // .text.replace(/\n/g, '').replace(/ +/g, ' ');
-const jsonSource = new RegExp(/RE.exportTypeInfo\(\n.*\n(.*)\n/).exec(src)[1];
-const attrInfo = _.values(JSON.parse(jsonSource));
-
 function setInstrument(fromType, toType, fromAttrId, toAttrId) {
+    const attrInfo = server.getInstrumentRelationshipAttrInfo();
+    const toAttr = isNaN(toAttrId) ? null :
+                     attrInfo.filter(attr => attr.id === toAttrId)[0];
+
     for (const recording of MB.relationshipEditor.UI.checkedRecordings()) {
         recording.relationships().filter(
-            relation => relation.linkTypeID() === fromType &&
-                (isNaN(fromAttrId) || relation.attributes().map(
-                    attr => attr.type.id
-                ).includes(fromAttrId))
+            relation => relation.linkTypeID() === fromType
+        ).filter(
+            relation => (
+                (isNaN(fromAttrId) && relation.attributes().length === 0)
+                || relation.attributes().map(attr => attr.type.id).includes(fromAttrId)
+            )
         ).map(relation => {
-            const attrs = relation.attributes();
             relation.linkTypeID(toType);
-            if (!isNaN(toAttrId)) {
-                const attrType = attrInfo.filter(attr => attr.id == toAttrId)[0];
-                attrs.push({type: attrType});
+            let attrs = relation.attributes();
+            if (!isNaN(fromAttrId)) {
+                attrs = attrs.filter(attr => attr.type.id != fromAttrId);
+            }
+            if (toAttr) {
+                attrs.push({type: toAttr});
             }
             relation.setAttributes(attrs);
         });

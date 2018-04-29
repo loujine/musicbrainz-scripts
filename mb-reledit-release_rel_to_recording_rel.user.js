@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Replace release relations by recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.4.25
+// @version      2018.4.29
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-release_rel_to_recording_rel.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-release_rel_to_recording_rel.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org relation editor: Replace release relations by recording relations
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=272024
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -24,8 +24,11 @@ const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*),\n.*\n/).exec(src)[1];
 const typeInfo = JSON.parse(jsonSource);
 
 function fetchLinkIds() {
-    const ids = [typeInfo['artist-release'][0].id];
-    for (const rel of typeInfo['artist-release'][0].children) {
+    const typeInfo = server.getRelationshipTypeInfo()['artist-release'].filter(
+        relation => relation.id === 34 // performance
+    );
+    const ids = [typeInfo.id];
+    for (const rel of typeInfo.children) {
         ids.push(rel.id);
         if (rel.children && rel.children.length) {
             for (const subrel of rel.children) {

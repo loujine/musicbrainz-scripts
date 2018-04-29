@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.4.25
+// @version      2018.4.29
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,20 +12,15 @@
 // @description  musicbrainz.org relation editor: Set attributes (live, partial, solo...)
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=272024
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
 
-const src = document.scripts[document.scripts.length - 1].text;
-                    // .text.replace(/\n/g, '').replace(/ +/g, ' ');
-const jsonSource = new RegExp(/RE.exportTypeInfo\(\n.*\n(.*)\n/).exec(src)[1];
-const attrInfo = _.values(JSON.parse(jsonSource));
-
 function setAttributes(relationType, attrId, toggle) {
-    const recordings = MB.relationshipEditor.UI.checkedRecordings();
-    for (const recording of recordings) {
+    const attrInfo = server.getRelationshipAttrInfo();
+    for (const recording of MB.relationshipEditor.UI.checkedRecordings()) {
         for (const relation of recording.relationships().filter(
             rel => rel.entityTypes === relationType
         )) {
