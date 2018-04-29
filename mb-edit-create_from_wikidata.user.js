@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.5.30
+// @version      2018.5.31
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -78,6 +78,7 @@ class WikiDataHelpers {
             idDiscogs: 'P1953',
             idMetalArchivesArtist: 'P1989',
             idSecondHandSongs: 'P2909',
+            idSNAC: 'P3430',
             idVGMDB: 'P3435',
             idOperabase: 'P4869',
             //social media
@@ -124,6 +125,7 @@ class WikiDataHelpers {
             idSecondHandSongs: 'https://secondhandsongs.com/artist/',
             idVGMDB: 'https://vgmdb.net/artist/',
             idOperabase: 'http://operabase.com/a/',
+            idSNAC: 'http://snaccooperative.org/ark:/99166/',
             //social media
             idTwitter: 'https://twitter.com/',
             idInstagram: 'https://www.instagram.com/',
