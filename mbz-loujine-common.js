@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.4.29
+// @version      2018.4.30
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -303,14 +303,14 @@ class Server {
 
     getRelationshipTypeInfo() {
         const scriptSrc = document.scripts[document.scripts.length - 1].text;
-        const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*)\n(.*)\n/).exec(scriptSrc);
+        const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*),\n(.*)\n/).exec(scriptSrc);
         return JSON.parse(jsonSource[1]);
 
     }
 
     getRelationshipAttrInfo() {
         const scriptSrc = document.scripts[document.scripts.length - 1].text;
-        const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*)\n(.*)\n/).exec(scriptSrc);
+        const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*),\n(.*)\n/).exec(scriptSrc);
         return _.values(JSON.parse(jsonSource[2]));
     }
 
