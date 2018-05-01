@@ -26,7 +26,7 @@ const typeInfo = JSON.parse(jsonSource);
 function fetchLinkIds() {
     const typeInfo = server.getRelationshipTypeInfo()['artist-release'].filter(
         relation => relation.id === 34 // performance
-    );
+    )[0];
     const ids = [typeInfo.id];
     for (const rel of typeInfo.children) {
         ids.push(rel.id);
