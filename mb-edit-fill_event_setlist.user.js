@@ -25,6 +25,8 @@
     relEditor.container(document.getElementById('side-col')).insertAdjacentHTML(
         'beforeend', `
         <h3>Complete entity in setlist</h3>
+        <p>Select text in the setlist box and click one of the buttons
+           to add the right symbol and MBID</p>
         <input type="button" id="fillArtist" value="Fill artist MBID">
         <input type="button" id="fillWork" value="Fill work MBID">
     `);
@@ -51,7 +53,7 @@ $(document).ready(function() {
     let appliedNote = false;
     document.getElementById('fillArtist').addEventListener('click',
         () => {
-            fillEventSetlist('work')
+            fillEventSetlist('artist')
             if (!appliedNote) {
                 document.getElementById('id-edit-event.edit_note')
                     .value = sidebar.editNote(GM_info.script);
