@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.5.31
+// @version      2018.7.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -659,7 +659,7 @@ $(document).ready(function() {
         node.style.backgroundColor = '#bbffbb';
         if (domain === "www.wikidata.org") {
             fillExternalLinks(node.value);
-            fillFormFromWikidata(node.value.split('/')[4].trim());
+            fillFormFromWikidata(node.value.match(/\/(Q\d+)\b/)[1]);
         } else if (domain === "viaf.org") {
             node.value = node.value.replace(/http:/g, 'https:')
             if (!node.value.endsWith('/')) {
