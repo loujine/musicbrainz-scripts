@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.7.28
+// @version      2018.7.29
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -534,11 +534,14 @@ function _fillFormFromWikidata(entity, entityType) {
     const existingDomains = _existingDomains();
     _.forOwn(libWD.urls, (url, externalLink) => {
         const domain = url.split('/')[2];
-        if (libWD.existField(entity, externalLink) &&
-                !existingDomains.includes(domain)) {
-            _fillExternalLinks(
-                url + libWD.fieldValue(entity, externalLink)
-            );
+        if (!libWD.existField(entity, externalLink)) {
+            return;
+        }
+        url += libWD.fieldValue(entity, externalLink);
+        if ((domain && !existingDomains.includes(domain)) ||
+            // official website
+            (!domain && !existingDomains.includes(url.split('/')[2]))) {
+            _fillExternalLinks(url);
         }
     });
 
@@ -678,6 +681,7 @@ $(document).ready(function() {
 
 // test data:
 // https://www.wikidata.org/wiki/Q11331342
+// https://www.wikidata.org/wiki/Special:EntityPage/Q5383 wikipedia link
 // https://www.wikidata.org/wiki/Q1277689 invalid date with precision=10 (Y+M)
 // https://www.wikidata.org/wiki/Q3290108 invalid date with precision=9 (year)
 // https://www.wikidata.org/wiki/Q3193910 invalid date with precision=7
