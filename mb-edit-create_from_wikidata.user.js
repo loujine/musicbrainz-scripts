@@ -576,7 +576,7 @@ function fillFormFromWikidata(wikiId) {
         _fillFormFromWikidata(entity, entityType);
     });
     document.getElementById(`id-edit-${entityType}.edit_note`)
-            .value = sidebar.editNote(GM_info.script);
+            .value += sidebar.editNote(GM_info.script);
 }
 
 
@@ -607,7 +607,7 @@ function fillFormFromVIAF(viafURL) {
             fillISNI(link.href.split('/')[4]);
         }
         document.getElementById(`id-edit-${entityType}.edit_note`)
-                .value = sidebar.editNote(GM_info.script);
+                .value += sidebar.editNote(GM_info.script);
     });
 }
 
