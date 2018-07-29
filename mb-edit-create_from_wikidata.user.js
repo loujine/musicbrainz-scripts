@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.7.26
+// @version      2018.7.28
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -111,16 +111,16 @@ class WikiDataHelpers {
             idLoC: 'https://id.loc.gov/authorities/names/',
             idWorldCat: 'https://www.worldcat.org/identities/lccn-',
             idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
-            idTrove: 'http://nla.gov.au/nla.party-',
+            idTrove: 'https://nla.gov.au/nla.party-',
             //databases
-            idIMDB: 'http://www.imdb.com/name/',
+            idIMDB: 'https://www.imdb.com/name/',
             idOL: 'https://openlibrary.org/works/',
             idIMSLP: 'https://imslp.org/wiki/',
             idIDBD: 'https://ibdb.com/person.php?id=',
             idAllMusic: 'https://www.allmusic.com/artist/',
-            idMetalArchivesBand: 'http://www.metal-archives.com/band.php?id=',
+            idMetalArchivesBand: 'https://www.metal-archives.com/band.php?id=',
             idDiscogs: 'https://www.discogs.com/artist/',
-            idMetalArchivesArtist: 'http://www.metal-archives.com/artist.php?id=',
+            idMetalArchivesArtist: 'https://www.metal-archives.com/artist.php?id=',
             idGenius: 'https://genius.com/artists/',
             idSecondHandSongs: 'https://secondhandsongs.com/artist/',
             idVGMDB: 'https://vgmdb.net/artist/',
@@ -139,7 +139,7 @@ class WikiDataHelpers {
             idYoutube: 'https://www.youtube.com/channel/',
             idDeezer: 'https://www.deezer.com/artist/',
             idiTunes: 'https://itunes.apple.com/artist/',
-            idDailymotion: 'http://www.dailymotion.com/',
+            idDailymotion: 'https://www.dailymotion.com/',
             idSoundCloud: 'https://soundcloud.com/',
             idLastFM: 'https://www.last.fm/music/',
             idSongkick: 'https://www.songkick.com/artists/',
