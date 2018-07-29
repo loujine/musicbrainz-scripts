@@ -1,15 +1,15 @@
 /* global $ _ helper relEditor sidebar GM_info GM_xmlhttpRequest */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz edit: Create entity or fill data from wikidata / VIAF / ISNI
+// @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.7.29
+// @version      2018.7.29.2
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org edit: create entity or fill data from wikidata / VIAF / ISNI
+// @description  musicbrainz.org edit: create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
@@ -645,7 +645,7 @@ function fillFormFromISNI(isniURL) {
     relEditor.container(document.getElementById('side-col')).insertAdjacentHTML(
         'beforeend', `
         <h3>Add external link</h3>
-        <p>Add a wikidata/VIAF/ISNI link here to retrieve automatically some information.</p>
+        <p>Add a wkipedia/wikidata/VIAF/ISNI link here to retrieve automatically some information.</p>
         <input type="text" id="linkParser" value="" placeholder="paste URL here"
                style="width: 400px;">
         <dl id="newFields">
@@ -663,6 +663,19 @@ $(document).ready(function() {
         if (domain === "www.wikidata.org") {
             fillExternalLinks(node.value);
             fillFormFromWikidata(node.value.match(/\/(Q\d+)\b/)[1]);
+        } else if (domain.includes("wikipedia.org")) {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: node.value,
+                timeout: 1000,
+                onload: function(resp) {
+                    const parser = new DOMParser(),
+                          doc = parser.parseFromString(resp.responseText, 'text/html'),
+                          link = doc.querySelector('a[href*="www.wikidata.org"]');
+                    fillExternalLinks(link.href);
+                    fillFormFromWikidata(link.href.match(/\/(Q\d+)\b/)[1]);
+                }
+            });
         } else if (domain === "viaf.org") {
             node.value = node.value.replace(/http:/g, 'https:')
             if (!node.value.endsWith('/')) {
