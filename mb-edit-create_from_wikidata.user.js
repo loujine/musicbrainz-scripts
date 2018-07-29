@@ -61,14 +61,14 @@ class WikiDataHelpers {
             student: 'P802',
             teacher: 'P1066',
             officialWebsite: 'P856',
-            //authorities
+            // authorities
             idVIAF: 'P214',
             idGND: 'P227',
             idLoC: 'P244',
             idWorldCat: 'P244',
             idBNF: 'P268',
             idTrove: 'P1315',
-            //databases
+            // databases
             idIMDB: 'P345',
             idOL: 'P648',
             idIMSLP: 'P839',
@@ -81,7 +81,7 @@ class WikiDataHelpers {
             idSNAC: 'P3430',
             idVGMDB: 'P3435',
             idOperabase: 'P4869',
-            //social media
+            // social media
             idTwitter: 'P2002',
             idInstagram: 'P2003',
             idFacebook: 'P2013',
@@ -90,7 +90,7 @@ class WikiDataHelpers {
             idMyspace: 'P3265',
             idWeibo: 'P3579',
             idPinterest: 'P3836',
-            //other
+            // other
             idSpotify: 'P1902',
             idYoutube: 'P2397',
             idDeezer: 'P2722',
@@ -105,14 +105,14 @@ class WikiDataHelpers {
         };
         this.urls = {
             officialWebsite: '',
-            //authorities
+            // authorities
             idVIAF: 'https://viaf.org/viaf/',
             idGND: 'https://d-nb.info/gnd/',
             idLoC: 'https://id.loc.gov/authorities/names/',
             idWorldCat: 'https://www.worldcat.org/identities/lccn-',
             idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
             idTrove: 'https://nla.gov.au/nla.party-',
-            //databases
+            // databases
             idIMDB: 'https://www.imdb.com/name/',
             idOL: 'https://openlibrary.org/works/',
             idIMSLP: 'https://imslp.org/wiki/',
@@ -126,7 +126,7 @@ class WikiDataHelpers {
             idVGMDB: 'https://vgmdb.net/artist/',
             idOperabase: 'http://operabase.com/a/',
             idSNAC: 'http://snaccooperative.org/ark:/99166/',
-            //social media
+            // social media
             idTwitter: 'https://twitter.com/',
             idInstagram: 'https://www.instagram.com/',
             idFacebook: 'https://www.facebook.com/',
@@ -134,7 +134,7 @@ class WikiDataHelpers {
             idMyspace: 'https://myspace.com/',
             idWeibo: 'https://weibo.com/',
             idPinterest: 'https://www.pinterest.com/',
-            //other
+            // other
             idSpotify: 'https://open.spotify.com/artist/',
             idYoutube: 'https://www.youtube.com/channel/',
             idDeezer: 'https://www.deezer.com/artist/',
@@ -164,7 +164,7 @@ class WikiDataHelpers {
     _fillArea(data, place, nodeId, lang) {
         const entityArea = data.entities[place],
             input = document.getElementById(`id-edit-artist.${nodeId}.name`);
-        if (!entityArea || !input) {  // no wikidata data
+        if (!entityArea || !input) { // no wikidata data
             return;
         }
         const area = entityArea.labels[lang].value;
@@ -304,7 +304,7 @@ function setValue(nodeId, value, callback) {
         $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
     )
     const printableValue = node.options ? node.options[value].text : value;
-    if (!node.value.trim()) {  // field was empty
+    if (!node.value.trim()) { // field was empty
         node.value = value;
         $('#newFields').append(
             $('<dd>',
@@ -312,7 +312,7 @@ function setValue(nodeId, value, callback) {
         );
         return callback(); // eslint-disable-line consistent-return
     }
-    if (node.value != value) {  // != to allow autocasting to int
+    if (node.value != value) { // != to allow autocasting to int
         $('#newFields').append(
             $('<dd>', {'text': `Different value "${printableValue}" suggested`}
             ).css('color', 'red')
@@ -645,7 +645,8 @@ function fillFormFromISNI(isniURL) {
     relEditor.container(document.getElementById('side-col')).insertAdjacentHTML(
         'beforeend', `
         <h3>Add external link</h3>
-        <p>Add a wkipedia/wikidata/VIAF/ISNI link here to retrieve automatically some information.</p>
+        <p>Add a wkipedia/wikidata/VIAF/ISNI link here
+           to retrieve automatically some information.</p>
         <input type="text" id="linkParser" value="" placeholder="paste URL here"
                style="width: 400px;">
         <dl id="newFields">
