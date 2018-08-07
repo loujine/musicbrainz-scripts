@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.7.29.2
+// @version      2018.8.6
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -672,7 +672,7 @@ $(document).ready(function() {
                 onload: function(resp) {
                     const parser = new DOMParser(),
                           doc = parser.parseFromString(resp.responseText, 'text/html'),
-                          link = doc.querySelector('a[href*="www.wikidata.org"]');
+                          link = doc.querySelector('#p-tb a[href*="www.wikidata.org"]');
                     fillExternalLinks(link.href);
                     fillFormFromWikidata(link.href.match(/\/(Q\d+)\b/)[1]);
                 }
