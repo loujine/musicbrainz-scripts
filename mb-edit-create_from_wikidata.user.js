@@ -1,15 +1,15 @@
 /* global $ _ helper relEditor sidebar GM_info GM_xmlhttpRequest */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz edit: Create entity or fill data from wikidata / VIAF / ISNI
+// @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.5.31
+// @version      2018.8.6
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
 // @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
-// @description  musicbrainz.org edit: create entity or fill data from wikidata / VIAF / ISNI
+// @description  musicbrainz.org edit: create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
@@ -61,14 +61,14 @@ class WikiDataHelpers {
             student: 'P802',
             teacher: 'P1066',
             officialWebsite: 'P856',
-            //authorities
+            // authorities
             idVIAF: 'P214',
             idGND: 'P227',
             idLoC: 'P244',
             idWorldCat: 'P244',
             idBNF: 'P268',
             idTrove: 'P1315',
-            //databases
+            // databases
             idIMDB: 'P345',
             idOL: 'P648',
             idIMSLP: 'P839',
@@ -81,7 +81,7 @@ class WikiDataHelpers {
             idSNAC: 'P3430',
             idVGMDB: 'P3435',
             idOperabase: 'P4869',
-            //social media
+            // social media
             idTwitter: 'P2002',
             idInstagram: 'P2003',
             idFacebook: 'P2013',
@@ -90,7 +90,7 @@ class WikiDataHelpers {
             idMyspace: 'P3265',
             idWeibo: 'P3579',
             idPinterest: 'P3836',
-            //other
+            // other
             idSpotify: 'P1902',
             idYoutube: 'P2397',
             idDeezer: 'P2722',
@@ -105,28 +105,28 @@ class WikiDataHelpers {
         };
         this.urls = {
             officialWebsite: '',
-            //authorities
+            // authorities
             idVIAF: 'https://viaf.org/viaf/',
             idGND: 'https://d-nb.info/gnd/',
             idLoC: 'https://id.loc.gov/authorities/names/',
             idWorldCat: 'https://www.worldcat.org/identities/lccn-',
             idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
-            idTrove: 'http://nla.gov.au/nla.party-',
-            //databases
-            idIMDB: 'http://www.imdb.com/name/',
+            idTrove: 'https://nla.gov.au/nla.party-',
+            // databases
+            idIMDB: 'https://www.imdb.com/name/',
             idOL: 'https://openlibrary.org/works/',
             idIMSLP: 'https://imslp.org/wiki/',
             idIDBD: 'https://ibdb.com/person.php?id=',
             idAllMusic: 'https://www.allmusic.com/artist/',
-            idMetalArchivesBand: 'http://www.metal-archives.com/band.php?id=',
+            idMetalArchivesBand: 'https://www.metal-archives.com/band.php?id=',
             idDiscogs: 'https://www.discogs.com/artist/',
-            idMetalArchivesArtist: 'http://www.metal-archives.com/artist.php?id=',
+            idMetalArchivesArtist: 'https://www.metal-archives.com/artist.php?id=',
             idGenius: 'https://genius.com/artists/',
             idSecondHandSongs: 'https://secondhandsongs.com/artist/',
             idVGMDB: 'https://vgmdb.net/artist/',
             idOperabase: 'http://operabase.com/a/',
             idSNAC: 'http://snaccooperative.org/ark:/99166/',
-            //social media
+            // social media
             idTwitter: 'https://twitter.com/',
             idInstagram: 'https://www.instagram.com/',
             idFacebook: 'https://www.facebook.com/',
@@ -134,12 +134,12 @@ class WikiDataHelpers {
             idMyspace: 'https://myspace.com/',
             idWeibo: 'https://weibo.com/',
             idPinterest: 'https://www.pinterest.com/',
-            //other
+            // other
             idSpotify: 'https://open.spotify.com/artist/',
             idYoutube: 'https://www.youtube.com/channel/',
             idDeezer: 'https://www.deezer.com/artist/',
             idiTunes: 'https://itunes.apple.com/artist/',
-            idDailymotion: 'http://www.dailymotion.com/',
+            idDailymotion: 'https://www.dailymotion.com/',
             idSoundCloud: 'https://soundcloud.com/',
             idLastFM: 'https://www.last.fm/music/',
             idSongkick: 'https://www.songkick.com/artists/',
@@ -164,7 +164,7 @@ class WikiDataHelpers {
     _fillArea(data, place, nodeId, lang) {
         const entityArea = data.entities[place],
             input = document.getElementById(`id-edit-artist.${nodeId}.name`);
-        if (!entityArea || !input) {  // no wikidata data
+        if (!entityArea || !input) { // no wikidata data
             return;
         }
         const area = entityArea.labels[lang].value;
@@ -304,7 +304,7 @@ function setValue(nodeId, value, callback) {
         $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
     )
     const printableValue = node.options ? node.options[value].text : value;
-    if (!node.value.trim()) {  // field was empty
+    if (!node.value.trim()) { // field was empty
         node.value = value;
         $('#newFields').append(
             $('<dd>',
@@ -312,7 +312,7 @@ function setValue(nodeId, value, callback) {
         );
         return callback(); // eslint-disable-line consistent-return
     }
-    if (node.value != value) {  // != to allow autocasting to int
+    if (node.value != value) { // != to allow autocasting to int
         $('#newFields').append(
             $('<dd>', {'text': `Different value "${printableValue}" suggested`}
             ).css('color', 'red')
@@ -534,11 +534,14 @@ function _fillFormFromWikidata(entity, entityType) {
     const existingDomains = _existingDomains();
     _.forOwn(libWD.urls, (url, externalLink) => {
         const domain = url.split('/')[2];
-        if (libWD.existField(entity, externalLink) &&
-                !existingDomains.includes(domain)) {
-            _fillExternalLinks(
-                url + libWD.fieldValue(entity, externalLink)
-            );
+        if (!libWD.existField(entity, externalLink)) {
+            return;
+        }
+        url += libWD.fieldValue(entity, externalLink);
+        if ((domain && !existingDomains.includes(domain)) ||
+            // official website
+            (!domain && !existingDomains.includes(url.split('/')[2]))) {
+            _fillExternalLinks(url);
         }
     });
 
@@ -576,7 +579,7 @@ function fillFormFromWikidata(wikiId) {
         _fillFormFromWikidata(entity, entityType);
     });
     document.getElementById(`id-edit-${entityType}.edit_note`)
-            .value = sidebar.editNote(GM_info.script);
+            .value += sidebar.editNote(GM_info.script);
 }
 
 
@@ -607,7 +610,7 @@ function fillFormFromVIAF(viafURL) {
             fillISNI(link.href.split('/')[4]);
         }
         document.getElementById(`id-edit-${entityType}.edit_note`)
-                .value = sidebar.editNote(GM_info.script);
+                .value += sidebar.editNote(GM_info.script);
     });
 }
 
@@ -642,7 +645,8 @@ function fillFormFromISNI(isniURL) {
     relEditor.container(document.getElementById('side-col')).insertAdjacentHTML(
         'beforeend', `
         <h3>Add external link</h3>
-        <p>Add a wikidata/VIAF/ISNI link here to retrieve automatically some information.</p>
+        <p>Add a wkipedia/wikidata/VIAF/ISNI link here
+           to retrieve automatically some information.</p>
         <input type="text" id="linkParser" value="" placeholder="paste URL here"
                style="width: 400px;">
         <dl id="newFields">
@@ -659,7 +663,20 @@ $(document).ready(function() {
         node.style.backgroundColor = '#bbffbb';
         if (domain === "www.wikidata.org") {
             fillExternalLinks(node.value);
-            fillFormFromWikidata(node.value.split('/')[4].trim());
+            fillFormFromWikidata(node.value.match(/\/(Q\d+)\b/)[1]);
+        } else if (domain.includes("wikipedia.org")) {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: node.value,
+                timeout: 1000,
+                onload: function(resp) {
+                    const parser = new DOMParser(),
+                          doc = parser.parseFromString(resp.responseText, 'text/html'),
+                          link = doc.querySelector('#p-tb a[href*="www.wikidata.org"]');
+                    fillExternalLinks(link.href);
+                    fillFormFromWikidata(link.href.match(/\/(Q\d+)\b/)[1]);
+                }
+            });
         } else if (domain === "viaf.org") {
             node.value = node.value.replace(/http:/g, 'https:')
             if (!node.value.endsWith('/')) {
@@ -678,6 +695,7 @@ $(document).ready(function() {
 
 // test data:
 // https://www.wikidata.org/wiki/Q11331342
+// https://www.wikidata.org/wiki/Special:EntityPage/Q5383 wikipedia link
 // https://www.wikidata.org/wiki/Q1277689 invalid date with precision=10 (Y+M)
 // https://www.wikidata.org/wiki/Q3290108 invalid date with precision=9 (year)
 // https://www.wikidata.org/wiki/Q3193910 invalid date with precision=7

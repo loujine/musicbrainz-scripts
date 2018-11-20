@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Set recording names as work aliases
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.8
+// @version      2018.7.29
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-set_work_aliases.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-set_work_aliases.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -34,7 +34,7 @@ function loadRecordings() {
             for (const name of new Set(names)) {
                 document.getElementById('recordingAliases').insertAdjacentHTML('beforeend', `
                     <div>
-                      <input type="checkbox" data-name="${name}">
+                      <input type="checkbox" data-name="${encodeURIComponent(name)}">
                       <span>${name}</span>
                     </div>
                 `)

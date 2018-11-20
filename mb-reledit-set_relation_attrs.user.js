@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.4.30
+// @version      2018.8.15
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -30,7 +30,7 @@ function setAttributes(relationType, attrId, toggle) {
                 const attrType = attrInfo.filter(attr => attr.id == attrId)[0];
                 attrs.push({type: attrType});
             } else if (toggle) {
-                attrs.splice(attrs.indexOf(attr), 1);
+                attrs.splice(attrs.indexOf(attr[0]), 1);
             }
             relation.setAttributes(attrs);
         }
