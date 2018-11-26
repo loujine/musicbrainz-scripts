@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from a Release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.3.19
+// @version      2018.11.26
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -101,7 +101,7 @@ function parseEditData(editData) {
         data['isrcs.0'] = null;
     } else {
         editData.isrcs.forEach(function (isrc, idx) {
-            data['isrcs.' + idx] = isrc;
+            data['isrcs.' + idx] = isrc.isrc;
         });
     }
     editData.relationships.forEach(function (rel) {
