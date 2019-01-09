@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.8.18
+// @version      2019.1.8
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -123,10 +123,12 @@ class Server {
             'Search hint': 2
         };
         this.attr = {
+            additional: 1,
             strings: 69,
             cello: 84,
             violin: 86,
             piano: 180,
+            guest: 194,
             bowedStrings: 275,
             string_quartet: 1067,
             piano_trio: 1070,

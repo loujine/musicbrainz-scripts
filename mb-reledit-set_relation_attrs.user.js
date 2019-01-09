@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.8.15
+// @version      2019.1.8
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org relation editor: Set attributes (live, partial, solo...)
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=272679
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=660714
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -50,6 +50,8 @@ function setAttributes(relationType, attrId, toggle) {
         <input type="button" id="toggleInstrumental" value="Toggle instrumental">
         <h3>Recording-Artist relation attributes</h3>
         <input type="button" id="toggleSolo" value="Toggle solo">
+        <input type="button" id="toggleAdditional" value="Toggle additional">
+        <input type="button" id="toggleGuest" value="Toggle guest">
     `);
 })();
 
@@ -65,9 +67,11 @@ $(document).ready(function() {
             relEditor.editNote(GM_info.script);
         });
     }
-    document.getElementById(`toggleSolo`).addEventListener('click', () => {
-        setAttributes('artist-recording', server.attr.solo, true);
-        relEditor.editNote(GM_info.script);
-    });
+    for (const attr of ['Solo', 'Additional', 'Guest']) {
+        document.getElementById(`toggle${attr}`).addEventListener('click', () => {
+            setAttributes('artist-recording', server.attr[attr.toLowerCase()], true);
+            relEditor.editNote(GM_info.script);
+        });
+    }
     return false;
 });
