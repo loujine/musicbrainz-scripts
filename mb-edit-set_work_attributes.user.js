@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Set work attributes from the composer Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.10
+// @version      2019.9.18
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-set_work_attributes.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-set_work_attributes.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -93,7 +93,7 @@ function editWork() {
                 'Success (code ' + xhr.status + ')'
             ).parent().css('color', 'green');
             var editId = new RegExp(
-                '/edit/(.*)">edit</a>'
+                '/edit/(\\d+)">edit</a>'
             ).exec(xhr.responseText)[1];
             $status.after(
                 $('<p>').append(

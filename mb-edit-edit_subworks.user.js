@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace subwork titles and attributes in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.13
+// @version      2019.9.18
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-edit_subworks.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-edit_subworks.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -41,7 +41,7 @@ function replaceSubworksTitles() {
             var $status = $('#replace' + _idx);
             $status.parent().css('color', 'green');
             var editId = new RegExp(
-                '/edit/(.*)">edit</a>'
+                '/edit/(\\d+)">edit</a>'
             ).exec(xhr.responseText)[1];
             $status.after(
                 $('<p>').append(
