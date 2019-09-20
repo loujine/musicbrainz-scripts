@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from a Release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.18
+// @version      2019.9.19
 // @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_release_page.user.js
 // @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_release_page.user.js
 // @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
@@ -15,6 +15,7 @@
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=260017
 // @include      http*://*musicbrainz.org/release/*
 // @exclude      http*://*musicbrainz.org/release/add
+// @exclude      http*://*musicbrainz.org/release/*/edit
 // @exclude      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
