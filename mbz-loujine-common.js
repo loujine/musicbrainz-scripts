@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.1.8
+// @version      2019.9.20
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -323,20 +323,7 @@ class Server {
 
     getInstrumentRelationshipAttrInfo() {
         return this.getRelationshipAttrInfo().filter(
-            // all instruments as children of the "instrument" parent
-            attr => attr.id == this.instrumentType.instrument
-        )[0].children.concat(
-            this.getRelationshipAttrInfo().filter(
-                // lead, background, choir
-                attr => attr.id == this.vocalType.vocal
-            )[0].children
-        ).concat(
-            this.getRelationshipAttrInfo().filter(
-                attr => attr.id == this.vocalType.vocal
-            )[0].children.filter(
-                // all standard voices
-                attr => attr.id == this.vocalType.lead
-            )[0].children
+            attr => attr.parent_id == this.instrumentType.instrument
         );
     }
 }
