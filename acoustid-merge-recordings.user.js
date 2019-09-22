@@ -4,11 +4,11 @@
 // @name         MusicBrainz: merge recordings from acoustID page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.6.1
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/acoustid-merge-recordings.user.js
-// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/acoustid-merge-recordings.user.js
-// @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
-// @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
+// @version      2019.9.22
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/acoustid-merge-recordings.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/acoustid-merge-recordings.user.js
+// @supportURL   https://github.com/loujine/musicbrainz-scripts
+// @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  musicbrainz.org: merge recordings from acoustID page
 // @compatible   firefox+tampermonkey
 // @license      MIT
