@@ -1,15 +1,15 @@
 /* global $ relEditor requests edits server sidebar helper */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz edit: Replace subwork titles and attributes in Work edit page
+// @name         MusicBrainz edit: Replace subwork titles, disambiguations and attributes in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.2.4
+// @version      2023.3.10
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
 // @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
-// @description  musicbrainz.org edit: Replace subwork titles/attributes in Work edit page
+// @description  musicbrainz.org edit: Replace subwork titles/disambiguations/attributes in Work edit page
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
@@ -91,6 +91,38 @@ function replaceSubworksTitles() {
 }
 
 
+function replaceSubworksDisambiguations(comment) {
+    let idx = 0;
+    $('table label:contains("parts:")').parents('tr').find(
+        'a[href*="/work/"]'
+    ).each((_idx, node) => {
+        const mbid = helper.mbidFromURL(node.href);
+        const url = edits.urlFromMbid('work', mbid);
+
+        function callback(editData) {
+            $('#replace' + _idx).text(' (' + comment + ')');
+            $('#replace' + _idx).siblings('.comment').hide(); // hide old disambiguation
+            const postData = edits.prepareEdit(editData);
+            postData.comment = comment; // workaround, it would be better to let prepareEdit() handle this
+            postData.edit_note = sidebar.editNote(GM_info.script);
+            console.info('Data ready to be posted: ', postData);
+            requests.POST(
+                url,
+                edits.formatEdit('edit-work', postData),
+                (xhr) => success(xhr, _idx),
+                (xhr) => fail(xhr, _idx)
+            );
+        }
+        setTimeout(function () {
+            $(node).after('<span id="replace' + _idx + '">' +
+                          'Fetching required data</span>');
+            edits.getWorkEditParams(url, callback);
+        }, 2 * idx * server.timeout);
+        idx += 1;
+    });
+}
+
+
 function setSubworksAttributes(attrIdx) {
     $('table label:contains("parts:")').parents('tr').find('button[class*="edit-item"]').each(
         function (_idx, node) {
@@ -117,6 +149,11 @@ function setSubworksAttributes(attrIdx) {
         <input type="text" id="subwork-regexp-replace" value="" placeholder="Replacing string">
         <input type="button" id="replaceTitles" value="Apply" disabled="True">
 
+        <h3>Replace subworks disambiguations</h3>
+        <input type="text" id="subwork-disambiguation" value="" placeholder="Disambiguation">
+        <input type="button" id="replaceSubworksDisambiguations"
+            value="Replace disambiguation for all subworks">
+
         <h3>Set subworks attributes</h3>
         <select id="subwork_attribute">
           <option value=""></option>
@@ -138,6 +175,9 @@ $(document).ready(function () {
     });
     document.getElementById('replaceTitles').addEventListener('click', () => {
         replaceSubworksTitles();
+    });
+    document.getElementById('replaceSubworksDisambiguations').addEventListener('click', () => {
+        replaceSubworksDisambiguations($('#subwork-disambiguation')[0].value);
     });
     document.getElementById('setSubworksAttributes').addEventListener('click', () => {
         setSubworksAttributes($('select#subwork_attribute')[0].value);
