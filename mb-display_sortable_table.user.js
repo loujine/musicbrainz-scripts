@@ -4,11 +4,11 @@
 // @name         MusicBrainz: Display sort button on table columns
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.8
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_sortable_table.user.js
-// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-display_sortable_table.user.js
-// @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
-// @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
+// @version      2019.9.22
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_sortable_table.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_sortable_table.user.js
+// @supportURL   https://github.com/loujine/musicbrainz-scripts
+// @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  musicbrainz.org: Make table columns sortable
 // @compatible   firefox+tampermonkey
 // @license      MIT

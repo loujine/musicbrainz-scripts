@@ -4,11 +4,11 @@
 // @name         MusicBrainz relation editor: Copy dates on recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.8
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-copy_dates.user.js
-// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-copy_dates.user.js
-// @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
-// @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
+// @version      2020.4.12
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-copy_dates.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-copy_dates.user.js
+// @supportURL   https://github.com/loujine/musicbrainz-scripts
+// @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  musicbrainz.org relation editor: Copy/remove dates on recording relations
 // @compatible   firefox+tampermonkey
 // @license      MIT
@@ -58,7 +58,7 @@ function propagateDates() {
         if (idx !== -1) {
             relations.forEach(function(rel) {
                 var linkType = parseInt(rel.linkTypeID());
-                if (_.values(server.recordingLinkType).includes(linkType)) {
+                if (!rel.removed() && _.values(server.recordingLinkType).includes(linkType)) {
                     copyDate(relations[idx], rel);
                 }
             });
@@ -71,7 +71,9 @@ function removeDates() {
     recordings.forEach(function(recording) {
         var relations = recording.relationships();
         relations.forEach(function(relation) {
-            removeDate(relation);
+            if (!relation.removed()) {
+                removeDate(relation);
+            }
         });
     });
 }

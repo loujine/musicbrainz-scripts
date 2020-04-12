@@ -4,11 +4,11 @@
 // @name         MusicBrainz edit: Replace recording artists from an Artist or Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.3.19
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_work_page.user.js
-// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_work_page.user.js
-// @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
-// @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
+// @version      2019.9.22
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_work_page.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_work_page.user.js
+// @supportURL   https://github.com/loujine/musicbrainz-scripts
+// @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  musicbrainz.org: Replace recording artists from an Artist or Work page
 // @compatible   firefox+tampermonkey
 // @license      MIT
@@ -144,7 +144,7 @@ function replaceArtist() {
                 'Success (code ' + xhr.status + ')'
             ).parent().css('color', 'green');
             var editId = new RegExp(
-                '/edit/(.*)">edit</a>'
+                '/edit/(\\d+)">edit</a>'
             ).exec(xhr.responseText)[1];
             $status.after(
                 $('<p>').append(

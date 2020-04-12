@@ -4,11 +4,11 @@
 // @name         MusicBrainz edit: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.7.29
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_work_arrangement.user.js
-// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-create_work_arrangement.user.js
-// @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
-// @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
+// @version      2019.9.22
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
+// @supportURL   https://github.com/loujine/musicbrainz-scripts
+// @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  musicbrainz.org: Create work arrangement from existing work
 // @compatible   firefox+tampermonkey
 // @license      MIT
@@ -68,7 +68,7 @@ function createArrangement(mbid, parentMbid) {
             function success(xhr) {
                 const newMbid = helper.mbidFromURL(xhr.responseURL);
                 let editId = new RegExp(
-                    '/edit/(.*)">edit</a>'
+                    '/edit/(\\d+)">edit</a>'
                 ).exec(xhr.responseText);
                 if (editId && editId.length) {
                     $('#create-arrangement-text').append(

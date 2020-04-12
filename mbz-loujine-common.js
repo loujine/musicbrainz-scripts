@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.8.18
+// @version      2020.4.12
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -42,8 +42,6 @@ class Server {
             piano: 180,
             guitar: 229,
             string_quartet: 1067,
-            piano_trio: 1070,
-            string_trio: 1074,
         };
         this.vocalType = {
             vocal: 3,
@@ -123,10 +121,12 @@ class Server {
             'Search hint': 2
         };
         this.attr = {
+            additional: 1,
             strings: 69,
             cello: 84,
             violin: 86,
             piano: 180,
+            guest: 194,
             bowedStrings: 275,
             string_quartet: 1067,
             piano_trio: 1070,
@@ -321,20 +321,14 @@ class Server {
 
     getInstrumentRelationshipAttrInfo() {
         return this.getRelationshipAttrInfo().filter(
-            // all instruments as children of the "instrument" parent
-            attr => attr.id == this.instrumentType.instrument
-        )[0].children.concat(
-            this.getRelationshipAttrInfo().filter(
+            attr => [
+                // all instruments as children of the "instrument" parent
+                this.instrumentType.instrument,
                 // lead, background, choir
-                attr => attr.id == this.vocalType.vocal
-            )[0].children
-        ).concat(
-            this.getRelationshipAttrInfo().filter(
-                attr => attr.id == this.vocalType.vocal
-            )[0].children.filter(
+                this.vocalType.vocal,
                 // all standard voices
-                attr => attr.id == this.vocalType.lead
-            )[0].children
+                this.vocalType.lead
+            ].includes(attr.parent_id)
         );
     }
 }
@@ -595,7 +589,7 @@ class Helper {
     }
 
     mbidFromURL(url) {
-        return (url || document.URL).split('/')[4];
+        return (url || document.URL).split('/')[4].slice(0,36);
     }
 
     wsUrl(entityType, options, mbid) {

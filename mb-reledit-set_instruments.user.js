@@ -4,15 +4,15 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.8.18
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_instruments.user.js
-// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-reledit-set_instruments.user.js
-// @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
-// @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
+// @version      2020.4.11
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
+// @supportURL   https://github.com/loujine/musicbrainz-scripts
+// @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  musicbrainz.org relation editor: set/unset role relations on selected recordings
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=621615
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=791362
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -54,10 +54,13 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
           From: <select id="fromRole">${roles.roles}</select>
           with attr:
             <select id="fromRoleAttrs">${roles.roleAttrs}</select>
+          <input type="text" id="fromId" value="" placeholder="or use instrument/vocal id">
           <br />
-          To: <select id="toRole">${roles.roles}</select>
+          To:&nbsp;&nbsp;&nbsp;<select id="toRole">${roles.roles}</select>
           with attr:
             <select id="toRoleAttrs">${roles.roleAttrs}</select>
+          <input type="text" id="toId" value="" placeholder="or use instrument/vocal id">
+          <br />
           <input type="button" id="setRole" value='Apply'>
         </p>
     `);
@@ -67,16 +70,20 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
 $(document).ready(function () {
     document.getElementById('fromRole').addEventListener('change', () => {
         document.getElementById('fromRoleAttrs').options.selectedIndex = 0;
+        document.getElementById('fromId').value = ""
     });
     document.getElementById('toRole').addEventListener('change', () => {
         document.getElementById('toRoleAttrs').options.selectedIndex = 0;
+        document.getElementById('toId').value = ""
     });
     document.getElementById('setRole').addEventListener('click', () => {
         setInstrument(
             parseInt(document.getElementById('fromRole').value),
             parseInt(document.getElementById('toRole').value),
-            parseInt(document.getElementById('fromRoleAttrs').value),
-            parseInt(document.getElementById('toRoleAttrs').value)
+            parseInt(document.getElementById('fromId').value)
+              || parseInt(document.getElementById('fromRoleAttrs').value),
+            parseInt(document.getElementById('toId').value)
+              || parseInt(document.getElementById('toRoleAttrs').value)
         );
         relEditor.editNote(GM_info.script);
     });

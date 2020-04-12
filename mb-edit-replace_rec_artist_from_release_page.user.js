@@ -4,17 +4,18 @@
 // @name         MusicBrainz edit: Replace recording artists from a Release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.3.19
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_release_page.user.js
-// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-replace_rec_artist_from_release_page.user.js
-// @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
-// @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
+// @version      2019.9.22
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
+// @supportURL   https://github.com/loujine/musicbrainz-scripts
+// @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  musicbrainz.org: Replace associated recording artist from a Release page
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=260017
 // @include      http*://*musicbrainz.org/release/*
 // @exclude      http*://*musicbrainz.org/release/add
+// @exclude      http*://*musicbrainz.org/release/*/edit
 // @exclude      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -101,7 +102,7 @@ function parseEditData(editData) {
         data['isrcs.0'] = null;
     } else {
         editData.isrcs.forEach(function (isrc, idx) {
-            data['isrcs.' + idx] = isrc;
+            data['isrcs.' + idx] = isrc.isrc;
         });
     }
     editData.relationships.forEach(function (rel) {
@@ -140,7 +141,7 @@ function replaceArtist() {
                 'Success (code ' + xhr.status + ')'
             ).parent().css('color', 'green');
             var editId = new RegExp(
-                '/edit/(.*)">edit</a>'
+                '/edit/(\\d+)">edit</a>'
             ).exec(xhr.responseText)[1];
             $status.after(
                 $('<p>').append(

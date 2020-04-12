@@ -4,11 +4,11 @@
 // @name         MusicBrainz edit: Replace subwork titles and attributes in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.13
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-edit_subworks.user.js
-// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mb-edit-edit_subworks.user.js
-// @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
-// @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
+// @version      2019.9.22
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
+// @supportURL   https://github.com/loujine/musicbrainz-scripts
+// @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  musicbrainz.org edit: replace subwork titles/attributes in Work edit page
 // @compatible   firefox+tampermonkey
 // @license      MIT
@@ -41,7 +41,7 @@ function replaceSubworksTitles() {
             var $status = $('#replace' + _idx);
             $status.parent().css('color', 'green');
             var editId = new RegExp(
-                '/edit/(.*)">edit</a>'
+                '/edit/(\\d+)">edit</a>'
             ).exec(xhr.responseText)[1];
             $status.after(
                 $('<p>').append(

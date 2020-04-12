@@ -4,11 +4,11 @@
 // @name         MusicBrainz: Display AcousticBrainz data on recording page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.2.4
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_acousticbrainz_data_for_recording.user.js
-// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_acousticbrainz_data_for_recording.user.js
-// @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
-// @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
+// @version      2019.9.22
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_acousticbrainz_data_for_recording.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_acousticbrainz_data_for_recording.user.js
+// @supportURL   https://github.com/loujine/musicbrainz-scripts
+// @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  musicbrainz.org: display AcousticBrainz data on recording page
 // @compatible   firefox+tampermonkey
 // @license      MIT

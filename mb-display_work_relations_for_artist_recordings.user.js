@@ -4,11 +4,11 @@
 // @name         MusicBrainz: Display (missing) work relations for an artist recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2018.1.8
-// @downloadURL  https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_work_relations_for_artist_recordings.user.js
-// @updateURL    https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/mbz-display_work_relations_for_artist_recordings.user.js
-// @supportURL   https://bitbucket.org/loujine/musicbrainz-scripts
-// @icon         https://bitbucket.org/loujine/musicbrainz-scripts/raw/default/icon.png
+// @version      2019.9.22
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_work_relations_for_artist_recordings.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_work_relations_for_artist_recordings.user.js
+// @supportURL   https://github.com/loujine/musicbrainz-scripts
+// @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  musicbrainz.org: Mark recordings not linked to any work on an artist recordings or relationships page
 // @compatible   firefox+tampermonkey
 // @license      MIT
