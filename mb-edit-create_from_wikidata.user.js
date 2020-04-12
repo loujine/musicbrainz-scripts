@@ -3,8 +3,8 @@
 // ==UserScript==
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
-// @author       loujine
-// @version      2020.4.11
+// @author       loujin
+// @version      2020.4.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -307,6 +307,7 @@ function setValue(nodeId, value, callback) {
     const printableValue = node.options ? node.options[value].text : value;
     if (!node.value.trim()) { // field was empty
         node.value = value;
+        $(node).trigger('change');
         $('#newFields').append(
             $('<dd>',
               {'text': `Added "${printableValue}"`}).css('color', 'green')
@@ -410,8 +411,6 @@ function fillExternalLinks(url) {
 function _fillEntityName(value, entityType) {
     function callback() {
         if (helper.isArtistURL()) {
-            $(document.getElementById('id-edit-artist.name')
-                ).trigger('change');
             if (!document.getElementById('id-edit-artist.sort_name')
                          .value.length) {
                 $('#newFields').append(
@@ -594,8 +593,6 @@ function fillFormFromVIAF(viafURL) {
             'id-edit-artist.name',
             doc.getElementsByTagName('h2')[1].textContent,
             () => {
-                $(document.getElementById(
-                    'id-edit-artist.name')).trigger('change');
                 document.getElementsByClassName(
                     'guesscase-sortname')[0].click();
             }
