@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Copy dates on recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.4.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-copy_dates.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-copy_dates.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -58,7 +58,7 @@ function propagateDates() {
         if (idx !== -1) {
             relations.forEach(function(rel) {
                 var linkType = parseInt(rel.linkTypeID());
-                if (_.values(server.recordingLinkType).includes(linkType)) {
+                if (!rel.removed() && _.values(server.recordingLinkType).includes(linkType)) {
                     copyDate(relations[idx], rel);
                 }
             });
@@ -71,7 +71,9 @@ function removeDates() {
     recordings.forEach(function(recording) {
         var relations = recording.relationships();
         relations.forEach(function(relation) {
-            removeDate(relation);
+            if (!relation.removed()) {
+                removeDate(relation);
+            }
         });
     });
 }
