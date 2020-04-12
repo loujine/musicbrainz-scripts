@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.20
+// @version      2020.4.11
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -42,8 +42,6 @@ class Server {
             piano: 180,
             guitar: 229,
             string_quartet: 1067,
-            piano_trio: 1070,
-            string_trio: 1074,
         };
         this.vocalType = {
             vocal: 3,
@@ -323,7 +321,14 @@ class Server {
 
     getInstrumentRelationshipAttrInfo() {
         return this.getRelationshipAttrInfo().filter(
-            attr => attr.parent_id == this.instrumentType.instrument
+            attr => [
+                // all instruments as children of the "instrument" parent
+                this.instrumentType.instrument,
+                // lead, background, choir
+                this.vocalType.vocal,
+                // all standard voices
+                this.vocalType.lead
+            ].includes(attr.parent_id)
         );
     }
 }
