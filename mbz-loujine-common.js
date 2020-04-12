@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.4.11
+// @version      2020.4.12
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -589,7 +589,7 @@ class Helper {
     }
 
     mbidFromURL(url) {
-        return (url || document.URL).split('/')[4];
+        return (url || document.URL).split('/')[4].slice(0,36);
     }
 
     wsUrl(entityType, options, mbid) {
