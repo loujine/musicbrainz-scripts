@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.4.11
+// @version      2020.4.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -32,13 +32,16 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
                 || relation.attributes().map(attr => attr.type.id).includes(fromAttrId)
             )
         ).map(relation => {
-            relation.linkTypeID(toType);
             let attrs = relation.attributes();
+            let idx = 0;
+            relation.linkTypeID(toType);
             if (!isNaN(fromAttrId)) {
+                idx = attrs.findIndex(attr => attr.type.id == fromAttrId);
                 attrs = attrs.filter(attr => attr.type.id != fromAttrId);
             }
             if (toAttr) {
-                attrs.push({type: toAttr});
+                // attrs order must be kept for credits, etc.
+                attrs.splice(idx, 0, {type: toAttr});
             }
             relation.setAttributes(attrs);
         });
