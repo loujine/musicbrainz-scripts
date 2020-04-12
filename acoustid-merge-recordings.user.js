@@ -4,7 +4,7 @@
 // @name         MusicBrainz: merge recordings from acoustID page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.4.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/acoustid-merge-recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/acoustid-merge-recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -62,7 +62,7 @@ function launchMerge() {
     document.querySelectorAll('table a[href*="/recording/"]').forEach(node => {
         const mbid = node.href.split('/')[4];
         const tr = node.parentElement.parentElement;
-        if (!tr.classList.contains('mbid-disabled')) {
+        if (node.parentElement.tagName != "I" && !tr.classList.contains('mbid-disabled')) {
             tr.insertAdjacentHTML(
                 'beforeend',
                 `<td><input class="mbmerge" value="${mbid}" type="checkbox"></td>`
