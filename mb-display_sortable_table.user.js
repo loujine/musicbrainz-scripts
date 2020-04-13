@@ -22,37 +22,41 @@
 // @run-at       document-end
 // ==/UserScript==
 
-function comparefct(index, asc) {
+function comparefct(index, title, asc) {
     return function(row1, row2) {
-        let cell1 = row1.querySelectorAll('td')[index],
-            cell2 = row2.querySelectorAll('td')[index];
+        let text1 = row1.querySelectorAll('td')[index].textContent,
+            text2 = row2.querySelectorAll('td')[index].textContent;
         if (index === 0) {
-            let d1 = new Date(cell1.textContent.split(' – ')[0]),
-                d2 = new Date(cell2.textContent.split(' – ')[0]);
+            let d1 = new Date(text1.split(' – ')[0]),
+                d2 = new Date(text2.split(' – ')[0]);
             // consider missing dates as year 3000 if ascending order
             // and year 1000 if descending
             if (isNaN(d1.getDate())) {d1 = new Date(asc ? 3000 : 1000,0);}
             if (isNaN(d2.getDate())) {d2 = new Date(asc ? 3000 : 1000,0);}
             return d2 - d1;
         }
-        var href1 = $(cell1).find('a');
-        if (href1.length) {
-            cell1 = href1[0];
+        if (title.startsWith('Length')) {
+            let regexp1 = new RegExp('(.*):(.*)').exec(text1),
+                t1 = parseInt(regexp1[1]) * 60 + parseInt(regexp1[2]),
+                regexp2 = new RegExp('(.*):(.*)').exec(text2),
+                t2 = parseInt(regexp2[1]) * 60 + parseInt(regexp2[2]);
+            if (isNaN(t1)) {t1 = asc ? 36000 : -1;}
+            if (isNaN(t2)) {t2 = asc ? 36000 : -1;}
+            // consider missing durations as 10 hours if ascending order
+            // and -1 second if descending
+            return t2 - t1;
         }
-        var href2 = $(cell2).find('a');
-        if (href2.length) {
-            cell2 = href2[0];
-        }
-        return cell1.textContent.localeCompare(cell2.textContent);
+        return text1.localeCompare(text2);
     };
 }
 
 function sortByClickedColumn(evt) {
     const table = $(evt.target).parents('table'),
-        colidx = $(evt.target).index();
+        colidx = $(evt.target).index(),
+        coltitle = evt.target.textContent;
     let rowclass,
         rows = table.find('tbody tr').not('.subh').get().sort(
-            comparefct(colidx, this.asc)
+            comparefct(colidx, coltitle, this.asc)
         );
     // reverse order if clicked several times
     this.asc = !this.asc;
