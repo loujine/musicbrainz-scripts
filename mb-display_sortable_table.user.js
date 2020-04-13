@@ -22,31 +22,18 @@
 // @run-at       document-end
 // ==/UserScript==
 
-function comparefct(index) {
+function comparefct(index, asc) {
     return function(row1, row2) {
-        var cell1 = $(row1).children('td')[index],
-            cell2 = $(row2).children('td')[index];
+        let cell1 = row1.querySelectorAll('td')[index],
+            cell2 = row2.querySelectorAll('td')[index];
         if (index === 0) {
-            var d1 = new Date(cell1.textContent.split(' – ')[0]),
+            let d1 = new Date(cell1.textContent.split(' – ')[0]),
                 d2 = new Date(cell2.textContent.split(' – ')[0]);
-
-            // If the table contains recordings without dates, parsing dates above fails, standard comparison
-            // (d2 - d1) returns NaN, and the sort operation on table fails. We have to process a missing date
-            // as a special case by explicitly checking if the parsing above succeed.
-            // By default (without this script) MusicBrainz shows first recordings with dates in ascending order,
-            // than recording without dates. The code below ensures compatibility of this script with the default
-            // sort order.
-            var d1_NaN = isNaN(d1.getDate()),
-                d2_NaN = isNaN(d2.getDate());
-            if (d1_NaN && d2_NaN) {
-                return 0;
-            } else if (d1_NaN) {
-                return -1;
-            } else if (d2_NaN) {
-                return 1;
-            } else {
-                return d2 - d1;
-            }
+            // consider missing dates as year 3000 if ascending order
+            // and year 1000 if descending
+            if (isNaN(d1.getDate())) {d1 = new Date(asc ? 3000 : 1000,0);}
+            if (isNaN(d2.getDate())) {d2 = new Date(asc ? 3000 : 1000,0);}
+            return d2 - d1;
         }
         var href1 = $(cell1).find('a');
         if (href1.length) {
@@ -65,7 +52,7 @@ function sortByClickedColumn(evt) {
         colidx = $(evt.target).index();
     let rowclass,
         rows = table.find('tbody tr').not('.subh').get().sort(
-            comparefct(colidx)
+            comparefct(colidx, this.asc)
         );
     // reverse order if clicked several times
     this.asc = !this.asc;
