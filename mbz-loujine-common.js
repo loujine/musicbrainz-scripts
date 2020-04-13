@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.4.12
+// @version      2020.4.13
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -34,13 +34,17 @@ class Server {
         this.instrumentType = {
             instrument: 14,
             strings: 69,
+            bass: 70,
+            double_bass: 71,
             guitar_family: 75,
+            violin_family: 82,
             cello: 84,
             violin: 86,
             membranophone: 125,
             drums: 126,
             piano: 180,
             guitar: 229,
+            bass_guitar: 277,
             string_quartet: 1067,
         };
         this.vocalType = {
