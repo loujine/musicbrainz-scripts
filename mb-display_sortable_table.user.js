@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display sort button on table columns
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.4.13
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_sortable_table.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_sortable_table.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -60,21 +60,22 @@ function comparefct(index) {
     };
 }
 
-function sortByClickedColumn() {
-    var table = $(this).parents('table'),
-        rowclass,
+function sortByClickedColumn(evt) {
+    const table = $(evt.target).parents('table'),
+        colidx = $(evt.target).index();
+    let rowclass,
         rows = table.find('tbody tr').not('.subh').get().sort(
-            comparefct($(this).index())
+            comparefct(colidx)
         );
     // reverse order if clicked several times
     this.asc = !this.asc;
     if (!this.asc) {
         rows = rows.reverse();
     }
-    rows.forEach(function (row, idx) {
-        $(row).removeClass();
+    rows.forEach((row, idx) => {
+        row.classList.remove('even', 'odd');
         rowclass = idx % 2 ? 'even' : 'odd';
-        $(row).addClass(rowclass);
+        row.classList.add(rowclass);
         table.append(row);
     });
 }
@@ -88,10 +89,13 @@ function sortByClickedColumn() {
 
 $(document).ready(function() {
     document.getElementById('makeSortable').addEventListener('click', () => {
-        $('table.tbl thead th:not(.sortable)').append(
-            '<span>↕</span>'
-        ).click(sortByClickedColumn);
-        $('table.tbl thead th').addClass('sortable');
+        document.querySelectorAll('table.tbl thead th:not(.sortable)').forEach(
+            node => {
+                node.insertAdjacentHTML('beforeend', '<span>↕</span>');
+                node.addEventListener('click', sortByClickedColumn);
+                node.classList.add('sortable');
+            }
+        );
     });
     return false;
 });
