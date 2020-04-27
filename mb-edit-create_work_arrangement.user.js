@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.4.27
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -76,7 +76,7 @@ function createArrangement(mbid, parentMbid) {
                         + '" target="_blank">edit ' + editId[1] + '</a>');
                 } else if (editId === null) {
                     editId = new RegExp(
-                        'href="(.*)">edits</a> (.*) have'
+                        'Thank you, your.* href="(.*)">edits</a> (.*) have'
                     ).exec(xhr.responseText);
                     if (editId && editId.length) {
                         $('#create-arrangement-text').append(
