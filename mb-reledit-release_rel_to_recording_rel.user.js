@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Replace release relations by recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.5.4
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-release_rel_to_recording_rel.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-release_rel_to_recording_rel.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -70,7 +70,8 @@ function moveAR(ids) {
             }
         }
         if (recordings.length) {
-            document.querySelectorAll('#release-rels .remove-button')[idx].click();
+            const realIdx = vm.source.relationships().indexOf(rel);
+            document.querySelectorAll('#release-rels .remove-button')[realIdx].click();
         }
     });
 }
