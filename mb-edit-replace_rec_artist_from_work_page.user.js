@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from an Artist or Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.5.4
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_work_page.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_work_page.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -174,7 +174,8 @@ function replaceArtist() {
 
 (function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
-        <h3>Show performers</h3>
+        <h3><span id="replace_script_toggle">▶ Show performers</span></h3>
+        <div id="replace_script_block" style="display:none;">
         <p>Show performers present in recording rels, for recordings not respecting the CSG</p>
         <div>First row:
           <input type="number" id="offset" value="1" style="width: 50px;">
@@ -194,10 +195,18 @@ function replaceArtist() {
         <textarea id="batch_replace_edit_note"
                   disabled="true">${sidebar.editNote(GM_info.script, editNoteMsg)}</textarea>
         <input type="button" id="batch_replace" value="Replace selected artists" disabled="true">
+        </div>
     `);
 })();
 
 $(document).ready(function () {
+    document.getElementById('replace_script_toggle').addEventListener('click', () => {
+        let header = document.getElementById('replace_script_toggle'),
+            block = document.getElementById('replace_script_block'),
+            display = block.style.display;
+        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
+        block.style.display = display == "block" ? "none" : "block";
+    });
     document.getElementById('showPerformers').addEventListener('click', () => {
         var start = $('#offset')[0].value,
             maxcount = $('#max')[0].value;

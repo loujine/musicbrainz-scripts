@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.4.27
+// @version      2020.5.4
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -109,7 +109,8 @@ function createArrangement(mbid, parentMbid) {
 
 (function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
-        <h3>Create work arrangement</h3>
+        <h3><span id="work_arrangement_script_toggle">▶ Create work arrangement</span></h3>
+        <div id="work_arrangement_script_block" style="display:none;">
         <input type="text" id="disambiguation" value="" placeholder="disambiguation text">
         <div>
           <label>Also create arr. for subworks</label>
@@ -117,12 +118,20 @@ function createArrangement(mbid, parentMbid) {
         </div>
         <input type="button" id="create-arrangement" value="Apply" disabled="true">
         <span id="create-arrangement-text">
+        </div>
     `);
     $('div#loujine-menu').css('margin-left', '550px');
 })();
 
 
 $(document).ready(function () {
+    document.getElementById('work_arrangement_script_toggle').addEventListener('click', () => {
+        let header = document.getElementById('work_arrangement_script_toggle'),
+            block = document.getElementById('work_arrangement_script_block'),
+            display = block.style.display;
+        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
+        block.style.display = display == "block" ? "none" : "block";
+    });
     $('#disambiguation').keydown(function () {
         $('#create-arrangement').prop('disabled', false);
     });

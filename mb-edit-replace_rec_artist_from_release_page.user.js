@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from a Release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.5.4
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -177,8 +177,8 @@ function replaceArtist() {
 
 (function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
-        <h3>Replace artists</h3>
-        <div>
+        <h3><span id="replace_script_toggle">▶ Replace artists</span></h3>
+        <div id="replace_script_block" style="display:none;">
           <p>First click "Show checkboxes" then select recordings to update</p>
           <input type="button" id="selectors" value="Show checkboxes">
           <div>
@@ -203,6 +203,13 @@ function replaceArtist() {
 })();
 
 $(document).ready(function () {
+    document.getElementById('replace_script_toggle').addEventListener('click', () => {
+        let header = document.getElementById('replace_script_toggle'),
+            block = document.getElementById('replace_script_block'),
+            display = block.style.display;
+        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
+        block.style.display = display == "block" ? "none" : "block";
+    });
     document.getElementById('selectors').addEventListener('click', () => {
         showSelectors();
         $('#batch_select').prop('disabled', false);

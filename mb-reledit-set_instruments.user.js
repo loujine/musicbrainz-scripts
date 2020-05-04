@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.4.13
+// @version      2020.5.4
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -52,7 +52,8 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
-        <h3>Replace artist role</h3>
+        <h3><span id="instrument_script_toggle">▶ Replace artist role</span></h3>
+        <div id="instrument_script_block" style="display:none;">
         <p>
           From: <select id="fromRole">${roles.roles}</select>
           with attr:
@@ -66,11 +67,19 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
           <br />
           <input type="button" id="setRole" value='Apply'>
         </p>
+        </div>
     `);
 })();
 
 
 $(document).ready(function () {
+    document.getElementById('instrument_script_toggle').addEventListener('click', () => {
+        let header = document.getElementById('instrument_script_toggle'),
+            block = document.getElementById('instrument_script_block'),
+            display = block.style.display;
+        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
+        block.style.display = display == "block" ? "none" : "block";
+    });
     document.getElementById('fromRole').addEventListener('change', () => {
         document.getElementById('fromRoleAttrs').options.selectedIndex = 0;
         document.getElementById('fromId').value = ""

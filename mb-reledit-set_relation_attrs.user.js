@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.5.4
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -41,6 +41,8 @@ function setAttributes(relationType, attrId, toggle) {
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
+        <h3><span id="relattrs_script_toggle">▶ Relation attributes</span></h3>
+        <div id="relattrs_script_block" style="display:none;">
         <h3>Recording-Work relation attributes</h3>
         <input type="button" id="setLive" value="Set live">
         <input type="button" id="setPartial" value="Set partial">
@@ -52,11 +54,19 @@ function setAttributes(relationType, attrId, toggle) {
         <input type="button" id="toggleSolo" value="Toggle solo">
         <input type="button" id="toggleAdditional" value="Toggle additional">
         <input type="button" id="toggleGuest" value="Toggle guest">
+        </div>
     `);
 })();
 
 
 $(document).ready(function() {
+    document.getElementById('relattrs_script_toggle').addEventListener('click', () => {
+        let header = document.getElementById('relattrs_script_toggle'),
+            block = document.getElementById('relattrs_script_block'),
+            display = block.style.display;
+        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
+        block.style.display = display == "block" ? "none" : "block";
+    });
     for (const attr of ['Live', 'Partial', 'Instrumental']) {
         document.getElementById(`set${attr}`).addEventListener('click', () => {
             setAttributes('recording-work', server.attr[attr.toLowerCase()], false);
