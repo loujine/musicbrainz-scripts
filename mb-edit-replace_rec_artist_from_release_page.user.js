@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from a Release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.4
+// @version      2020.5.5
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -181,20 +181,25 @@ function replaceArtist() {
         <div id="replace_script_block" style="display:none;">
           <p>First click "Show checkboxes" then select recordings to update</p>
           <input type="button" id="selectors" value="Show checkboxes">
-          <div>
-            <label>Exclude rels with pending edits</label>
-            <input type="checkbox" id="pending" style="float: right;">
-          </div>
-          <div class="auto-editor">
-            <label>Make all edits votable</label>
-            <input type="checkbox" id="votable" style="float: right;">
-          </div>
-          <div>
-            <label>Set [unknown] artist if no rel</label>
-            <input type="checkbox" id="set-unknown" style="float: right;">
-          </div>
+
           <input type="button" id="batch_select" value="Select all" disabled="true">
-          <p>Edit note:</p>
+
+          <table>
+          <tr>
+            <td><label for="pending">Exclude rels with pending edits</label></td>
+            <td><input type="checkbox" id="pending"></td>
+          </tr>
+          <tr>
+            <td><label for="votable">Make all edits votable</label></td>
+            <td><input type="checkbox" id="votable"></td>
+          </tr>
+          <tr>
+            <td><label for="set-unknown">Set [unknown] artist if no rel</label></td>
+            <td><input type="checkbox" id="set-unknown"></td>
+          </tr>
+          </table>
+
+          <br />Edit note:
           <textarea id="batch_replace_edit_note"
                     disabled="true">${sidebar.editNote(GM_info.script, editNoteMsg)}</textarea>
           <input type="button" id="batch_replace" value="Replace selected artists" disabled="true">
