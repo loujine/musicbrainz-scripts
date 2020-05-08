@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show recordings of subworks on Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.7
+// @version      2020.5.8
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -60,9 +60,13 @@ function fetchRelatedRecordings(mbid, props) {
         if (json.relations == undefined || json.relations.length === 0 || json.releases.length === 0) {
             return;
         }
+        let rels = json.relations.filter(rel => ['instrument', 'vocal', 'orchestra', 'conductor'].includes(rel.type));
+        if (rels.length === 0) {
+            return;
+        }
         for (let rel of json.releases) {
             counts[rel.id] = counts[rel.id] || [];
-            props['artists'] = json.relations.map(rel => rel.artist.name).join(', ');
+            props['artists'] = rels.map(rel => rel.artist.name).join(', ');
             counts[rel.id].push(props);
         }
     })
@@ -99,18 +103,17 @@ function fetchWork(mbid) {
     fetch(`/ws/2/work/${mbid}?fmt=json&inc=work-rels`).then(
         resp => resp.json()
     ).then(json => {
-        nbSubworks = json.relations.length;
+        let rels = json.relations.filter(rel => rel.type === 'parts' && rel.direction === 'forward');
+        nbSubworks = rels.length;
         console.log(`${nbSubworks} subworks`);
         offset.push(nbSubworks);
-        for (let subwrel of json.relations) {
-            if (subwrel.direction === 'forward') {
-                let subw = subwrel.work;
-                let subwidx = subwrel['ordering-key'];
-                setTimeout(() => {
-                    // console.log(subwidx, 'SubWork title:', subw.title);
-                    fetchSubWorks(subw.id, subwidx);
-                }, 1000 * delay * (subwidx - 1));
-            }
+        for (let subwrel of rels) {
+            let subw = subwrel.work;
+            let subwidx = subwrel['ordering-key'];
+            setTimeout(() => {
+                // console.log(subwidx, 'SubWork title:', subw.title);
+                fetchSubWorks(subw.id, subwidx);
+            }, 1000 * delay * (subwidx - 1));
         }
     }).then(() => {
         $('table:last').after('<table class="tbl"><thead><tr><th>Date</th><th>Title</th><th>Artist</th><th>Length</th></tr></thead><tbody id="split"><tr class="subh"><th></th><th colspan="3">performance</th></tr>').after('<h2>Recordings split by subworks</h2>');
