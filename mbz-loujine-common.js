@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.4.13
+// @version      2020.5.8
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -656,7 +656,7 @@ class Sidebar {
         if (container !== null) {
             return container;
         }
-        document.querySelector('h2.collections').insertAdjacentHTML('afterend', `
+        document.querySelector('h2.collections').insertAdjacentHTML('beforebegin', `
             <div id="loujine-sidebar"
                  style="background-color: white;
                         padding: 8px; margin: 0px -6px 6px;
