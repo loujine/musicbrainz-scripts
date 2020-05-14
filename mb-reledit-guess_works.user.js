@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.6
+// @version      2020.5.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org relation editor: Guess related works in batch
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=802926
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -135,7 +135,7 @@ function guessSubWorks(workMbid) {
 
 $(document).ready(function() {
     document.getElementById('guess_works_script_toggle').addEventListener('click', () => {
-        let header = document.getElementById('guess_works_script_toggle'),
+        const header = document.getElementById('guess_works_script_toggle'),
             block = document.getElementById('guess_works_script_block'),
             display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");

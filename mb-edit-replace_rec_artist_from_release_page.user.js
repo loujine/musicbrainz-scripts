@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from a Release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.5
+// @version      2020.5.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Replace associated recording artist from a Release page
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=260017
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=802926
 // @include      http*://*musicbrainz.org/release/*
 // @exclude      http*://*musicbrainz.org/release/add
 // @exclude      http*://*musicbrainz.org/release/*/edit
@@ -209,7 +209,7 @@ function replaceArtist() {
 
 $(document).ready(function () {
     document.getElementById('replace_script_toggle').addEventListener('click', () => {
-        let header = document.getElementById('replace_script_toggle'),
+        const header = document.getElementById('replace_script_toggle'),
             block = document.getElementById('replace_script_block'),
             display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");

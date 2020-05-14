@@ -1,10 +1,10 @@
-/* global $ _ */
+/* global $ */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Show recordings of subworks on Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.8
+// @version      2020.5.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -30,24 +30,24 @@ let nbSubworks;
 function formatTrackLength(milliseconds) {
     if (!milliseconds) {return '';}
     if (milliseconds < 1000) {return milliseconds + ' ms';}
-    var oneMinute = 60;
-    var oneHour = 60 * oneMinute;
-    var seconds = Math.round(milliseconds / 1000.0);
-    var hours = Math.floor(seconds / oneHour);
+    const oneMinute = 60;
+    const oneHour = 60 * oneMinute;
+    let seconds = Math.round(milliseconds / 1000.0);
+    const hours = Math.floor(seconds / oneHour);
     seconds = seconds % oneHour;
-    var minutes = Math.floor(seconds / oneMinute);
+    const minutes = Math.floor(seconds / oneMinute);
     seconds = seconds % oneMinute;
-    var result = ('00' + seconds).slice(-2);
+    let result = ('00' + seconds).slice(-2);
     if (hours > 0) {
         result = hours + ':' + ('00' + minutes).slice(-2) + ':' + result;
     } else {
         result = minutes + ':' + result;
     }
     return result;
-};
+}
 
 function formatDate(begin, end) {
-    if (begin == null && end == null) {return '';}
+    if (begin === null && end === null) {return '';}
     if (begin === end) {return begin;}
     return `${begin} – ${end}`;
 }
@@ -60,11 +60,13 @@ function fetchRelatedRecordings(mbid, props) {
         if (json.relations == undefined || json.relations.length === 0 || json.releases.length === 0) {
             return;
         }
-        let rels = json.relations.filter(rel => ['instrument', 'vocal', 'orchestra', 'conductor'].includes(rel.type));
+        const rels = json.relations.filter(
+            rel => ['instrument', 'vocal', 'orchestra', 'conductor'].includes(rel.type)
+        );
         if (rels.length === 0) {
             return;
         }
-        for (let rel of json.releases) {
+        for (const rel of json.releases) {
             counts[rel.id] = counts[rel.id] || [];
             props['artists'] = rels.map(rel => rel.artist.name).join(', ');
             counts[rel.id].push(props);
@@ -82,8 +84,8 @@ function fetchSubWorks(mbid, swidx) {
         }
         console.log(`${json.relations.length} recordings for subwork no. ${swidx}`);
         offset.push(json.relations.length);
-        for (let [idx, recrel] of json.relations.entries()) {
-            let rec = recrel.recording;
+        for (const [idx, recrel] of json.relations.entries()) {
+            const rec = recrel.recording;
             setTimeout(() => {
                 // console.log(idx, 'Recording title:', rec.title);
                 fetchRelatedRecordings(rec.id, {
@@ -93,7 +95,7 @@ function fetchSubWorks(mbid, swidx) {
                     begin: recrel.begin,
                     end: recrel.end,
                 });
-            }, 1000 * delay * (idx + offset.slice().splice(0, swidx).reduce((a,b)=>a+b, 0)));
+            }, 1000 * delay * (idx + offset.slice().splice(0, swidx).reduce((a,b) => a+b, 0)));
         }
     })
 }
@@ -103,13 +105,13 @@ function fetchWork(mbid) {
     fetch(`/ws/2/work/${mbid}?fmt=json&inc=work-rels`).then(
         resp => resp.json()
     ).then(json => {
-        let rels = json.relations.filter(rel => rel.type === 'parts' && rel.direction === 'forward');
+        const rels = json.relations.filter(rel => rel.type === 'parts' && rel.direction === 'forward');
         nbSubworks = rels.length;
         console.log(`${nbSubworks} subworks`);
         offset.push(nbSubworks);
-        for (let subwrel of rels) {
-            let subw = subwrel.work;
-            let subwidx = subwrel['ordering-key'];
+        for (const subwrel of rels) {
+            const subw = subwrel.work;
+            const subwidx = subwrel['ordering-key'];
             setTimeout(() => {
                 // console.log(subwidx, 'SubWork title:', subw.title);
                 fetchSubWorks(subw.id, subwidx);
@@ -125,23 +127,23 @@ function fetchWork(mbid) {
             // required
             // at this stage we should know how many recordings in total we have
             // to load
-            let nbRecordings = offset.slice().splice(1).reduce((a,b)=>a+b, 0);
+            const nbRecordings = offset.slice().splice(1).reduce((a,b) => a+b, 0);
             $('#tmpSubworks').empty().text(
                 `Loading ${nbRecordings} recordings (it should take around ${Number.parseInt(nbRecordings * delay)} seconds)`
             );
             setTimeout(() => {
                 $('#tmpSubworks').remove();
-                for (let [mbid, ar] of Object.entries(counts)) {
+                for (const [mbid, ar] of Object.entries(counts)) {
                     if (ar.length == nbSubworks && !uniques.includes(ar[0].mbid)) {
-                        let {begin, end, artists} = ar[0];
+                        const {begin, end, artists} = ar[0];
                         $('#split').append($(
                             `<tr>
                             <td>${formatDate(begin, end)}</td>
                             <td></td>
                             <td>${artists}</td>
-                            <td>${formatTrackLength(ar.map(obj => obj.duration).reduce((a,b)=>a+b, 0))}</td>
+                            <td>${formatTrackLength(ar.map(obj => obj.duration).reduce((a,b) => a+b, 0))}</td>
                             </tr>`));
-                        for (let {mbid, title, artists, duration} of ar) {
+                        for (const {mbid, title, artists, duration} of ar) {
                             $('#split').append($(
                                 `<tr>
                                 <td></td>
@@ -154,7 +156,7 @@ function fetchWork(mbid) {
                         uniques.push(ar[0].mbid);
                     }
                 }
-            }, 1000 * delay * offset.reduce((a,b)=>a+b, 0))
+            }, 1000 * delay * offset.reduce((a,b) => a+b, 0))
         }, 1000 * delay * nbSubworks);
     });
 }

@@ -1,10 +1,10 @@
-/* global $ _ MB server relEditor GM_info */
+/* global $ MB server relEditor GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.4
+// @version      2020.5.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org relation editor: Set attributes (live, partial, solo...)
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=660714
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=802926
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -61,7 +61,7 @@ function setAttributes(relationType, attrId, toggle) {
 
 $(document).ready(function() {
     document.getElementById('relattrs_script_toggle').addEventListener('click', () => {
-        let header = document.getElementById('relattrs_script_toggle'),
+        const header = document.getElementById('relattrs_script_toggle'),
             block = document.getElementById('relattrs_script_block'),
             display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");

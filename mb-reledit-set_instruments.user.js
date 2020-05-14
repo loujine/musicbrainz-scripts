@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.4
+// @version      2020.5.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org relation editor: set/unset role relations on selected recordings
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=791854
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=802926
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -74,7 +74,7 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
 
 $(document).ready(function () {
     document.getElementById('instrument_script_toggle').addEventListener('click', () => {
-        let header = document.getElementById('instrument_script_toggle'),
+        const header = document.getElementById('instrument_script_toggle'),
             block = document.getElementById('instrument_script_block'),
             display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");

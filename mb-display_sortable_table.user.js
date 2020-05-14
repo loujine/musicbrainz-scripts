@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display sort button on table columns
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.4.13
+// @version      2020.5.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_sortable_table.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_sortable_table.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Make table columns sortable
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=802926
 // @include      http*://*musicbrainz.org/work/*
 // @include      http*://*musicbrainz.org/instrument/*/recordings
 // @include      http*://*musicbrainz.org/instrument/*/recordings?page=*
@@ -24,7 +24,7 @@
 
 function comparefct(index, title, asc) {
     return function(row1, row2) {
-        let text1 = row1.querySelectorAll('td')[index].textContent,
+        const text1 = row1.querySelectorAll('td')[index].textContent,
             text2 = row2.querySelectorAll('td')[index].textContent;
         if (index === 0) {
             let d1 = new Date(text1.split(' – ')[0]),
@@ -36,9 +36,9 @@ function comparefct(index, title, asc) {
             return d2 - d1;
         }
         if (title.startsWith('Length')) {
-            let regexp1 = new RegExp('(.*):(.*)').exec(text1),
-                t1 = parseInt(regexp1[1]) * 60 + parseInt(regexp1[2]),
-                regexp2 = new RegExp('(.*):(.*)').exec(text2),
+            const regexp1 = new RegExp('(.*):(.*)').exec(text1),
+                regexp2 = new RegExp('(.*):(.*)').exec(text2);
+            let t1 = parseInt(regexp1[1]) * 60 + parseInt(regexp1[2]),
                 t2 = parseInt(regexp2[1]) * 60 + parseInt(regexp2[2]);
             if (isNaN(t1)) {t1 = asc ? 36000 : -1;}
             if (isNaN(t2)) {t2 = asc ? 36000 : -1;}

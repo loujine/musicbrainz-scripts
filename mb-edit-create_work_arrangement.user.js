@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.4
+// @version      2020.5.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Create work arrangement from existing work
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=802926
 // @include      http*://*musicbrainz.org/work/*
 // @exclude      http*://*musicbrainz.org/work/*/*
 // @grant        none
@@ -126,7 +126,7 @@ function createArrangement(mbid, parentMbid) {
 
 $(document).ready(function () {
     document.getElementById('work_arrangement_script_toggle').addEventListener('click', () => {
-        let header = document.getElementById('work_arrangement_script_toggle'),
+        const header = document.getElementById('work_arrangement_script_toggle'),
             block = document.getElementById('work_arrangement_script_block'),
             display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");

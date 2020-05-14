@@ -1,10 +1,10 @@
-/* global MBImport helper requests sidebar */
+/* global GM_info MBImport helper requests sidebar */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz recording: Create broadcast release from the current recording
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.4.20
+// @version      2020.5.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_release_from_recording.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_release_from_recording.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -13,7 +13,7 @@
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://greasyfork.org/scripts/20955-mbimport/code/mbimport.js?version=794744
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=791854
+// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=802926
 // @include      http*://*musicbrainz.org/recording/*
 // @exclude      http*://*musicbrainz.org/recording/merge
 // @exclude      http*://*musicbrainz.org/recording/*/*
@@ -21,7 +21,12 @@
 // @run-at       document-end
 // ==/UserScript==
 
-const editNote = ('\n —\n' + 'GM script: "' + GM_info.script.name + '" (' + GM_info.script.version + ')\n\n');
+const editNote = `
+ —
+GM script: "${GM_info.script.name}" (${GM_info.script.version})
+
+`;
+
 const recordingMBID = helper.mbidFromURL();
 const recordingTitle = document.querySelector('div.recordingheader h1').textContent;
 const recordingLength = document.querySelector('#sidebar dd.length').textContent;
@@ -31,17 +36,17 @@ const date = dateInTitle === null ? ['', '', ''] : dateInTitle.splice(1);
 // let artistCredit = document.querySelector('p.subheader a').textContent;
 
 function prepareReleaseForm (resp) {
-    let artistCredit = JSON.parse(resp).artistCredit.names.map(
+    const artistCredit = JSON.parse(resp).artistCredit.names.map(
         credit => ({
             'credited_name': credit.name,
             'mbid': credit.artist.gid,
             'joinphrase': credit.joinPhrase
         })
     );
-    let broadcastURLs = JSON.parse(resp).relationships.filter(rel => rel.linkTypeID === 268);
-    let urls = broadcastURLs.map(url => ({'link_type': 85, 'url': url.target.href_url}));
+    const broadcastURLs = JSON.parse(resp).relationships.filter(rel => rel.linkTypeID === 268);
+    const urls = broadcastURLs.map(url => ({'link_type': 85, 'url': url.target.href_url}));
 
-    let release = {
+    const release = {
         'title': recordingTitle,
         'artist_credit': artistCredit,
         'type': 'Broadcast',
