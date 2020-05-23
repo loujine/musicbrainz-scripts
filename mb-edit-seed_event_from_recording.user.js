@@ -4,7 +4,7 @@
 // @name         MusicBrainz recording: Seed concert event from recording
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.14
+// @version      2020.5.23
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-seed_event_from_recording.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-seed_event_from_recording.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -42,7 +42,7 @@ function buildSetList() {
         document.querySelectorAll('div#content h3 ~ table.details a[href*=artist]')
     ).filter(
         // ugly and works only on english pages
-        el => el.parentElement.previousSibling.textContent == 'composer:'
+        el => el.closest('td').previousSibling.textContent == 'composer:'
     ).map(
         a => [a.href.split('/')[4], a.textContent]
     );
@@ -89,6 +89,8 @@ function buildRelData() {
 
     const places = Array.from(
         document.querySelectorAll('div#content table.details a[href*=place]')
+    ).filter(
+        el => el.closest('td').previousSibling.textContent == 'recorded at:'
     ).map(
         a => a.href.split('/')[4]
     );
