@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.4.13
+// @version      2020.5.31
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -154,8 +154,10 @@ class WikiDataHelpers {
     }
 
     fieldValue(entity, field) {
-        return entity.claims[this.fields[field]][0]
-                     .mainsnak.datavalue.value;
+        if (entity.claims[this.fields[field]][0].mainsnak.snaktype === 'value') {
+            return entity.claims[this.fields[field]][0].mainsnak.datavalue.value;
+        }
+        // snaktype='somevalue' seems to mean ill-defined/undefined, do not parse
     }
 
     /*
@@ -209,6 +211,9 @@ class WikiDataHelpers {
     fillDate(entity, entityType, fieldName, nodeId) {
         const field = this.fieldValue(entity, fieldName),
             prefix = `id-edit-${entityType}.period.${nodeId}`;
+        if (!field) {
+            return;
+        }
         // sometimes wikidata has valid data but not 'translatable'
         // to the mbz schema
         // cf https://www.mediawiki.org/wiki/Wikibase/DataModel#Dates_and_times
@@ -697,6 +702,7 @@ $(document).ready(function() {
 // https://www.wikidata.org/wiki/Q1277689 invalid date with precision=10 (Y+M)
 // https://www.wikidata.org/wiki/Q3290108 invalid date with precision=9 (year)
 // https://www.wikidata.org/wiki/Q3193910 invalid date with precision=7
+// https://www.wikidata.org/wiki/Q732552  unknown value date of birth
 
 // import viaf
 // https://viaf.org/viaf/44485204/
