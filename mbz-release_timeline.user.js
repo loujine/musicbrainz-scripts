@@ -1,23 +1,23 @@
 /* global $ GM_addStyle GM_getResourceText Handlebars vis */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: Display release timeline
+// @name         MusicBrainz: Display RG timeline
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
-// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-release_timeline.user.js
-// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-release_timeline.user.js
+// @version      2020.8.13
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_rg_timeline.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_rg_timeline.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
 // @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
-// @description  musicbrainz.org: display release timeline
+// @description  musicbrainz.org: display release groups timeline on artist overview page
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.js
-// @resource     viscss https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis-timeline-graph2d.min.css
-// @require      https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js
-// @resource     slickcss https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css
-// @resource     slicktheme https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css
+// @require      https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js
+// @resource     viscss https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-timeline-graph2d.min.css
+// @require      https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js
+// @resource     slickcss https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css
+// @resource     slicktheme https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css
 // @include      http*://*musicbrainz.org/artist/*
 // @exclude      http*://*musicbrainz.org/artist/create
 // @exclude      http*://*musicbrainz.org/artist/*/*
@@ -40,7 +40,7 @@ const template = Handlebars.compile(`
   </div>
 `);
 
-$('div#filter').after(`
+document.querySelector('div.filter').insertAdjacentHTML('afterend', `
     <div style="width: 800px;">
       <h3>Carousel</h3>
       <div id="slider" class="slider multiple-items"></div>
