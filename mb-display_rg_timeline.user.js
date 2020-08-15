@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display RG timeline
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.8.14
+// @version      2020.8.15
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_rg_timeline.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_rg_timeline.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -60,7 +60,7 @@ $(document).ready(function () {
 
     document.querySelectorAll('h3 + .release-group-list').forEach((node, idx) => {
         node.insertAdjacentHTML('beforebegin', `
-          <div style="width: 800px;">
+          <div style="width: 700px;">
             <div id="slider${idx}" class="slider multiple-items"></div>
           </div>
         `);
@@ -98,7 +98,7 @@ $(document).ready(function () {
         arrows: true,
         centerMode: false,
         infinite: true,
-        slidesToShow: 3,
+        slidesToShow: 4,
         slidesToScroll: 2,
     });
     $('.slick-arrow').css('background-color', 'black');
