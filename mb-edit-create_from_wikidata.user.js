@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.31
+// @version      2020.8.15
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -200,7 +200,10 @@ class WikiDataHelpers {
     }
 
     fillArea(entity, field, areaField, lang) {
-        const area = 'Q' + this.fieldValue(entity, field)['numeric-id'];
+        let area = 'Q' + this.fieldValue(entity, field)['numeric-id'];
+        if (area = 'Q29999') { // Kingdom of Netherlands
+            area = 'Q55'; // Netherlands
+        }
         $.ajax({
             url: 'https://www.wikidata.org/w/api.php?action=wbgetentities&ids='
                  + area + '&format=json',
