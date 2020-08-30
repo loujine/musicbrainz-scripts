@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display RG timeline
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.8.15
+// @version      2020.8.30
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_rg_timeline.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_rg_timeline.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -33,8 +33,6 @@ GM_addStyle(GM_getResourceText("slicktheme"));
 const template = Handlebars.compile(`
   <div>
     <a href="{{rg_url}}">{{album}}</a>
-    <br />
-    {{artists}}
     <br />
     <img src="{{cover_url}}" width="150" height="150">
   </div>
@@ -66,11 +64,10 @@ $(document).ready(function () {
         `);
 
       node.querySelectorAll('tbody tr').forEach(row => {
-            const mbid = row.children[2].children[0].href.split('/')[4],
-                year = row.children[1].textContent,
+            const mbid = row.querySelector('a[href*="release-group"]').href.split('/')[4],
+                year = row.querySelector('td.c').textContent,
                 cover_url =  `https://coverartarchive.org/release-group/${mbid}/front-250.jpg`,
                 rg_url = `https://musicbrainz.org/release-group/${mbid}`;
-            let artists = '';
 
             document.getElementById(`slider${idx}`).insertAdjacentHTML('beforeend', `
                 <div>
@@ -81,13 +78,9 @@ $(document).ready(function () {
                 </div>`
             );
 
-            if (row.length == 6) {
-                artists = row.children[3].textContent;
-            }
             data.push({
-                start: row.children[1].textContent,
-                album: row.children[2].textContent,
-                artists: artists,
+                start: year,
+                album: row.querySelector('a[href*="release-group"]').textContent,
                 cover_url: cover_url,
                 rg_url: `https://musicbrainz.org/release-group/${mbid}`
             });
