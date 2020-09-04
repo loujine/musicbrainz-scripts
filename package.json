@@ -1,0 +1,33 @@
+{
+    "name": "musicbrainz-scripts",
+    "version": "1.0.0",
+    "description": "Collection of userscripts for MusicBrainz",
+    "main": "index.js",
+    "scripts": {
+        "prettier:format": "prettier mb*user.js",
+        "lint": "npm run eslint",
+        "eslint": "eslint ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/loujine/musicbrainz-scripts.git"
+    },
+    "keywords": [
+        "musicbrainz",
+        "userscripts"
+    ],
+    "author": "loujine <loujine@protonmail.com>",
+    "license": "SEE LICENSE IN individual userscripts",
+    "bugs": {
+        "url": "https://github.com/loujine/musicbrainz-scripts/issues"
+    },
+    "homepage": "https://github.com/loujine/musicbrainz-scripts#readme",
+    "devDependencies": {
+        "eslint": "^7.7.0",
+        "eslint-config-prettier": "^6.11.0",
+        "eslint-plugin-import": "^2.22.0",
+        "eslint-plugin-prettier": "^3.1.4",
+        "eslint-plugin-you-dont-need-lodash-underscore": "latest",
+        "prettier": "^2.0.5"
+    }
+}
