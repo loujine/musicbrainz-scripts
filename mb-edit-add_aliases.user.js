@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Add entity aliases in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.9.8
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-add_aliases.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-add_aliases.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
