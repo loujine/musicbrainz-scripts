@@ -639,7 +639,7 @@ class Helper {
             (rel.linkTypeID === server.workLinkType.subwork
              && rel.direction !== 'backward')
         );
-        rels = rels.sort(sortBy('linkOrder'));
+        rels = rels.sort(this.sortBy('linkOrder'));
         return rels.map(rel => rel.target);
     }
 }
