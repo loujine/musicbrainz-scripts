@@ -81,7 +81,8 @@ function extract_release_data() {
     function _setTitle() {
         var title = $('h4')[0].textContent;
         if ($('div.works').length) {
-            title += ' ' + $('div.works')[0].innerHTML.replace(/<br><br>/g, ' / ').replace(/<br>/g, ' ');
+            title += ' ' + $('div.works')[0].innerHTML.replace(/<br><br>/g, ' / ').replace(
+                /<br>/g, ' ');
         }
         return title;
     }
@@ -168,8 +169,7 @@ function extract_release_data() {
     });
 
     var discs = [],
-        tracks = [],
-        medium_title = '';
+        tracks = [];
     nodes.forEach(function (item, idx) {
         if (item.type === 'track') {
             var track = extract_track_data(item.node);
@@ -179,12 +179,11 @@ function extract_release_data() {
         if (item.type === 'medium') {
             if (idx > 0) {
                 discs.push({
-                    'title': '', // medium_title,
+                    'title': '',
                     'format': 'CD',
                     'tracks': tracks
                 });
             }
-            medium_title = item.title;
             tracks = [];
         }
     });
@@ -257,8 +256,10 @@ function extract_track_data(node) {
     } else {
         console.log('no meta data on ', node);
         schema.name = node.querySelectorAll('div.track-text > a.fancy')[0].textContent;
-        schema.byArtist = $(node).parent().nextAll('div.container-container').children('.artists-container')[0].textContent;
-        var previousComposers = $(node).parent().prevAll('div.container-container').children('.first-composer-container');
+        schema.byArtist = $(node).parent().nextAll('div.container-container').children(
+            '.artists-container')[0].textContent;
+        var previousComposers = $(node).parent().prevAll('div.container-container').children(
+            '.first-composer-container');
         schema.creator = previousComposers[previousComposers.length-1].textContent;
     }
     console.info('schema', schema);

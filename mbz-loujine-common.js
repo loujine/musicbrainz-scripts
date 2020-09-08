@@ -473,7 +473,7 @@ var requests = function () {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-                callback(xhr);
+                callback(xhr); // eslint-disable-line callback-return
             }
         };
         xhr.open(verb, url, true);
@@ -490,7 +490,7 @@ var requests = function () {
     self.GET = function (url, callback) {
         self._request('GET', url, null, function (xhr) {
             if (xhr.status === 200 && xhr.responseText !== null) {
-                callback(xhr.responseText);
+                callback(xhr.responseText); // eslint-disable-line callback-return
             } else {
                 console.log('Error ', xhr.status, ': ', url);
             }
@@ -571,8 +571,9 @@ class Edits {
 
     formatEdit(editType, info) {
         return Object.entries(info).map(
-            ([prop, val]) => val === null ? `${editType}.${prop}`
-                                          : `${editType}.${prop}=${val}`
+            ([prop, val]) => (
+                val === null ? `${editType}.${prop}` : `${editType}.${prop}=${val}`
+            )
         ).join('&');
     }
 }
@@ -629,8 +630,8 @@ class Helper {
         return this._isEntityTypeURL('work')
     }
 
-    sortBy = (key) => {
-        return (a, b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0);
+    sortBy(key) {
+        return (a, b) => ((a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0));
     }
 
     sortSubworks(work) {

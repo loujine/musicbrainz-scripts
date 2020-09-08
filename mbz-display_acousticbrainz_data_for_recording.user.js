@@ -20,9 +20,9 @@
 // @run-at       document-end
 // ==/UserScript==
 
-const round = (num, precision) => {
-  const modifier = 10 ** precision
-  return Math.round(num * modifier) / modifier
+function round(num, precision) {
+    const modifier = Math.power(10, precision);
+    return Math.round(num * modifier) / modifier;
 }
 
 function showAcousticBrainzData() {

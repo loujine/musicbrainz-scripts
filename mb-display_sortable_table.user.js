@@ -56,11 +56,11 @@ function sortByClickedColumn(evt) {
         coltitle = evt.target.textContent;
     let rowclass,
         rows = table.find('tbody tr').not('.subh').get().sort(
-            comparefct(colidx, coltitle, this.asc)
+            comparefct(colidx, coltitle, this.asc) // eslint-disable-line no-invalid-this
         );
     // reverse order if clicked several times
-    this.asc = !this.asc;
-    if (!this.asc) {
+    this.asc = !this.asc; // eslint-disable-line no-invalid-this
+    if (!this.asc) { // eslint-disable-line no-invalid-this
         rows = rows.reverse();
     }
     rows.forEach((row, idx) => {

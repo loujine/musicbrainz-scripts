@@ -84,8 +84,8 @@ function _clean(s) {
 
 function extract_track_data(node) {
     let title;
-    let work = node.querySelector('.hyp-worktitle a');
-    if (work != null) {
+    const work = node.querySelector('.hyp-worktitle a');
+    if (work !== null) {
         title = work.textContent;
     } else {
         title = $(node).prevAll('tr:has(.hyp-work)').first().find('.hyp-worktitle a').text();
@@ -126,8 +126,10 @@ function extract_release_data() {
         return list.concat(_setReleasePerformers());
     }
 
-    let discsNb = document.querySelector('.hyp-notice-album') && new RegExp(/(\d*)CDs/).exec(document.querySelector('.hyp-notice-album').textContent);
-    discsNb = discsNb == null ? 1 : parseInt(discsNb[1]);
+    let discsNb = document.querySelector('.hyp-notice-album') && new RegExp(
+        /(\d*)CDs/
+    ).exec(document.querySelector('.hyp-notice-album').textContent);
+    discsNb = discsNb === null ? 1 : parseInt(discsNb[1]);
 
     const trackNodes = Array.prototype.filter.call(
         document.querySelectorAll(`.dc-d_${catno.toLowerCase()},
@@ -139,7 +141,7 @@ function extract_release_data() {
     if (discsNb === 1) {
         discTracks.push(trackNodes);
     } else {
-        for (let node of trackNodes) {
+        for (const node of trackNodes) {
             if (node.children[0].children[0].textContent.startsWith('CD')) {
                 discTracks.push([]);
             }

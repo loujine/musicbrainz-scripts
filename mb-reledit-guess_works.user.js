@@ -119,8 +119,9 @@ function guessSubWorks(workMbid) {
         <br />
         <h3>Link to parts of a main Work</h3>
         <p>
-          Fill the main work mbid to link selected recordings to (ordered) parts of the work.
-          Use the repeats fields to use the same subwork on successive recordings (e.g. for opera acts)
+          Fill the main work mbid to link selected recordings to (ordered) parts
+          of the work.  Use the repeats fields to use the same subwork on
+          successive recordings (e.g. for opera acts)
         </p>
         <span>Main work name:&nbsp;</span>
         <input type="text" id="mainWork" placeholder="main work mbid">
