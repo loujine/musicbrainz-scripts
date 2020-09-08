@@ -4,7 +4,7 @@
 // @name         Import Hyperion/Helios releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.9.8
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-importer-hyperion.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-importer-hyperion.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  Add a button to import Hyperion/Helios releases to MusicBrainz
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/20955-mbimport/code/mbimport.js?version=133752
+// @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
 // @include      http*://www.hyperion-records.co.uk/dc.asp?dc=D_*
 // @include      http*://www.hyperion-records.co.uk/al.asp?al=*
 // @grant        none

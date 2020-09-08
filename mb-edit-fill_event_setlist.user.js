@@ -4,7 +4,7 @@
 // @name         MusicBrainz event editor: Fill event setlist
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.23
+// @version      2020.9.8
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-fill_event_setlist.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-fill_event_setlist.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org event editor: Fill event setlist
 // @compatible   firefox+tampermonkey
 // @license      MIT
- // @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=612784
+// @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/event/*/edit
 // @include      http*://*musicbrainz.org/event/create*
 // @grant        none
