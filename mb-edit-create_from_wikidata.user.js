@@ -1,10 +1,10 @@
-/* global $ _ helper relEditor sidebar GM_info GM_xmlhttpRequest */
+/* global $ helper relEditor sidebar GM_info GM_xmlhttpRequest */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.8.17
+// @version      2020.9.8
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org edit: create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
+// @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/artist/create*
 // @include      http*://*musicbrainz.org/artist/*/edit
 // @exclude      http*://*musicbrainz.org/artist/*/alias/*/edit
@@ -295,12 +295,12 @@ const FIELD_NAMES = {
     'area': 'Area',
 };
 
-_.forOwn(FIELD_NAMES, (v, k) => {
-    if (k.includes('artist')) {
-        FIELD_NAMES[k.replace('artist', 'place')] = v;
-        FIELD_NAMES[k.replace('artist', 'work')] = v;
+for (const [key, value] of Object.entries(FIELD_NAMES)) {
+    if (key.includes('artist')) {
+        FIELD_NAMES[key.replace('artist', 'place')] = value;
+        FIELD_NAMES[key.replace('artist', 'work')] = value;
     }
-});
+}
 
 
 function setValue(nodeId, value, callback) {
@@ -540,7 +540,7 @@ function _fillFormFromWikidata(entity, entityType) {
     }
 
     const existingDomains = _existingDomains();
-    _.forOwn(libWD.urls, (url, externalLink) => {
+    for (const [externalLink, url] of Object.entries(libWD.urls)) {
         const domain = url.split('/')[2];
         if (!libWD.existField(entity, externalLink)) {
             return;
@@ -551,7 +551,7 @@ function _fillFormFromWikidata(entity, entityType) {
             (!domain && !existingDomains.includes(url.split('/')[2]))) {
             _fillExternalLinks(url);
         }
-    });
+    }
 
     for (const role of ['student', 'teacher']) {
         if (libWD.existField(entity, role)) {

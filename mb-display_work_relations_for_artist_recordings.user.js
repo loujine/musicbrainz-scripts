@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: Mark recordings not linked to any work on an artist recordings or relationships page
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
+// @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/artist/*/recordings*
 // @grant        none

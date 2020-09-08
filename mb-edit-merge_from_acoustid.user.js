@@ -1,10 +1,10 @@
-/* global $ _ helper requests sidebar */
+/* global $ helper requests sidebar */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz edit: Display acoustIDs and merge recordings with common acoustID
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.9.8
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-merge_from_acoustid.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-merge_from_acoustid.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org: display acoustIDs and merge recordings with common acoustID
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
+// @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/work/*
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/artist/*/recordings
@@ -72,7 +72,7 @@ function showAcoustids() {
         }
         var duplicate_ids = Object.keys(ids).filter(
             // true if distinct recordings use the same acoustID
-            acid => _.uniq(ids[acid]).length > 1
+            acid => [...new Set(ids[acid])].size > 1
         );
         duplicate_ids.forEach(function (acid) {
             $('#acidForMerge').append(

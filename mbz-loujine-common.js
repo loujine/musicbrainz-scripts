@@ -1,10 +1,10 @@
-/* global _ MB */
+/* global MB */
 'use strict';
 // ==UserScript==
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.8
+// @version      2020.9.8
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -320,7 +320,7 @@ class Server {
     getRelationshipAttrInfo() {
         const scriptSrc = document.scripts[document.scripts.length - 1].text;
         const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*),\n(.*)\n/).exec(scriptSrc);
-        return _.values(JSON.parse(jsonSource[2]));
+        return Object.values(JSON.parse(jsonSource[2]));
     }
 
     getInstrumentRelationshipAttrInfo() {
@@ -343,13 +343,13 @@ const server = new Server();
 function buildOptions(obj) {
     // to be replaced by Object.entries when all supported browser versions
     // recognize it
-    return _.toPairs(obj).map(
+    return Object.entries(obj).map(
         ([type, code]) => `<option value="${code}">${type}</option>`
     ).join('');
 }
 
 function buildLanguageOptions(obj) {
-    return _.toPairs(obj).map(
+    return Object.entries(obj).map(
         ([type, code]) => `<option class="language" value="${code}">${type}</option>`
     ).join('');
 }
@@ -570,7 +570,7 @@ class Edits {
     }
 
     formatEdit(editType, info) {
-        return _.toPairs(info).map(
+        return Object.entries(info).map(
             ([prop, val]) => val === null ? `${editType}.${prop}`
                                           : `${editType}.${prop}=${val}`
         ).join('&');
@@ -629,13 +629,17 @@ class Helper {
         return this._isEntityTypeURL('work')
     }
 
+    sortBy = (key) => {
+    return (a, b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0);
+    }
+
     sortSubworks(work) {
         let rels = work.relationships;
         rels = rels.filter(rel =>
             (rel.linkTypeID === server.workLinkType.subwork
              && rel.direction !== 'backward')
         );
-        rels = _.sortBy(rels, rel => rel.linkOrder);
+        rels = rels.sort(sortBy('linkOrder'));
         return rels.map(rel => rel.target);
     }
 }

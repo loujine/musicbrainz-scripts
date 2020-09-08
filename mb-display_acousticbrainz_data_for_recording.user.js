@@ -1,10 +1,10 @@
-/* global _ sidebar helper */
+/* global sidebar helper */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Display AcousticBrainz data on recording page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.9.8
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_acousticbrainz_data_for_recording.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_acousticbrainz_data_for_recording.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,13 +12,18 @@
 // @description  musicbrainz.org: display AcousticBrainz data on recording page
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
+// @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/recording/*
 // @exclude      http*://*musicbrainz.org/recording/merge
 // @exclude      http*://*musicbrainz.org/recording/*/*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
+
+const round = (num, precision) => {
+  const modifier = 10 ** precision
+  return Math.round(num * modifier) / modifier
+}
 
 function showAcousticBrainzData() {
     const mbid = helper.mbidFromURL();
@@ -32,11 +37,11 @@ function showAcousticBrainzData() {
                 resp => resp.json()
             ).then(data => {
                 document.getElementById('ABkey').append(
-                    `${data.tonal.key_key} ${data.tonal.key_scale} (${_.round(
+                    `${data.tonal.key_key} ${data.tonal.key_scale} (${round(
                         100 * data.tonal.key_strength, 1)}%)`
                 );
-                document.getElementById('ABfreq').append(_.round(data.tonal.tuning_frequency, 2));
-                document.getElementById('ABbpm').append(_.round(data.rhythm.bpm, 1));
+                document.getElementById('ABfreq').append(round(data.tonal.tuning_frequency, 2));
+                document.getElementById('ABbpm').append(round(data.rhythm.bpm, 1));
                 document.getElementById('ABbeatcount').append(data.rhythm.beats_count);
             });
         }

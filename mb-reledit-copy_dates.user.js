@@ -1,10 +1,10 @@
-/* global $ _ MB server relEditor GM_info */
+/* global $ MB server relEditor GM_info */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz relation editor: Copy dates on recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.4.12
+// @version      2020.9.8
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-copy_dates.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-copy_dates.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -12,7 +12,7 @@
 // @description  musicbrainz.org relation editor: Copy/remove dates on recording relations
 // @compatible   firefox+tampermonkey
 // @license      MIT
-// @require      https://greasyfork.org/scripts/13747-mbz-loujine-common/code/mbz-loujine-common.js?version=241520
+// @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/release/*/edit-relationships
 // @grant        none
 // @run-at       document-end
@@ -41,7 +41,7 @@ function referenceDate(relations) {
     for (const unit of ['day', 'month', 'year']) {
         for (const [idx, rel] of relations.entries()) {
             if (rel.end_date[unit]() > 0
-                && _.values(server.recordingLinkType).includes(
+                && Object.values(server.recordingLinkType).includes(
                     parseInt(rel.linkTypeID()))) {
                 return idx;
             }
@@ -58,7 +58,7 @@ function propagateDates() {
         if (idx !== -1) {
             relations.forEach(function(rel) {
                 var linkType = parseInt(rel.linkTypeID());
-                if (!rel.removed() && _.values(server.recordingLinkType).includes(linkType)) {
+                if (!rel.removed() && Object.values(server.recordingLinkType).includes(linkType)) {
                     copyDate(relations[idx], rel);
                 }
             });
