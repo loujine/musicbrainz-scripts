@@ -20,20 +20,30 @@
 // ==/UserScript==
 
 // seems that $ is predefined but does not work
-$ = jQuery;
+$ = jQuery; // eslint-disable-line no-global-assign
 
-const url = document.URL.split('.');
-url.splice(0, 1, 'https://www');
-const editNote = (
-    'Imported from ' + url + '\n'
-    + 'Warning: Track durations from Naxos Music Library can seldom be incorrect\n'
-    + '\n —\n'
-    + 'GM script: "' + GM_info.script.name + '" (' + GM_info.script.version + ')\n\n');
+const url = document.URL.replace(/\/[^/].*nml3/, '/www.nml3');
+
+const editNote = `
+    Imported from ${url}
+    Warning: Track durations from Naxos Music Library can seldom be incorrect
+    —
+    GM script: "${GM_info.script.name}" (${GM_info.script.version})
+`;
 
 const months = {
-    'January': 1, 'February': 2, 'March': 3, 'April': 4,
-    'May': 5, 'June': 6, 'July': 7, 'August': 8,
-    'September': 9, 'October': 10, 'November': 11, 'December': 12
+    January: 1,
+    February: 2,
+    March: 3,
+    April: 4,
+    May: 5,
+    June: 6,
+    July: 7,
+    August: 8,
+    September: 9,
+    October: 10,
+    November: 11,
+    December: 12,
 };
 
 function _clean(s) {
@@ -68,8 +78,6 @@ function _clean(s) {
 }
 
 function extract_release_data() {
-    console.log('extract_release_data');
-
     function _setTitle() {
         return document.querySelector('div.song-tit').textContent;
     }
@@ -77,10 +85,8 @@ function extract_release_data() {
     function _setReleasePerformers() {
         const artists = $('ul.album-type li:contains("Artist(s):") span a').toArray();
         const list = artists.map(artist => ({
-            'credited_name': artist.textContent,
-            'artist_name': artist.textContent,
-            'artist_mbid': '',
-            'joinphrase': ', '
+            artist_name: artist.textContent,
+            joinphrase: ', ',
         }));
         list[list.length - 1].joinphrase = '';
         return list;
@@ -89,10 +95,8 @@ function extract_release_data() {
     function _setReleaseArtists() {
         const composers = $('ul.album-type li:contains("Composer(s):") span a').toArray();
         const list = composers.map(composer => ({
-            'credited_name': composer.textContent,
-            'artist_name': composer.textContent,
-            'artist_mbid': '',
-            'joinphrase': ', '
+            artist_name: composer.textContent,
+            joinphrase: ', ',
         }));
         list[list.length - 1].joinphrase = '; ';
         return list.concat(_setReleasePerformers());
@@ -109,15 +113,12 @@ function extract_release_data() {
         const numberField = node.querySelector('div.number').textContent.trim();
         let title = node.querySelector('div.trackTitle').textContent.trim();
         if (parentWork && title.trim().startsWith('»')) {
-            title = parentWork + ': ' + title.replace('»', '');
+            title = `${parentWork}: ${title.replace('»', '')}`;
         }
-        let artists = Array.prototype.map.call(
-            node.querySelectorAll('div.list-artist a'),
+        let artists = Array.prototype.map.call(node.querySelectorAll('div.list-artist a'),
             aNode => ({
-                'credited_name': aNode.textContent,
-                'artist_name': aNode.textContent,
-                'artist_mbid': '',
-                'joinphrase': ', '
+                artist_name: aNode.textContent,
+                joinphrase: ', ',
             })
         );
         if (!artists.length) {
@@ -139,8 +140,8 @@ function extract_release_data() {
 
     let parentWork;
     discNodes.forEach(discNode => {
-        let tracks = [];
-        discNode.querySelectorAll('div.list-con').forEach((trackNode, idx) => {
+        const tracks = [];
+        discNode.querySelectorAll('div.list-con').forEach(trackNode => {
             if (trackNode.classList.contains('cata-work-title')) {
                 parentWork = trackNode.querySelector('div.production').textContent.trim();
             } else {
@@ -187,17 +188,18 @@ function insertMBSection(release) {
     const parameters = MBImport.buildFormParameters(release, editNote);
 
     // Build form + search button
-    const innerHTML = '<div id="mb_buttons">'
-      + MBImport.buildFormHTML(parameters)
-      + MBImport.buildSearchButton(release)
-      + '</div>';
+    const innerHTML = `
+        <div id="mb_buttons">
+        ${MBImport.buildFormHTML(parameters)}
+        ${MBImport.buildSearchButton(release)}
+        </div>`;
     mbContentBlock.append(innerHTML);
 
     document.querySelector('div.song-con').prepend(mbUI[0]);
 
     $('#mb_buttons').css({
-      display: 'inline-block',
-      width: '100%'
+        display: 'inline-block',
+        width: '100%',
     });
     $('form.musicbrainz_import').css({width: '49%', display: 'inline-block'});
     $('form.musicbrainz_import_search').css({'float': 'right'})

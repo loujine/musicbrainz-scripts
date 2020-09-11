@@ -59,17 +59,20 @@ function submitAliases() {
         }
         cols[6].textContent = 'Sending edit data';
         console.info('Data ready to be posted: ', postData);
-        function success(xhr) {
-            cols[6].textContent = `Success (code ${xhr.status})`;
-            cols[6].parentElement.style.color = 'green';
-        }
-        function fail(xhr) {
-            cols[6].textContent = `Error (code ${xhr.status})`;
-            cols[6].parentElement.style.color = 'red';
-        }
-        requests.POST(document.URL.replace('aliases', 'add-alias'),
-                      edits.formatEdit('edit-alias', postData),
-                      success, fail);
+        requests.POST(
+            document.URL.replace('aliases', 'add-alias'),
+            edits.formatEdit('edit-alias', postData),
+            // success
+            xhr => {
+                cols[6].textContent = `Success (code ${xhr.status})`;
+                cols[6].parentElement.style.color = 'green';
+            },
+            // fail
+            xhr => {
+                cols[6].textContent = `Error (code ${xhr.status})`;
+                cols[6].parentElement.style.color = 'red';
+            }
+        );
         node.classList.remove('newAlias');
     }
 }

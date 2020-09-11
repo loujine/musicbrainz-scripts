@@ -18,11 +18,6 @@
 // @run-at       document-end
 // ==/UserScript==
 
-const src = document.scripts[document.scripts.length - 1].text;
-                    // .text.replace(/\n/g, '').replace(/ +/g, ' ');
-const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*),\n.*\n/).exec(src)[1];
-const typeInfo = JSON.parse(jsonSource);
-
 function fetchLinkIds() {
     const typeInfo = server.getRelationshipTypeInfo()['artist-release'].filter(
         relation => relation.id === 34 // performance

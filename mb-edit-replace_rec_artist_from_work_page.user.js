@@ -95,7 +95,8 @@ function parseArtistEditData(data, performers) {
             creditedName = performer.creditedName;
         }
         data['artist_credit.names.' + idx + '.name'] = edits.encodeName(creditedName);
-        data['artist_credit.names.' + idx + '.join_phrase'] = (idx === performers.length - 1) ? null : ',+';
+        data['artist_credit.names.' + idx + '.join_phrase'] = (idx === performers.length - 1)
+            ? null : ',+';
         data['artist_credit.names.' + idx + '.artist.name'] = edits.encodeName(performer.name);
         data['artist_credit.names.' + idx + '.artist.id'] = performer.id;
     });

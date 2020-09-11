@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.11
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -158,6 +158,7 @@ class WikiDataHelpers {
             return entity.claims[this.fields[field]][0].mainsnak.datavalue.value;
         }
         // snaktype='somevalue' seems to mean ill-defined/undefined, do not parse
+        return '';
     }
 
     /*
@@ -545,11 +546,11 @@ function _fillFormFromWikidata(entity, entityType) {
         if (!libWD.existField(entity, externalLink)) {
             return;
         }
-        url += libWD.fieldValue(entity, externalLink);
+        const fullUrl = url + libWD.fieldValue(entity, externalLink);
         if ((domain && !existingDomains.includes(domain)) ||
             // official website
-            (!domain && !existingDomains.includes(url.split('/')[2]))) {
-            _fillExternalLinks(url);
+            (!domain && !existingDomains.includes(fullUrl.split('/')[2]))) {
+            _fillExternalLinks(fullUrl);
         }
     }
 

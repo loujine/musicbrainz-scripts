@@ -29,7 +29,7 @@ function replaceSubworksTitles() {
             return;
         }
         var name = searchExp.match(/^\/.+\/[gi]*$/) ?
-            node.textContent.replace(eval(searchExp), replaceExp) :
+            node.textContent.replace(eval(searchExp), replaceExp) : // eslint-disable-line no-eval
             node.textContent.split(searchExp).join(replaceExp);
         if (name === node.textContent) {
             $(node).after('<span>nothing to replace</span>');
@@ -76,11 +76,13 @@ function replaceSubworksTitles() {
 
 
 function setSubworksAttributes(attrIdx) {
-    $('table label:contains("parts:")').parents('tr').find('button[class*="edit-item"]').each(function (_idx, node) {
-        node.click();
-        $('.attribute-container input')[attrIdx].click();
-        $('.rel-editor-dialog button.positive').click();
-    });
+    $('table label:contains("parts:")').parents('tr').find('button[class*="edit-item"]').each(
+        function (_idx, node) {
+            node.click();
+            $('.attribute-container input')[attrIdx].click();
+            $('.rel-editor-dialog button.positive').click();
+        }
+    );
 }
 
 

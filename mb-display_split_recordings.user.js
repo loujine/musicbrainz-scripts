@@ -34,9 +34,9 @@ function formatTrackLength(milliseconds) {
     const oneHour = 60 * oneMinute;
     let seconds = Math.round(milliseconds / 1000.0);
     const hours = Math.floor(seconds / oneHour);
-    seconds = seconds % oneHour;
+    seconds %= oneHour;
     const minutes = Math.floor(seconds / oneMinute);
-    seconds = seconds % oneMinute;
+    seconds %= oneMinute;
     let result = ('00' + seconds).slice(-2);
     if (hours > 0) {
         result = hours + ':' + ('00' + minutes).slice(-2) + ':' + result;
@@ -57,7 +57,9 @@ function fetchRelatedRecordings(mbid, props) {
     fetch(`/ws/2/recording/${mbid}?fmt=json&inc=artist-rels releases`).then(
         resp => resp.json()
     ).then(json => {
-        if (json.relations == undefined || json.relations.length === 0 || json.releases.length === 0) {
+        if (
+            json.relations == undefined || json.relations.length === 0 || json.releases.length === 0
+        ) {
             return;
         }
         const rels = json.relations.filter(
@@ -105,7 +107,9 @@ function fetchWork(mbid) {
     fetch(`/ws/2/work/${mbid}?fmt=json&inc=work-rels`).then(
         resp => resp.json()
     ).then(json => {
-        const rels = json.relations.filter(rel => rel.type === 'parts' && rel.direction === 'forward');
+        const rels = json.relations.filter(
+            rel => rel.type === 'parts' && rel.direction === 'forward'
+        );
         nbSubworks = rels.length;
         console.log(`${nbSubworks} subworks`);
         offset.push(nbSubworks);
@@ -118,9 +122,25 @@ function fetchWork(mbid) {
             }, 1000 * delay * (subwidx - 1));
         }
     }).then(() => {
-        $('table:last').after('<table class="tbl"><thead><tr><th>Date</th><th>Title</th><th>Artist</th><th>Length</th></tr></thead><tbody id="split"><tr class="subh"><th></th><th colspan="3">performance</th></tr>').after('<h2>Recordings split by subworks</h2>');
+        $('table:last').after(`
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Title</th>
+                        <th>Artist</th>
+                        <th>Length</th>
+                    </tr>
+                </thead>
+                <tbody id="split">
+                    <tr class="subh">
+                        <th></th>
+                        <th colspan="3">performance</th>
+                    </tr>
+            `).after('<h2>Recordings split by subworks</h2>');
         $('#split').parent().after($(
-            `<p id="tmpSubworks">Loading ${nbSubworks} subworks (it should take around ${Number.parseInt(nbSubworks * delay)} seconds)</p>`
+            `<p id="tmpSubworks">Loading ${nbSubworks} subworks (it should take
+            around ${Number.parseInt(nbSubworks * delay)} seconds)</p>`
         ))
         setTimeout(() => {
             // the first delay is required so that we can compute the real delay
@@ -129,19 +149,24 @@ function fetchWork(mbid) {
             // to load
             const nbRecordings = offset.slice().splice(1).reduce((a,b) => a+b, 0);
             $('#tmpSubworks').empty().text(
-                `Loading ${nbRecordings} recordings (it should take around ${Number.parseInt(nbRecordings * delay)} seconds)`
+                `Loading ${nbRecordings} recordings (it should take
+                around ${Number.parseInt(nbRecordings * delay)} seconds)`
             );
             setTimeout(() => {
                 $('#tmpSubworks').remove();
-                for (const [mbid, ar] of Object.entries(counts)) {
+                for (const [mbid, ar] of Object.entries(counts)) { // eslint-disable-line no-unused-vars
                     if (ar.length == nbSubworks && !uniques.includes(ar[0].mbid)) {
                         const {begin, end, artists} = ar[0];
                         $('#split').append($(
                             `<tr>
-                            <td>${formatDate(begin, end)}</td>
-                            <td></td>
-                            <td>${artists}</td>
-                            <td>${formatTrackLength(ar.map(obj => obj.duration).reduce((a,b) => a+b, 0))}</td>
+                                <td>${formatDate(begin, end)}</td>
+                                <td></td>
+                                <td>${artists}</td>
+                                <td>${
+                                    formatTrackLength(
+                                        ar.map(obj => obj.duration
+                                    ).reduce((a,b) => a+b, 0))}
+                                </td>
                             </tr>`));
                         for (const {mbid, title, artists, duration} of ar) {
                             $('#split').append($(
