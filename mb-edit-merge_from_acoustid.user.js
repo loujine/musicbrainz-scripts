@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Display acoustIDs and merge recordings with common acoustID
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8.1
+// @version      2020.9.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-merge_from_acoustid.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-merge_from_acoustid.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -14,10 +14,11 @@
 // @license      MIT
 // @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/work/*
+// @exclude      http*://*musicbrainz.org/work/create
+// @exclude      http*://*musicbrainz.org/work/*/*
 // @include      http*://*musicbrainz.org/artist/*/relationships
 // @include      http*://*musicbrainz.org/artist/*/recordings
 // @include      http*://*musicbrainz.org/artist/*/recordings?page=*
-// @exclude      http*://*musicbrainz.org/work/*/*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
