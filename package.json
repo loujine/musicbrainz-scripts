@@ -6,7 +6,7 @@
     "scripts": {
         "prettier:format": "prettier mb*user.js",
         "lint": "npm run eslint",
-        "eslint": "eslint mb-*user.js mbz*js"
+        "eslint": "eslint *user.js *common.js"
     },
     "repository": {
         "type": "git",
@@ -27,7 +27,18 @@
         "eslint-config-prettier": "^6.11.0",
         "eslint-plugin-import": "^2.22.0",
         "eslint-plugin-prettier": "^3.1.4",
-        "eslint-plugin-you-dont-need-lodash-underscore": "latest",
         "prettier": "^2.0.5"
+    },
+    "prettier": {
+        "printWidth": 100,
+        "singleQuote": true,
+        "tabWidth": 4,
+        "useTabs": false,
+        "arrowParens": "avoid",
+        "semi": true,
+        "quoteProps": "preserve",
+        "trailingComma": "es5",
+        "bracketSpacing": false,
+        "arrowParens": "avoid"
     }
 }
