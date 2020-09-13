@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.11
+// @version      2020.9.13
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -596,14 +596,14 @@ function fillFormFromVIAF(viafURL) {
     const entityType = document.URL.split('/')[3];
     fetch(viafURL).then(resp => resp.text()).then(html => {
         fillExternalLinks(viafURL);
-        const parser = new DOMParser(),
-            doc = parser.parseFromString(html, 'text/html');
+        const doc = new DOMParser().parseFromString(html, 'text/xml');
         setValue(
-            'id-edit-artist.name',
+            `id-edit-${entityType}.name`,
             doc.getElementsByTagName('h2')[1].textContent,
             () => {
-                document.getElementsByClassName(
-                    'guesscase-sortname')[0].click();
+                if (document.getElementsByClassName('guesscase-sortname').length) {
+                    document.getElementsByClassName('guesscase-sortname')[0].click();
+                }
             }
         );
         for (const site of ["catalogue.bnf.fr", "d-nb.info", "wikidata.org", "id.loc.gov"]) {
@@ -685,7 +685,7 @@ $(document).ready(function() {
                 }
             });
         } else if (domain === "viaf.org") {
-            node.value = node.value.replace(/http:/g, 'https:')
+            node.value = node.value.replace(/http:/g, 'https:');
             if (!node.value.endsWith('/')) {
                 node.value += '/';
             }
@@ -711,6 +711,7 @@ $(document).ready(function() {
 // import viaf
 // https://viaf.org/viaf/44485204/
 // https://viaf.org/viaf/80111787/
+// https://viaf.org/viaf/176025900/ work
 
 // bnf
 // http://catalogue.bnf.fr/ark:/12148/cb13894801b.unimarc
