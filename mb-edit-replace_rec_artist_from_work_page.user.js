@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from an Artist or Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.12
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_work_page.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_work_page.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts

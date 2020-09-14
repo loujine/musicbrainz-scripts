@@ -4,7 +4,7 @@
 // @name         Import Hyperion/Helios releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-importer-hyperion.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-importer-hyperion.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts

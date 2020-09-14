@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Replace release relations by recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-release_rel_to_recording_rel.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-release_rel_to_recording_rel.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts

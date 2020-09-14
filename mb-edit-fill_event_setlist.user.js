@@ -4,7 +4,7 @@
 // @name         MusicBrainz event editor: Fill event setlist
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-fill_event_setlist.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-fill_event_setlist.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts

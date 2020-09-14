@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display RG timeline
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.8.30
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_rg_timeline.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_rg_timeline.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts

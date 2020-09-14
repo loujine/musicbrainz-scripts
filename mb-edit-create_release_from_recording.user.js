@@ -4,7 +4,7 @@
 // @name         MusicBrainz recording: Create broadcast release from the current recording
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_release_from_recording.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_release_from_recording.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts

@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show recordings of subworks on Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.14
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts

@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Set work attributes from the composer Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_attributes.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_attributes.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts

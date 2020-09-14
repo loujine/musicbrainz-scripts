@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display discid count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_count_discid.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_count_discid.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
