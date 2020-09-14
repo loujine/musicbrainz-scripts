@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2020.9.15
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -24,6 +24,9 @@
 // @include      http*://*musicbrainz.org/work/*/edit
 // @exclude      http*://*musicbrainz.org/work/*/alias/*/edit
 // @grant        GM_xmlhttpRequest
+// @connect      wikipedia.org
+// @connect      isni.org
+// @connect      oclc.org
 // @run-at       document-end
 // ==/UserScript==
 
@@ -644,24 +647,40 @@ function fillFormFromISNI(isniURL) {
     GM_xmlhttpRequest({
         method: 'GET',
         url: isniURL,
-        timeout: 1000,
-        onload: function (resp) {
+        timeout: 5000,
+        ontimeout: () => {
+            $('#newFields').append(
+                $('<p>',
+                  {'text': 'The request to ISNI website timed out'}).css('color', 'red')
+            );
+        },
+        onload: resp => {
             fillISNI(isniURL.split('/')[3]);
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(resp.responseText, 'text/html');
-            const rgx = new RegExp(/ISNI [0-9]+ (.*)/).exec(doc.title);
-            _fillEntityName(rgx[1], entityType);
-            [
-                'viaf.org',
-                'catalogue.bnf.fr',
-                'd-nb.info',
-                'wikidata.org',
-            ].forEach(function (site) {
-                const link = doc.querySelector(`a[href*="${site}"]`);
-                if (link && link.href) {
-                    fillExternalLinks(link.href);
+            let rgx = new RegExp(`href="(.*?musicbrainz.org.*?)"`).exec(resp.responseText);
+            if (rgx.length) {
+                // eslint-disable-next-line no-alert
+                if (window.confirm(
+                        'An entity already exists linked to this ISNI id, ' +
+                        'click "ok" to redirect to their page')) {
+                    window.location.href = rgx[1];
                 }
-            });
+            }
+
+            for (const site of [
+                'catalogue.bnf.fr', 'd-nb.info', 'wikidata.org', 'id.loc.gov', 'viaf.org'
+            ]) {
+                rgx = new RegExp(`href="(.*?${site}.*?)"`).exec(resp.responseText);
+                if (rgx.length) {
+                    fillExternalLinks(rgx[1]);
+                }
+            }
+
+            rgx = new RegExp(
+                /Name:.*?<psi:text>(.*?)<\/psi:text>/
+            ).exec(resp.responseText.replace(/\n/g, ''));
+            if (rgx.length) {
+                _fillEntityName(rgx[1], entityType);
+            }
         },
     });
 }
@@ -686,6 +705,9 @@ $(document).ready(function () {
     const node = document.getElementById('linkParser');
     node.addEventListener('input', () => {
         node.value = node.value.trim();
+        if (!node.value) {
+            return;
+        }
         const domain = node.value.split('/')[2];
         node.style.backgroundColor = '#bbffbb';
         if (domain === "www.wikidata.org") {
@@ -710,8 +732,9 @@ $(document).ready(function () {
                 node.value += '/';
             }
             fillFormFromVIAF(node.value);
-        } else if (domain === "www.isni.org") {
-            node.value = node.value.replace(/isni\//g, '')
+        } else if (domain.includes("isni.org")) {
+            node.value = node.value.replace(/http:/g, 'https:');
+            node.value = node.value.replace(/isni\//g, '');
             fillFormFromISNI(node.value);
         } else {
             node.style.backgroundColor = '#ffaaaa';
@@ -744,4 +767,3 @@ $(document).ready(function () {
 // isni
 // http://www.isni.org/isni/0000000073684002 person
 // http://www.isni.org/0000000120191498 orchestra
-// http://www.isni.org/0000000120191498 place
