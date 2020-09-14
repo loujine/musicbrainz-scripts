@@ -28,11 +28,11 @@ function showMissingWorks() {
 
     $recordings.each(function (idx, recording) {
         setTimeout(function () {
-            var mbid = recording.href.split('/')[4],
-                url = helper.wsUrl('recording', ['work-rels'], mbid);
+            var mbid = recording.href.split('/')[4];
+            var url = helper.wsUrl('recording', ['work-rels'], mbid);
             requests.GET(url, function (response) {
-                var resp = JSON.parse(response),
-                    $node;
+                var resp = JSON.parse(response);
+                var $node;
                 if (resp.relations.length) {
                     if (resp.relations[0].begin) {
                         $node = $('<td>✓</td>').css('background-color',

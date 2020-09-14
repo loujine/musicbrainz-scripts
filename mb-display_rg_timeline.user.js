@@ -49,9 +49,9 @@ document.querySelector('div.filter').insertAdjacentHTML('afterend', `
 $(document).ready(function () {
     const data = [];
     document.getElementById('timeline_toggle').addEventListener('click', () => {
-        const header = document.getElementById('timeline_toggle'),
-            block = document.getElementById('timeline_block'),
-            display = block.style.display;
+        const header = document.getElementById('timeline_toggle');
+        const block = document.getElementById('timeline_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });
@@ -63,11 +63,11 @@ $(document).ready(function () {
           </div>
         `);
 
-      node.querySelectorAll('tbody tr').forEach(row => {
-            const mbid = row.querySelector('a[href*="release-group"]').href.split('/')[4],
-                year = row.querySelector('td.c').textContent,
-                cover_url =  `https://coverartarchive.org/release-group/${mbid}/front-250.jpg`,
-                rg_url = `https://musicbrainz.org/release-group/${mbid}`;
+        node.querySelectorAll('tbody tr').forEach(row => {
+            const mbid = row.querySelector('a[href*="release-group"]').href.split('/')[4];
+            const year = row.querySelector('td.c').textContent;
+            const cover_url =  `https://coverartarchive.org/release-group/${mbid}/front-250.jpg`;
+            const rg_url = `https://musicbrainz.org/release-group/${mbid}`;
 
             document.getElementById(`slider${idx}`).insertAdjacentHTML('beforeend', `
                 <div>

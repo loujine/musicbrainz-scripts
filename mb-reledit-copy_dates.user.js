@@ -53,8 +53,8 @@ function referenceDate(relations) {
 function propagateDates() {
     var recordings = MB.relationshipEditor.UI.checkedRecordings();
     recordings.forEach(function(recording) {
-        var relations = recording.relationships(),
-            idx = referenceDate(relations);
+        var relations = recording.relationships();
+        var idx = referenceDate(relations);
         if (idx !== -1) {
             relations.forEach(function(rel) {
                 var linkType = parseInt(rel.linkTypeID());

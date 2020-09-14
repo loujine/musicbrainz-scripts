@@ -136,9 +136,9 @@ function guessSubWorks(workMbid) {
 
 $(document).ready(function() {
     document.getElementById('guess_works_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('guess_works_script_toggle'),
-            block = document.getElementById('guess_works_script_block'),
-            display = block.style.display;
+        const header = document.getElementById('guess_works_script_toggle');
+        const block = document.getElementById('guess_works_script_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });

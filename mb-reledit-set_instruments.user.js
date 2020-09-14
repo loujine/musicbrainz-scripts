@@ -74,9 +74,9 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
 
 $(document).ready(function () {
     document.getElementById('instrument_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('instrument_script_toggle'),
-            block = document.getElementById('instrument_script_block'),
-            display = block.style.display;
+        const header = document.getElementById('instrument_script_toggle');
+        const block = document.getElementById('instrument_script_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });

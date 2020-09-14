@@ -166,8 +166,8 @@ class WikiDataHelpers {
      * place: wikidata code ('Q90', etc.)
      */
     _fillArea(data, place, nodeId, lang) {
-        const entityArea = data.entities[place],
-            input = document.getElementById(`id-edit-artist.${nodeId}.name`);
+        const entityArea = data.entities[place];
+        const input = document.getElementById(`id-edit-artist.${nodeId}.name`);
         if (!entityArea || !input) { // no wikidata data
             return;
         }
@@ -213,8 +213,8 @@ class WikiDataHelpers {
     }
 
     fillDate(entity, entityType, fieldName, nodeId) {
-        const field = this.fieldValue(entity, fieldName),
-            prefix = `id-edit-${entityType}.period.${nodeId}`;
+        const field = this.fieldValue(entity, fieldName);
+        const prefix = `id-edit-${entityType}.period.${nodeId}`;
         if (!field) {
             return;
         }
@@ -339,10 +339,10 @@ function setValue(nodeId, value, callback) {
 
 
 function fillISNI(isni) {
-    const existing_isni = [],
-        isniBlock = document.getElementsByClassName(
-            'edit-artist.isni_codes-template')[0].parentElement,
-        fields = isniBlock.getElementsByTagName('input');
+    const existing_isni = [];
+    const isniBlock = document.getElementsByClassName(
+        'edit-artist.isni_codes-template')[0].parentElement;
+    const fields = isniBlock.getElementsByTagName('input');
     for (const input of fields) {
         existing_isni.push(input.value.split(" ").join(""));
     }
@@ -475,8 +475,9 @@ function _fillEntityGender(entity) {
 
 // eslint-disable-next-line complexity
 function _fillFormFromWikidata(entity, entityType) {
-    let lang = libWD.language,
-        field, input;
+    let lang = libWD.language;
+    let field;
+    let input;
     if (!(lang in entity.labels)) {
         lang = Object.keys(entity.labels)[0];
     }
@@ -677,9 +678,9 @@ $(document).ready(function() {
                 url: node.value,
                 timeout: 1000,
                 onload: function(resp) {
-                    const parser = new DOMParser(),
-                          doc = parser.parseFromString(resp.responseText, 'text/html'),
-                          link = doc.querySelector('#p-tb a[href*="www.wikidata.org"]');
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(resp.responseText, 'text/html');
+                    const link = doc.querySelector('#p-tb a[href*="www.wikidata.org"]');
                     fillExternalLinks(link.href);
                     fillFormFromWikidata(link.href.match(/\/(Q\d+)\b/)[1]);
                 }

@@ -19,14 +19,14 @@
 // @run-at       document-end
 // ==/UserScript==
 
-var $rows = $('table.tbl tr:gt(0)'),
-    idxType = $('table.tbl th:contains("Type")').index(),
-    idxLang = $('table.tbl th:contains("Language")').index(),
-    idxKey = $('table.tbl th:contains("Attributes")').index();
+var $rows = $('table.tbl tr:gt(0)');
+var idxType = $('table.tbl th:contains("Type")').index();
+var idxLang = $('table.tbl th:contains("Language")').index();
+var idxKey = $('table.tbl th:contains("Attributes")').index();
 
 $rows.each(function (idx, row) {
-    var mbid = $(row).find('a[href*="/work/"]').attr('href').split('/')[2],
-        title = $(row).find('a[href*="/work/"]')[0].text;
+    var mbid = $(row).find('a[href*="/work/"]').attr('href').split('/')[2];
+    var title = $(row).find('a[href*="/work/"]')[0].text;
     if (!row.children[idxType].textContent.trim()) {
         $(row.children[idxType]).append($('<form>')
                                 .append($(works.type).clone()));

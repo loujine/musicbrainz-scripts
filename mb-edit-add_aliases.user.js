@@ -45,15 +45,15 @@ function addRow() {
 
 function submitAliases() {
     for (const node of document.getElementsByClassName('newAlias')) {
-        const cols = node.children,
-            postData = {
-                name: edits.encodeName(cols[0].children[0].value),
-                sort_name: edits.encodeName(cols[1].children[0].value),
-                type_id: cols[4].children[0].value,
-                locale: cols[5].children[0].value,
-                primary_for_locale: cols[5].children[1].checked ? 1 : 0,
-                edit_note: sidebar.editNote(GM_info.script)
-            };
+        const cols = node.children;
+        const postData = {
+            name: edits.encodeName(cols[0].children[0].value),
+            sort_name: edits.encodeName(cols[1].children[0].value),
+            type_id: cols[4].children[0].value,
+            locale: cols[5].children[0].value,
+            primary_for_locale: cols[5].children[1].checked ? 1 : 0,
+            edit_note: sidebar.editNote(GM_info.script)
+        };
         if (postData.sort_name === '') {
             postData.sort_name = postData.name;
         }

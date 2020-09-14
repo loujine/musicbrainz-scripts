@@ -47,9 +47,9 @@ function formatPerformers(relations) {
 function showPerformers(start, maxcount) {
     var $rows;
     if (helper.isArtistURL()) {
-        var performer = helper.mbidFromURL(),
-            $allRows = $('table.tbl a[href*="/artist/"]').parents('tr'),
-            $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr');
+        var performer = helper.mbidFromURL();
+        var $allRows = $('table.tbl a[href*="/artist/"]').parents('tr');
+        var $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr');
         $rows = $allRows.not($performerRows);
     } else if (helper.isWorkURL()) {
         var composer = $('th:contains("composer:")').parent().find('a').attr('href').split('/')[2];
@@ -64,12 +64,12 @@ function showPerformers(start, maxcount) {
 
     $rows.each(function (idx, tr) {
         setTimeout(function () {
-            var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[2],
-                url = helper.wsUrl('recording', ['artist-rels'], mbid);
+            var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[2];
+            var url = helper.wsUrl('recording', ['artist-rels'], mbid);
             requests.GET(url, function (response) {
-                var resp = JSON.parse(response),
-                    $node = $(tr).find('td:last'),
-                    $button;
+                var resp = JSON.parse(response);
+                var $node = $(tr).find('td:last');
+                var $button;
                 if (resp.relations.length) {
                     $node.text(formatPerformers(resp.relations));
                     $button = $('<input>', {
@@ -104,8 +104,8 @@ function parseArtistEditData(data, performers) {
 }
 
 function parseEditData(editData) {
-    var data = {},
-        performers = [];
+    var data = {};
+    var performers = [];
     data['name'] = edits.encodeName(editData.name);
     data['comment'] = editData.comment ? editData.comment : null;
     if (!editData.isrcs.length) {
@@ -116,8 +116,8 @@ function parseEditData(editData) {
         });
     }
     editData.relationships.forEach(function (rel) {
-        var linkType = rel.linkTypeID,
-            uniqueIds = [];
+        var linkType = rel.linkTypeID;
+        var uniqueIds = [];
         if (server.performingLinkTypes().includes(linkType) &&
                 !uniqueIds.includes(rel.target.id)) {
             uniqueIds.push(rel.target.id); // filter duplicates
@@ -137,8 +137,8 @@ function parseEditData(editData) {
 
 function replaceArtist() {
     $('.replace:input:checked:enabled').each(function (idx, node) {
-        var mbid = node.id.replace('replace-', ''),
-            url = edits.urlFromMbid('recording', mbid);
+        var mbid = node.id.replace('replace-', '');
+        var url = edits.urlFromMbid('recording', mbid);
         function success(xhr) {
             var $status = $('#' + node.id + '-text');
             node.disabled = true;
@@ -203,15 +203,15 @@ function replaceArtist() {
 
 $(document).ready(function () {
     document.getElementById('replace_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('replace_script_toggle'),
-            block = document.getElementById('replace_script_block'),
-            display = block.style.display;
+        const header = document.getElementById('replace_script_toggle');
+        const block = document.getElementById('replace_script_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });
     document.getElementById('showPerformers').addEventListener('click', () => {
-        var start = $('#offset')[0].value,
-            maxcount = $('#max')[0].value;
+        var start = $('#offset')[0].value;
+        var maxcount = $('#max')[0].value;
         showPerformers(parseInt(start - 1), parseInt(maxcount));
         $('#batch_select').prop('disabled', false);
         $('#batch_replace_edit_note').prop('disabled', false);

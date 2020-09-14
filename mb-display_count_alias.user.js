@@ -26,8 +26,8 @@
 // adapted from jesus2099  mb. INLINE STUFF
 
 function parseCount(resp, tab) {
-    var cnt = resp.aliases.length,
-        locales = [];
+    var cnt = resp.aliases.length;
+    var locales = [];
     if (cnt > 0) {
         tab.style.setProperty('background-color', '#6f9');
     }
@@ -43,9 +43,9 @@ function parseCount(resp, tab) {
 }
 
 (function showCountAliases() {
-    var tab = document.querySelector("a[href$='/aliases']"),
-        entityType = document.URL.split('/')[3],
-        url = helper.wsUrl(entityType, ['aliases']);
+    var tab = document.querySelector("a[href$='/aliases']");
+    var entityType = document.URL.split('/')[3];
+    var url = helper.wsUrl(entityType, ['aliases']);
     requests.GET(url, function (resp) {
         parseCount(JSON.parse(resp), tab);
     });

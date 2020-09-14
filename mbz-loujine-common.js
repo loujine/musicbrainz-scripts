@@ -586,9 +586,9 @@ class Helper {
 
     comparefct(a, b) {
         // Sort function for performers in the recording artist list
-        const link = server.recordingLinkType,
-            order = [link.vocals, link.instrument, link.orchestra,
-                     link.conductor, link.performer];
+        const link = server.recordingLinkType;
+        const order = [link.vocals, link.instrument, link.orchestra,
+            link.conductor, link.performer];
         if (a.link === b.link) {return 0;}
         return order.indexOf(a.link) > order.indexOf(b.link) ? 1 : -1;
     }
@@ -682,11 +682,11 @@ class RelationshipEditor {
 
     editNote(meta, msg) {
         msg = msg || '';
-        const separator = '\n —\n',
-            signature = `GM script: "${meta.name}" (${meta.version})\n`,
-            vm = MB.releaseRelationshipEditor;
-        let existingMsg = vm.editNote(),
-            existingSign;
+        const separator = '\n —\n';
+        const signature = `GM script: "${meta.name}" (${meta.version})\n`;
+        const vm = MB.releaseRelationshipEditor;
+        let existingMsg = vm.editNote();
+        let existingSign;
         if (existingMsg.includes('\n —\n')) {
             [existingMsg, existingSign] = existingMsg.split(separator);
             vm.editNote(existingMsg + '\n' + msg

@@ -31,7 +31,7 @@ function parseCount(data, tab) {
 }
 
 (function showCountDiscid() {
-    const tab = document.querySelector("a[href$='/discids']"),
-        url = helper.wsUrl('release', ['discids']);
+    const tab = document.querySelector("a[href$='/discids']");
+    const url = helper.wsUrl('release', ['discids']);
     fetch(url).then(resp => resp.json()).then(data => parseCount(data, tab));
 })();

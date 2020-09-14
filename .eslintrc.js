@@ -48,7 +48,7 @@ module.exports = {
         ],
         "prefer-const": "off",
         "one-var": [
-            "off",
+            "error",
             "never"
         ]
     }

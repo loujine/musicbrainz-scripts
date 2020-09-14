@@ -91,9 +91,9 @@ function parseArtistEditData(data, performers) {
 }
 
 function parseEditData(editData) {
-    var data = {},
-        performers = [],
-        uniqueIds = [];
+    var data = {};
+    var performers = [];
+    var uniqueIds = [];
     data['name'] = edits.encodeName(editData.name);
     data['comment'] = editData.comment ? editData.comment : null;
     if (editData.video === true) {
@@ -133,8 +133,8 @@ function parseEditData(editData) {
 
 function replaceArtist() {
     $('.replace:input:checked:enabled').each(function (idx, node) {
-        var mbid = node.id.replace('replace-', ''),
-            url = edits.urlFromMbid('recording', mbid);
+        var mbid = node.id.replace('replace-', '');
+        var url = edits.urlFromMbid('recording', mbid);
         function success(xhr) {
             var $status = $('#' + node.id + '-text');
             node.disabled = true;
@@ -210,9 +210,9 @@ function replaceArtist() {
 
 $(document).ready(function () {
     document.getElementById('replace_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('replace_script_toggle'),
-            block = document.getElementById('replace_script_block'),
-            display = block.style.display;
+        const header = document.getElementById('replace_script_toggle');
+        const block = document.getElementById('replace_script_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });

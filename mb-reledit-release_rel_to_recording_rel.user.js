@@ -39,10 +39,10 @@ function moveAR(ids) {
     vm.source.relationships().filter(
         rel => rel.entityTypes === "artist-release" && ids.includes(rel.linkTypeID())
     ).forEach(rel => {
-        const performer = rel.entities()[0],
-            releaseLinkType = rel.linkTypeID(),
-            releaseLinkAttributes = rel.attributes(),
-            recordings = MB.relationshipEditor.UI.checkedRecordings();
+        const performer = rel.entities()[0];
+        const releaseLinkType = rel.linkTypeID();
+        const releaseLinkAttributes = rel.attributes();
+        const recordings = MB.relationshipEditor.UI.checkedRecordings();
         for (const recording of recordings) {
             if (recording.relationships().filter(
                 rel => rel.entityTypes === "artist-recording"

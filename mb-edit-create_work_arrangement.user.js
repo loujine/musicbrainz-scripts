@@ -127,9 +127,9 @@ function createArrangement(mbid, parentMbid) {
 
 $(document).ready(function () {
     document.getElementById('work_arrangement_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('work_arrangement_script_toggle'),
-            block = document.getElementById('work_arrangement_script_block'),
-            display = block.style.display;
+        const header = document.getElementById('work_arrangement_script_toggle');
+        const block = document.getElementById('work_arrangement_script_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });

@@ -155,7 +155,9 @@ function extract_release_data() {
         'tracks': tracks.map(extract_track_data),
     }));
 
-    let year, month, day;
+    let year;
+    let month;
+    let day;
     const release_info = document.querySelector('div.panel-body.hyp-anorak').textContent;
     const release_date = new RegExp(/Release date: (\d*) *(\w*) (\d*)\n/).exec(release_info);
     if (release_date) {
