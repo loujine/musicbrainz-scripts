@@ -46,7 +46,7 @@ module.exports = {
                 "ignoreComments": true
             }
         ],
-        "prefer-const": "off",
+        "prefer-const": "error",
         "one-var": [
             "error",
             "never"

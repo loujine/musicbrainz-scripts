@@ -18,12 +18,12 @@
 // @run-at       document-end
 // ==/UserScript==
 
-let MBID_REGEX = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
+const MBID_REGEX = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
 
 function setWork(recording, work) {
     requests.GET(`/ws/js/entity/${work.gid}?inc=rels`, function (resp) {
-        let target = JSON.parse(resp);
-        let dialog = new MB.relationshipEditor.UI.AddDialog({
+        const target = JSON.parse(resp);
+        const dialog = new MB.relationshipEditor.UI.AddDialog({
             source: recording,
             target: target,
             viewModel: MB.releaseRelationshipEditor
@@ -39,7 +39,7 @@ function setWork(recording, work) {
 function guessWork() {
     let idx = 0;
     MB.relationshipEditor.UI.checkedRecordings().forEach(function (recording) {
-        let url = '/ws/js/work/?q=' +
+        const url = '/ws/js/work/?q=' +
                   encodeURIComponent(document.getElementById('prefix').value) + ' ' +
                   encodeURIComponent(recording.name) +
                   '&artist=' + encodeURIComponent(recording.artist) +
@@ -56,10 +56,10 @@ function guessWork() {
 }
 
 function autoComplete() {
-    let $input = $('input#mainWork');
-    let match = $input.val().match(MBID_REGEX);
+    const $input = $('input#mainWork');
+    const match = $input.val().match(MBID_REGEX);
     if (match) {
-        let mbid = match[0];
+        const mbid = match[0];
         requests.GET(`/ws/2/work/${mbid}?fmt=json`, function (data) {
             data = JSON.parse(data);
             $input.data('mbid', mbid);

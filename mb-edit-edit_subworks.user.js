@@ -23,24 +23,24 @@ function replaceSubworksTitles() {
     let idx = 0;
     $('table label:contains("parts:")').parents('tr')
             .find('a[href*="/work/"]').each(function (_idx, node) {
-        let searchExp = document.getElementById('search').value;
-        let replaceExp = document.getElementById('replace').value;
+        const searchExp = document.getElementById('search').value;
+        const replaceExp = document.getElementById('replace').value;
         if (!searchExp || searchExp === replaceExp) {
             return;
         }
-        let name = searchExp.match(/^\/.+\/[gi]*$/) ?
+        const name = searchExp.match(/^\/.+\/[gi]*$/) ?
             node.textContent.replace(eval(searchExp), replaceExp) : // eslint-disable-line no-eval
             node.textContent.split(searchExp).join(replaceExp);
         if (name === node.textContent) {
             $(node).after('<span>nothing to replace</span>');
             return;
         }
-        let mbid = helper.mbidFromURL(node.href);
+        const mbid = helper.mbidFromURL(node.href);
 
         function success(xhr) {
-            let $status = $('#replace' + _idx);
+            const $status = $('#replace' + _idx);
             $status.parent().css('color', 'green');
-            let editId = new RegExp(
+            const editId = new RegExp(
                 '/edit/(\\d+)">edit</a>'
             ).exec(xhr.responseText)[1];
             $status.after(
@@ -58,7 +58,7 @@ function replaceSubworksTitles() {
             $('#replace' + _idx).text('Sending edit data');
             editData.name = name;
             $('#replace' + _idx).text(' replaced by ' + name);
-            let postData = edits.prepareEdit(editData);
+            const postData = edits.prepareEdit(editData);
             postData.edit_note = sidebar.editNote(GM_info.script);
             console.info('Data ready to be posted: ', postData);
             requests.POST(edits.urlFromMbid('work', mbid),

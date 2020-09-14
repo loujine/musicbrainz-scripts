@@ -24,12 +24,12 @@
 // ==/UserScript==
 
 function showAcoustids() {
-    let $recordings = $('table a[href*="/recording/"]');
-    let recording_mbids = $recordings.map(function() {
+    const $recordings = $('table a[href*="/recording/"]');
+    const recording_mbids = $recordings.map(function() {
         return this.href.split('/')[4]; // eslint-disable-line no-invalid-this
     }).get();
-    let url = '//api.acoustid.org/v2/track/list_by_mbid';
-    let application_api_key = 'P9e1TIJs7g';
+    const url = '//api.acoustid.org/v2/track/list_by_mbid';
+    const application_api_key = 'P9e1TIJs7g';
     let params = 'client=' + application_api_key;
     params += '&mbid=' + recording_mbids.join('&mbid=');
     params += '&batch=1&disabled=0';
@@ -41,9 +41,9 @@ function showAcoustids() {
     $('table.tbl > tbody > tr:not(".subh")').append('<td>');
 
     requests.POST(url, params, function success(xhr) {
-        let resp_mbids = JSON.parse(xhr.responseText).mbids;
+        const resp_mbids = JSON.parse(xhr.responseText).mbids;
         $recordings.each(function (idx, recording) {
-            let acids = resp_mbids[idx].tracks.map(function (track) {
+            const acids = resp_mbids[idx].tracks.map(function (track) {
                 return track.id;
             });
             $(recording).parents('tr').find('td:last').append(
@@ -62,10 +62,10 @@ function showAcoustids() {
                 })
             );
         });
-        let nodes = document.getElementsByClassName('acoustID');
-        let ids = {};
-        for (let node of nodes) {
-            let acid = node.getAttribute('data-acid');
+        const nodes = document.getElementsByClassName('acoustID');
+        const ids = {};
+        for (const node of nodes) {
+            const acid = node.getAttribute('data-acid');
             if (!Object.keys(ids).includes(acid)) {
                 ids[acid] = [];
             }
@@ -94,23 +94,23 @@ function showAcoustids() {
 
 
 function mergeFromAcoustID() {
-    let acid = $('#acidForMerge')[0].value;
-    let url = '//api.acoustid.org/v2/lookup';
-    let application_api_key = 'P9e1TIJs7g';
+    const acid = $('#acidForMerge')[0].value;
+    const url = '//api.acoustid.org/v2/lookup';
+    const application_api_key = 'P9e1TIJs7g';
     let params = 'client=' + application_api_key;
     params += '&meta=recordingids';
     params += '&trackid=' + acid;
     requests.POST(url, params, function success(xhr) {
-        let recordings = JSON.parse(xhr.responseText).results[0].recordings;
-        let ids = [];
+        const recordings = JSON.parse(xhr.responseText).results[0].recordings;
+        const ids = [];
         recordings.forEach(function (recording) {
-            let url = '/ws/js/entity/' + recording.id;
+            const url = '/ws/js/entity/' + recording.id;
             requests.GET(url, function (resp) {
                 ids.push(JSON.parse(resp).id);
             });
         });
         setTimeout(function () {
-            let url = '/recording/merge_queue?add-to-merge=' +
+            const url = '/recording/merge_queue?add-to-merge=' +
                       ids.join('&add-to-merge=');
             console.log('Merge URL is ' + url);
             window.open(url);

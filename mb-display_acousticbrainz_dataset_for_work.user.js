@@ -23,14 +23,14 @@
 const abzIconURL = "//acousticbrainz.org/static/images/favicon-16.png";
 
 function showABids() {
-    let $recordings = $('table a[href*="/recording/"]');
-    let recording_mbids = Array.from($recordings).map(node => node.href.split('/')[4]);
+    const $recordings = $('table a[href*="/recording/"]');
+    const recording_mbids = Array.from($recordings).map(node => node.href.split('/')[4]);
     if (recording_mbids.length > 125) {
         console.info('Warning: sending only the first 125 recordings '
                      + 'to AcousticBrainz');
         recording_mbids.splice(125);
     }
-    let url = ('//acousticbrainz.org/api/v1/count?recording_ids='
+    const url = ('//acousticbrainz.org/api/v1/count?recording_ids='
                + recording_mbids.join(';'));
     $('thead > tr').append('<th>ABrainz</th>');
     $('.subh > th')[1].colSpan += 1;
@@ -39,7 +39,7 @@ function showABids() {
     requests.GET(url, function (data) {
         data = JSON.parse(data);
         $recordings.each(function (idx, recording) {
-            let mbid = helper.mbidFromURL(recording.href);
+            const mbid = helper.mbidFromURL(recording.href);
             if (data[mbid] === undefined || data[mbid].count === 0) {
                 return;
             }

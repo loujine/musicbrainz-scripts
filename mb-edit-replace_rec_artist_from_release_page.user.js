@@ -25,7 +25,7 @@ const editNoteMsg =
     'CSG: Set performer(s) in recording relations as recording artist\n';
 
 function showSelectors() {
-    let $rows = $(
+    const $rows = $(
         $('table.tbl a[href*="/artist/"]').parents('tr').get().reverse()
     );
     if (!$('#selectorColumn').length) {
@@ -91,9 +91,9 @@ function parseArtistEditData(data, performers) {
 }
 
 function parseEditData(editData) {
-    let data = {};
-    let performers = [];
-    let uniqueIds = [];
+    const data = {};
+    const performers = [];
+    const uniqueIds = [];
     data['name'] = edits.encodeName(editData.name);
     data['comment'] = editData.comment ? editData.comment : null;
     if (editData.video === true) {
@@ -107,8 +107,8 @@ function parseEditData(editData) {
         });
     }
     editData.relationships.forEach(function (rel) {
-        let linkType = rel.linkTypeID;
-        let filterPending = document.getElementById('pending').checked ?
+        const linkType = rel.linkTypeID;
+        const filterPending = document.getElementById('pending').checked ?
             !rel.editsPending : true;
         if (server.performingLinkTypes().includes(linkType) &&
                 !uniqueIds.includes(rel.target.id) && filterPending &&
@@ -133,15 +133,15 @@ function parseEditData(editData) {
 
 function replaceArtist() {
     $('.replace:input:checked:enabled').each(function (idx, node) {
-        let mbid = node.id.replace('replace-', '');
-        let url = edits.urlFromMbid('recording', mbid);
+        const mbid = node.id.replace('replace-', '');
+        const url = edits.urlFromMbid('recording', mbid);
         function success(xhr) {
-            let $status = $('#' + node.id + '-text');
+            const $status = $('#' + node.id + '-text');
             node.disabled = true;
             $status.text(
                 'Success (code ' + xhr.status + ')'
             ).parent().css('color', 'green');
-            let editId = new RegExp(
+            const editId = new RegExp(
                 '/edit/(\\d+)">edit</a>'
             ).exec(xhr.responseText)[1];
             $status.after(
@@ -158,7 +158,7 @@ function replaceArtist() {
         }
         function callback(editData) {
             $('#' + node.id + '-text').text('Sending edit data');
-            let postData = parseEditData(editData);
+            const postData = parseEditData(editData);
             console.info('Data ready to be posted: ', postData);
             if (postData === null) {
                 $('#' + node.id + '-text').text('No artist data to send');

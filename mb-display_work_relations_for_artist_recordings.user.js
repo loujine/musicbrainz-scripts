@@ -20,7 +20,7 @@
 // ==/UserScript==
 
 function showMissingWorks() {
-    let $recordings = $('table a[href*="/recording/"]');
+    const $recordings = $('table a[href*="/recording/"]');
     if (!$('#workColumn').length) {
         $('thead > tr').append('<th id="workColumn">Related work</th>');
         $('.subh').append('<th>with date</th>');
@@ -28,10 +28,10 @@ function showMissingWorks() {
 
     $recordings.each(function (idx, recording) {
         setTimeout(function () {
-            let mbid = recording.href.split('/')[4];
-            let url = helper.wsUrl('recording', ['work-rels'], mbid);
+            const mbid = recording.href.split('/')[4];
+            const url = helper.wsUrl('recording', ['work-rels'], mbid);
             requests.GET(url, function (response) {
-                let resp = JSON.parse(response);
+                const resp = JSON.parse(response);
                 let $node;
                 if (resp.relations.length) {
                     if (resp.relations[0].begin) {

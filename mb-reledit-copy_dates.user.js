@@ -51,13 +51,13 @@ function referenceDate(relations) {
 }
 
 function propagateDates() {
-    let recordings = MB.relationshipEditor.UI.checkedRecordings();
+    const recordings = MB.relationshipEditor.UI.checkedRecordings();
     recordings.forEach(function(recording) {
-        let relations = recording.relationships();
-        let idx = referenceDate(relations);
+        const relations = recording.relationships();
+        const idx = referenceDate(relations);
         if (idx !== -1) {
             relations.forEach(function(rel) {
-                let linkType = parseInt(rel.linkTypeID());
+                const linkType = parseInt(rel.linkTypeID());
                 if (!rel.removed() && Object.values(server.recordingLinkType).includes(linkType)) {
                     copyDate(relations[idx], rel);
                 }
@@ -67,9 +67,9 @@ function propagateDates() {
 }
 
 function removeDates() {
-    let recordings = MB.relationshipEditor.UI.checkedRecordings();
+    const recordings = MB.relationshipEditor.UI.checkedRecordings();
     recordings.forEach(function(recording) {
-        let relations = recording.relationships();
+        const relations = recording.relationships();
         relations.forEach(function(relation) {
             if (!relation.removed()) {
                 removeDate(relation);
