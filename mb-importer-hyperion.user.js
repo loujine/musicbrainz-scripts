@@ -189,15 +189,15 @@ function extract_release_data() {
 
 // Insert links in page
 function insertMBSection(release) {
-    var mbUI = $('<div class="section musicbrainz"></div>');
-    var mbContentBlock = $('<div class="section_content"></div>');
+    let mbUI = $('<div class="section musicbrainz"></div>');
+    let mbContentBlock = $('<div class="section_content"></div>');
     mbUI.append(mbContentBlock);
 
     // Form parameters
-    var parameters = MBImport.buildFormParameters(release, editNote);
+    let parameters = MBImport.buildFormParameters(release, editNote);
 
     // Build form + search button
-    var innerHTML = '<div id="mb_buttons">'
+    let innerHTML = '<div id="mb_buttons">'
       + MBImport.buildFormHTML(parameters)
       + MBImport.buildSearchButton(release)
       + '</div>';
@@ -220,7 +220,7 @@ function insertMBSection(release) {
 
 try {
     setTimeout(() => {
-        var release = extract_release_data();
+        let release = extract_release_data();
         console.info(release);
         insertMBSection(release);
     }, 1000);

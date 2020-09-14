@@ -25,7 +25,7 @@ const editNoteMsg =
     'CSG: Set performer(s) in recording relations as recording artist\n';
 
 function showSelectors() {
-    var $rows = $(
+    let $rows = $(
         $('table.tbl a[href*="/artist/"]').parents('tr').get().reverse()
     );
     if (!$('#selectorColumn').length) {
@@ -47,9 +47,9 @@ function showSelectors() {
         );
     });
 
-    var lastChecked;
+    let lastChecked;
     $('.replace').click(function (evt) {
-        var currentChecked = $('.replace').index(evt.target);
+        let currentChecked = $('.replace').index(evt.target);
         if (evt.shiftKey && lastChecked !== undefined) {
             if (lastChecked > currentChecked) {
                 // es6 syntax
@@ -77,7 +77,7 @@ function parseArtistEditData(data, performers) {
         return data;
     }
     performers.forEach(function (performer, idx) {
-        var creditedName = performer.name;
+        let creditedName = performer.name;
         if (performer.creditedName) {
             creditedName = performer.creditedName;
         }
@@ -91,9 +91,9 @@ function parseArtistEditData(data, performers) {
 }
 
 function parseEditData(editData) {
-    var data = {};
-    var performers = [];
-    var uniqueIds = [];
+    let data = {};
+    let performers = [];
+    let uniqueIds = [];
     data['name'] = edits.encodeName(editData.name);
     data['comment'] = editData.comment ? editData.comment : null;
     if (editData.video === true) {
@@ -107,8 +107,8 @@ function parseEditData(editData) {
         });
     }
     editData.relationships.forEach(function (rel) {
-        var linkType = rel.linkTypeID;
-        var filterPending = document.getElementById('pending').checked ?
+        let linkType = rel.linkTypeID;
+        let filterPending = document.getElementById('pending').checked ?
             !rel.editsPending : true;
         if (server.performingLinkTypes().includes(linkType) &&
                 !uniqueIds.includes(rel.target.id) && filterPending &&
@@ -133,15 +133,15 @@ function parseEditData(editData) {
 
 function replaceArtist() {
     $('.replace:input:checked:enabled').each(function (idx, node) {
-        var mbid = node.id.replace('replace-', '');
-        var url = edits.urlFromMbid('recording', mbid);
+        let mbid = node.id.replace('replace-', '');
+        let url = edits.urlFromMbid('recording', mbid);
         function success(xhr) {
-            var $status = $('#' + node.id + '-text');
+            let $status = $('#' + node.id + '-text');
             node.disabled = true;
             $status.text(
                 'Success (code ' + xhr.status + ')'
             ).parent().css('color', 'green');
-            var editId = new RegExp(
+            let editId = new RegExp(
                 '/edit/(\\d+)">edit</a>'
             ).exec(xhr.responseText)[1];
             $status.after(
@@ -158,7 +158,7 @@ function replaceArtist() {
         }
         function callback(editData) {
             $('#' + node.id + '-text').text('Sending edit data');
-            var postData = parseEditData(editData);
+            let postData = parseEditData(editData);
             console.info('Data ready to be posted: ', postData);
             if (postData === null) {
                 $('#' + node.id + '-text').text('No artist data to send');

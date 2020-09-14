@@ -466,11 +466,11 @@ const roles = {
 };
 
 
-var requests = function () {
-    var self = {};
+let requests = function () {
+    let self = {};
 
     self._request = function (verb, url, param, callback) {
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 callback(xhr); // eslint-disable-line callback-return

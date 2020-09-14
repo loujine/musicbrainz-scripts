@@ -19,14 +19,14 @@
 // @run-at       document-end
 // ==/UserScript==
 
-var $rows = $('table.tbl tr:gt(0)');
-var idxType = $('table.tbl th:contains("Type")').index();
-var idxLang = $('table.tbl th:contains("Language")').index();
-var idxKey = $('table.tbl th:contains("Attributes")').index();
+let $rows = $('table.tbl tr:gt(0)');
+let idxType = $('table.tbl th:contains("Type")').index();
+let idxLang = $('table.tbl th:contains("Language")').index();
+let idxKey = $('table.tbl th:contains("Attributes")').index();
 
 $rows.each(function (idx, row) {
-    var mbid = $(row).find('a[href*="/work/"]').attr('href').split('/')[2];
-    var title = $(row).find('a[href*="/work/"]')[0].text;
+    let mbid = $(row).find('a[href*="/work/"]').attr('href').split('/')[2];
+    let title = $(row).find('a[href*="/work/"]')[0].text;
     if (!row.children[idxType].textContent.trim()) {
         $(row.children[idxType]).append($('<form>')
                                 .append($(works.type).clone()));
@@ -40,7 +40,7 @@ $rows.each(function (idx, row) {
                                .append($(works.key).clone()));
         if (title.toLowerCase().includes('major') ||
             title.toLowerCase().includes('minor')) {
-            var cell = row.children[idxKey];
+            let cell = row.children[idxKey];
             $(cell).find('option').each(function (idx, option) {
                 if (title.toLowerCase().includes(option.text.toLowerCase())) {
                     option.selected = true;
@@ -48,35 +48,35 @@ $rows.each(function (idx, row) {
             });
         }
     }
-    var $button = $('<input>', {
+    let $button = $('<input>', {
         'id': 'edit-' + mbid,
         'class': 'commit',
         'type': 'checkbox'
     });
-    var $td = $('<td></td>').append($button);
+    let $td = $('<td></td>').append($button);
     $(row).append($td);
 });
 
 
 function updateFromPage(editData, node) {
-    var row = $(node).parents('tr')[0];
+    let row = $(node).parents('tr')[0];
 
-    var type = $(row.children[idxType]).find('select');
-    var optionType = type.length ? type[0].value : null;
+    let type = $(row.children[idxType]).find('select');
+    let optionType = type.length ? type[0].value : null;
     if (optionType) {
         editData.type_id = optionType;
     }
 
-    var lang = $(row.children[idxLang]).find('select');
-    var optionLang = lang.length ? lang[0].selectedOptions[0].text : null;
+    let lang = $(row.children[idxLang]).find('select');
+    let optionLang = lang.length ? lang[0].selectedOptions[0].text : null;
     if (optionLang) {
         editData.languages = [optionLang];
     }
 
-    var key = $(row.children[idxKey]).find('select');
-    var optionKey = key.length ? key[0].value : null;
+    let key = $(row.children[idxKey]).find('select');
+    let optionKey = key.length ? key[0].value : null;
     if (optionKey) {
-        var keyAttribute = {'type_id': 1, 'value': parseInt(optionKey)};
+        let keyAttribute = {'type_id': 1, 'value': parseInt(optionKey)};
         editData.attributes.push(keyAttribute);
     }
     return editData;
@@ -85,14 +85,14 @@ function updateFromPage(editData, node) {
 
 function editWork() {
     $('.commit:input:checked:enabled').each(function (idx, node) {
-        var mbid = node.id.replace('edit-', '');
+        let mbid = node.id.replace('edit-', '');
         function success(xhr) {
-            var $status = $('#' + node.id + '-text');
+            let $status = $('#' + node.id + '-text');
             node.disabled = true;
             $status.text(
                 'Success (code ' + xhr.status + ')'
             ).parent().css('color', 'green');
-            var editId = new RegExp(
+            let editId = new RegExp(
                 '/edit/(\\d+)">edit</a>'
             ).exec(xhr.responseText)[1];
             $status.after(
@@ -108,7 +108,7 @@ function editWork() {
         }
         function callback(editData) {
             $('#' + node.id + '-text').text('Sending edit data');
-            var postData = edits.prepareEdit(updateFromPage(editData, node));
+            let postData = edits.prepareEdit(updateFromPage(editData, node));
             postData.edit_note = $('#batch_replace_edit_note')[0].value;
             console.info('Data ready to be posted: ', postData);
             requests.POST(edits.urlFromMbid('work', mbid),

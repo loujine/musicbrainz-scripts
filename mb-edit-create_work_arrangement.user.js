@@ -42,7 +42,7 @@ function createArrangement(mbid, parentMbid) {
             });
             const postData = edits.prepareEdit(editData);
             const wlt = server.workLinkType;
-            var idx = 0;
+            let idx = 0;
             editData.relations.forEach(function (rel) {
                 if (rel['target-type'] === 'artist' && wlt[rel.type]) {
                     postData[`rel.${idx}.target`] = rel.artist.id;

@@ -28,7 +28,7 @@ module.exports = {
         "no-useless-concat": "warn",
         "no-useless-escape": "warn",
         "no-unused-vars": "warn",
-        "no-var": "off",
+        "no-var": "error",
         "indent": [
             "off",
             4
