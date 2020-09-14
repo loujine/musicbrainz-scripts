@@ -26,9 +26,9 @@
 // @run-at       document-end
 // ==/UserScript==
 
-GM_addStyle(GM_getResourceText("viscss"));
-GM_addStyle(GM_getResourceText("slickcss"));
-GM_addStyle(GM_getResourceText("slicktheme"));
+GM_addStyle(GM_getResourceText('viscss'));
+GM_addStyle(GM_getResourceText('slickcss'));
+GM_addStyle(GM_getResourceText('slicktheme'));
 
 const template = Handlebars.compile(`
   <div>
@@ -96,12 +96,12 @@ $(document).ready(function () {
     });
     $('.slick-arrow').css('background-color', 'black');
 
-    new vis.Timeline(  // eslint-disable-line no-new
+    new vis.Timeline( // eslint-disable-line no-new
         document.getElementById('timeline_block'),
         new vis.DataSet(data),
         {
             template: template,
-            editable: false
+            editable: false,
         }
     );
     return false;

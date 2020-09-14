@@ -34,7 +34,7 @@
 })();
 
 function fillEventSetlist(entityType) {
-    const area = document.getElementById("id-edit-event.setlist");
+    const area = document.getElementById('id-edit-event.setlist');
     // document.getSelection() does not work on textarea
     const entity = area.value.substring(area.selectionStart, area.selectionEnd);
     fetch(`/ws/2/${entityType}?query=${entityType}:${entity}&limit=1&fmt=json`).then(
@@ -49,7 +49,7 @@ function fillEventSetlist(entityType) {
     )
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     let appliedNote = false;
     document.getElementById('fillArtist').addEventListener('click',
         () => {

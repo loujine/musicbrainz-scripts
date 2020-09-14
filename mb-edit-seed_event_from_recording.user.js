@@ -109,11 +109,12 @@ function seedConcert() {
     const relData = buildRelData();
     const data = [
         ...Object.entries(eventData).map(
-            ([prop,val]) => `edit-event.${prop}=${encodeURIComponent(val)}`
+            ([prop, val]) => `edit-event.${prop}=${encodeURIComponent(val)}`
         ),
         ...Object.entries(relData).map(
-            ([prop,val]) => `${prop}=${encodeURIComponent(val)}`
-        )].join('&');
+            ([prop, val]) => `${prop}=${encodeURIComponent(val)}`
+        ),
+    ].join('&');
     window.open(`/event/create?${data}`);
 }
 
@@ -124,7 +125,7 @@ function seedConcert() {
     `);
 })();
 
-$(document).ready(function() {
+$(document).ready(function () {
     document.getElementById('createConcert').addEventListener('click', () => {
         document.getElementById('createConcert').disabled = true;
         seedConcert();

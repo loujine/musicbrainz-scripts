@@ -52,7 +52,7 @@ function submitAliases() {
             type_id: cols[4].children[0].value,
             locale: cols[5].children[0].value,
             primary_for_locale: cols[5].children[1].checked ? 1 : 0,
-            edit_note: sidebar.editNote(GM_info.script)
+            edit_note: sidebar.editNote(GM_info.script),
         };
         if (postData.sort_name === '') {
             postData.sort_name = postData.name;

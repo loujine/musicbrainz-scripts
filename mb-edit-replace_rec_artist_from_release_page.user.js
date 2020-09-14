@@ -41,7 +41,7 @@ function showSelectors() {
                     'id': 'replace-' + mbid,
                     'class': 'replace',
                     'type': 'checkbox',
-                    'value': 'Replace artist'
+                    'value': 'Replace artist',
                 })
             )
         );
@@ -64,8 +64,10 @@ function showSelectors() {
 
 // Replace composer -> performer as recording artist (CSG)
 function parseArtistEditData(data, performers) {
-    if (performers.length === 0
-        && !document.getElementById('set-unknown').checked) {
+    if (
+        performers.length === 0 &&
+        !document.getElementById('set-unknown').checked
+    ) {
         // erase completely data to prevent the POST request
         return null;
     } else if (performers.length === 0) {
@@ -97,7 +99,7 @@ function parseEditData(editData) {
     data['name'] = edits.encodeName(editData.name);
     data['comment'] = editData.comment ? editData.comment : null;
     if (editData.video === true) {
-        data['video'] = "1";
+        data['video'] = '1';
     }
     if (!editData.isrcs.length) {
         data['isrcs.0'] = null;
@@ -108,24 +110,31 @@ function parseEditData(editData) {
     }
     editData.relationships.forEach(function (rel) {
         const linkType = rel.linkTypeID;
-        const filterPending = document.getElementById('pending').checked ?
-            !rel.editsPending : true;
-        if (server.performingLinkTypes().includes(linkType) &&
-                !uniqueIds.includes(rel.target.id) && filterPending &&
-                rel.target.name !== '[unknown]') {
+        const filterPending = document.getElementById('pending').checked
+            ? !rel.editsPending
+            : true;
+        if (
+            server.performingLinkTypes().includes(linkType) &&
+            !uniqueIds.includes(rel.target.id) &&
+            filterPending &&
+            rel.target.name !== '[unknown]'
+        ) {
             uniqueIds.push(rel.target.id); // filter duplicates
-            performers.push({'name': rel.target.name,
-                             'creditedName': rel.entity0_credit,
-                             'id': rel.target.id,
-                             'link': linkType,
-                             'mbid': rel.target.gid
+            performers.push({
+                'name': rel.target.name,
+                'creditedName': rel.entity0_credit,
+                'id': rel.target.id,
+                'link': linkType,
+                'mbid': rel.target.gid,
             });
         }
     });
     data['edit_note'] = $('#batch_replace_edit_note')[0].value;
     if (document.getElementById('set-unknown').checked) {
         data['edit_note'] = data['edit_note'].replace(
-            editNoteMsg, 'Set [unknown] performer when no rel');
+            editNoteMsg,
+            'Set [unknown] performer when no rel'
+        );
     }
     data.make_votable = document.getElementById('votable').checked ? '1' : '0';
     return parseArtistEditData(data, performers.sort(helper.comparefct));
@@ -164,13 +173,18 @@ function replaceArtist() {
                 $('#' + node.id + '-text').text('No artist data to send');
                 return;
             }
-            requests.POST(url, edits.formatEdit('edit-recording', postData),
-                          success, fail);
+            requests.POST(
+                url,
+                edits.formatEdit('edit-recording', postData),
+                success,
+                fail
+            );
         }
         setTimeout(function () {
             $('#' + node.id + '-text').empty();
             $(node).after(
-                `<span id="${node.id}-text">Fetching required data</span>`);
+                `<span id="${node.id}-text">Fetching required data</span>`
+            );
             edits.getEditParams(url, callback);
         }, 2 * idx * server.timeout);
     });

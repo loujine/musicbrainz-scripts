@@ -79,8 +79,7 @@ function moveAR(ids) {
     `);
 })();
 
-
-$(document).ready(function() {
+$(document).ready(function () {
     const ids = fetchLinkIds();
     document.getElementById('moveAR').addEventListener('click', () => {
         moveAR(ids);

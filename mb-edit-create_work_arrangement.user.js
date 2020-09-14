@@ -24,7 +24,7 @@ function createArrangement(mbid, parentMbid) {
     $('#create-arrangement-text').empty();
     fetch(helper.wsUrl('work', ['artist-rels', 'work-rels'], mbid))
         .then(resp => resp.json())
-        .then(function(data) {
+        .then(function (data) {
             const editData = {
                 name: data.title,
                 type_id: server.workType[data.type],
@@ -37,7 +37,7 @@ function createArrangement(mbid, parentMbid) {
                     editData.attributes.push({
                         type_id: 1,
                         value: server.workKeyAttr[attr.value],
-                    })
+                    });
                 }
             });
             const postData = edits.prepareEdit(editData);
@@ -88,8 +88,10 @@ function createArrangement(mbid, parentMbid) {
                 if (document.getElementById('subworks').checked) {
                     idx = 0;
                     editData.relations.forEach(function (rel) {
-                        if (rel.type === 'parts'
-                            && rel.direction === "forward") {
+                        if (
+                            rel.type === 'parts' &&
+                            rel.direction === 'forward'
+                        ) {
                             setTimeout(function () {
                                 createArrangement(rel.work.id, newMbid);
                             }, idx * server.timeout);

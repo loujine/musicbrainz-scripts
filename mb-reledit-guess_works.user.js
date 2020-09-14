@@ -26,7 +26,7 @@ function setWork(recording, work) {
         const dialog = new MB.relationshipEditor.UI.AddDialog({
             source: recording,
             target: target,
-            viewModel: MB.releaseRelationshipEditor
+            viewModel: MB.releaseRelationshipEditor,
         });
         target.relationships.forEach(function (rel) {
             // apparently necessary to fill MB.entityCache with rels
@@ -39,11 +39,14 @@ function setWork(recording, work) {
 function guessWork() {
     let idx = 0;
     MB.relationshipEditor.UI.checkedRecordings().forEach(function (recording) {
-        const url = '/ws/js/work/?q=' +
-                  encodeURIComponent(document.getElementById('prefix').value) + ' ' +
-                  encodeURIComponent(recording.name) +
-                  '&artist=' + encodeURIComponent(recording.artist) +
-                  '&fmt=json&limit=1';
+        const url =
+            '/ws/js/work/?q=' +
+            encodeURIComponent(document.getElementById('prefix').value) +
+            ' ' +
+            encodeURIComponent(recording.name) +
+            '&artist=' +
+            encodeURIComponent(recording.artist) +
+            '&fmt=json&limit=1';
         if (!recording.performances().length) {
             idx += 1;
             setTimeout(function () {
@@ -81,7 +84,7 @@ function guessSubWorks(workMbid) {
         let total = subWorks.length;
         if (repeats) {
             repeats = repeats.split(/[,; ]+/).map(s => Number.parseInt(s));
-            total = repeats.reduce((n,m) => n+m, 0);
+            total = repeats.reduce((n, m) => n + m, 0);
         } else {
             repeats = subWorks.map(() => 1);
         }
@@ -90,16 +93,18 @@ function guessSubWorks(workMbid) {
         subWorks.forEach((sb, sbIdx) => {
             repeatedSubWorks.fill(sb, start, start + repeats[sbIdx]);
             start += repeats[sbIdx];
-        })
-
-        MB.relationshipEditor.UI.checkedRecordings().forEach((recording, recIdx) => {
-            if (recIdx >= repeatedSubWorks.length) {
-                return;
-            }
-            if (!recording.performances().length) {
-                setWork(recording, repeatedSubWorks[recIdx]);
-            }
         });
+
+        MB.relationshipEditor.UI.checkedRecordings().forEach(
+            (recording, recIdx) => {
+                if (recIdx >= repeatedSubWorks.length) {
+                    return;
+                }
+                if (!recording.performances().length) {
+                    setWork(recording, repeatedSubWorks[recIdx]);
+                }
+            }
+        );
     });
 }
 

@@ -77,8 +77,7 @@ function showAcoustids() {
         );
         duplicate_ids.forEach(function (acid) {
             $('#acidForMerge').append(
-                '<option value="' + acid + '">' + acid.slice(0, 6) +
-                '</option>'
+                '<option value="' + acid + '">' + acid.slice(0, 6) + '</option>'
             );
         });
         duplicate_ids = duplicate_ids.map(function (acid) {
@@ -110,8 +109,9 @@ function mergeFromAcoustID() {
             });
         });
         setTimeout(function () {
-            const url = '/recording/merge_queue?add-to-merge=' +
-                      ids.join('&add-to-merge=');
+            const url =
+                '/recording/merge_queue?add-to-merge=' +
+                ids.join('&add-to-merge=');
             console.log('Merge URL is ' + url);
             window.open(url);
         }, 1000);

@@ -18,9 +18,9 @@
 // ==/UserScript==
 
 function checkAll() {
-    document.querySelectorAll('.mbmerge').forEach(
-        function (node) {node.checked = true}
-    );
+    document.querySelectorAll('.mbmerge').forEach(function (node) {
+        node.checked = true;
+    });
 }
 
 function launchMerge() {
@@ -33,20 +33,24 @@ function launchMerge() {
     document.querySelectorAll('.mbmerge:checked').forEach((node, idx) => {
         setTimeout(() => {
             GM_xmlhttpRequest({
-                method: "GET",
+                method: 'GET',
                 url: `https://musicbrainz.org/ws/js/entity/${node.value}`,
                 timeout: 1000,
                 onload: resp => {
-                    document.getElementById('merge-text')
-                            .textContent = `Fetched internal id for recording ${idx}`;
+                    document.getElementById(
+                        'merge-text'
+                    ).textContent = `Fetched internal id for recording ${idx}`;
                     ids.push(JSON.parse(resp.responseText).id);
-                }
+                },
             });
-        }, 1000 * idx)
+        }, 1000 * idx);
     });
     setTimeout(function () {
-        const url = 'https://musicbrainz.org/recording/merge_queue?add-to-merge=' + ids.join('&add-to-merge=');
-        document.getElementById('merge-text').textContent = 'Opening merge page';
+        const url =
+            'https://musicbrainz.org/recording/merge_queue?add-to-merge=' +
+            ids.join('&add-to-merge=');
+        document.getElementById('merge-text').textContent =
+            'Opening merge page';
         console.log('Merge URL is ' + url);
         window.open(url);
     }, document.querySelectorAll('.mbmerge:checked').length * 1000 + 1000);
@@ -62,7 +66,10 @@ function launchMerge() {
     document.querySelectorAll('table a[href*="/recording/"]').forEach(node => {
         const mbid = node.href.split('/')[4];
         const tr = node.parentElement.parentElement;
-        if (node.parentElement.tagName != "I" && !tr.classList.contains('mbid-disabled')) {
+        if (
+            node.parentElement.tagName != 'I' &&
+            !tr.classList.contains('mbid-disabled')
+        ) {
             tr.insertAdjacentHTML(
                 'beforeend',
                 `<td><input class="mbmerge" value="${mbid}" type="checkbox"></td>`
@@ -75,7 +82,7 @@ function launchMerge() {
     `);
 })();
 
-$(document).ready(function() {
+$(document).ready(function () {
     document.getElementById('checkAll').addEventListener('click', checkAll);
     document.getElementById('merge').addEventListener('click', launchMerge);
     return false;

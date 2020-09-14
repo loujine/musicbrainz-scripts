@@ -35,16 +35,19 @@ const date = dateInTitle === null ? ['', '', ''] : dateInTitle.splice(1);
 
 // let artistCredit = document.querySelector('p.subheader a').textContent;
 
-function prepareReleaseForm (resp) {
-    const artistCredit = JSON.parse(resp).artistCredit.names.map(
-        credit => ({
-            'credited_name': credit.name,
-            'mbid': credit.artist.gid,
-            'joinphrase': credit.joinPhrase
-        })
+function prepareReleaseForm(resp) {
+    const artistCredit = JSON.parse(resp).artistCredit.names.map(credit => ({
+        'credited_name': credit.name,
+        'mbid': credit.artist.gid,
+        'joinphrase': credit.joinPhrase,
+    }));
+    const broadcastURLs = JSON.parse(resp).relationships.filter(
+        rel => rel.linkTypeID === 268
     );
-    const broadcastURLs = JSON.parse(resp).relationships.filter(rel => rel.linkTypeID === 268);
-    const urls = broadcastURLs.map(url => ({'link_type': 85, 'url': url.target.href_url}));
+    const urls = broadcastURLs.map(url => ({
+        'link_type': 85,
+        'url': url.target.href_url,
+    }));
 
     const release = {
         'title': recordingTitle,
@@ -58,22 +61,28 @@ function prepareReleaseForm (resp) {
         'year': date[0],
         'month': date[1],
         'day': date[2],
-        'labels': [{
-            'name': '[no label]',
-            'mbid': '157afde4-4bf5-4039-8ad2-5a15acc85176'
-        }],
+        'labels': [
+            {
+                'name': '[no label]',
+                'mbid': '157afde4-4bf5-4039-8ad2-5a15acc85176',
+            },
+        ],
         'barcode': 'none',
         'urls': urls,
-        'discs': [{
-            'format': 'Digital Media',
-            'tracks': [{
-                'number': 1,
-                'title': recordingTitle,
-                'recording': recordingMBID,
-                'duration': recordingLength,
-                'artist_credit': artistCredit
-            }]
-        }]
+        'discs': [
+            {
+                'format': 'Digital Media',
+                'tracks': [
+                    {
+                        'number': 1,
+                        'title': recordingTitle,
+                        'recording': recordingMBID,
+                        'duration': recordingLength,
+                        'artist_credit': artistCredit,
+                    },
+                ],
+            },
+        ],
     };
     document.getElementById('add_release_script').insertAdjacentHTML(
         'beforeend',

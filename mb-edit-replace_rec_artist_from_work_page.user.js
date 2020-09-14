@@ -27,10 +27,16 @@ function formatPerformers(relations) {
     const performers = [];
     relations.forEach(function (rel) {
         let type;
-        const creditedName = rel['target-credit'] ? rel['target-credit'] : rel.artist.name;
-        if (rel.type === 'instrument' || rel.type === 'vocal' ||
-            rel.type === 'conductor' || rel.type === 'performing orchestra' ||
-            rel.type === 'performer') {
+        const creditedName = rel['target-credit']
+            ? rel['target-credit']
+            : rel.artist.name;
+        if (
+            rel.type === 'instrument' ||
+            rel.type === 'vocal' ||
+            rel.type === 'conductor' ||
+            rel.type === 'performing orchestra' ||
+            rel.type === 'performer'
+        ) {
             if (rel.type === 'performing orchestra') {
                 type = 'orchestra';
             } else if (!rel.attributes.length) {
@@ -77,7 +83,7 @@ function showPerformers(start, maxcount) {
                         'id': 'replace-' + mbid,
                         'class': 'replace',
                         'type': 'checkbox',
-                        'value': 'Replace artist'
+                        'value': 'Replace artist',
                     });
                     $node.append($button);
                 } else {
@@ -119,14 +125,17 @@ function parseEditData(editData) {
     editData.relationships.forEach(function (rel) {
         const linkType = rel.linkTypeID;
         const uniqueIds = [];
-        if (server.performingLinkTypes().includes(linkType) &&
-                !uniqueIds.includes(rel.target.id)) {
+        if (
+            server.performingLinkTypes().includes(linkType) &&
+            !uniqueIds.includes(rel.target.id)
+        ) {
             uniqueIds.push(rel.target.id); // filter duplicates
-            performers.push({'name': rel.target.name,
-                             'creditedName': rel.entity0_credit,
-                             'id': rel.target.id,
-                             'link': linkType,
-                             'mbid': rel.target.gid
+            performers.push({
+                'name': rel.target.name,
+                'creditedName': rel.entity0_credit,
+                'id': rel.target.id,
+                'link': linkType,
+                'mbid': rel.target.gid,
             });
         }
     });
@@ -153,7 +162,7 @@ function replaceArtist() {
                 $('<p>').append(
                     '<a href="/edit/' + editId + '" target="_blank">edit ' + editId + '</a>'
                 )
-            )
+            );
         }
         function fail(xhr) {
             $('#' + node.id + '-text').text(
@@ -164,8 +173,12 @@ function replaceArtist() {
             $('#' + node.id + '-text').text('Sending edit data');
             const postData = parseEditData(editData);
             console.info('Data ready to be posted: ', postData);
-            requests.POST(url, edits.formatEdit('edit-recording', postData),
-                          success, fail);
+            requests.POST(
+                url,
+                edits.formatEdit('edit-recording', postData),
+                success,
+                fail
+            );
         }
         setTimeout(function () {
             $('#' + node.id + '-text').empty();

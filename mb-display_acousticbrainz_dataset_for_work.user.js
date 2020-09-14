@@ -20,18 +20,23 @@
 // @run-at       document-end
 // ==/UserScript==
 
-const abzIconURL = "//acousticbrainz.org/static/images/favicon-16.png";
+const abzIconURL = '//acousticbrainz.org/static/images/favicon-16.png';
 
 function showABids() {
     const $recordings = $('table a[href*="/recording/"]');
-    const recording_mbids = Array.from($recordings).map(node => node.href.split('/')[4]);
+    const recording_mbids = Array.from($recordings).map(
+        node => node.href.split('/')[4]
+    );
     if (recording_mbids.length > 125) {
-        console.info('Warning: sending only the first 125 recordings '
-                     + 'to AcousticBrainz');
+        console.info(
+            'Warning: sending only the first 125 recordings ' +
+                'to AcousticBrainz'
+        );
         recording_mbids.splice(125);
     }
-    const url = ('//acousticbrainz.org/api/v1/count?recording_ids='
-               + recording_mbids.join(';'));
+    const url =
+        '//acousticbrainz.org/api/v1/count?recording_ids=' +
+        recording_mbids.join(';');
     $('thead > tr').append('<th>ABrainz</th>');
     $('.subh > th')[1].colSpan += 1;
     $('table.tbl > tbody > tr:not(".subh")').append('<td>');
@@ -62,7 +67,7 @@ function showABids() {
     `);
 })();
 
-$(document).ready(function() {
+$(document).ready(function () {
     document.getElementById('showABids').addEventListener('click', showABids);
     return false;
 });

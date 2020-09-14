@@ -25,7 +25,8 @@ function loadRecordings() {
         data => {
             const existingAliases = Array.prototype.map.call(
                 document.querySelectorAll('tbody tr bdi'),
-                node => node.textContent);
+                node => node.textContent
+            );
             const names = Array.from(
                 new Set(data.relations.map(rel => rel.recording.title).filter(
                     name => !existingAliases.includes(name))

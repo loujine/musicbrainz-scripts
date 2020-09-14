@@ -51,7 +51,7 @@ $rows.each(function (idx, row) {
     const $button = $('<input>', {
         'id': 'edit-' + mbid,
         'class': 'commit',
-        'type': 'checkbox'
+        'type': 'checkbox',
     });
     const $td = $('<td></td>').append($button);
     $(row).append($td);
@@ -99,7 +99,7 @@ function editWork() {
                 $('<p>').append(
                     '<a href="/edit/' + editId + '" target="_blank">edit ' + editId + '</a>'
                 )
-            )
+            );
         }
         function fail(xhr) {
             $('#' + node.id + '-text').text(
@@ -111,9 +111,12 @@ function editWork() {
             const postData = edits.prepareEdit(updateFromPage(editData, node));
             postData.edit_note = $('#batch_replace_edit_note')[0].value;
             console.info('Data ready to be posted: ', postData);
-            requests.POST(edits.urlFromMbid('work', mbid),
-                          edits.formatEdit('edit-work', postData),
-                          success, fail);
+            requests.POST(
+                edits.urlFromMbid('work', mbid),
+                edits.formatEdit('edit-work', postData),
+                success,
+                fail
+            );
         }
         setTimeout(function () {
             $('#' + node.id + '-text').empty();

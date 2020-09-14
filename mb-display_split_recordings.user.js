@@ -28,8 +28,12 @@ let nbSubworks;
 
 // musicbrainz-server/root/static/scripts/common/utility/formatTrackLength.js
 function formatTrackLength(milliseconds) {
-    if (!milliseconds) {return '';}
-    if (milliseconds < 1000) {return milliseconds + ' ms';}
+    if (!milliseconds) {
+        return '';
+    }
+    if (milliseconds < 1000) {
+        return milliseconds + ' ms';
+    }
     const oneMinute = 60;
     const oneHour = 60 * oneMinute;
     let seconds = Math.round(milliseconds / 1000.0);
@@ -47,8 +51,12 @@ function formatTrackLength(milliseconds) {
 }
 
 function formatDate(begin, end) {
-    if (begin === null && end === null) {return '';}
-    if (begin === end) {return begin;}
+    if (begin === null && end === null) {
+        return '';
+    }
+    if (begin === end) {
+        return begin;
+    }
     return `${begin} – ${end}`;
 }
 
@@ -194,7 +202,7 @@ function fetchWork(mbid) {
             'value': 'Display recordings split by subworks',
         })
     );
-}())
+})();
 
 $(document).ready(function () {
     // const work = helper.mbidFromURL();
