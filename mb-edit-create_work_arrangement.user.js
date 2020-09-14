@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.12
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -24,7 +24,7 @@ function createArrangement(mbid, parentMbid) {
     $('#create-arrangement-text').empty();
     fetch(helper.wsUrl('work', ['artist-rels', 'work-rels'], mbid))
         .then(resp => resp.json())
-        .then(function(data) {
+        .then(function (data) {
             const editData = {
                 name: data.title,
                 type_id: server.workType[data.type],
@@ -37,12 +37,12 @@ function createArrangement(mbid, parentMbid) {
                     editData.attributes.push({
                         type_id: 1,
                         value: server.workKeyAttr[attr.value],
-                    })
+                    });
                 }
             });
             const postData = edits.prepareEdit(editData);
             const wlt = server.workLinkType;
-            var idx = 0;
+            let idx = 0;
             editData.relations.forEach(function (rel) {
                 if (rel['target-type'] === 'artist' && wlt[rel.type]) {
                     postData[`rel.${idx}.target`] = rel.artist.id;
@@ -88,8 +88,10 @@ function createArrangement(mbid, parentMbid) {
                 if (document.getElementById('subworks').checked) {
                     idx = 0;
                     editData.relations.forEach(function (rel) {
-                        if (rel.type === 'parts'
-                            && rel.direction === "forward") {
+                        if (
+                            rel.type === 'parts' &&
+                            rel.direction === 'forward'
+                        ) {
                             setTimeout(function () {
                                 createArrangement(rel.work.id, newMbid);
                             }, idx * server.timeout);
@@ -127,9 +129,9 @@ function createArrangement(mbid, parentMbid) {
 
 $(document).ready(function () {
     document.getElementById('work_arrangement_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('work_arrangement_script_toggle'),
-            block = document.getElementById('work_arrangement_script_block'),
-            display = block.style.display;
+        const header = document.getElementById('work_arrangement_script_toggle');
+        const block = document.getElementById('work_arrangement_script_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });

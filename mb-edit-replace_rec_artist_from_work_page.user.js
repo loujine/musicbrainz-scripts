@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from an Artist or Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.12
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_work_page.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_work_page.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -21,16 +21,22 @@
 // @run-at       document-end
 // ==/UserScript==
 
-var editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
+const editNoteMsg = 'CSG: Set performer(s) as recording artist\n';
 
 function formatPerformers(relations) {
-    var performers = [];
+    const performers = [];
     relations.forEach(function (rel) {
-        var type;
-        var creditedName = rel['target-credit'] ? rel['target-credit'] : rel.artist.name;
-        if (rel.type === 'instrument' || rel.type === 'vocal' ||
-            rel.type === 'conductor' || rel.type === 'performing orchestra' ||
-            rel.type === 'performer') {
+        let type;
+        const creditedName = rel['target-credit']
+            ? rel['target-credit']
+            : rel.artist.name;
+        if (
+            rel.type === 'instrument' ||
+            rel.type === 'vocal' ||
+            rel.type === 'conductor' ||
+            rel.type === 'performing orchestra' ||
+            rel.type === 'performer'
+        ) {
             if (rel.type === 'performing orchestra') {
                 type = 'orchestra';
             } else if (!rel.attributes.length) {
@@ -45,14 +51,15 @@ function formatPerformers(relations) {
 }
 
 function showPerformers(start, maxcount) {
-    var $rows;
+    let $rows;
     if (helper.isArtistURL()) {
-        var performer = helper.mbidFromURL(),
-            $allRows = $('table.tbl a[href*="/artist/"]').parents('tr'),
-            $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr');
+        const performer = helper.mbidFromURL();
+        const $allRows = $('table.tbl a[href*="/artist/"]').parents('tr');
+        const $performerRows = $('table.tbl a[href*="/artist/' + performer + '"]').parents('tr');
         $rows = $allRows.not($performerRows);
     } else if (helper.isWorkURL()) {
-        var composer = $('th:contains("composer:")').parent().find('a').attr('href').split('/')[2];
+        const composer = $('th:contains("composer:")').parent()
+                                                      .find('a').attr('href').split('/')[2];
         $rows = $('table.tbl a[href*="/artist/' + composer + '"]').parents('tr');
     }
     $rows = $($rows.get().reverse().splice(start, maxcount));
@@ -64,19 +71,19 @@ function showPerformers(start, maxcount) {
 
     $rows.each(function (idx, tr) {
         setTimeout(function () {
-            var mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[2],
-                url = helper.wsUrl('recording', ['artist-rels'], mbid);
+            const mbid = $(tr).find('a[href*="/recording/"]').attr('href').split('/')[2];
+            const url = helper.wsUrl('recording', ['artist-rels'], mbid);
             requests.GET(url, function (response) {
-                var resp = JSON.parse(response),
-                    $node = $(tr).find('td:last'),
-                    $button;
+                const resp = JSON.parse(response);
+                const $node = $(tr).find('td:last');
+                let $button;
                 if (resp.relations.length) {
                     $node.text(formatPerformers(resp.relations));
                     $button = $('<input>', {
                         'id': 'replace-' + mbid,
                         'class': 'replace',
                         'type': 'checkbox',
-                        'value': 'Replace artist'
+                        'value': 'Replace artist',
                     });
                     $node.append($button);
                 } else {
@@ -91,7 +98,7 @@ function showPerformers(start, maxcount) {
 // Replace composer -> performer as recording artist (CSG)
 function parseArtistEditData(data, performers) {
     performers.sort(helper.comparefct).forEach(function (performer, idx) {
-        var creditedName = performer.name;
+        let creditedName = performer.name;
         if (performer.creditedName) {
             creditedName = performer.creditedName;
         }
@@ -104,8 +111,8 @@ function parseArtistEditData(data, performers) {
 }
 
 function parseEditData(editData) {
-    var data = {},
-        performers = [];
+    const data = {};
+    const performers = [];
     data['name'] = edits.encodeName(editData.name);
     data['comment'] = editData.comment ? editData.comment : null;
     if (!editData.isrcs.length) {
@@ -116,16 +123,19 @@ function parseEditData(editData) {
         });
     }
     editData.relationships.forEach(function (rel) {
-        var linkType = rel.linkTypeID,
-            uniqueIds = [];
-        if (server.performingLinkTypes().includes(linkType) &&
-                !uniqueIds.includes(rel.target.id)) {
+        const linkType = rel.linkTypeID;
+        const uniqueIds = [];
+        if (
+            server.performingLinkTypes().includes(linkType) &&
+            !uniqueIds.includes(rel.target.id)
+        ) {
             uniqueIds.push(rel.target.id); // filter duplicates
-            performers.push({'name': rel.target.name,
-                             'creditedName': rel.entity0_credit,
-                             'id': rel.target.id,
-                             'link': linkType,
-                             'mbid': rel.target.gid
+            performers.push({
+                'name': rel.target.name,
+                'creditedName': rel.entity0_credit,
+                'id': rel.target.id,
+                'link': linkType,
+                'mbid': rel.target.gid,
             });
         }
     });
@@ -137,22 +147,22 @@ function parseEditData(editData) {
 
 function replaceArtist() {
     $('.replace:input:checked:enabled').each(function (idx, node) {
-        var mbid = node.id.replace('replace-', ''),
-            url = edits.urlFromMbid('recording', mbid);
+        const mbid = node.id.replace('replace-', '');
+        const url = edits.urlFromMbid('recording', mbid);
         function success(xhr) {
-            var $status = $('#' + node.id + '-text');
+            const $status = $('#' + node.id + '-text');
             node.disabled = true;
             $status.text(
                 'Success (code ' + xhr.status + ')'
             ).parent().css('color', 'green');
-            var editId = new RegExp(
+            const editId = new RegExp(
                 '/edit/(\\d+)">edit</a>'
             ).exec(xhr.responseText)[1];
             $status.after(
                 $('<p>').append(
                     '<a href="/edit/' + editId + '" target="_blank">edit ' + editId + '</a>'
                 )
-            )
+            );
         }
         function fail(xhr) {
             $('#' + node.id + '-text').text(
@@ -161,10 +171,14 @@ function replaceArtist() {
         }
         function callback(editData) {
             $('#' + node.id + '-text').text('Sending edit data');
-            var postData = parseEditData(editData);
+            const postData = parseEditData(editData);
             console.info('Data ready to be posted: ', postData);
-            requests.POST(url, edits.formatEdit('edit-recording', postData),
-                          success, fail);
+            requests.POST(
+                url,
+                edits.formatEdit('edit-recording', postData),
+                success,
+                fail
+            );
         }
         setTimeout(function () {
             $('#' + node.id + '-text').empty();
@@ -203,15 +217,15 @@ function replaceArtist() {
 
 $(document).ready(function () {
     document.getElementById('replace_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('replace_script_toggle'),
-            block = document.getElementById('replace_script_block'),
-            display = block.style.display;
+        const header = document.getElementById('replace_script_toggle');
+        const block = document.getElementById('replace_script_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });
     document.getElementById('showPerformers').addEventListener('click', () => {
-        var start = $('#offset')[0].value,
-            maxcount = $('#max')[0].value;
+        const start = $('#offset')[0].value;
+        const maxcount = $('#max')[0].value;
         showPerformers(parseInt(start - 1), parseInt(maxcount));
         $('#batch_select').prop('disabled', false);
         $('#batch_replace_edit_note').prop('disabled', false);

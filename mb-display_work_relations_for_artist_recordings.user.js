@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display (missing) work relations for an artist recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.13
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_work_relations_for_artist_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_work_relations_for_artist_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -20,7 +20,7 @@
 // ==/UserScript==
 
 function showMissingWorks() {
-    var $recordings = $('table a[href*="/recording/"]');
+    const $recordings = $('table a[href*="/recording/"]');
     if (!$('#workColumn').length) {
         $('thead > tr').append('<th id="workColumn">Related work</th>');
         $('.subh').append('<th>with date</th>');
@@ -28,11 +28,11 @@ function showMissingWorks() {
 
     $recordings.each(function (idx, recording) {
         setTimeout(function () {
-            var mbid = recording.href.split('/')[4],
-                url = helper.wsUrl('recording', ['work-rels'], mbid);
+            const mbid = recording.href.split('/')[4];
+            const url = helper.wsUrl('recording', ['work-rels'], mbid);
             requests.GET(url, function (response) {
-                var resp = JSON.parse(response),
-                    $node;
+                const resp = JSON.parse(response);
+                let $node;
                 if (resp.relations.length) {
                     if (resp.relations[0].begin) {
                         $node = $('<td>✓</td>').css('background-color',

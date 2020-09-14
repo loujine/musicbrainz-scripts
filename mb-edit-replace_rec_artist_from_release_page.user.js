@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from a Release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -25,7 +25,7 @@ const editNoteMsg =
     'CSG: Set performer(s) in recording relations as recording artist\n';
 
 function showSelectors() {
-    var $rows = $(
+    const $rows = $(
         $('table.tbl a[href*="/artist/"]').parents('tr').get().reverse()
     );
     if (!$('#selectorColumn').length) {
@@ -41,15 +41,15 @@ function showSelectors() {
                     'id': 'replace-' + mbid,
                     'class': 'replace',
                     'type': 'checkbox',
-                    'value': 'Replace artist'
+                    'value': 'Replace artist',
                 })
             )
         );
     });
 
-    var lastChecked;
+    let lastChecked;
     $('.replace').click(function (evt) {
-        var currentChecked = $('.replace').index(evt.target);
+        let currentChecked = $('.replace').index(evt.target);
         if (evt.shiftKey && lastChecked !== undefined) {
             if (lastChecked > currentChecked) {
                 // es6 syntax
@@ -64,8 +64,10 @@ function showSelectors() {
 
 // Replace composer -> performer as recording artist (CSG)
 function parseArtistEditData(data, performers) {
-    if (performers.length === 0
-        && !document.getElementById('set-unknown').checked) {
+    if (
+        performers.length === 0 &&
+        !document.getElementById('set-unknown').checked
+    ) {
         // erase completely data to prevent the POST request
         return null;
     } else if (performers.length === 0) {
@@ -77,7 +79,7 @@ function parseArtistEditData(data, performers) {
         return data;
     }
     performers.forEach(function (performer, idx) {
-        var creditedName = performer.name;
+        let creditedName = performer.name;
         if (performer.creditedName) {
             creditedName = performer.creditedName;
         }
@@ -91,13 +93,13 @@ function parseArtistEditData(data, performers) {
 }
 
 function parseEditData(editData) {
-    var data = {},
-        performers = [],
-        uniqueIds = [];
+    const data = {};
+    const performers = [];
+    const uniqueIds = [];
     data['name'] = edits.encodeName(editData.name);
     data['comment'] = editData.comment ? editData.comment : null;
     if (editData.video === true) {
-        data['video'] = "1";
+        data['video'] = '1';
     }
     if (!editData.isrcs.length) {
         data['isrcs.0'] = null;
@@ -107,25 +109,32 @@ function parseEditData(editData) {
         });
     }
     editData.relationships.forEach(function (rel) {
-        var linkType = rel.linkTypeID;
-        var filterPending = document.getElementById('pending').checked ?
-            !rel.editsPending : true;
-        if (server.performingLinkTypes().includes(linkType) &&
-                !uniqueIds.includes(rel.target.id) && filterPending &&
-                rel.target.name !== '[unknown]') {
+        const linkType = rel.linkTypeID;
+        const filterPending = document.getElementById('pending').checked
+            ? !rel.editsPending
+            : true;
+        if (
+            server.performingLinkTypes().includes(linkType) &&
+            !uniqueIds.includes(rel.target.id) &&
+            filterPending &&
+            rel.target.name !== '[unknown]'
+        ) {
             uniqueIds.push(rel.target.id); // filter duplicates
-            performers.push({'name': rel.target.name,
-                             'creditedName': rel.entity0_credit,
-                             'id': rel.target.id,
-                             'link': linkType,
-                             'mbid': rel.target.gid
+            performers.push({
+                'name': rel.target.name,
+                'creditedName': rel.entity0_credit,
+                'id': rel.target.id,
+                'link': linkType,
+                'mbid': rel.target.gid,
             });
         }
     });
     data['edit_note'] = $('#batch_replace_edit_note')[0].value;
     if (document.getElementById('set-unknown').checked) {
         data['edit_note'] = data['edit_note'].replace(
-            editNoteMsg, 'Set [unknown] performer when no rel');
+            editNoteMsg,
+            'Set [unknown] performer when no rel'
+        );
     }
     data.make_votable = document.getElementById('votable').checked ? '1' : '0';
     return parseArtistEditData(data, performers.sort(helper.comparefct));
@@ -133,15 +142,15 @@ function parseEditData(editData) {
 
 function replaceArtist() {
     $('.replace:input:checked:enabled').each(function (idx, node) {
-        var mbid = node.id.replace('replace-', ''),
-            url = edits.urlFromMbid('recording', mbid);
+        const mbid = node.id.replace('replace-', '');
+        const url = edits.urlFromMbid('recording', mbid);
         function success(xhr) {
-            var $status = $('#' + node.id + '-text');
+            const $status = $('#' + node.id + '-text');
             node.disabled = true;
             $status.text(
                 'Success (code ' + xhr.status + ')'
             ).parent().css('color', 'green');
-            var editId = new RegExp(
+            const editId = new RegExp(
                 '/edit/(\\d+)">edit</a>'
             ).exec(xhr.responseText)[1];
             $status.after(
@@ -158,19 +167,24 @@ function replaceArtist() {
         }
         function callback(editData) {
             $('#' + node.id + '-text').text('Sending edit data');
-            var postData = parseEditData(editData);
+            const postData = parseEditData(editData);
             console.info('Data ready to be posted: ', postData);
             if (postData === null) {
                 $('#' + node.id + '-text').text('No artist data to send');
                 return;
             }
-            requests.POST(url, edits.formatEdit('edit-recording', postData),
-                          success, fail);
+            requests.POST(
+                url,
+                edits.formatEdit('edit-recording', postData),
+                success,
+                fail
+            );
         }
         setTimeout(function () {
             $('#' + node.id + '-text').empty();
             $(node).after(
-                `<span id="${node.id}-text">Fetching required data</span>`);
+                `<span id="${node.id}-text">Fetching required data</span>`
+            );
             edits.getEditParams(url, callback);
         }, 2 * idx * server.timeout);
     });
@@ -210,9 +224,9 @@ function replaceArtist() {
 
 $(document).ready(function () {
     document.getElementById('replace_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('replace_script_toggle'),
-            block = document.getElementById('replace_script_block'),
-            display = block.style.display;
+        const header = document.getElementById('replace_script_toggle');
+        const block = document.getElementById('replace_script_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });

@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display discid count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2019.9.22
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_count_discid.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_count_discid.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -31,7 +31,7 @@ function parseCount(data, tab) {
 }
 
 (function showCountDiscid() {
-    const tab = document.querySelector("a[href$='/discids']"),
-        url = helper.wsUrl('release', ['discids']);
+    const tab = document.querySelector("a[href$='/discids']");
+    const url = helper.wsUrl('release', ['discids']);
     fetch(url).then(resp => resp.json()).then(data => parseCount(data, tab));
 })();

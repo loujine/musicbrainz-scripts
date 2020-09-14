@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show recordings of subworks on Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.5.14
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -28,8 +28,12 @@ let nbSubworks;
 
 // musicbrainz-server/root/static/scripts/common/utility/formatTrackLength.js
 function formatTrackLength(milliseconds) {
-    if (!milliseconds) {return '';}
-    if (milliseconds < 1000) {return milliseconds + ' ms';}
+    if (!milliseconds) {
+        return '';
+    }
+    if (milliseconds < 1000) {
+        return milliseconds + ' ms';
+    }
     const oneMinute = 60;
     const oneHour = 60 * oneMinute;
     let seconds = Math.round(milliseconds / 1000.0);
@@ -47,8 +51,12 @@ function formatTrackLength(milliseconds) {
 }
 
 function formatDate(begin, end) {
-    if (begin === null && end === null) {return '';}
-    if (begin === end) {return begin;}
+    if (begin === null && end === null) {
+        return '';
+    }
+    if (begin === end) {
+        return begin;
+    }
     return `${begin} – ${end}`;
 }
 
@@ -194,7 +202,7 @@ function fetchWork(mbid) {
             'value': 'Display recordings split by subworks',
         })
     );
-}())
+})();
 
 $(document).ready(function () {
     // const work = helper.mbidFromURL();

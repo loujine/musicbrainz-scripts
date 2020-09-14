@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -24,8 +24,8 @@ function setAttributes(relationType, attrId, toggle) {
         for (const relation of recording.relationships().filter(
             rel => rel.entityTypes === relationType
         )) {
-            const attrs = relation.attributes(),
-                attr = attrs.filter(el => el.type.id === attrId);
+            const attrs = relation.attributes();
+            const attr = attrs.filter(el => el.type.id === attrId);
             if (!attr.length) {
                 const attrType = attrInfo.filter(attr => attr.id == attrId)[0];
                 attrs.push({type: attrType});
@@ -61,9 +61,9 @@ function setAttributes(relationType, attrId, toggle) {
 
 $(document).ready(function() {
     document.getElementById('relattrs_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('relattrs_script_toggle'),
-            block = document.getElementById('relattrs_script_block'),
-            display = block.style.display;
+        const header = document.getElementById('relattrs_script_toggle');
+        const block = document.getElementById('relattrs_script_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });

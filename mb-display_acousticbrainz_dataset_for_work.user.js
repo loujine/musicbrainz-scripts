@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display AcousticBrainz datasets count for work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.12
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_acousticbrainz_dataset_for_work.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_acousticbrainz_dataset_for_work.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -20,18 +20,23 @@
 // @run-at       document-end
 // ==/UserScript==
 
-const abzIconURL = "//acousticbrainz.org/static/images/favicon-16.png";
+const abzIconURL = '//acousticbrainz.org/static/images/favicon-16.png';
 
 function showABids() {
-    var $recordings = $('table a[href*="/recording/"]');
-    var recording_mbids = Array.from($recordings).map(node => node.href.split('/')[4]);
+    const $recordings = $('table a[href*="/recording/"]');
+    const recording_mbids = Array.from($recordings).map(
+        node => node.href.split('/')[4]
+    );
     if (recording_mbids.length > 125) {
-        console.info('Warning: sending only the first 125 recordings '
-                     + 'to AcousticBrainz');
+        console.info(
+            'Warning: sending only the first 125 recordings ' +
+                'to AcousticBrainz'
+        );
         recording_mbids.splice(125);
     }
-    var url = ('//acousticbrainz.org/api/v1/count?recording_ids='
-               + recording_mbids.join(';'));
+    const url =
+        '//acousticbrainz.org/api/v1/count?recording_ids=' +
+        recording_mbids.join(';');
     $('thead > tr').append('<th>ABrainz</th>');
     $('.subh > th')[1].colSpan += 1;
     $('table.tbl > tbody > tr:not(".subh")').append('<td>');
@@ -39,7 +44,7 @@ function showABids() {
     requests.GET(url, function (data) {
         data = JSON.parse(data);
         $recordings.each(function (idx, recording) {
-            var mbid = helper.mbidFromURL(recording.href);
+            const mbid = helper.mbidFromURL(recording.href);
             if (data[mbid] === undefined || data[mbid].count === 0) {
                 return;
             }
@@ -62,7 +67,7 @@ function showABids() {
     `);
 })();
 
-$(document).ready(function() {
+$(document).ready(function () {
     document.getElementById('showABids').addEventListener('click', showABids);
     return false;
 });

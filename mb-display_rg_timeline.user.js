@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display RG timeline
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.8.30
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_rg_timeline.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_rg_timeline.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -26,9 +26,9 @@
 // @run-at       document-end
 // ==/UserScript==
 
-GM_addStyle(GM_getResourceText("viscss"));
-GM_addStyle(GM_getResourceText("slickcss"));
-GM_addStyle(GM_getResourceText("slicktheme"));
+GM_addStyle(GM_getResourceText('viscss'));
+GM_addStyle(GM_getResourceText('slickcss'));
+GM_addStyle(GM_getResourceText('slicktheme'));
 
 const template = Handlebars.compile(`
   <div>
@@ -49,9 +49,9 @@ document.querySelector('div.filter').insertAdjacentHTML('afterend', `
 $(document).ready(function () {
     const data = [];
     document.getElementById('timeline_toggle').addEventListener('click', () => {
-        const header = document.getElementById('timeline_toggle'),
-            block = document.getElementById('timeline_block'),
-            display = block.style.display;
+        const header = document.getElementById('timeline_toggle');
+        const block = document.getElementById('timeline_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });
@@ -63,11 +63,11 @@ $(document).ready(function () {
           </div>
         `);
 
-      node.querySelectorAll('tbody tr').forEach(row => {
-            const mbid = row.querySelector('a[href*="release-group"]').href.split('/')[4],
-                year = row.querySelector('td.c').textContent,
-                cover_url =  `https://coverartarchive.org/release-group/${mbid}/front-250.jpg`,
-                rg_url = `https://musicbrainz.org/release-group/${mbid}`;
+        node.querySelectorAll('tbody tr').forEach(row => {
+            const mbid = row.querySelector('a[href*="release-group"]').href.split('/')[4];
+            const year = row.querySelector('td.c').textContent;
+            const cover_url =  `https://coverartarchive.org/release-group/${mbid}/front-250.jpg`;
+            const rg_url = `https://musicbrainz.org/release-group/${mbid}`;
 
             document.getElementById(`slider${idx}`).insertAdjacentHTML('beforeend', `
                 <div>
@@ -96,12 +96,12 @@ $(document).ready(function () {
     });
     $('.slick-arrow').css('background-color', 'black');
 
-    new vis.Timeline(  // eslint-disable-line no-new
+    new vis.Timeline( // eslint-disable-line no-new
         document.getElementById('timeline_block'),
         new vis.DataSet(data),
         {
             template: template,
-            editable: false
+            editable: false,
         }
     );
     return false;

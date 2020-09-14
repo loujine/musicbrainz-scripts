@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8.1
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -18,15 +18,15 @@
 // @run-at       document-end
 // ==/UserScript==
 
-var MBID_REGEX = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
+const MBID_REGEX = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
 
 function setWork(recording, work) {
     requests.GET(`/ws/js/entity/${work.gid}?inc=rels`, function (resp) {
-        var target = JSON.parse(resp);
-        var dialog = new MB.relationshipEditor.UI.AddDialog({
+        const target = JSON.parse(resp);
+        const dialog = new MB.relationshipEditor.UI.AddDialog({
             source: recording,
             target: target,
-            viewModel: MB.releaseRelationshipEditor
+            viewModel: MB.releaseRelationshipEditor,
         });
         target.relationships.forEach(function (rel) {
             // apparently necessary to fill MB.entityCache with rels
@@ -39,11 +39,14 @@ function setWork(recording, work) {
 function guessWork() {
     let idx = 0;
     MB.relationshipEditor.UI.checkedRecordings().forEach(function (recording) {
-        var url = '/ws/js/work/?q=' +
-                  encodeURIComponent(document.getElementById('prefix').value) + ' ' +
-                  encodeURIComponent(recording.name) +
-                  '&artist=' + encodeURIComponent(recording.artist) +
-                  '&fmt=json&limit=1';
+        const url =
+            '/ws/js/work/?q=' +
+            encodeURIComponent(document.getElementById('prefix').value) +
+            ' ' +
+            encodeURIComponent(recording.name) +
+            '&artist=' +
+            encodeURIComponent(recording.artist) +
+            '&fmt=json&limit=1';
         if (!recording.performances().length) {
             idx += 1;
             setTimeout(function () {
@@ -56,10 +59,10 @@ function guessWork() {
 }
 
 function autoComplete() {
-    var $input = $('input#mainWork');
-    var match = $input.val().match(MBID_REGEX);
+    const $input = $('input#mainWork');
+    const match = $input.val().match(MBID_REGEX);
     if (match) {
-        var mbid = match[0];
+        const mbid = match[0];
         requests.GET(`/ws/2/work/${mbid}?fmt=json`, function (data) {
             data = JSON.parse(data);
             $input.data('mbid', mbid);
@@ -81,7 +84,7 @@ function guessSubWorks(workMbid) {
         let total = subWorks.length;
         if (repeats) {
             repeats = repeats.split(/[,; ]+/).map(s => Number.parseInt(s));
-            total = repeats.reduce((n,m) => n+m, 0);
+            total = repeats.reduce((n, m) => n + m, 0);
         } else {
             repeats = subWorks.map(() => 1);
         }
@@ -90,16 +93,18 @@ function guessSubWorks(workMbid) {
         subWorks.forEach((sb, sbIdx) => {
             repeatedSubWorks.fill(sb, start, start + repeats[sbIdx]);
             start += repeats[sbIdx];
-        })
-
-        MB.relationshipEditor.UI.checkedRecordings().forEach((recording, recIdx) => {
-            if (recIdx >= repeatedSubWorks.length) {
-                return;
-            }
-            if (!recording.performances().length) {
-                setWork(recording, repeatedSubWorks[recIdx]);
-            }
         });
+
+        MB.relationshipEditor.UI.checkedRecordings().forEach(
+            (recording, recIdx) => {
+                if (recIdx >= repeatedSubWorks.length) {
+                    return;
+                }
+                if (!recording.performances().length) {
+                    setWork(recording, repeatedSubWorks[recIdx]);
+                }
+            }
+        );
     });
 }
 
@@ -136,9 +141,9 @@ function guessSubWorks(workMbid) {
 
 $(document).ready(function() {
     document.getElementById('guess_works_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('guess_works_script_toggle'),
-            block = document.getElementById('guess_works_script_block'),
-            display = block.style.display;
+        const header = document.getElementById('guess_works_script_toggle');
+        const block = document.getElementById('guess_works_script_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });

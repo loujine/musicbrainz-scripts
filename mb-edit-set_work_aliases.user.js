@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Set recording names as work aliases
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_aliases.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_aliases.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -25,7 +25,8 @@ function loadRecordings() {
         data => {
             const existingAliases = Array.prototype.map.call(
                 document.querySelectorAll('tbody tr bdi'),
-                node => node.textContent);
+                node => node.textContent
+            );
             const names = Array.from(
                 new Set(data.relations.map(rel => rel.recording.title).filter(
                     name => !existingAliases.includes(name))

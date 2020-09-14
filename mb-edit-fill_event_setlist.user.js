@@ -4,7 +4,7 @@
 // @name         MusicBrainz event editor: Fill event setlist
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-fill_event_setlist.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-fill_event_setlist.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -34,7 +34,7 @@
 })();
 
 function fillEventSetlist(entityType) {
-    const area = document.getElementById("id-edit-event.setlist");
+    const area = document.getElementById('id-edit-event.setlist');
     // document.getSelection() does not work on textarea
     const entity = area.value.substring(area.selectionStart, area.selectionEnd);
     fetch(`/ws/2/${entityType}?query=${entityType}:${entity}&limit=1&fmt=json`).then(
@@ -49,7 +49,7 @@ function fillEventSetlist(entityType) {
     )
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     let appliedNote = false;
     document.getElementById('fillArtist').addEventListener('click',
         () => {

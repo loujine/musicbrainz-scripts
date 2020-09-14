@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -13,7 +13,8 @@
 // ==/UserScript==
 
 // bitbucket repo info
-const wikiUrl = 'https://bitbucket.org/loujine/musicbrainz-scripts/wiki/documentation.rst';
+const wikiUrl =
+    'https://bitbucket.org/loujine/musicbrainz-scripts/wiki/documentation.rst';
 
 // from musicbrainz-server/root/static/scripts/tests/typeInfo.js
 class Server {
@@ -29,7 +30,7 @@ class Server {
             performer: 156,
             work: 278,
             place: 693,
-            area: 698
+            area: 698,
         };
         this.instrumentType = {
             instrument: 14,
@@ -85,7 +86,7 @@ class Server {
             'Suite': 6,
             'Symphonic poem': 18,
             'Symphony': 16,
-            'Zarzuela': 19
+            'Zarzuela': 19,
         };
         this.workLinkType = {
             arrangement: 350,
@@ -113,16 +114,16 @@ class Server {
         this.aliasArtistType = {
             'Artist name': 1,
             'Legal name': 2,
-            'Search hint': 3
+            'Search hint': 3,
         };
         this.aliasInstrumentType = {
             'Instrument name': 1,
             'Search hint': 2,
-            'Brand name': 3
+            'Brand name': 3,
         };
         this.aliasType = {
             'Name': 1,
-            'Search hint': 2
+            'Search hint': 2,
         };
         this.attr = {
             additional: 1,
@@ -140,7 +141,7 @@ class Server {
             partial: 579,
             instrumental: 580,
             video: 582,
-            solo: 596
+            solo: 596,
         };
         this.language = {
             '[Multiple languages]': 284,
@@ -163,7 +164,7 @@ class Server {
             'Russian': 353,
             'Spanish': 393,
             'Swedish': 403,
-            'Turkish': 433
+            'Turkish': 433,
         };
         this.languageFromISO = {
             ara: 'Arabic',
@@ -186,7 +187,7 @@ class Server {
             spa: 'Spanish',
             swe: 'Swedish',
             tur: 'Turkish',
-            zxx: '[No lyrics]'
+            zxx: '[No lyrics]',
         };
         this.locale = {
             'Afrikaans': 'af',
@@ -252,7 +253,7 @@ class Server {
             'Ukrainian': 'uk',
             'Uzbek': 'uz',
             'Vietnamese': 'vi',
-            'Welsh (Cymric)': 'cy'
+            'Welsh (Cymric)': 'cy',
         };
         this.workKeyAttr = {
             'C major': 2,
@@ -294,7 +295,7 @@ class Server {
             'F Dorian': 792,
             'G Dorian': 793,
             'A Dorian': 794,
-            'B Dorian': 795
+            'B Dorian': 795,
         };
         this.unknownArtistId = 97546;
         // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
@@ -307,31 +308,34 @@ class Server {
     }
 
     performingLinkTypes() {
-        return this._performingRoles.map(role => this.recordingLinkType[role])
+        return this._performingRoles.map(role => this.recordingLinkType[role]);
     }
 
     getRelationshipTypeInfo() {
         const scriptSrc = document.scripts[document.scripts.length - 1].text;
-        const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*),\n(.*)\n/).exec(scriptSrc);
+        const jsonSource = new RegExp(
+            /RE.exportTypeInfo\(\n(.*),\n(.*)\n/
+        ).exec(scriptSrc);
         return JSON.parse(jsonSource[1]);
-
     }
 
     getRelationshipAttrInfo() {
         const scriptSrc = document.scripts[document.scripts.length - 1].text;
-        const jsonSource = new RegExp(/RE.exportTypeInfo\(\n(.*),\n(.*)\n/).exec(scriptSrc);
+        const jsonSource = new RegExp(
+            /RE.exportTypeInfo\(\n(.*),\n(.*)\n/
+        ).exec(scriptSrc);
         return Object.values(JSON.parse(jsonSource[2]));
     }
 
     getInstrumentRelationshipAttrInfo() {
-        return this.getRelationshipAttrInfo().filter(
-            attr => [
+        return this.getRelationshipAttrInfo().filter(attr =>
+            [
                 // all instruments as children of the "instrument" parent
                 this.instrumentType.instrument,
                 // lead, background, choir
                 this.vocalType.vocal,
                 // all standard voices
-                this.vocalType.lead
+                this.vocalType.lead,
             ].includes(attr.parent_id)
         );
     }
@@ -343,15 +347,18 @@ const server = new Server();
 function buildOptions(obj) {
     // to be replaced by Object.entries when all supported browser versions
     // recognize it
-    return Object.entries(obj).map(
-        ([type, code]) => `<option value="${code}">${type}</option>`
-    ).join('');
+    return Object.entries(obj)
+        .map(([type, code]) => `<option value="${code}">${type}</option>`)
+        .join('');
 }
 
 function buildLanguageOptions(obj) {
-    return Object.entries(obj).map(
-        ([type, code]) => `<option class="language" value="${code}">${type}</option>`
-    ).join('');
+    return Object.entries(obj)
+        .map(
+            ([type, code]) =>
+                `<option class="language" value="${code}">${type}</option>`
+        )
+        .join('');
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -465,12 +472,11 @@ const roles = {
     `,
 };
 
-
-var requests = function () {
-    var self = {};
+const requests = (function () {
+    const self = {};
 
     self._request = function (verb, url, param, callback) {
-        var xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 callback(xhr); // eslint-disable-line callback-return
@@ -478,12 +484,15 @@ var requests = function () {
         };
         xhr.open(verb, url, true);
         if (verb === 'POST') {
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader(
+                'Content-Type',
+                'application/x-www-form-urlencoded'
+            );
         }
         xhr.timeout = 10000;
         xhr.ontimeout = function () {
             console.error('The request for ' + url + ' timed out.');
-            };
+        };
         xhr.send(param);
     };
 
@@ -507,8 +516,7 @@ var requests = function () {
         });
     };
     return self;
-}();
-
+})();
 
 class Edits {
 
@@ -535,7 +543,7 @@ class Edits {
                 type_id: server.workType[data.type],
                 languages: data.languages.map(l => server.languageFromISO[l]),
                 iswcs: data.iswcs,
-                attributes: data.attributes
+                attributes: data.attributes,
             });
         });
     }
@@ -570,11 +578,13 @@ class Edits {
     }
 
     formatEdit(editType, info) {
-        return Object.entries(info).map(
-            ([prop, val]) => (
-                val === null ? `${editType}.${prop}` : `${editType}.${prop}=${val}`
+        return Object.entries(info)
+            .map(([prop, val]) =>
+                val === null
+                    ? `${editType}.${prop}`
+                    : `${editType}.${prop}=${val}`
             )
-        ).join('&');
+            .join('&');
     }
 }
 
@@ -586,15 +596,22 @@ class Helper {
 
     comparefct(a, b) {
         // Sort function for performers in the recording artist list
-        const link = server.recordingLinkType,
-            order = [link.vocals, link.instrument, link.orchestra,
-                     link.conductor, link.performer];
-        if (a.link === b.link) {return 0;}
+        const link = server.recordingLinkType;
+        const order = [
+            link.vocals,
+            link.instrument,
+            link.orchestra,
+            link.conductor,
+            link.performer,
+        ];
+        if (a.link === b.link) {
+            return 0;
+        }
         return order.indexOf(a.link) > order.indexOf(b.link) ? 1 : -1;
     }
 
     mbidFromURL(url) {
-        return (url || document.URL).split('/')[4].slice(0,36);
+        return (url || document.URL).split('/')[4].slice(0, 36);
     }
 
     wsUrl(entityType, options, mbid) {
@@ -607,7 +624,9 @@ class Helper {
             url += prefix + option;
         });
         return new URL(
-            url, document.location.protocol + '//' + document.location.host);
+            url,
+            document.location.protocol + '//' + document.location.host
+        );
     }
 
     _isEntityTypeURL(entityType) {
@@ -615,30 +634,31 @@ class Helper {
     }
 
     isArtistURL() {
-        return this._isEntityTypeURL('artist')
+        return this._isEntityTypeURL('artist');
     }
 
     isInstrumentURL() {
-        return this._isEntityTypeURL('instrument')
+        return this._isEntityTypeURL('instrument');
     }
 
     isReleaseURL() {
-        return this._isEntityTypeURL('release')
+        return this._isEntityTypeURL('release');
     }
 
     isWorkURL() {
-        return this._isEntityTypeURL('work')
+        return this._isEntityTypeURL('work');
     }
 
     sortBy(key) {
-        return (a, b) => ((a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0));
+        return (a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0);
     }
 
     sortSubworks(work) {
         let rels = work.relationships;
-        rels = rels.filter(rel =>
-            (rel.linkTypeID === server.workLinkType.subwork
-             && rel.direction !== 'backward')
+        rels = rels.filter(
+            rel =>
+                rel.linkTypeID === server.workLinkType.subwork &&
+                rel.direction !== 'backward'
         );
         rels = rels.sort(this.sortBy('linkOrder'));
         return rels.map(rel => rel.target);
@@ -653,7 +673,7 @@ class Sidebar {
     editNote(meta, msg) {
         msg = msg || '';
         const signature = `\n —\nGM script: "${meta.name}" (${meta.version})`;
-        return (msg + signature);
+        return msg + signature;
     }
 
     container() {
@@ -682,15 +702,16 @@ class RelationshipEditor {
 
     editNote(meta, msg) {
         msg = msg || '';
-        const separator = '\n —\n',
-            signature = `GM script: "${meta.name}" (${meta.version})\n`,
-            vm = MB.releaseRelationshipEditor;
-        let existingMsg = vm.editNote(),
-            existingSign;
+        const separator = '\n —\n';
+        const signature = `GM script: "${meta.name}" (${meta.version})\n`;
+        const vm = MB.releaseRelationshipEditor;
+        let existingMsg = vm.editNote();
+        let existingSign;
         if (existingMsg.includes('\n —\n')) {
             [existingMsg, existingSign] = existingMsg.split(separator);
-            vm.editNote(existingMsg + '\n' + msg
-                        + separator + existingSign + signature);
+            vm.editNote(
+                existingMsg + '\n' + msg + separator + existingSign + signature
+            );
         } else {
             vm.editNote(existingMsg + msg + separator + signature);
         }

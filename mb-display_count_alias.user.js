@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display alias count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.13
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_count_alias.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_count_alias.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -26,8 +26,8 @@
 // adapted from jesus2099  mb. INLINE STUFF
 
 function parseCount(resp, tab) {
-    var cnt = resp.aliases.length,
-        locales = [];
+    const cnt = resp.aliases.length;
+    const locales = [];
     if (cnt > 0) {
         tab.style.setProperty('background-color', '#6f9');
     }
@@ -43,9 +43,9 @@ function parseCount(resp, tab) {
 }
 
 (function showCountAliases() {
-    var tab = document.querySelector("a[href$='/aliases']"),
-        entityType = document.URL.split('/')[3],
-        url = helper.wsUrl(entityType, ['aliases']);
+    const tab = document.querySelector("a[href$='/aliases']");
+    const entityType = document.URL.split('/')[3];
+    const url = helper.wsUrl(entityType, ['aliases']);
     requests.GET(url, function (resp) {
         parseCount(JSON.parse(resp), tab);
     });

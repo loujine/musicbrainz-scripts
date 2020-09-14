@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Replace release relations by recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-release_rel_to_recording_rel.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-release_rel_to_recording_rel.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -39,10 +39,10 @@ function moveAR(ids) {
     vm.source.relationships().filter(
         rel => rel.entityTypes === "artist-release" && ids.includes(rel.linkTypeID())
     ).forEach(rel => {
-        const performer = rel.entities()[0],
-            releaseLinkType = rel.linkTypeID(),
-            releaseLinkAttributes = rel.attributes(),
-            recordings = MB.relationshipEditor.UI.checkedRecordings();
+        const performer = rel.entities()[0];
+        const releaseLinkType = rel.linkTypeID();
+        const releaseLinkAttributes = rel.attributes();
+        const recordings = MB.relationshipEditor.UI.checkedRecordings();
         for (const recording of recordings) {
             if (recording.relationships().filter(
                 rel => rel.entityTypes === "artist-recording"
@@ -79,8 +79,7 @@ function moveAR(ids) {
     `);
 })();
 
-
-$(document).ready(function() {
+$(document).ready(function () {
     const ids = fetchLinkIds();
     document.getElementById('moveAR').addEventListener('click', () => {
         moveAR(ids);

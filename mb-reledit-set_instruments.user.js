@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -20,8 +20,9 @@
 
 function setInstrument(fromType, toType, fromAttrId, toAttrId) {
     const attrInfo = server.getInstrumentRelationshipAttrInfo();
-    const toAttr = isNaN(toAttrId) ? null :
-                     attrInfo.filter(attr => attr.id === toAttrId)[0];
+    const toAttr = isNaN(toAttrId)
+        ? null
+        : attrInfo.filter(attr => attr.id === toAttrId)[0];
 
     for (const recording of MB.relationshipEditor.UI.checkedRecordings()) {
         recording.relationships().filter(
@@ -74,28 +75,28 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
 
 $(document).ready(function () {
     document.getElementById('instrument_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('instrument_script_toggle'),
-            block = document.getElementById('instrument_script_block'),
-            display = block.style.display;
+        const header = document.getElementById('instrument_script_toggle');
+        const block = document.getElementById('instrument_script_block');
+        const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
     });
     document.getElementById('fromRole').addEventListener('change', () => {
         document.getElementById('fromRoleAttrs').options.selectedIndex = 0;
-        document.getElementById('fromId').value = ""
+        document.getElementById('fromId').value = '';
     });
     document.getElementById('toRole').addEventListener('change', () => {
         document.getElementById('toRoleAttrs').options.selectedIndex = 0;
-        document.getElementById('toId').value = ""
+        document.getElementById('toId').value = '';
     });
     document.getElementById('setRole').addEventListener('click', () => {
         setInstrument(
             parseInt(document.getElementById('fromRole').value),
             parseInt(document.getElementById('toRole').value),
-            parseInt(document.getElementById('fromId').value)
-              || parseInt(document.getElementById('fromRoleAttrs').value),
-            parseInt(document.getElementById('toId').value)
-              || parseInt(document.getElementById('toRoleAttrs').value)
+            parseInt(document.getElementById('fromId').value) ||
+                parseInt(document.getElementById('fromRoleAttrs').value),
+            parseInt(document.getElementById('toId').value) ||
+                parseInt(document.getElementById('toRoleAttrs').value)
         );
         relEditor.editNote(GM_info.script);
     });

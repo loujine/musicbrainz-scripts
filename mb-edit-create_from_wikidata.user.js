@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.13
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -39,7 +39,7 @@ class WikiDataHelpers {
             band: 215380,
             rockBand: 5741069,
             male: 6581097,
-            female: 6581072
+            female: 6581072,
         };
         this.fields = {
             type: 'P31',
@@ -166,19 +166,19 @@ class WikiDataHelpers {
      * place: wikidata code ('Q90', etc.)
      */
     _fillArea(data, place, nodeId, lang) {
-        const entityArea = data.entities[place],
-            input = document.getElementById(`id-edit-artist.${nodeId}.name`);
+        const entityArea = data.entities[place];
+        const input = document.getElementById(`id-edit-artist.${nodeId}.name`);
         if (!entityArea || !input) { // no wikidata data
             return;
         }
         const area = entityArea.labels[lang].value;
         $('#newFields').append(
             $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
-        )
+        );
         if (input.value === area) {
             $('#newFields').append(
                 $('<dd>', {'text': `Kept "${input.value}"`})
-            )
+            );
             return;
         }
         if (input.value !== '' && input.value !== area) {
@@ -197,12 +197,13 @@ class WikiDataHelpers {
         }
         $('#newFields').append(
             $('<dd>', {'text': `Added "${area}"`}).css('color', 'green')
-        )
+        );
     }
 
     fillArea(entity, field, areaField, lang) {
         let area = 'Q' + this.fieldValue(entity, field)['numeric-id'];
-        if (area === 'Q29999') { // Kingdom of Netherlands
+        if (area === 'Q29999') {
+            // Kingdom of Netherlands
             area = 'Q55'; // Netherlands
         }
         $.ajax({
@@ -213,8 +214,8 @@ class WikiDataHelpers {
     }
 
     fillDate(entity, entityType, fieldName, nodeId) {
-        const field = this.fieldValue(entity, fieldName),
-            prefix = `id-edit-${entityType}.period.${nodeId}`;
+        const field = this.fieldValue(entity, fieldName);
+        const prefix = `id-edit-${entityType}.period.${nodeId}`;
         if (!field) {
             return;
         }
@@ -226,7 +227,8 @@ class WikiDataHelpers {
         }
         // sometimes wikidata has invalid data for months/days
         let date = new Date(field.time.slice(1)); // remove leading "+"
-        if (isNaN(date.getTime())) { // invalid date
+        if (isNaN(date.getTime())) {
+            // invalid date
             // try to find valid fields
             date = new RegExp('(.*)-(.*)-(.*)T').exec(field.time);
             if (parseInt(date[1]) !== 0) {
@@ -246,9 +248,9 @@ class WikiDataHelpers {
             return;
         }
         if (yearInput.classList.contains('jesus2099')) {
-                // jesus2099's EASY_DATE script is shifting the input node
-                // containing the year but not its id
-                yearInput.nextSibling.value = date.getUTCFullYear();
+            // jesus2099's EASY_DATE script is shifting the input node
+            // containing the year but not its id
+            yearInput.nextSibling.value = date.getUTCFullYear();
         }
         if (field.precision > 9) {
             setValue(prefix + '.month', date.getUTCMonth() + 1);
@@ -312,9 +314,10 @@ function setValue(nodeId, value, callback) {
     }
     $('#newFields').append(
         $('<dt>', {'text': `Field "${FIELD_NAMES[nodeId]}":`})
-    )
+    );
     const printableValue = node.options ? node.options[value].text : value;
-    if (!node.value.trim()) { // field was empty
+    if (!node.value.trim()) {
+        // field was empty
         node.value = value;
         $(node).trigger('change');
         $('#newFields').append(
@@ -339,18 +342,18 @@ function setValue(nodeId, value, callback) {
 
 
 function fillISNI(isni) {
-    const existing_isni = [],
-        isniBlock = document.getElementsByClassName(
-            'edit-artist.isni_codes-template')[0].parentElement,
-        fields = isniBlock.getElementsByTagName('input');
+    const existing_isni = [];
+    const isniBlock = document.getElementsByClassName(
+        'edit-artist.isni_codes-template')[0].parentElement;
+    const fields = isniBlock.getElementsByTagName('input');
     for (const input of fields) {
-        existing_isni.push(input.value.split(" ").join(""));
+        existing_isni.push(input.value.split(' ').join(''));
     }
     existing_isni.splice(0, 1); // skip template
-    if (existing_isni.includes(isni.split(" ").join(""))) {
+    if (existing_isni.includes(isni.split(' ').join(''))) {
         return;
     }
-    if (existing_isni.length === 1 && existing_isni[0] === "") {
+    if (existing_isni.length === 1 && existing_isni[0] === '') {
         document.getElementsByName('edit-artist.isni_codes.0')[0].value = isni;
     } else {
         isniBlock.getElementsByClassName('form-row-add')[0]
@@ -433,11 +436,10 @@ function _fillEntityName(value, entityType) {
     setValue(`id-edit-${entityType}.name`, value, callback);
 }
 
-
 function _fillEntityType(entity, entityType) {
     let value;
     const type = libWD.fieldValue(entity, 'type')['numeric-id'];
-    switch(type) {
+    switch (type) {
         case libWD.entities.person:
             value = 1;
             break;
@@ -454,11 +456,10 @@ function _fillEntityType(entity, entityType) {
     setValue(`id-edit-${entityType}.type_id`, value);
 }
 
-
 function _fillEntityGender(entity) {
     let value;
     const gender = libWD.fieldValue(entity, 'gender')['numeric-id'];
-    switch(gender) {
+    switch (gender) {
         case libWD.entities.male:
             value = 1;
             break;
@@ -475,14 +476,15 @@ function _fillEntityGender(entity) {
 
 // eslint-disable-next-line complexity
 function _fillFormFromWikidata(entity, entityType) {
-    let lang = libWD.language,
-        field, input;
+    let lang = libWD.language;
+    let field;
+    let input;
     if (!(lang in entity.labels)) {
         lang = Object.keys(entity.labels)[0];
     }
 
     // name and sort name
-    _fillEntityName(entity.labels[lang].value, entityType)
+    _fillEntityName(entity.labels[lang].value, entityType);
 
     // for places: Coordinates
     if (libWD.existField(entity, 'coordinates')) {
@@ -503,8 +505,10 @@ function _fillFormFromWikidata(entity, entityType) {
     // Area
     // we need to fetch the wikidata entry of the different areas to
     // check if a musicbrainz MBID already exists
-    if (libWD.existField(entity, 'citizen')
-            || libWD.existField(entity, 'country')) {
+    if (
+        libWD.existField(entity, 'citizen') ||
+        libWD.existField(entity, 'country')
+    ) {
         field = libWD.existField(entity, 'citizen') ? 'citizen' : 'country';
         libWD.fillArea(entity, field, 'area', lang);
     }
@@ -515,24 +519,33 @@ function _fillFormFromWikidata(entity, entityType) {
     }
 
     // Dates & places
-    if (libWD.existField(entity, 'birthDate')
-            || libWD.existField(entity, 'inceptionDate')) {
-        field = libWD.existField(entity, 'birthDate') ? 'birthDate'
-                                                      : 'inceptionDate';
+    if (
+        libWD.existField(entity, 'birthDate') ||
+        libWD.existField(entity, 'inceptionDate')
+    ) {
+        field = libWD.existField(entity, 'birthDate')
+            ? 'birthDate'
+            : 'inceptionDate';
         libWD.fillDate(entity, entityType, field, 'begin_date');
     }
 
-    if (libWD.existField(entity, 'birthPlace')
-            || libWD.existField(entity, 'formationLocation')) {
-        field = libWD.existField(entity, 'birthPlace') ? 'birthPlace'
-                                                       : 'formationLocation';
+    if (
+        libWD.existField(entity, 'birthPlace') ||
+        libWD.existField(entity, 'formationLocation')
+    ) {
+        field = libWD.existField(entity, 'birthPlace')
+            ? 'birthPlace'
+            : 'formationLocation';
         libWD.fillArea(entity, field, 'begin_area', lang);
     }
 
-    if (libWD.existField(entity, 'deathDate')
-            || libWD.existField(entity, 'dissolutionDate')) {
-        field = libWD.existField(entity, 'deathDate') ? 'deathDate'
-                                                      : 'dissolutionDate';
+    if (
+        libWD.existField(entity, 'deathDate') ||
+        libWD.existField(entity, 'dissolutionDate')
+    ) {
+        field = libWD.existField(entity, 'deathDate')
+            ? 'deathDate'
+            : 'dissolutionDate';
         libWD.fillDate(entity, entityType, field, 'end_date');
     }
 
@@ -547,17 +560,18 @@ function _fillFormFromWikidata(entity, entityType) {
             return;
         }
         const fullUrl = url + libWD.fieldValue(entity, externalLink);
-        if ((domain && !existingDomains.includes(domain)) ||
+        if (
+            (domain && !existingDomains.includes(domain)) ||
             // official website
-            (!domain && !existingDomains.includes(fullUrl.split('/')[2]))) {
+            (!domain && !existingDomains.includes(fullUrl.split('/')[2]))
+        ) {
             _fillExternalLinks(fullUrl);
         }
     }
 
     for (const role of ['student', 'teacher']) {
         if (libWD.existField(entity, role)) {
-            libWD.request(libWD.fieldValue(entity, role).id,
-                          data => {
+            libWD.request(libWD.fieldValue(entity, role).id, data => {
                 const name = data.labels[lang].value;
                 $('#newFields').append(
                     $('<dt>', {'text': `${role} suggestion:`})
@@ -572,12 +586,14 @@ function _fillFormFromWikidata(entity, entityType) {
 function fillFormFromWikidata(wikiId) {
     const entityType = document.URL.split('/')[3];
     libWD.request(wikiId, entity => {
-        if (document.URL.split('/')[4] == 'create' && (
-            (libWD.existField(entity, 'mbidArtist')
-                || libWD.existField(entity, 'mbidPlace')))) {
-            const mbid = libWD.existField(entity, 'mbidArtist') ?
-                libWD.fieldValue(entity, 'mbidArtist') :
-                libWD.fieldValue(entity, 'mbidPlace');
+        if (
+            document.URL.split('/')[4] == 'create' &&
+            (libWD.existField(entity, 'mbidArtist') ||
+                libWD.existField(entity, 'mbidPlace'))
+        ) {
+            const mbid = libWD.existField(entity, 'mbidArtist')
+                ? libWD.fieldValue(entity, 'mbidArtist')
+                : libWD.fieldValue(entity, 'mbidPlace');
             // eslint-disable-next-line no-alert
             if (window.confirm(
                     'An entity already exists linked to this wikidata id, ' +
@@ -587,8 +603,9 @@ function fillFormFromWikidata(wikiId) {
         }
         _fillFormFromWikidata(entity, entityType);
     });
-    document.getElementById(`id-edit-${entityType}.edit_note`)
-            .value += sidebar.editNote(GM_info.script);
+    document.getElementById(
+        `id-edit-${entityType}.edit_note`
+    ).value += sidebar.editNote(GM_info.script);
 }
 
 
@@ -625,23 +642,27 @@ function fillFormFromVIAF(viafURL) {
 function fillFormFromISNI(isniURL) {
     const entityType = document.URL.split('/')[3];
     GM_xmlhttpRequest({
-        method: "GET",
+        method: 'GET',
         url: isniURL,
         timeout: 1000,
-        onload: function(resp) {
+        onload: function (resp) {
             fillISNI(isniURL.split('/')[3]);
             const parser = new DOMParser();
             const doc = parser.parseFromString(resp.responseText, 'text/html');
             const rgx = new RegExp(/ISNI [0-9]+ (.*)/).exec(doc.title);
             _fillEntityName(rgx[1], entityType);
-            ["viaf.org", "catalogue.bnf.fr",
-             "d-nb.info", "wikidata.org"].forEach(function (site) {
+            [
+                'viaf.org',
+                'catalogue.bnf.fr',
+                'd-nb.info',
+                'wikidata.org',
+            ].forEach(function (site) {
                 const link = doc.querySelector(`a[href*="${site}"]`);
                 if (link && link.href) {
                     fillExternalLinks(link.href);
                 }
             });
-        }
+        },
     });
 }
 
@@ -661,8 +682,7 @@ function fillFormFromISNI(isniURL) {
     document.getElementById('loujine-menu').style.marginLeft = '550px';
 })();
 
-
-$(document).ready(function() {
+$(document).ready(function () {
     const node = document.getElementById('linkParser');
     node.addEventListener('input', () => {
         node.value = node.value.trim();
@@ -677,9 +697,9 @@ $(document).ready(function() {
                 url: node.value,
                 timeout: 1000,
                 onload: function(resp) {
-                    const parser = new DOMParser(),
-                          doc = parser.parseFromString(resp.responseText, 'text/html'),
-                          link = doc.querySelector('#p-tb a[href*="www.wikidata.org"]');
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(resp.responseText, 'text/html');
+                    const link = doc.querySelector('#p-tb a[href*="www.wikidata.org"]');
                     fillExternalLinks(link.href);
                     fillFormFromWikidata(link.href.match(/\/(Q\d+)\b/)[1]);
                 }

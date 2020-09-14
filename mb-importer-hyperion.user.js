@@ -4,7 +4,7 @@
 // @name         Import Hyperion/Helios releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-importer-hyperion.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-importer-hyperion.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -155,7 +155,9 @@ function extract_release_data() {
         'tracks': tracks.map(extract_track_data),
     }));
 
-    let year, month, day;
+    let year;
+    let month;
+    let day;
     const release_info = document.querySelector('div.panel-body.hyp-anorak').textContent;
     const release_date = new RegExp(/Release date: (\d*) *(\w*) (\d*)\n/).exec(release_info);
     if (release_date) {
@@ -187,15 +189,15 @@ function extract_release_data() {
 
 // Insert links in page
 function insertMBSection(release) {
-    var mbUI = $('<div class="section musicbrainz"></div>');
-    var mbContentBlock = $('<div class="section_content"></div>');
+    const mbUI = $('<div class="section musicbrainz"></div>');
+    const mbContentBlock = $('<div class="section_content"></div>');
     mbUI.append(mbContentBlock);
 
     // Form parameters
-    var parameters = MBImport.buildFormParameters(release, editNote);
+    const parameters = MBImport.buildFormParameters(release, editNote);
 
     // Build form + search button
-    var innerHTML = '<div id="mb_buttons">'
+    const innerHTML = '<div id="mb_buttons">'
       + MBImport.buildFormHTML(parameters)
       + MBImport.buildSearchButton(release)
       + '</div>';
@@ -218,7 +220,7 @@ function insertMBSection(release) {
 
 try {
     setTimeout(() => {
-        var release = extract_release_data();
+        const release = extract_release_data();
         console.info(release);
         insertMBSection(release);
     }, 1000);

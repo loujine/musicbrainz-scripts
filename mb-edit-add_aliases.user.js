@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Add entity aliases in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.8
+// @version      2020.9.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-add_aliases.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-add_aliases.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -45,15 +45,15 @@ function addRow() {
 
 function submitAliases() {
     for (const node of document.getElementsByClassName('newAlias')) {
-        const cols = node.children,
-            postData = {
-                name: edits.encodeName(cols[0].children[0].value),
-                sort_name: edits.encodeName(cols[1].children[0].value),
-                type_id: cols[4].children[0].value,
-                locale: cols[5].children[0].value,
-                primary_for_locale: cols[5].children[1].checked ? 1 : 0,
-                edit_note: sidebar.editNote(GM_info.script)
-            };
+        const cols = node.children;
+        const postData = {
+            name: edits.encodeName(cols[0].children[0].value),
+            sort_name: edits.encodeName(cols[1].children[0].value),
+            type_id: cols[4].children[0].value,
+            locale: cols[5].children[0].value,
+            primary_for_locale: cols[5].children[1].checked ? 1 : 0,
+            edit_note: sidebar.editNote(GM_info.script),
+        };
         if (postData.sort_name === '') {
             postData.sort_name = postData.name;
         }
