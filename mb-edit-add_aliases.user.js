@@ -1,4 +1,4 @@
-/* global $ helper aliases edits sidebar requests GM_info */
+/* global $ helper aliases edits sidebar requests */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz edit: Add entity aliases in batch

@@ -22,7 +22,7 @@ module.exports = {
         "no-console": "off",
         "no-inner-declarations": "warn",
         "no-global-assign": "warn",
-        "no-redeclare": "off",
+        "no-redeclare": "warn",
         "no-self-assign": "warn",
         "no-undef": "warn",
         "no-useless-concat": "warn",

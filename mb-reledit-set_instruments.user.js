@@ -1,4 +1,4 @@
-/* global $ MB roles server relEditor GM_info */
+/* global $ MB roles server relEditor */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz relation editor: set role in recording-artist relation

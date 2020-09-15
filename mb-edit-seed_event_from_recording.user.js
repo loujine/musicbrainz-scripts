@@ -1,4 +1,4 @@
-/* global $ GM_info helper sidebar */
+/* global $ helper sidebar */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz recording: Seed concert event from recording

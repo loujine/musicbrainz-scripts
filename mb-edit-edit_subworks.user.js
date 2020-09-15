@@ -1,4 +1,4 @@
-/* global $ relEditor requests edits server sidebar helper GM_info */
+/* global $ relEditor requests edits server sidebar helper */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz edit: Replace subwork titles and attributes in Work edit page

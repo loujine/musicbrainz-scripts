@@ -1,4 +1,4 @@
-/* global $ MB requests helper server relEditor GM_info */
+/* global $ MB requests helper server relEditor */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz relation editor: Guess related works in batch

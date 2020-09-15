@@ -1,4 +1,4 @@
-/* global GM_info MBImport helper requests sidebar */
+/* global MBImport helper requests sidebar */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz recording: Create broadcast release from the current recording

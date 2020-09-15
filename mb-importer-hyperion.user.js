@@ -1,4 +1,4 @@
-/* global $ MBImport GM_info */
+/* global $ MBImport */
 'use strict';
 // ==UserScript==
 // @name         Import Hyperion/Helios releases to MusicBrainz

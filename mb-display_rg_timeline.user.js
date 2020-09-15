@@ -1,4 +1,4 @@
-/* global $ GM_addStyle GM_getResourceText Handlebars vis */
+/* global $ Handlebars vis */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: Display RG timeline

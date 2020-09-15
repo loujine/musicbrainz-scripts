@@ -1,4 +1,4 @@
-/* global $ MB server relEditor GM_info */
+/* global $ MB server relEditor */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz relation editor: Set relation attributes
