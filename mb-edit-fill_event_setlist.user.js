@@ -1,4 +1,4 @@
-/* global $ GM_info sidebar relEditor */
+/* global $ sidebar relEditor */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz event editor: Fill event setlist

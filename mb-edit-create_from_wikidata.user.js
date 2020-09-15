@@ -1,4 +1,4 @@
-/* global $ helper relEditor sidebar GM_info GM_xmlhttpRequest */
+/* global $ helper relEditor sidebar */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI

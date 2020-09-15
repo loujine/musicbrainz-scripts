@@ -1,4 +1,4 @@
-/* global $ requests edits server sidebar helper GM_info */
+/* global $ requests edits server sidebar helper */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz edit: Create work arrangement from existing work

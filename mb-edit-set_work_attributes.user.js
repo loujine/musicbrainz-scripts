@@ -1,4 +1,4 @@
-/* global $ requests server works sidebar edits helper GM_info */
+/* global $ requests server works sidebar edits helper */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz edit: Set work attributes from the composer Work page

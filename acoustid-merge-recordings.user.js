@@ -1,4 +1,4 @@
-/* globals $ GM_xmlhttpRequest */
+/* globals $ */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz: merge recordings from acoustID page
