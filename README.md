@@ -19,9 +19,7 @@ update to versions using github in @updateURL or reinstall them.
 
 ## Content
 
-Documentation was moved to a [wiki](https://bitbucket.org/loujine/musicbrainz-scripts/wiki/Home).
-
-[Screenshots and some explanations](https://bitbucket.org/loujine/musicbrainz-scripts/wiki/documentation.rst)
+Documentation was moved to a [wiki](https://github.com/loujine/musicbrainz-scripts/wiki).
 
 Discussions on these scripts sometimes take place on the [musicbrainz forums](https://community.metabrainz.org/tags/userscripts).
 
