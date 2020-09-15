@@ -1,7 +1,7 @@
 /* global sidebar helper */
 'use strict';
 // ==UserScript==
-// @name         MusicBrainz: Display AcousticBrainz data on recording page
+// @name         MusicBrainz: Display (more) AcousticBrainz data on recording page
 // @namespace    mbz-loujine
 // @author       loujine
 // @version      2020.9.13
@@ -9,7 +9,7 @@
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_acousticbrainz_data_for_recording.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
 // @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
-// @description  musicbrainz.org: display AcousticBrainz data on recording page
+// @description  musicbrainz.org: Display (more) AcousticBrainz data on recording page
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js

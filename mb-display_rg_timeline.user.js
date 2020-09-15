@@ -9,7 +9,7 @@
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_rg_timeline.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
 // @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
-// @description  musicbrainz.org: display release groups timeline on artist overview page
+// @description  musicbrainz.org: Display release groups timeline on artist overview page
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js

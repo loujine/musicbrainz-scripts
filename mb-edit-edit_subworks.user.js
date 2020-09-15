@@ -9,7 +9,7 @@
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
 // @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
-// @description  musicbrainz.org edit: replace subwork titles/attributes in Work edit page
+// @description  musicbrainz.org edit: Replace subwork titles/attributes in Work edit page
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js

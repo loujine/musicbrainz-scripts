@@ -9,7 +9,7 @@
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-merge_from_acoustid.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
 // @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
-// @description  musicbrainz.org: display acoustIDs and merge recordings with common acoustID
+// @description  musicbrainz.org: Display acoustIDs and merge recordings with common acoustID
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
