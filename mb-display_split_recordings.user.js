@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show recordings of subworks on Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2020.9.15
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -145,6 +145,8 @@ function fetchWork(mbid) {
                         <th></th>
                         <th colspan="3">performance</th>
                     </tr>
+                </tbody>
+            </table>
             `).after('<h2>Recordings split by subworks</h2>');
         $('#split').parent().after($(
             `<p id="tmpSubworks">Loading ${nbSubworks} subworks (it should take
@@ -170,10 +172,10 @@ function fetchWork(mbid) {
                                 <td>${formatDate(begin, end)}</td>
                                 <td></td>
                                 <td>${artists}</td>
-                                <td>${
+                                <td>(${
                                     formatTrackLength(
                                         ar.map(obj => obj.duration
-                                    ).reduce((a,b) => a+b, 0))}
+                                    ).reduce((a,b) => a+b, 0))})
                                 </td>
                             </tr>`));
                         for (const {mbid, title, artists, duration} of ar) {
