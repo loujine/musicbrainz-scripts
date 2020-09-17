@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Add entity aliases in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.17
+// @version      2020.9.17.1
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/aliases_for_ff44/mb-edit-add_aliases.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/aliases_for_ff44/mb-edit-add_aliases.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -39,6 +39,72 @@ const server = {
         'Name': 1,
         'Search hint': 2,
     },
+    locale: {
+        'Afrikaans': 'af',
+        'Azerbaijani': 'az',
+        'Albanian': 'sq',
+        'Arabic': 'ar',
+        'Armenian': 'hy',
+        'Bengali/Bangla': 'bn',
+        'Basque': 'eu',
+        'Belorussian': 'be',
+        'Bosnian': 'bs',
+        'Bulgarian': 'bg',
+        'Cantonese': 'zh_yue',
+        'Catalan': 'ca',
+        'Chinese': 'zh',
+        'Croatian': 'hr',
+        'Czech': 'cs',
+        'Danish': 'da',
+        'Dutch': 'nl',
+        'English': 'en',
+        'Esperanto': 'eo',
+        'Estonian': 'et',
+        'Finnish': 'fi',
+        'French': 'fr',
+        'German': 'de',
+        'Greek': 'el',
+        'Hebrew': 'he',
+        'Hindi': 'hi',
+        'Hungarian': 'hu',
+        'Icelandic': 'is',
+        'Indonesian': 'id',
+        'Irish': 'ga',
+        'Italian': 'it',
+        'Japanese': 'ja',
+        'Javanese': 'jv',
+        'Kazakh': 'kk',
+        'Khmer (Central)': 'km',
+        'Korean': 'ko',
+        'Latvian': 'lv',
+        'Lithuanian': 'lt',
+        'Macedonian': 'mk',
+        'Malay': 'ms',
+        'Malayam': 'ml',
+        'Nepali': 'ne',
+        'Norwegian Bokmål': 'nb',
+        'Norwegian Nynorsk': 'nn',
+        'Persian (Farsi)': 'fa',
+        'Polish': 'pl',
+        'Portuguese': 'pt',
+        'Punjabi': 'pa',
+        'Romanian': 'ro',
+        'Russian': 'ru',
+        'Serbian': 'sr',
+        'Serbo-Croatian': 'sh',
+        'Slovakian': 'sk',
+        'Slovenian': 'sl',
+        'Spanish': 'es',
+        'Swahili': 'sw',
+        'Swedish': 'sv',
+        'Thai': 'th',
+        'Turkish': 'tr',
+        'Urdu': 'ur',
+        'Ukrainian': 'uk',
+        'Uzbek': 'uz',
+        'Vietnamese': 'vi',
+        'Welsh (Cymric)': 'cy',
+    },
 }
 
 const aliases = {
@@ -58,6 +124,12 @@ const aliases = {
         <select>
           <option selected> </option>
           ${buildOptions(server.aliasType)}
+        </select>
+    `,
+    locale: `
+        <select>
+          <option> </option>
+          ${buildOptions(server.locale)}
         </select>
     `,
 };
