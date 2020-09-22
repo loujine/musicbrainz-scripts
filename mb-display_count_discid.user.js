@@ -1,4 +1,3 @@
-/* global helper */
 'use strict';
 // ==UserScript==
 // @name         (obsolete) MusicBrainz: Display discid count
