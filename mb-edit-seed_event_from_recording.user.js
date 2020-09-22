@@ -4,7 +4,7 @@
 // @name         MusicBrainz recording: Seed concert event from recording
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2020.9.22
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-seed_event_from_recording.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-seed_event_from_recording.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -14,7 +14,7 @@
 // @license      MIT
 // @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
 // @include      http*://*musicbrainz.org/recording/*
-// @exclude      http*://*musicbrainz.org/recording/merge
+// @exclude      http*://*musicbrainz.org/recording/merge*
 // @exclude      http*://*musicbrainz.org/recording/*/*
 // @grant        none
 // @run-at       document-end
