@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2020.9.23
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -12,9 +12,8 @@
 // @run-at       document-end
 // ==/UserScript==
 
-// bitbucket repo info
-const wikiUrl =
-    'https://bitbucket.org/loujine/musicbrainz-scripts/wiki/documentation.rst';
+// github wiki
+const wikiUrl = 'https://github.com/loujine/musicbrainz-scripts/wiki';
 
 // from musicbrainz-server/root/static/scripts/tests/typeInfo.js
 class Server {
