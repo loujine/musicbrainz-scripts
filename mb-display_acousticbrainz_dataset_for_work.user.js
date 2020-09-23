@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display AcousticBrainz datasets count for work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2020.9.23
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_acousticbrainz_dataset_for_work.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_acousticbrainz_dataset_for_work.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -23,16 +23,19 @@
 const abzIconURL = '//acousticbrainz.org/static/images/favicon-16.png';
 
 function showABids() {
+    if (!$('thead > tr').length) {
+        return;
+    }
     const $recordings = $('table a[href*="/recording/"]');
     const recording_mbids = Array.from($recordings).map(
         node => node.href.split('/')[4]
     );
-    if (recording_mbids.length > 125) {
+    if (recording_mbids.length > 25) {
         console.info(
-            'Warning: sending only the first 125 recordings ' +
+            'Warning: sending only the first 25 recordings ' +
                 'to AcousticBrainz'
         );
-        recording_mbids.splice(125);
+        recording_mbids.splice(25);
     }
     const url =
         '//acousticbrainz.org/api/v1/count?recording_ids=' +
