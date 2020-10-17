@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Lean display
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.24
+// @version      2020.10.10
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -79,7 +79,7 @@ if (document.URL.split('/')[3] === 'release') {
         $('span#toggle-labels').append($labelheader);
         $labelul.before('<div id="block-labels"></div>');
         $('div#block-labels').append($labelul);
-        $('div#block-labels')[0].style.display = 'none';
+        $('div#block-labels')[0].style.display = 'block';
         document.getElementById('toggle-labels').addEventListener('click', () => {
             const block = document.getElementById('block-labels');
             const display = block.style.display;
@@ -94,7 +94,7 @@ if (document.URL.split('/')[3] === 'release') {
         $('span#toggle-release-events').append($eventsheader);
         $eventsblock.before('<div id="block-release-events"></div>');
         $('div#block-release-events').append($eventsblock);
-        $('div#block-release-events')[0].style.display = 'none';
+        $('div#block-release-events')[0].style.display = 'block';
         document.getElementById('toggle-release-events').addEventListener('click', () => {
             const block = document.getElementById('block-release-events');
             const display = block.style.display;
