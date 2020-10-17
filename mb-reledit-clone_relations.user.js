@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.10.15
+// @version      2020.10.16
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -58,9 +58,9 @@ function cloneAR(refIdx) {
              .insertAdjacentHTML('beforeend', `
         <h3>Clone recording relations to selected recordings</h3>
         <span>
-          <abbr title="index of source recording to clone from">Reference recording</abbr>:&nbsp;
+          <abbr title="index of selected recording to clone from">Reference recording</abbr>:&nbsp;
         </span>
-        <input type="text" id="cloneRef" placeholder="1 (clone from 1st recording)">
+        <input type="text" id="cloneRef" placeholder="1 (clone from 1st selected recording)">
         <input type="button" id="cloneAR" value="Clone relations">
     `);
 })();
