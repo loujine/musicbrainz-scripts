@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2020.10.16
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -114,26 +114,27 @@ function guessSubWorks(workMbid) {
              .insertAdjacentHTML('beforeend', `
         <h3><span id="guess_works_script_toggle">▼ Search for works</span></h3>
         <div id="guess_works_script_block" style="display:block;">
-        <p>
-          You can add an optional prefix (e.g. the misssing parent work name)
-          to help guessing the right work
-        </p>
-        <span>prefix:&nbsp;</span>
-        <input type="text" id="prefix" value="" placeholder="optional">
-        <input type="button" id="searchWork" value="Guess works">
-        <br />
-        <h3>Link to parts of a main Work</h3>
-        <p>
-          Fill the main work mbid to link selected recordings to (ordered) parts
-          of the work.  Use the repeats fields to use the same subwork on
-          successive recordings (e.g. for opera acts)
-        </p>
-        <span>Main work name:&nbsp;</span>
-        <input type="text" id="mainWork" placeholder="main work mbid">
-        <input type="button" id="searchSubworks" value="Guess subworks">
-        <br />
-        <span>Repeats:&nbsp;</span>
-        <input type="text" id="repeats" placeholder="n1,n2,n3... (optional)">
+          <span>
+            <abbr title="You can add an optional prefix (e.g. the misssing parent
+            work name) to help guessing the right work">prefix</abbr>:&nbsp;
+          </span>
+          <input type="text" id="prefix" value="" placeholder="optional">
+          <br />
+          <input type="button" id="searchWork" value="Guess works">
+          <br />
+          <h3>Link to parts of a main Work</h3>
+          <p>
+            Fill the main work mbid to link selected recordings to (ordered) parts of the work.
+          </p>
+          <span>
+            <abbr title="to use the same subwork on successive
+            recordings (e.g. for opera acts)">Repeats</abbr>:&nbsp;
+          </span>
+          <input type="text" id="repeats" placeholder="n1,n2,n3... (optional)">
+          <br />
+          <span>Main work name:&nbsp;</span>
+          <input type="text" id="mainWork" placeholder="main work mbid">
+          <input type="button" id="searchSubworks" value="Guess subworks">
         </div>
     `);
 })();
