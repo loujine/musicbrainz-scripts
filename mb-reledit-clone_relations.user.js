@@ -1,10 +1,10 @@
-/* global $ MB relEditor */
+/* global $ MB relEditor requests */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.10.16
+// @version      2020.10.20
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -17,6 +17,24 @@
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
+
+const MBID_REGEX = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
+
+function autoCompleteRec() {
+    const $input = $('input#cloneExtRecording');
+    const match = $input.val().match(MBID_REGEX);
+    if (match) {
+        const mbid = match[0];
+        requests.GET(`/ws/2/recording/${mbid}?fmt=json`, data => {
+            data = JSON.parse(data);
+            $input.data('mbid', mbid);
+            $input.val(data.title || data.name);
+            $input.css('background', '#bbffbb');
+        });
+    } else {
+        $input.css('background', '#ffaaaa');
+    }
+}
 
 function cloneAR(refIdx) {
     refIdx = refIdx - 1 || 0;
@@ -53,25 +71,87 @@ function cloneAR(refIdx) {
     });
 }
 
+function cloneExtAR(recMBID) {
+    if (recMBID.split('/').length > 1) {
+        recMBID = recMBID.split('/')[4];
+    }
+    const vm = MB.releaseRelationshipEditor;
+    const selectedRecordings = MB.relationshipEditor.UI.checkedRecordings();
+    let dialog;
+
+    requests.GET(`/ws/js/entity/${recMBID}?inc=rels`, resp => {
+        const sourceRels = JSON.parse(resp).relationships.filter(
+            rel => rel.target_type != 'work'
+        );
+        selectedRecordings.map(rec => {
+            sourceRels.map(sourceRel => {
+                dialog = new MB.relationshipEditor.UI.AddDialog({
+                    viewModel: vm,
+                    source: rec,
+                    target: sourceRel.target,
+                });
+                dialog.accept();
+
+                dialog.relationship().linkTypeID(sourceRel.linkTypeID);
+                dialog.relationship().setAttributes(sourceRel.attributes);
+
+                dialog.relationship().entity0_credit(sourceRel.entity0_credit);
+                dialog.relationship().entity1_credit(sourceRel.entity1_credit);
+
+                dialog.relationship().begin_date.year(sourceRel.begin_date.year);
+                dialog.relationship().begin_date.month(sourceRel.begin_date.month);
+                dialog.relationship().begin_date.day(sourceRel.begin_date.day);
+                dialog.relationship().end_date.year(sourceRel.end_date.year);
+                dialog.relationship().end_date.month(sourceRel.end_date.month);
+                dialog.relationship().end_date.day(sourceRel.end_date.day);
+                dialog.accept();
+            });
+        });
+    });
+}
+
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
-        <h3>Clone recording relations to selected recordings</h3>
-        <span>
-          <abbr title="index of selected recording to clone from">Reference recording</abbr>:&nbsp;
-        </span>
-        <input type="text" id="cloneRef" placeholder="1 (clone from 1st selected recording)">
-        <input type="button" id="cloneAR" value="Clone relations">
+        <h3><span id="clone_rels_script_toggle">▶ Clone recording relations to selected recordings</h3>
+        <div id="clone_rels_script_block" style="display:none;">
+          <span>
+            <abbr title="index of selected recording to clone from">Reference recording</abbr>:&nbsp;
+          </span>
+          <input type="text" id="cloneRef" placeholder="1 (clone from 1st selected recording)">
+          <input type="button" id="cloneAR" value="Clone relations">
+          <br />
+          <span>External recording:&nbsp;</span>
+          <input type="text" id="cloneExtRecording" placeholder="recording mbid">
+          <input type="button" id="cloneExtAR" value="Clone relations">
+        </div>
     `);
 })();
 
 $(document).ready(function () {
+    document.getElementById('clone_rels_script_toggle').addEventListener('click', () => {
+        const header = document.getElementById('clone_rels_script_toggle');
+        const block = document.getElementById('clone_rels_script_block');
+        const display = block.style.display;
+        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
+        block.style.display = display == "block" ? "none" : "block";
+    });
+    $('input#cloneExtRecording').on('input', autoCompleteRec);
+    let appliedNote = false;
     document.getElementById('cloneAR').addEventListener('click', () => {
         const refIdx = parseInt(document.getElementById('cloneRef').value);
         cloneAR(refIdx);
-        relEditor.editNote(
-            GM_info.script
-        );
+        if (!appliedNote) {
+            relEditor.editNote(GM_info.script);
+            appliedNote = true;
+        }
+    });
+    document.getElementById('cloneExtAR').addEventListener('click', () => {
+        cloneExtAR($('input#cloneExtRecording').data('mbid'));
+        if (!appliedNote) {
+            relEditor.editNote(GM_info.script);
+            appliedNote = true;
+        }
     });
     return false;
 });
