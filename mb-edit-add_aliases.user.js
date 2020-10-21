@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Add entity aliases in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.18
+// @version      2020.10.21
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/aliases_for_ff44/mb-edit-add_aliases.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/aliases_for_ff44/mb-edit-add_aliases.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -59,6 +59,7 @@ const server = {
         'bs': 'Bosnian',
         'ca': 'Catalan',
         'ckb': 'Central Kurdish',
+        'ckb': 'Central Kurdish/Sorani',
         'cs': 'Czech',
         'cy': 'Welsh',
         'da': 'Danish',
