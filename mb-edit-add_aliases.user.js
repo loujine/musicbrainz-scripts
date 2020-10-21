@@ -79,7 +79,7 @@ const server = {
         'gd': 'Scottish Gaelic',
         'gl': 'Galician',
         'gu': 'Gujarati',
-        'haw': 'Hawai'ian',
+        'haw': 'Hawai’ian',
         'he': 'Hebrew',
         'hi': 'Hindi',
         'hr': 'Croatian',
@@ -146,7 +146,6 @@ const server = {
         'zh_Hant_HK': 'Chinese Hong Kong SAR China Traditional',
         'zh_Hant_TW': 'Chinese Taiwan Traditional',
         'zu': 'Zulu',
-
     },
 }
 
