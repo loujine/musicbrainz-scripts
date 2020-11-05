@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.11.5
+// @version      2020.11.5.1
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -32,6 +32,7 @@ function autoCompleteRec() {
             $input.css('background', '#bbffbb');
         });
     } else {
+        $input.data().mbid = "";
         $input.css('background', '#ffaaaa');
     }
 }
@@ -124,14 +125,13 @@ function cloneExtAR(recMBID) {
         <h3><span id="clone_rels_script_toggle">▶ Clone recording relations to selected recordings</h3>
         <div id="clone_rels_script_block" style="display:none;">
           <span>
-            <abbr title="index of selected recording to clone from">Reference recording</abbr>:&nbsp;
+            <abbr title="index of selected recording to clone from">Recording index in selection</abbr>:&nbsp;
           </span>
           <input type="text" id="cloneRef" placeholder="1 (clone from 1st selected recording)">
-          <input type="button" id="cloneAR" value="Clone relations">
-          <br />
-          <span>External recording:&nbsp;</span>
+          <span>OR recording link:&nbsp;</span>
           <input type="text" id="cloneExtRecording" placeholder="recording mbid">
-          <input type="button" id="cloneExtAR" value="Clone relations">
+          <br />
+          <input type="button" id="cloneAR" value="Apply">
         </div>
     `);
 })();
@@ -147,15 +147,14 @@ $(document).ready(function () {
     $('input#cloneExtRecording').on('input', autoCompleteRec);
     let appliedNote = false;
     document.getElementById('cloneAR').addEventListener('click', () => {
-        const refIdx = parseInt(document.getElementById('cloneRef').value);
-        cloneAR(refIdx);
-        if (!appliedNote) {
-            relEditor.editNote(GM_info.script);
-            appliedNote = true;
+
+        const recMBID = $('input#cloneExtRecording').data('mbid');
+        if (recMBID) {
+            cloneExtAR(recMBID);
+        } else {
+            const refIdx = parseInt(document.getElementById('cloneRef').value);
+            cloneAR(refIdx);
         }
-    });
-    document.getElementById('cloneExtAR').addEventListener('click', () => {
-        cloneExtAR($('input#cloneExtRecording').data('mbid'));
         if (!appliedNote) {
             relEditor.editNote(GM_info.script);
             appliedNote = true;
