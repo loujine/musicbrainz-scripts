@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.10.20
+// @version      2020.11.5
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -60,12 +60,16 @@ function cloneAR(refIdx) {
             dialog.relationship().entity0_credit(sourceRel.entity0_credit());
             dialog.relationship().entity1_credit(sourceRel.entity1_credit());
 
-            dialog.relationship().begin_date.year(sourceRel.begin_date.year());
-            dialog.relationship().begin_date.month(sourceRel.begin_date.month());
-            dialog.relationship().begin_date.day(sourceRel.begin_date.day());
-            dialog.relationship().end_date.year(sourceRel.end_date.year());
-            dialog.relationship().end_date.month(sourceRel.end_date.month());
-            dialog.relationship().end_date.day(sourceRel.end_date.day());
+            if (sourceRel.begin_date) {
+                dialog.relationship().begin_date.year(sourceRel.begin_date.year());
+                dialog.relationship().begin_date.month(sourceRel.begin_date.month());
+                dialog.relationship().begin_date.day(sourceRel.begin_date.day());
+            }
+            if (sourceRel.end_date) {
+                dialog.relationship().end_date.year(sourceRel.end_date.year());
+                dialog.relationship().end_date.month(sourceRel.end_date.month());
+                dialog.relationship().end_date.day(sourceRel.end_date.day());
+            }
             dialog.accept();
         });
     });
@@ -98,13 +102,17 @@ function cloneExtAR(recMBID) {
                 dialog.relationship().entity0_credit(sourceRel.entity0_credit);
                 dialog.relationship().entity1_credit(sourceRel.entity1_credit);
 
-                dialog.relationship().begin_date.year(sourceRel.begin_date.year);
-                dialog.relationship().begin_date.month(sourceRel.begin_date.month);
-                dialog.relationship().begin_date.day(sourceRel.begin_date.day);
-                dialog.relationship().end_date.year(sourceRel.end_date.year);
-                dialog.relationship().end_date.month(sourceRel.end_date.month);
-                dialog.relationship().end_date.day(sourceRel.end_date.day);
-                dialog.accept();
+                if (sourceRel.begin_date) {
+                    dialog.relationship().begin_date.year(sourceRel.begin_date.year);
+                    dialog.relationship().begin_date.month(sourceRel.begin_date.month);
+                    dialog.relationship().begin_date.day(sourceRel.begin_date.day);
+                }
+                if (sourceRel.end_date) {
+                    dialog.relationship().end_date.year(sourceRel.end_date.year);
+                    dialog.relationship().end_date.month(sourceRel.end_date.month);
+                    dialog.relationship().end_date.day(sourceRel.end_date.day);
+                    dialog.accept();
+                }
             });
         });
     });
