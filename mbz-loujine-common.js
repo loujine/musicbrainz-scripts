@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.23
+// @version      2020.11.5
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -670,9 +670,10 @@ const helper = new Helper();
 
 class Sidebar {
     editNote(meta, msg) {
-        msg = msg || '';
-        const signature = `\n —\nGM script: "${meta.name}" (${meta.version})`;
-        return msg + signature;
+        const separator = '\n —\n';
+        msg = msg ? '\n' + msg : '';
+        const signature = `GM script: "${meta.name}" (${meta.version})\n`;
+        return [msg, signature].join(separator);
     }
 
     container() {
@@ -700,19 +701,17 @@ const sidebar = new Sidebar();
 class RelationshipEditor {
 
     editNote(meta, msg) {
-        msg = msg || '';
+        msg = msg ? '\n' + msg : '';
         const separator = '\n —\n';
         const signature = `GM script: "${meta.name}" (${meta.version})\n`;
         const vm = MB.releaseRelationshipEditor;
         let existingMsg = vm.editNote();
         let existingSign;
-        if (existingMsg.includes('\n —\n')) {
+        if (existingMsg.includes(separator)) {
             [existingMsg, existingSign] = existingMsg.split(separator);
-            vm.editNote(
-                existingMsg + '\n' + msg + separator + existingSign + signature
-            );
+            vm.editNote([existingMsg + msg, existingSign + signature].join(separator));
         } else {
-            vm.editNote(existingMsg + msg + separator + signature);
+            vm.editNote([existingMsg + msg, signature].join(separator));
         }
     }
 
