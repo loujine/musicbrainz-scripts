@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display alias count
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2020.11.9
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_count_alias.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_count_alias.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -27,17 +27,14 @@
 
 function parseCount(resp, tab) {
     const cnt = resp.aliases.length;
-    const locales = [];
     if (cnt > 0) {
         tab.style.setProperty('background-color', '#6f9');
     }
     tab.textContent += ' (' + cnt + ')';
-    resp.aliases.forEach(function (alias) {
-        if (alias.locale) {
-            locales.push(alias.locale);
-        }
-    });
+
+    let locales = resp.aliases.map(alias => alias.locale).filter(locale => locale !== null);
     if (locales.length > 0) {
+        locales = Array.from(new Set(locales));
         tab.textContent += ' ' + locales.sort().join(',');
     }
 }
