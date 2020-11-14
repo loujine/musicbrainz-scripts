@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Lean display
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.10.10
+// @version      2020.11.14
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -13,6 +13,7 @@
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @include      http*://*musicbrainz.org/artist/*
+// @include      http*://*musicbrainz.org/collection/*
 // @include      http*://*musicbrainz.org/recording/*
 // @include      http*://*musicbrainz.org/release/*
 // @exclude      http*://*musicbrainz.org/*/merge
@@ -103,17 +104,21 @@ if (document.URL.split('/')[3] === 'release') {
     }
 
     $('h2.reviews + p').empty();
+    $('h2.reviews').empty();
 
     $('div.sidebar-tags').empty();
 
-    const $linksheader = $('#sidebar h2.external-links');
+    let $linksheader = $('#sidebar h2.external-links');
     if ($linksheader.length) {
-        const $linksul = $('#sidebar h2.external-links + ul.external_links');
+        $linksheader = $linksheader.first();
+        const $linksul = $(
+            '#sidebar h2.external-links,#sidebar h2.external-links + ul.external_links'
+        ).not(':first');
         $linksheader.before('<span id="toggle-external-links"></span>');
         $('span#toggle-external-links').append($linksheader);
-        $linksul.before('<div id="block-external-links"></div>');
+        $linksul.first().before('<div id="block-external-links"></div>');
         $('div#block-external-links').append($linksul);
-        $('div#block-external-links')[0].style.display = 'block';
+        $('div#block-external-links')[0].style.display = 'none';
         document.getElementById('toggle-external-links').addEventListener('click', () => {
             const block = document.getElementById('block-external-links');
             const display = block.style.display;
