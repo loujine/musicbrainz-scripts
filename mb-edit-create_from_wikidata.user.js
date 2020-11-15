@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.15
+// @version      2020.11.15
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -560,7 +560,7 @@ function _fillFormFromWikidata(entity, entityType) {
     for (const [externalLink, url] of Object.entries(libWD.urls)) {
         const domain = url.split('/')[2];
         if (!libWD.existField(entity, externalLink)) {
-            return;
+            continue;
         }
         const fullUrl = url + libWD.fieldValue(entity, externalLink);
         if (
@@ -763,6 +763,9 @@ $(document).ready(function () {
 
 // test data for places:
 // https://www.wikidata.org/wiki/Q2303621
+
+// test data for works:
+// https://www.wikidata.org/wiki/Q31745949
 
 // isni
 // http://www.isni.org/isni/0000000073684002 person
