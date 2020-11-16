@@ -4,7 +4,7 @@
 // @name         Import Idagio releases to MusicBrainz
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.10.27
+// @version      2020.11.16
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
 // @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  Add a button to import Idagio releases to MusicBrainz
@@ -38,18 +38,18 @@ function comparefct(a, b) {
 
 function _clean(s) {
     return s
-        // .replace(' In ', ' in ')
-        // .replace('Minor', 'minor')
-        // .replace('Major', 'major')
+        .replace(' In ', ' in ')
+        .replace('Minor', 'minor')
+        .replace('Major', 'major')
         // .replace('Op.', 'op. ')
         .replace(' op. ', ', op. ')
         .replace(/No\. /g, 'no. ')
         // .replace(/No\./g, 'no. ')
-        // .replace('-Flat', '-flat')
-        // .replace(' Flat', '-flat')
+        .replace('-Flat', '-flat')
+        .replace(' Flat', '-flat')
         .replace(' flat', '-flat')
-        // .replace('-Sharp', '-sharp')
-        // .replace(' Sharp', '-sharp')
+        .replace('-Sharp', '-sharp')
+        .replace(' Sharp', '-sharp')
         .replace(' sharp', '-sharp')
         // .replace('1. ', 'I. ')
         // .replace('2. ', 'II. ')
