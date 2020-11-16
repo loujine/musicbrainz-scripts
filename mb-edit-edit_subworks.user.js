@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace subwork titles and attributes in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2020.11.16
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -23,8 +23,8 @@ function replaceSubworksTitles() {
     let idx = 0;
     $('table label:contains("parts:")').parents('tr')
             .find('a[href*="/work/"]').each(function (_idx, node) {
-        const searchExp = document.getElementById('search').value;
-        const replaceExp = document.getElementById('replace').value;
+        const searchExp = document.getElementById('subwork-regexp-search').value;
+        const replaceExp = document.getElementById('subwork-regexp-replace').value;
         if (!searchExp || searchExp === replaceExp) {
             return;
         }
@@ -39,10 +39,19 @@ function replaceSubworksTitles() {
 
         function success(xhr) {
             const $status = $('#replace' + _idx);
-            $status.parent().css('color', 'green');
-            const editId = new RegExp(
+            const rx = new RegExp(
                 '/edit/(\\d+)">edit</a>'
-            ).exec(xhr.responseText)[1];
+            ).exec(xhr.responseText);
+            if (rx === null) {
+                // usually means the POST was accepted but nothing was changed
+                // i.e. the attributes names are wrong
+                $status.text(
+                    'Edit was probably not applied, please check'
+                ).parent().css('color', 'red');
+                return;
+            }
+            const editId = rx[1];
+            $status.parent().css('color', 'green');
             $status.after(
                 $('<p>').append(
                     '<a href="/edit/' + editId + '" target="_blank">edit ' + editId + '</a>'
@@ -55,15 +64,20 @@ function replaceSubworksTitles() {
             ).parent().css('color', 'red');
         }
         function callback(editData) {
+            // no need to POST relations
+            delete editData.relations;
             $('#replace' + _idx).text('Sending edit data');
             editData.name = name;
             $('#replace' + _idx).text(' replaced by ' + name);
             const postData = edits.prepareEdit(editData);
             postData.edit_note = sidebar.editNote(GM_info.script);
             console.info('Data ready to be posted: ', postData);
-            requests.POST(edits.urlFromMbid('work', mbid),
-                          edits.formatEdit('edit-work', postData),
-                          success, fail);
+            requests.POST(
+                edits.urlFromMbid('work', mbid),
+                edits.formatEdit('edit-work', postData),
+                success,
+                fail
+            );
         }
         setTimeout(function () {
             $(node).after('<span id="replace' + _idx + '">' +
@@ -96,8 +110,9 @@ function setSubworksAttributes(attrIdx) {
           Search for a string or regular expression (e.g. /sonata Op.(.+)/i).
           Replace with a string that can call groups from the search regexp ($1, $2...).
         </p>
-        <input type="text" id="search" value="" placeholder="Searched string or regexp">
-        <input type="text" id="replace" value="" placeholder="Replacing string">
+        <input type="text" id="subwork-regexp-search" value=""
+               placeholder="Searched string or regexp">
+        <input type="text" id="subwork-regexp-replace" value="" placeholder="Replacing string">
         <input type="button" id="replaceTitles" value="Apply" disabled="True">
 
         <h3>Set subworks attributes</h3>
@@ -116,7 +131,7 @@ function setSubworksAttributes(attrIdx) {
 
 
 $(document).ready(function () {
-    $('#search').keydown(function () {
+    $('#subwork-regexp-search').keydown(function () {
         $('#replaceTitles').prop('disabled', false);
     });
     document.getElementById('replaceTitles').addEventListener('click', () => {

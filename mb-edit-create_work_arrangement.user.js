@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2020.11.16
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -22,24 +22,11 @@
 
 function createArrangement(mbid, parentMbid) {
     $('#create-arrangement-text').empty();
-    fetch(helper.wsUrl('work', ['artist-rels', 'work-rels'], mbid))
-        .then(resp => resp.json())
-        .then(function (data) {
-            const editData = {
-                name: data.title,
-                type_id: server.workType[data.type],
-                languages: data.languages.map(l => server.languageFromISO[l]),
-                attributes: [],
-                relations: data.relations,
-            };
-            data.attributes.forEach(function (attr) {
-                if (attr.type === 'Key') {
-                    editData.attributes.push({
-                        type_id: 1,
-                        value: server.workKeyAttr[attr.value],
-                    });
-                }
-            });
+    edits.getWorkEditParams(
+        helper.wsUrl('work', ['artist-rels', 'work-rels'], mbid),
+        editData => {
+            // do not copy ISWC to arrangement
+            editData.iswcs = '';
             const postData = edits.prepareEdit(editData);
             const wlt = server.workLinkType;
             let idx = 0;
@@ -77,7 +64,8 @@ function createArrangement(mbid, parentMbid) {
                         + '" target="_blank">edit ' + editId[1] + '</a>');
                 } else if (editId === null) {
                     editId = new RegExp(
-                        'Thank you, your.* href="(.*)">edits</a> (.*) have'
+                        'Thank you, your.* href="(.*)">edits</a> (.*) have '
+                        + 'been automatically accepted and applied'
                     ).exec(xhr.responseText);
                     if (editId && editId.length) {
                         $('#create-arrangement-text').append(
@@ -106,7 +94,8 @@ function createArrangement(mbid, parentMbid) {
                 edits.formatEdit('edit-work', postData),
                 success
             );
-        });
+        }
+    );
 }
 
 

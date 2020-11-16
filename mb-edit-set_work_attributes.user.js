@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Set work attributes from the composer Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2020.11.16
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_attributes.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_attributes.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -107,6 +107,8 @@ function editWork() {
             ).parent().css('color', 'red');
         }
         function callback(editData) {
+            // no need to POST relations
+            delete editData.relations;
             $('#' + node.id + '-text').text('Sending edit data');
             const postData = edits.prepareEdit(updateFromPage(editData, node));
             postData.edit_note = $('#batch_replace_edit_note')[0].value;
@@ -122,8 +124,7 @@ function editWork() {
             $('#' + node.id + '-text').empty();
             $(node).after('<span id="' + node.id + '-text">' +
                           'Fetching required data</span>');
-            edits.getWorkEditParams(helper.wsUrl('work', [], mbid),
-                                    callback);
+            edits.getWorkEditParams(helper.wsUrl('work', [], mbid), callback);
         }, 2 * idx * server.timeout);
     });
 }

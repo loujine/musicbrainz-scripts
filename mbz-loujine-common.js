@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.11.5
+// @version      2020.11.16
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -535,15 +535,25 @@ class Edits {
     }
 
     getWorkEditParams(url, callback) {
-        requests.GET(url, resp => {
-            const data = JSON.parse(resp);
-            callback({
-                name: data.title,
-                type_id: server.workType[data.type],
-                languages: data.languages.map(l => server.languageFromISO[l]),
-                iswcs: data.iswcs,
-                attributes: data.attributes,
-            });
+        fetch(url)
+            .then(resp => resp.json())
+            .then(data => {
+                const editData = {
+                    name: data.title,
+                    type_id: server.workType[data.type],
+                    languages: data.languages.map(l => server.languageFromISO[l]),
+                    iswcs: data.iswcs,
+                    relations: data.relations,
+                };
+                editData.attributes = data.attributes.filter(
+                    attr => attr.type === 'Key'
+                ).map(attr =>
+                    ({
+                        type_id: 1,
+                        value: server.workKeyAttr[attr.value],
+                    })
+                );
+                callback(editData);
         });
     }
 
