@@ -626,6 +626,7 @@ class Helper {
     wsUrl(entityType, options, mbid) {
         let url = `/ws/2/${entityType}/`;
         mbid = mbid || this.mbidFromURL();
+        options = options || [];
         url += encodeURIComponent(mbid);
         url += '?fmt=json';
         options.forEach((option, idx) => {
