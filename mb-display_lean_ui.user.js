@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Lean display
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.11.14
+// @version      2020.11.18
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -124,5 +124,9 @@ if (document.URL.split('/')[3] === 'release') {
             const display = block.style.display;
             block.style.display = display == "block" ? "none" : "block";
         });
+    }
+
+    if ($('dd span.high-data-quality,dd span.low-data-quality').length) {
+        $('span.prefix').after($('dd span.high-data-quality,dd span.low-data-quality')[0]);
     }
 }
