@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.11.5
+// @version      2020.12.26
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -28,7 +28,7 @@ function setWork(recording, work) {
             target: target,
             viewModel: MB.releaseRelationshipEditor,
         });
-        target.relationships.forEach(function (rel) {
+        target.relationships.forEach(rel => {
             // apparently necessary to fill MB.entityCache with rels
             MB.getRelationship(rel, target);
         });
@@ -36,9 +36,29 @@ function setWork(recording, work) {
     });
 }
 
+function replaceWork(recording, work, rel) {
+    requests.GET(`/ws/js/entity/${work.gid}?inc=rels`, function (resp) {
+        const target = JSON.parse(resp);
+        const dialog = new MB.relationshipEditor.UI.EditDialog({
+            source: recording,
+            relationship: rel,
+            viewModel: MB.releaseRelationshipEditor,
+        });
+        target.relationships.forEach(rel => {
+            // apparently necessary to fill MB.entityCache with rels
+            MB.getRelationship(rel, target);
+        });
+        dialog.relationship().entities([
+            MB.entity({entityType: 'recording', gid: recording.gid}),
+            MB.entity({entityType: 'work', gid: work.gid}),
+        ]);
+        dialog.accept();
+    });
+}
+
 function guessWork() {
     let idx = 0;
-    MB.relationshipEditor.UI.checkedRecordings().forEach(function (recording) {
+    MB.relationshipEditor.UI.checkedRecordings().forEach(recording => {
         const url =
             '/ws/js/work/?q=' +
             encodeURIComponent(document.getElementById('prefix').value) +
@@ -74,7 +94,8 @@ function autoComplete() {
     }
 }
 
-function guessSubWorks(workMbid) {
+function guessSubWorks(workMbid, replace) {
+    replace = replace || false;
     if (workMbid.split('/').length > 1) {
         workMbid = workMbid.split('/')[4];
     }
@@ -100,7 +121,9 @@ function guessSubWorks(workMbid) {
                 if (recIdx >= repeatedSubWorks.length) {
                     return;
                 }
-                if (!recording.performances().length) {
+                if (replace && recording.performances().length) {
+                    replaceWork(recording, repeatedSubWorks[recIdx], recording.performances()[0]);
+                } else if (!recording.performances().length) {
                     setWork(recording, repeatedSubWorks[recIdx]);
                 }
             }
@@ -132,6 +155,9 @@ function guessSubWorks(workMbid) {
           </span>
           <input type="text" id="repeats" placeholder="n1,n2,n3... (optional)">
           <br />
+          <span>Replace work if pre-existing:&nbsp;</span>
+          <input type="checkbox" id="replaceSubworks">
+          <br />
           <span>Main work name:&nbsp;</span>
           <input type="text" id="mainWork" placeholder="main work mbid">
           <input type="button" id="searchSubworks" value="Guess subworks">
@@ -158,7 +184,10 @@ $(document).ready(function() {
     });
     $('input#mainWork').on('input', autoComplete);
     document.querySelector('input#searchSubworks').addEventListener('click', () => {
-        guessSubWorks($('input#mainWork').data('mbid'));
+        guessSubWorks(
+            $('input#mainWork').data('mbid'),
+            document.querySelector('input#replaceSubworks').checked
+        );
         if (!appliedNote) {
             relEditor.editNote(GM_info.script, 'Set guessed subworks');
             appliedNote = true;
