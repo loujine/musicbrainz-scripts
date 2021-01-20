@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Copy dates on recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2021.1.19
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-copy_dates.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-copy_dates.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -53,7 +53,7 @@ function referenceDate(relations) {
     return -1;
 }
 
-function propagateDates() {
+function propagateDates(replace) {
     const recordings = MB.relationshipEditor.UI.checkedRecordings();
     recordings.forEach(function (recording) {
         const relations = recording.relationships();
@@ -63,7 +63,8 @@ function propagateDates() {
                 const linkType = parseInt(rel.linkTypeID());
                 if (
                     !rel.removed() &&
-                    Object.values(server.recordingLinkType).includes(linkType)
+                    Object.values(server.recordingLinkType).includes(linkType) &&
+                    (replace || !rel.formatDatePeriod())
                 ) {
                     copyDate(relations[idx], rel);
                 }
@@ -88,6 +89,9 @@ function removeDates() {
     relEditor.container(document.querySelector('div.tabs'))
     .insertAdjacentHTML('beforeend', `
         <h3>Dates</h3>
+        <label for="replaceDates">Replace dates if pre-existing:&nbsp;</label>
+        <input type="checkbox" id="replaceDates">
+        <br />
         <input type="button" id="copyDates" value="Copy dates">
         <input type="button" id="removeDates" value="Removes dates">
     `);
@@ -100,7 +104,9 @@ $(document).ready(function () {
         relEditor.editNote(GM_info.script);
     });
     document.getElementById('copyDates').addEventListener('click', () => {
-        propagateDates();
+        propagateDates(
+            document.querySelector('input#replaceDates').checked
+        );
         if (!appliedNote) {
             relEditor.editNote(
                 GM_info.script,
