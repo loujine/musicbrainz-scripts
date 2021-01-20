@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.12.26
+// @version      2021.1.19
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -20,7 +20,7 @@
 
 const MBID_REGEX = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
 
-function setWork(recording, work) {
+function setWork(recording, work, partial) {
     requests.GET(`/ws/js/entity/${work.gid}?inc=rels`, function (resp) {
         const target = JSON.parse(resp);
         const dialog = new MB.relationshipEditor.UI.AddDialog({
@@ -32,6 +32,13 @@ function setWork(recording, work) {
             // apparently necessary to fill MB.entityCache with rels
             MB.getRelationship(rel, target);
         });
+
+        if (partial) {
+            dialog.relationship().setAttributes([{
+                // 'partial' attribute, id 579
+                type: {gid: "d2b63be6-91ec-426a-987a-30b47f8aae2d"}
+            }]);
+        }
         dialog.accept();
     });
 }
@@ -110,9 +117,11 @@ function guessSubWorks(workMbid, replace) {
             repeats = subWorks.map(() => 1);
         }
         const repeatedSubWorks = Array(total);
+        const partialSubWorks = Array(total);
         let start = 0;
         subWorks.forEach((sb, sbIdx) => {
             repeatedSubWorks.fill(sb, start, start + repeats[sbIdx]);
+            partialSubWorks.fill(repeats[sbIdx] > 1 ? true : false, start, start + repeats[sbIdx]);
             start += repeats[sbIdx];
         });
 
@@ -124,7 +133,7 @@ function guessSubWorks(workMbid, replace) {
                 if (replace && recording.performances().length) {
                     replaceWork(recording, repeatedSubWorks[recIdx], recording.performances()[0]);
                 } else if (!recording.performances().length) {
-                    setWork(recording, repeatedSubWorks[recIdx]);
+                    setWork(recording, repeatedSubWorks[recIdx], partialSubWorks[recIdx]);
                 }
             }
         );
@@ -155,7 +164,7 @@ function guessSubWorks(workMbid, replace) {
           </span>
           <input type="text" id="repeats" placeholder="n1,n2,n3... (optional)">
           <br />
-          <span>Replace work if pre-existing:&nbsp;</span>
+          <label for="replaceSubworks">Replace work if pre-existing:&nbsp;</label>
           <input type="checkbox" id="replaceSubworks">
           <br />
           <span>Main work name:&nbsp;</span>
