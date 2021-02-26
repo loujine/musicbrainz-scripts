@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.11.5.1
+// @version      2021.2.26
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -103,6 +103,10 @@ function cloneExtAR(recMBID) {
                 dialog.relationship().entity0_credit(sourceRel.entity0_credit);
                 dialog.relationship().entity1_credit(sourceRel.entity1_credit);
 
+                if (sourceRel.target_type === 'recording'
+                        && sourceRel.direction === 'backward') {
+                    dialog.changeDirection();
+                }
                 if (sourceRel.begin_date) {
                     dialog.relationship().begin_date.year(sourceRel.begin_date.year);
                     dialog.relationship().begin_date.month(sourceRel.begin_date.month);
