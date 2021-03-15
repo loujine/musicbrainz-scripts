@@ -44,16 +44,28 @@ function setAttributes(relationType, attrId, toggle) {
         <h3><span id="relattrs_script_toggle">▶ Relation attributes</span></h3>
         <div id="relattrs_script_block" style="display:none;">
         <h3>Recording-Work relation attributes</h3>
-        <input type="button" id="setCover" value="Set cover">
-        <input type="button" id="setLive" value="Set live">
-        <input type="button" id="setPartial" value="Set partial">
-        <input type="button" id="setInstrumental" value="Set instrumental">
-        <input type="button" id="setMedley" value="Set medley">
-        <input type="button" id="toggleCover" value="Toggle cover">
-        <input type="button" id="toggleLive" value="Toggle live">
-        <input type="button" id="togglePartial" value="Toggle partial">
-        <input type="button" id="toggleInstrumental" value="Toggle instrumental">
-        <input type="button" id="toggleMedley" value="Toggle medley">
+        <table>
+            <tr>
+                <td><input type="button" id="setCover" value="Set cover"></td>
+                <td><input type="button" id="toggleCover" value="Toggle cover"></td>
+            </tr>
+            <tr>
+                <td><input type="button" id="setLive" value="Set live"></td>
+                <td><input type="button" id="toggleLive" value="Toggle live"></td>
+            </tr>
+            <tr>
+                <td><input type="button" id="setPartial" value="Set partial"></td>
+                <td><input type="button" id="togglePartial" value="Toggle partial"></td>
+            </tr>
+            <tr>
+                <td><input type="button" id="setInstrumental" value="Set instrumental"></td>
+                <td><input type="button" id="toggleInstrumental" value="Toggle instrumental"></td>
+            </tr>
+            <tr>
+                <td><input type="button" id="setMedley" value="Set medley"></td>
+                <td><input type="button" id="toggleMedley" value="Toggle medley"></td>
+            </tr>
+        </table>
         <h3>Recording-Artist relation attributes</h3>
         <input type="button" id="toggleSolo" value="Toggle solo">
         <input type="button" id="toggleAdditional" value="Toggle additional">
