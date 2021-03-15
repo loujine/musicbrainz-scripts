@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.11.16
+// @version      2021.3.16
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -141,6 +141,7 @@ class Server {
             instrumental: 580,
             video: 582,
             solo: 596,
+            medley: 750,
         };
         this.language = {
             '[Multiple languages]': 284,
