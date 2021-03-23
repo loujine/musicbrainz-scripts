@@ -79,6 +79,11 @@ Make table columns sortable
 [![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://github.com/loujine/musicbrainz-scripts/blob/master/mb-edit-add_aliases.user.js)
 [![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-add_aliases.user.js)
 
+#### MusicBrainz edit: Change release quality
+
+[![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://github.com/loujine/musicbrainz-scripts/blob/master/mb-edit-change_release_quality.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-change-release-quality.user.js)
+
 #### MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 
 [![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://github.com/loujine/musicbrainz-scripts/blob/master/mb-edit-create_from_wikidata.user.js)
@@ -93,6 +98,11 @@ Make table columns sortable
 
 [![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://github.com/loujine/musicbrainz-scripts/blob/master/mb-edit-merge_from_acoustid.user.js)
 [![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-merge_from_acoustid.user.js)
+
+#### MusicBrainz edit: Mark recordings as video
+
+[![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://github.com/loujine/musicbrainz-scripts/blob/master/mb-edit-set_video_recordings.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js)
 
 #### MusicBrainz edit: Replace recording artists from a Release page
 
@@ -147,6 +157,11 @@ Seed a "Concert" event with the same content as the current recording
 
 ### Scripts to edit relations
 
+#### MusicBrainz relation editor: Clone recording relations onto other recordings
+
+[![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://github.com/loujine/musicbrainz-scripts/blob/master/mb-reledit-clone_relations.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js)
+
 #### MusicBrainz relation editor: Copy dates on recording relations
 
 Copy/remove dates on recording relations
@@ -181,6 +196,13 @@ Set/unset role relations on selected recordings
 ### Importer scripts
 
 Importer scripts should be installed from [https://raw.githubusercontent.com/murdos/musicbrainz-userscripts](murdos's repo) when possible (e.g. Naxos Library)
+
+#### Import Idagio releases to MusicBrainz
+
+Add a button to import Idagio releases to MusicBrainz
+
+[![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://github.com/loujine/musicbrainz-scripts/blob/master/mbz-idagio-importer.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-idagio-importer.user.js)
 
 #### Import Hyperion/Helios releases to MusicBrainz
 
