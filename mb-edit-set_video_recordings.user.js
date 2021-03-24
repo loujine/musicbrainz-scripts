@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Mark recordings as video
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.6.1
+// @version      2021.3.24
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -113,13 +113,18 @@ function setVideo() {
             $('#' + node.id + '-text').text('Sending edit data');
             const postData = parseEditData(editData);
             console.info('Data ready to be posted: ', postData);
-            requests.POST(url, edits.formatEdit('edit-recording', postData),
-                          success, fail);
+            requests.POST(
+                url,
+                edits.formatEdit('edit-recording', postData),
+                success,
+                fail
+            );
         }
         setTimeout(function () {
             $('#' + node.id + '-text').empty();
             $(node).after(
-                `<span id="${node.id}-text">Fetching required data</span>`);
+                `<span id="${node.id}-text">Fetching required data</span>`
+            );
             edits.getEditParams(url, callback);
         }, 2 * idx * server.timeout);
     });
@@ -131,6 +136,8 @@ function setVideo() {
         <div id="video_script_block" style="display:none;">
           <p>First click "Show checkboxes" then select recordings to update</p>
           <input type="button" id="video_selectors" value="Show checkboxes">
+
+          <input type="button" id="batch_video_select" value="Select all" disabled="true">
 
           <table>
           <tr>
@@ -153,8 +160,12 @@ $(document).ready(function () {
     });
     document.getElementById('video_selectors').addEventListener('click', () => {
         showSelectors();
-        $('#batch_video').prop('disabled', false);
+        $('#batch_video_select').prop('disabled', false);
         $('#video_selectors').prop('disabled', true);
+        $('#batch_video').prop('disabled', false);
+    });
+    document.getElementById('batch_video_select').addEventListener('click', () => {
+        $('.replacevideo:input').prop('checked', true);
     });
     document.getElementById('batch_video').addEventListener('click', setVideo);
     return false;
