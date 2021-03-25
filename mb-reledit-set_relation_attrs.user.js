@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.3.23
+// @version      2021.3.25
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -20,8 +20,18 @@
 
 function setAttributes(relationType, attrId, toggle) {
     const attrInfo = server.getRelationshipAttrInfo();
-    for (const recording of MB.relationshipEditor.UI.checkedRecordings()) {
-        for (const relation of recording.relationships().filter(
+    let checkedEntities = [];
+    if (relationType.includes('work')) {
+        checkedEntities = MB.relationshipEditor.UI.checkedWorks();
+    }
+    if (!checkedEntities.length) {
+        checkedEntities = MB.relationshipEditor.UI.checkedRecordings();
+    }
+    if (!checkedEntities.length) {
+        alert('No relation selected');
+    }
+    for (const recordingOrWork of checkedEntities) {
+        for (const relation of recordingOrWork.relationships().filter(
             rel => rel.entityTypes === relationType
         )) {
             const attrs = relation.attributes();
@@ -41,7 +51,9 @@ function setAttributes(relationType, attrId, toggle) {
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
-        <h3><span id="relattrs_script_toggle">▶ Relation attributes</span></h3>
+        <h3>
+          <span id="relattrs_script_toggle" style="cursor:pointer">▶ Relation attributes</span>
+        </h3>
         <div id="relattrs_script_block" style="display:none;">
         <h3>Recording-Work relation attributes</h3>
         <table>

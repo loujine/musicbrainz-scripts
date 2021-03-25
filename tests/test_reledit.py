@@ -107,13 +107,26 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.login('release', RELEASE_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-set_relation_attrs.user.js')
         time.sleep(1)
-        assert '>live recording of<' not in self.driver.page_source
+        assert '>live recording of</span>' not in self.driver.page_source
         self.driver.find_element_by_id('relattrs_script_toggle').click()
+
+        # set live from recording checkbox
         self.driver.find_element_by_css_selector('td.recording input').click()
         self.driver.find_element_by_id('setLive').click()
-        assert '>live recording of<' in self.driver.page_source
+        assert '>live recording of</span>' in self.driver.page_source
+
+        # set partial from second work checkbox
+        self.driver.find_elements_by_css_selector('td.works input')[1].click()
+        self.driver.find_element_by_id('setPartial').click()
+        assert '>live recording of</span>' in self.driver.page_source
+        assert '>live partial recording of</span>' in self.driver.page_source
+        assert '>partial recording of</span>' not in self.driver.page_source
+
+        # unset live from second work checkbox
         self.driver.find_element_by_id('toggleLive').click()
-        assert '>live recording of<' not in self.driver.page_source
+        assert '>live recording of</span>' in self.driver.page_source
+        assert '>partial recording of</span>' in self.driver.page_source
+        assert '>live partial recording of</span>' not in self.driver.page_source
 
     def tearDown(self):
         super().tearDown()
