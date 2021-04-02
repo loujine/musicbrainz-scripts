@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from a Release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2021.4.1
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -192,7 +192,9 @@ function replaceArtist() {
 
 (function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
-        <h3><span id="replace_script_toggle">▶ Replace artists</span></h3>
+        <h3>
+          <span id="replace_script_toggle" style="cursor: pointer;">▶ Replace artists</span>
+        </h3>
         <div id="replace_script_block" style="display:none;">
           <p>First click "Show checkboxes" then select recordings to update</p>
           <input type="button" id="selectors" value="Show checkboxes">

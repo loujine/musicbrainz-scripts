@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.11.16
+// @version      2021.4.1
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -101,7 +101,11 @@ function createArrangement(mbid, parentMbid) {
 
 (function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
-        <h3><span id="work_arrangement_script_toggle">▶ Create work arrangement</span></h3>
+        <h3>
+          <span id="work_arrangement_script_toggle" style="cursor: pointer;">
+            ▶ Create work arrangement
+          </span>
+        </h3>
         <div id="work_arrangement_script_block" style="display:none;">
         <input type="text" id="disambiguation" value="" placeholder="disambiguation text">
         <div>

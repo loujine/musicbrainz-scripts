@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.1.19
+// @version      2021.4.1
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -144,7 +144,9 @@ function guessSubWorks(workMbid, replace) {
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
-        <h3><span id="guess_works_script_toggle">▼ Search for works</span></h3>
+        <h3>
+          <span id="guess_works_script_toggle" style="cursor: pointer;">▼ Search for works</span>
+        </h3>
         <div id="guess_works_script_block" style="display:block;">
           <span>
             <abbr title="You can add an optional prefix (e.g. the misssing parent

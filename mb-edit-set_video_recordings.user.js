@@ -127,7 +127,10 @@ function setVideo() {
 
 (function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
-        <h3><span id="video_script_toggle">▶ Set video</span></h3>
+        <h3>
+          <span id="video_script_toggle" style="cursor:pointer;">▶ Set video</span>
+        </h3>
+
         <div id="video_script_block" style="display:none;">
           <input type="button" id="batch_video_select" value="Select all">
 

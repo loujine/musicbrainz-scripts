@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2021.4.1
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -53,7 +53,9 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
-        <h3><span id="instrument_script_toggle">▶ Replace artist role</span></h3>
+        <h3>
+          <span id="instrument_script_toggle" style="cursor: pointer;">▶ Replace artist role</span>
+        </h3>
         <div id="instrument_script_block" style="display:none;">
         <p>
           From: <select id="fromRole">${roles.roles}</select>
