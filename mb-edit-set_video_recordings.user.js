@@ -22,12 +22,10 @@
 // ==/UserScript==
 
 function showSelectors() {
-    if (!document.getElementsByClassName('videoSelectorColumn').length) {
-        Array.from(document.getElementsByClassName('subh')).map(
-            el => el.insertAdjacentHTML('beforeend',
-                '<th class="videoSelectorColumn">rels</th>')
-        );
-    }
+    Array.from(document.getElementsByClassName('subh')).map(
+        el => el.insertAdjacentHTML('beforeend',
+            '<th class="videoSelectorColumn">video</th>')
+    );
 
     const rows = document.querySelectorAll('table.tbl tr.odd,tr.even');
     Array.from(rows).map(row => {
@@ -131,10 +129,7 @@ function setVideo() {
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3><span id="video_script_toggle">▶ Set video</span></h3>
         <div id="video_script_block" style="display:none;">
-          <p>First click "Show checkboxes" then select recordings to update</p>
-          <input type="button" id="video_selectors" value="Show checkboxes">
-
-          <input type="button" id="batch_video_select" value="Select all" disabled="true">
+          <input type="button" id="batch_video_select" value="Select all">
 
           <table>
             <tr>
@@ -142,7 +137,7 @@ function setVideo() {
               <td><input type="checkbox" id="votable"></td>
             </tr>
           </table>
-          <input type="button" id="batch_video" value="Set video attribute" disabled="true">
+          <input type="button" id="batch_video" value="Set video attribute">
         </div>
     `);
 })();
@@ -154,12 +149,9 @@ $(document).ready(function () {
         const display = block.style.display;
         header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
         block.style.display = display == "block" ? "none" : "block";
-    });
-    document.getElementById('video_selectors').addEventListener('click', () => {
-        showSelectors();
-        $('#batch_video_select').prop('disabled', false);
-        $('#video_selectors').prop('disabled', true);
-        $('#batch_video').prop('disabled', false);
+        if (!document.getElementsByClassName('videoSelectorColumn').length) {
+            showSelectors();
+        }
     });
     document.getElementById('batch_video_select').addEventListener('click', () => {
         $('.replacevideo:input').prop('checked', true);
