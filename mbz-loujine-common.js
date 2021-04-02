@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.3.16
+// @version      2021.4.1
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -689,6 +689,10 @@ class Sidebar {
     }
 
     container() {
+        if (document.querySelector('.top ul.menu a').href.includes('login')) {
+            console.warn('You are not logged in');
+        }
+
         const container = document.getElementById('loujine-sidebar');
         if (container !== null) {
             return container;
