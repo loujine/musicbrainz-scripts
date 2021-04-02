@@ -52,7 +52,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
     def test_script_remove_dates(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-copy_dates.user.js')
-        time.sleep(1)
+        time.sleep(2)
         assert self.driver.page_source.count('>2016-04-07<') > 1
         assert len(self.driver.find_elements_by_class_name('rel-edit')) == 2
         self.driver.find_element_by_css_selector('td.recording input').click()
@@ -63,7 +63,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
     def test_script_copy_dates(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-copy_dates.user.js')
-        time.sleep(1)
+        time.sleep(2)
         assert self.driver.page_source.count('>2016-04-07<') > 1
         assert len(self.driver.find_elements_by_class_name('rel-edit')) == 2
         self.driver.find_element_by_css_selector('td.recording input').click()

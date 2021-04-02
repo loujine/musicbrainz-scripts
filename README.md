@@ -223,6 +223,13 @@ Add a button to import Hyperion/Helios releases to MusicBrainz
 
 [MIT](https://opensource.org/licenses/MIT)
 
+## Tests
+
+You can run automatic python tests with e.g.:
+```
+SHOW=1 pytest -s tests/
+```
+
 ## Reporting bugs & Contributing
 
 Please submit all patches to [github](https://github.com/loujine/musicbrainz-scripts/pulls) for review.
