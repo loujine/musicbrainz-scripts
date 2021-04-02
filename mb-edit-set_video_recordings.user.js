@@ -1,10 +1,10 @@
-/* global $ requests server sidebar edits */
+/* global $ requests server sidebar edits helper */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz edit: Mark recordings as video
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.3.24
+// @version      2021.4.1
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -22,26 +22,23 @@
 // ==/UserScript==
 
 function showSelectors() {
-    const $rows = $(
-        $('table.tbl a[href*="/artist/"]').parents('tr').get().reverse()
-    );
-    if (!$('#selectorColumn').length) {
-        $('.subh').append('<th id="selectorColumn">rels</th>');
+    if (!document.getElementsByClassName('videoSelectorColumn').length) {
+        Array.from(document.getElementsByClassName('subh')).map(
+            el => el.insertAdjacentHTML('beforeend',
+                '<th class="videoSelectorColumn">rels</th>')
+        );
     }
 
-    $rows.each(function (idx, tr) {
-        const mbid = $(tr).find('a[href*="/recording/"]')
-                          .attr('href').split('/')[2];
-        $(tr).append(
-            $('<td>').append(
-                $('<input>', {
-                    'id': 'video-' + mbid,
-                    'class': 'replacevideo',
-                    'type': 'checkbox',
-                    'value': 'Set video'
-                })
-            )
+    const rows = document.querySelectorAll('table.tbl tr.odd,tr.even');
+    Array.from(rows).map(row => {
+        const mbid = helper.mbidFromURL(
+            row.querySelector('a[href*="/recording/"]').href
         );
+        row.insertAdjacentHTML('beforeend', `
+            <td>
+              <input id="video-${mbid}" class="replacevideo" type="checkbox" value="Set video">
+            </td>
+        `);
     });
 
     let lastChecked;
@@ -140,10 +137,10 @@ function setVideo() {
           <input type="button" id="batch_video_select" value="Select all" disabled="true">
 
           <table>
-          <tr>
-            <td><label for="votable">Make all edits votable</label></td>
-            <td><input type="checkbox" id="votable"></td>
-          </tr>
+            <tr>
+              <td><label for="votable">Make all edits votable</label></td>
+              <td><input type="checkbox" id="votable"></td>
+            </tr>
           </table>
           <input type="button" id="batch_video" value="Set video attribute" disabled="true">
         </div>
