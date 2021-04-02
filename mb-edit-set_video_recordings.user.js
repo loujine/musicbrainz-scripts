@@ -54,7 +54,7 @@ function showSelectors() {
     });
 }
 
-function parseEditData(editData) {
+function parseEditData(editData, msg) {
     const data = {};
     data['name'] = edits.encodeName(editData.name);
     data['comment'] = editData.comment ? editData.comment : null;
@@ -74,7 +74,7 @@ function parseEditData(editData) {
         );
         data['artist_credit.names.' + idx + '.artist.id'] = performer.artist.id;
     });
-    data['edit_note'] = sidebar.editNote(GM_info.script);
+    data['edit_note'] = sidebar.editNote(GM_info.script, msg);
     data.make_votable = document.getElementById('votable').checked ? '1' : '0';
     return data;
 }
@@ -83,6 +83,10 @@ function setVideo() {
     $('.replacevideo:input:checked:enabled').each(function (idx, node) {
         const mbid = node.id.replace('video-', '');
         const url = edits.urlFromMbid('recording', mbid);
+        const msg = `
+            Track ${document.URL.split('release')[0]}track/${node.parentElement.parentElement.id}
+            on release ${document.URL}
+        `;
         function success(xhr) {
             const $status = $('#' + node.id + '-text');
             node.disabled = true;
@@ -106,7 +110,7 @@ function setVideo() {
         }
         function callback(editData) {
             $('#' + node.id + '-text').text('Sending edit data');
-            const postData = parseEditData(editData);
+            const postData = parseEditData(editData, msg);
             console.info('Data ready to be posted: ', postData);
             requests.POST(
                 url,
