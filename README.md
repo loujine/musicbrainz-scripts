@@ -1,5 +1,7 @@
 # Musicbrainz scripts
 
+[![Code validation](https://github.com/loujine/musicbrainz-scripts/actions/workflows/ci.yml/badge.svg)](https://github.com/loujine/musicbrainz-scripts/actions/workflows/ci.yml)
+
 Collection of greasemonkey scripts I wrote for [MusicBrainz](https://musicbrainz.org) display and editing.
 
 Contact me for bug reports/suggestions/patches: [loujine](https://github.com/loujine/) on github, [loujin](https://musicbrainz.org/user/loujin) on Musicbrainz (sadly 'loujine' was already taken)
