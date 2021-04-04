@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.2.26
+// @version      2021.4.4
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -127,7 +127,7 @@ function cloneExtAR(recMBID) {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
         <h3>
-          <span id="clone_rels_script_toggle">
+          <span id="clone_rels_script_toggle" style="cursor: pointer;">
             ▶ Clone recording relations to selected recordings
           </span>
         </h3>
