@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Mark recordings as video
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.1
+// @version      2021.4.3
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -56,9 +56,9 @@ function showSelectors() {
 
 function parseEditData(editData, msg) {
     const data = {};
-    data['name'] = edits.encodeName(editData.name);
-    data['comment'] = editData.comment ? editData.comment : null;
-    data['video'] = "1";
+    data.name = edits.encodeName(editData.name);
+    data.comment = editData.comment ? editData.comment : null;
+    data.video = "1";
     if (!editData.isrcs.length) {
         data['isrcs.0'] = null;
     } else {
@@ -68,13 +68,15 @@ function parseEditData(editData, msg) {
     }
     editData.artistCredit.names.forEach(function (performer, idx) {
         data['artist_credit.names.' + idx + '.name'] = edits.encodeName(performer.name);
-        data['artist_credit.names.' + idx + '.join_phrase'] = performer.joinPhrase,
+        data['artist_credit.names.' + idx + '.join_phrase'] = edits.encodeName(
+            performer.joinPhrase
+        );
         data['artist_credit.names.' + idx + '.artist.name'] = edits.encodeName(
             performer.artist.name
         );
         data['artist_credit.names.' + idx + '.artist.id'] = performer.artist.id;
     });
-    data['edit_note'] = sidebar.editNote(GM_info.script, msg);
+    data.edit_note = sidebar.editNote(GM_info.script, msg);
     data.make_votable = document.getElementById('votable').checked ? '1' : '0';
     return data;
 }
