@@ -163,7 +163,7 @@ $(document).ready(function () {
         }
     });
     document.getElementById('batch_video_select').addEventListener('click', () => {
-        $('.replacevideo:input').prop('checked', true);
+        $('.replacevideo:input').filter(':visible').prop('checked', true);
     });
     document.getElementById('batch_video').addEventListener('click', setVideo);
     return false;
