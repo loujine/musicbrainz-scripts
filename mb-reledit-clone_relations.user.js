@@ -127,8 +127,8 @@ function cloneExtAR(recMBID) {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
         <h3>
-          <span id="clone_rels_script_toggle" style="cursor: pointer;">
-            ▶ Clone recording relations to selected recordings
+          <span id="clone_rels_script_toggle" style="cursor: pointer;">▶
+            Clone recording relations to selected recordings
           </span>
         </h3>
         <div id="clone_rels_script_block" style="display:none;">

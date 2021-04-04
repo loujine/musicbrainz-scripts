@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.3.25
+// @version      2021.4.4
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -52,7 +52,9 @@ function setAttributes(relationType, attrId, toggle) {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
         <h3>
-          <span id="relattrs_script_toggle" style="cursor:pointer">▶ Relation attributes</span>
+          <span id="relattrs_script_toggle" style="cursor:pointer">▶
+            Relation attributes
+          </span>
         </h3>
         <div id="relattrs_script_block" style="display:none;">
         <h3>Recording-Work relation attributes</h3>
