@@ -12,6 +12,7 @@ RELEASE_MBID = '57eac48b-da83-4be2-9328-4d350b255261'
 RELEASE_WO_WORKS_MBID = '06cf52ff-747b-45b3-b928-2a987fa412c0'
 RELEASE_W_RELS_MBID = 'd5d4b955-2517-445a-bf1e-6efdb1279710'
 RELEASE_W_RECRELS_MBID = '9e10cf78-0d27-3db9-a6cb-de45c5ca174e'
+SMALL_RELEASE_MBID = 'a3bceee7-c9d9-4ce1-9fd4-5a47553a0305'
 RECORDING_URL = f'{MBSERVER}/recording/91390a5d-317d-4012-80c9-314a139f4800'
 RECORDING2_URL = f'{MBSERVER}/recording/d787eb84-37a4-4195-bbc9-93f7731140d4'
 # WORK_MBID = 'cc6eba78-85ef-3834-a400-a34e0d8856d9'
@@ -288,6 +289,19 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert '(live and partial)' not in self.driver.page_source
         assert '(partial)' in self.driver.page_source
         assert self.driver.find_element_by_id('edit-note-text').text
+
+    def test_script_set_writer(self):
+        self.login('release', SMALL_RELEASE_MBID + '/edit-relationships')
+        self.load_userscript('mb-reledit-set_rec_artist_as_writer.user.js')
+        time.sleep(2)
+        assert not len(self.driver.find_elements_by_css_selector('tr.writer'))
+        self.driver.find_element_by_css_selector('td.recording input').click()
+        self.driver.find_element_by_id('setWriter').click()
+        time.sleep(2)
+        assert len(self.driver.find_elements_by_css_selector('tr.writer'))
+        assert self.driver.find_element_by_css_selector('tr.writer').text == 'writer:\nAttacca Quartet'
+
+        pass
 
     def tearDown(self):
         super().tearDown()
