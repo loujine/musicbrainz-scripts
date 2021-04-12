@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from a Release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.1
+// @version      2021.4.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -192,56 +192,48 @@ function replaceArtist() {
 
 (function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
-        <h3>
-          <span id="replace_script_toggle" style="cursor: pointer;">▶ Replace artists</span>
-        </h3>
-        <div id="replace_script_block" style="display:none;">
-          <p>First click "Show checkboxes" then select recordings to update</p>
-          <input type="button" id="selectors" value="Show checkboxes">
-
-          <input type="button" id="batch_select" value="Select all" disabled="true">
-
+      <details>
+        <summary id="replace_script" style="display: block;margin-left: 8px;cursor: pointer;">
+          <h3 style="display: list-item;">
+            Replace artists
+          </h3>
+        </summary>
+        <div>
+          <p>First select recordings to update</p>
+          <input type="button" id="batch_select" value="Select all">
           <table>
-          <tr>
-            <td><label for="pending">Exclude rels with pending edits</label></td>
-            <td><input type="checkbox" id="pending"></td>
-          </tr>
-          <tr>
-            <td><label for="votable">Make all edits votable</label></td>
-            <td><input type="checkbox" id="votable"></td>
-          </tr>
-          <tr>
-            <td><label for="set-unknown">Set [unknown] artist if no rel</label></td>
-            <td><input type="checkbox" id="set-unknown"></td>
-          </tr>
+            <tr>
+              <td><label for="pending">Exclude rels with pending edits</label></td>
+              <td><input type="checkbox" id="pending"></td>
+            </tr>
+            <tr>
+              <td><label for="votable">Make all edits votable</label></td>
+              <td><input type="checkbox" id="votable"></td>
+            </tr>
+            <tr>
+              <td><label for="set-unknown">Set [unknown] artist if no rel</label></td>
+              <td><input type="checkbox" id="set-unknown"></td>
+            </tr>
           </table>
-
           <br />Edit note:
-          <textarea id="batch_replace_edit_note"
-                    disabled="true">${sidebar.editNote(GM_info.script, editNoteMsg)}</textarea>
-          <input type="button" id="batch_replace" value="Replace selected artists" disabled="true">
+          <textarea id="batch_replace_edit_note">
+            ${sidebar.editNote(GM_info.script, editNoteMsg)}
+          </textarea>
+          <input type="button" id="batch_replace" value="Replace selected artists">
         </div>
+      </details>
     `);
 })();
 
 $(document).ready(function () {
-    document.getElementById('replace_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('replace_script_toggle');
-        const block = document.getElementById('replace_script_block');
-        const display = block.style.display;
-        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
-        block.style.display = display == "block" ? "none" : "block";
+    document.getElementById('replace_script').addEventListener('click', () => {
+        if (!document.getElementById('selectorColumn')) {
+            showSelectors();
+        }
     });
-    document.getElementById('selectors').addEventListener('click', () => {
-        showSelectors();
-        $('#batch_select').prop('disabled', false);
-        $('#batch_replace_edit_note').prop('disabled', false);
-        $('#batch_replace').prop('disabled', false);
-        $('#selectors').prop('disabled', true);
+    document.getElementById('batch_select').addEventListener('click', () => {
+        $('.replace:input').filter(':visible').prop('checked', true);
     });
     document.getElementById('batch_replace').addEventListener('click', replaceArtist);
-    document.getElementById('batch_select').addEventListener('click', () => {
-        $('.replace:input').prop('checked', true);
-    });
     return false;
 });

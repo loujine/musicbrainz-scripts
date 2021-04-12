@@ -39,23 +39,21 @@ const template = Handlebars.compile(`
 `);
 
 document.querySelector('div.filter').insertAdjacentHTML('afterend', `
+  <details>
+    <summary style="display: block;margin-left: 8px;cursor: pointer;">
+      <h3 style="display: list-item;">
+        Timeline</span>
+      </h3>
+    </summary>
     <div>
-      <h3><span id="timeline_toggle" style="cursor: pointer;">▶ Timeline</span></h3>
-      <div id="timeline_block" style="display:none;">
+      <div id="timeline_block">
       </div>
     </div>
+  </details>
 `);
 
 $(document).ready(function () {
     const data = [];
-    document.getElementById('timeline_toggle').addEventListener('click', () => {
-        const header = document.getElementById('timeline_toggle');
-        const block = document.getElementById('timeline_block');
-        const display = block.style.display;
-        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
-        block.style.display = display == "block" ? "none" : "block";
-    });
-
     document.querySelectorAll('h3 + .release-group-list').forEach((node, idx) => {
         node.insertAdjacentHTML('beforebegin', `
           <div style="width: 700px;">

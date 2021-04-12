@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.4
+// @version      2021.4.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -126,12 +126,13 @@ function cloneExtAR(recMBID) {
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
-        <h3>
-          <span id="clone_rels_script_toggle" style="cursor: pointer;">▶
+      <details id="clone_rels_script_toggle">
+        <summary style="display: block;margin-left: 8px;cursor: pointer;">
+          <h3 style="display: list-item;">
             Clone recording relations to selected recordings
-          </span>
-        </h3>
-        <div id="clone_rels_script_block" style="display:none;">
+          </h3>
+        </summary>
+        <div>
           <span>
             <abbr title="index of selected recording to clone from">
               Recording index in selection
@@ -144,21 +145,14 @@ function cloneExtAR(recMBID) {
           <br />
           <input type="button" id="cloneAR" value="Apply">
         </div>
+      </details>
     `);
 })();
 
 $(document).ready(function () {
-    document.getElementById('clone_rels_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('clone_rels_script_toggle');
-        const block = document.getElementById('clone_rels_script_block');
-        const display = block.style.display;
-        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
-        block.style.display = display == "block" ? "none" : "block";
-    });
     $('input#cloneExtRecording').on('input', autoCompleteRec);
     let appliedNote = false;
     document.getElementById('cloneAR').addEventListener('click', () => {
-
         const recMBID = $('input#cloneExtRecording').data('mbid');
         if (recMBID) {
             cloneExtAR(recMBID);

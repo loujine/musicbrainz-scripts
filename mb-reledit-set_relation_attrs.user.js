@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.4
+// @version      2021.4.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -51,46 +51,41 @@ function setAttributes(relationType, attrId, toggle) {
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
-        <h3>
-          <span id="relattrs_script_toggle" style="cursor:pointer">▶
+      <details id="relattrs_script_toggle">
+        <summary style="display: block;margin-left: 8px;cursor: pointer;">
+          <h3 style="display: list-item;">
             Relation attributes
-          </span>
-        </h3>
-        <div id="relattrs_script_block" style="display:none;">
-        <h3>Recording-Work relation attributes</h3>
-        <table>
-          <tr>
-            <td><input type="button" id="setCover" value="Set cover"></td>
-            <td><input type="button" id="setLive" value="Set live"></td>
-            <td><input type="button" id="setPartial" value="Set partial"></td>
-            <td><input type="button" id="setInstrumental" value="Set instrumental"></td>
-            <td><input type="button" id="setMedley" value="Set medley"></td>
-          </tr>
-          <tr>
-            <td><input type="button" id="toggleCover" value="Toggle cover"></td>
-            <td><input type="button" id="toggleLive" value="Toggle live"></td>
-            <td><input type="button" id="togglePartial" value="Toggle partial"></td>
-            <td><input type="button" id="toggleInstrumental" value="Toggle instrumental"></td>
-            <td><input type="button" id="toggleMedley" value="Toggle medley"></td>
-          </tr>
-        </table>
-        <h3>Recording-Artist relation attributes</h3>
-        <input type="button" id="toggleSolo" value="Toggle solo">
-        <input type="button" id="toggleAdditional" value="Toggle additional">
-        <input type="button" id="toggleGuest" value="Toggle guest">
+          </h3>
+        </summary>
+        <div>
+          <h3>Recording-Work relation attributes</h3>
+          <table>
+            <tr>
+              <td><input type="button" id="setCover" value="Set cover"></td>
+              <td><input type="button" id="setLive" value="Set live"></td>
+              <td><input type="button" id="setPartial" value="Set partial"></td>
+              <td><input type="button" id="setInstrumental" value="Set instrumental"></td>
+              <td><input type="button" id="setMedley" value="Set medley"></td>
+            </tr>
+            <tr>
+              <td><input type="button" id="toggleCover" value="Toggle cover"></td>
+              <td><input type="button" id="toggleLive" value="Toggle live"></td>
+              <td><input type="button" id="togglePartial" value="Toggle partial"></td>
+              <td><input type="button" id="toggleInstrumental" value="Toggle instrumental"></td>
+              <td><input type="button" id="toggleMedley" value="Toggle medley"></td>
+            </tr>
+          </table>
+          <h3>Recording-Artist relation attributes</h3>
+          <input type="button" id="toggleSolo" value="Toggle solo">
+          <input type="button" id="toggleAdditional" value="Toggle additional">
+          <input type="button" id="toggleGuest" value="Toggle guest">
         </div>
+      </details>
     `);
 })();
 
 
 $(document).ready(function() {
-    document.getElementById('relattrs_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('relattrs_script_toggle');
-        const block = document.getElementById('relattrs_script_block');
-        const display = block.style.display;
-        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
-        block.style.display = display == "block" ? "none" : "block";
-    });
     for (const attr of ['Cover', 'Live', 'Partial', 'Instrumental', 'Medley']) {
         document.getElementById(`set${attr}`).addEventListener('click', () => {
             setAttributes('recording-work', server.attr[attr.toLowerCase()], false);

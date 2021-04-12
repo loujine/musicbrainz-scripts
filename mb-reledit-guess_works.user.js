@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.1
+// @version      2021.4.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -144,10 +144,13 @@ function guessSubWorks(workMbid, replace) {
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
-        <h3>
-          <span id="guess_works_script_toggle" style="cursor: pointer;">▼ Search for works</span>
-        </h3>
-        <div id="guess_works_script_block" style="display:block;">
+      <details open="">
+        <summary style="display: block;margin-left: 8px;cursor: pointer;">
+          <h3 style="display: list-item;">
+            Search for works
+          </h3>
+        </summary>
+        <div>
           <span>
             <abbr title="You can add an optional prefix (e.g. the misssing parent
             work name) to help guessing the right work">prefix</abbr>:&nbsp;
@@ -173,18 +176,12 @@ function guessSubWorks(workMbid, replace) {
           <input type="text" id="mainWork" placeholder="main work mbid">
           <input type="button" id="searchSubworks" value="Guess subworks">
         </div>
+      </details>
     `);
 })();
 
 
 $(document).ready(function() {
-    document.getElementById('guess_works_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('guess_works_script_toggle');
-        const block = document.getElementById('guess_works_script_block');
-        const display = block.style.display;
-        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
-        block.style.display = display == "block" ? "none" : "block";
-    });
     let appliedNote = false;
     document.getElementById('searchWork').addEventListener('click', () => {
         guessWork();

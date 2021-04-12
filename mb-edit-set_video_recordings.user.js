@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Mark recordings as video
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.3
+// @version      2021.4.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -133,13 +133,14 @@ function setVideo() {
 
 (function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
-        <h3>
-          <span id="video_script_toggle" style="cursor:pointer;">▶ Set video</span>
-        </h3>
-
-        <div id="video_script_block" style="display:none;">
+      <details id="video_script_toggle">
+        <summary style="display: block;margin-left: 8px;cursor: pointer;">
+          <h3 style="display: list-item;">
+            Set video
+          </h3>
+        </summary>
+        <div>
           <input type="button" id="batch_video_select" value="Select all">
-
           <table>
             <tr>
               <td><label for="votable">Make all edits votable</label></td>
@@ -148,16 +149,12 @@ function setVideo() {
           </table>
           <input type="button" id="batch_video" value="Set video attribute">
         </div>
+      </details>
     `);
 })();
 
 $(document).ready(function () {
     document.getElementById('video_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('video_script_toggle');
-        const block = document.getElementById('video_script_block');
-        const display = block.style.display;
-        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
-        block.style.display = display == "block" ? "none" : "block";
         if (!document.getElementsByClassName('videoSelectorColumn').length) {
             showSelectors();
         }

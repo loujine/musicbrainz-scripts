@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.4
+// @version      2021.4.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -101,33 +101,28 @@ function createArrangement(mbid, parentMbid) {
 
 (function displaySidebar() {
     sidebar.container().insertAdjacentHTML('beforeend', `
-        <h3>
-          <span id="work_arrangement_script_toggle" style="cursor: pointer;">▶
+      <details>
+        <summary style="display: block;margin-left: 8px;cursor: pointer;">
+          <h3 style="display: list-item;">
             Create work arrangement
-          </span>
-        </h3>
-        <div id="work_arrangement_script_block" style="display:none;">
-        <input type="text" id="disambiguation" value="" placeholder="disambiguation text">
+          </h3>
+        </summary>
         <div>
-          <label>Also create arr. for subworks</label>
-          <input type="checkbox" id="subworks" value="">
+          <input type="text" id="disambiguation" value="" placeholder="disambiguation text">
+          <div>
+            <label>Also create arr. for subworks</label>
+            <input type="checkbox" id="subworks" value="">
+          </div>
+          <input type="button" id="create-arrangement" value="Apply" disabled="true">
+          <span id="create-arrangement-text">
         </div>
-        <input type="button" id="create-arrangement" value="Apply" disabled="true">
-        <span id="create-arrangement-text">
-        </div>
+      </details>
     `);
     $('div#loujine-menu').css('margin-left', '550px');
 })();
 
 
 $(document).ready(function () {
-    document.getElementById('work_arrangement_script_toggle').addEventListener('click', () => {
-        const header = document.getElementById('work_arrangement_script_toggle');
-        const block = document.getElementById('work_arrangement_script_block');
-        const display = block.style.display;
-        header.textContent = header.textContent.replace(/./, display == "block" ? "▶" : "▼");
-        block.style.display = display == "block" ? "none" : "block";
-    });
     $('#disambiguation').keydown(function () {
         $('#create-arrangement').prop('disabled', false);
     });

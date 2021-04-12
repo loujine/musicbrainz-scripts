@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Lean display
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.11.18
+// @version      2021.4.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
