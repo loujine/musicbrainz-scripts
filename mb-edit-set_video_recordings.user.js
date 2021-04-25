@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Mark recordings as video
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.12
+// @version      2021.4.24
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -111,6 +111,11 @@ function setVideo() {
             ).parent().css('color', 'red');
         }
         function callback(editData) {
+            if (editData.video) {
+                $('#' + node.id + '-text').text('Already video recording');
+                node.disabled = true;
+                return;
+            }
             $('#' + node.id + '-text').text('Sending edit data');
             const postData = parseEditData(editData, msg);
             console.info('Data ready to be posted: ', postData);
