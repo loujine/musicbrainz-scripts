@@ -66,16 +66,6 @@ function parseEditData(editData, msg) {
             data['isrcs.' + idx] = isrc.isrc;
         });
     }
-    editData.artistCredit.names.forEach(function (performer, idx) {
-        data['artist_credit.names.' + idx + '.name'] = edits.encodeName(performer.name);
-        data['artist_credit.names.' + idx + '.join_phrase'] = edits.encodeName(
-            performer.joinPhrase
-        );
-        data['artist_credit.names.' + idx + '.artist.name'] = edits.encodeName(
-            performer.artist.name
-        );
-        data['artist_credit.names.' + idx + '.artist.id'] = performer.artist.id;
-    });
     data.edit_note = sidebar.editNote(GM_info.script, msg);
     data.make_votable = document.getElementById('votable').checked ? '1' : '0';
     return data;
