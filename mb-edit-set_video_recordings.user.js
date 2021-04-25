@@ -57,7 +57,6 @@ function showSelectors() {
 function parseEditData(editData, msg) {
     const data = {};
     data.name = edits.encodeName(editData.name);
-    data.comment = editData.comment ? editData.comment : null;
     data.video = "1";
     if (!editData.isrcs.length) {
         data['isrcs.0'] = null;

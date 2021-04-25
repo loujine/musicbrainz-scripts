@@ -97,7 +97,6 @@ function parseEditData(editData) {
     const performers = [];
     const uniqueIds = [];
     data['name'] = edits.encodeName(editData.name);
-    data['comment'] = editData.comment ? editData.comment : null;
     if (editData.video === true) {
         data['video'] = '1';
     }

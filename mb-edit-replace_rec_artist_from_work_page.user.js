@@ -114,7 +114,6 @@ function parseEditData(editData) {
     const data = {};
     const performers = [];
     data['name'] = edits.encodeName(editData.name);
-    data['comment'] = editData.comment ? editData.comment : null;
     if (!editData.isrcs.length) {
         data['isrcs.0'] = null;
     } else {
