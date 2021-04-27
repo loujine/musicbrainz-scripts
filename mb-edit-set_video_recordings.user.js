@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Mark recordings as video
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.24
+// @version      2021.4.27
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -20,6 +20,10 @@
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
+
+const editNoteMsg = `
+    From release ${document.URL}
+`;
 
 function showSelectors() {
     Array.from(document.getElementsByClassName('subh')).map(
@@ -54,7 +58,7 @@ function showSelectors() {
     });
 }
 
-function parseEditData(editData, msg) {
+function parseEditData(editData) {
     const data = {};
     data.name = edits.encodeName(editData.name);
     data.video = "1";
@@ -65,7 +69,6 @@ function parseEditData(editData, msg) {
             data['isrcs.' + idx] = isrc.isrc;
         });
     }
-    data.edit_note = sidebar.editNote(GM_info.script, msg);
     data.make_votable = document.getElementById('votable').checked ? '1' : '0';
     return data;
 }
@@ -74,10 +77,6 @@ function setVideo() {
     $('.replacevideo:input:checked:enabled').each(function (idx, node) {
         const mbid = node.id.replace('video-', '');
         const url = edits.urlFromMbid('recording', mbid);
-        const msg = `
-            Track ${document.URL.split('release')[0]}track/${node.parentElement.parentElement.id}
-            on release ${document.URL}
-        `;
         function success(xhr) {
             const $status = $('#' + node.id + '-text');
             node.disabled = true;
@@ -106,7 +105,7 @@ function setVideo() {
                 return;
             }
             $('#' + node.id + '-text').text('Sending edit data');
-            const postData = parseEditData(editData, msg);
+            const postData = parseEditData(editData);
             console.info('Data ready to be posted: ', postData);
             requests.POST(
                 url,
@@ -141,6 +140,10 @@ function setVideo() {
               <td><input type="checkbox" id="votable"></td>
             </tr>
           </table>
+          <br />Edit note:
+          <textarea id="batch_video_edit_note">
+            ${sidebar.editNote(GM_info.script, editNoteMsg)}
+          </textarea>
           <input type="button" id="batch_video" value="Set video attribute">
         </div>
       </details>
