@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Show recordings of subworks on Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.15
+// @version      2021.6.24
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_split_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -62,23 +62,26 @@ function formatDate(begin, end) {
 
 function fetchRelatedRecordings(mbid, props) {
     // wsUrl
-    fetch(`/ws/2/recording/${mbid}?fmt=json&inc=artist-rels releases`).then(
+    fetch(`/ws/2/recording/${mbid}?fmt=json&inc=artists artist-rels releases`).then(
         resp => resp.json()
     ).then(json => {
         if (
-            json.relations == undefined || json.relations.length === 0 || json.releases.length === 0
+            json.releases.length === 0
         ) {
             return;
         }
-        const rels = json.relations.filter(
+        const rels = json.relations && json.relations.filter(
             rel => ['instrument', 'vocal', 'orchestra', 'conductor'].includes(rel.type)
         );
-        if (rels.length === 0) {
-            return;
+        if (
+            rels === undefined || rels.length === 0
+        ) {
+            props.artists = json['artist-credit'].map(ar => ar.name).join(', ');
+        } else {
+            props.artists = rels.map(rel => rel.artist.name).join(', ');
         }
         for (const rel of json.releases) {
             counts[rel.id] = counts[rel.id] || [];
-            props['artists'] = rels.map(rel => rel.artist.name).join(', ');
             counts[rel.id].push(props);
         }
     })
