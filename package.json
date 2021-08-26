@@ -34,7 +34,6 @@
         "singleQuote": true,
         "tabWidth": 4,
         "useTabs": false,
-        "arrowParens": "avoid",
         "semi": true,
         "quoteProps": "preserve",
         "trailingComma": "es5",
