@@ -5,8 +5,10 @@ import unittest
 
 from tests import UserscriptsTC
 
+ARTIST_MBID = 'cea4a3b8-c26c-4b61-a243-cf72555e2c71'
 RELEASE_MBID = '0381e8bd-29d3-4fa1-bf8a-e8b1d87ff531'
 RECORDING_MBID = '4b86f0bf-be35-4c78-a554-80f795c020aa'
+WIKIDATA_LINK = 'https://www.wikidata.org/wiki/Q27916341'
 
 
 class EditUserscriptsTC(UserscriptsTC):
@@ -34,6 +36,18 @@ class EditUserscriptsTC(UserscriptsTC):
         # self.driver.find_element_by_id('batch_video').click()
         # time.sleep(1)
         # assert 'Fetching required data' in self.driver.page_source
+
+    def test_script_wikidata(self):
+        self.login('artist', ARTIST_MBID + '/edit')
+        self.load_userscript('mb-edit-create_from_wikidata.user.js')
+        assert 'Add external link' in self.driver.page_source
+        assert len(self.driver.find_elements_by_class_name('url')) > 18
+        self.driver.find_element_by_id('linkParser').send_keys(WIKIDATA_LINK)
+        time.sleep(1)
+        assert '<dt>Field "Name":</dt>' in self.driver.page_source
+        assert '<dd>Kept "Víkingur Ólafsson"</dd>' in self.driver.page_source
+        assert 'New external link added' in self.driver.page_source
+        assert 'teacher suggestion' in self.driver.page_source
 
 
 if __name__ == "__main__":
