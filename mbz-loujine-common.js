@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.1
+// @version      2021.8.26
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -669,7 +669,7 @@ class Helper {
         rels = rels.filter(
             rel =>
                 rel.linkTypeID === server.workLinkType.subwork &&
-                rel.direction !== 'backward'
+                !rel.backward
         );
         rels = rels.sort(this.sortBy('linkOrder'));
         return rels.map(rel => rel.target);
