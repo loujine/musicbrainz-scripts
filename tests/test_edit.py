@@ -5,7 +5,7 @@ import unittest
 
 from tests import UserscriptsTC
 
-RELEASE_MBID = '61167171-2556-45a6-85c6-e08e33fd7e5f'
+RELEASE_MBID = '0381e8bd-29d3-4fa1-bf8a-e8b1d87ff531'
 RECORDING_MBID = '4b86f0bf-be35-4c78-a554-80f795c020aa'
 
 
@@ -29,7 +29,7 @@ class EditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('video_script_toggle').click()
         time.sleep(2)
         assert len(self.driver.find_elements_by_class_name('replacevideo')) > 1
-        self.driver.find_element_by_id('video-b8557e27-38d2-41de-a7f4-f970c11a4ba5').click()
+        self.driver.find_element_by_id('video-68eec263-13e4-4a5f-8042-23117714cdce').click()
         # self.driver.set_network_conditions(offline=True, latency=1000, throughput=500 * 1024)
         # self.driver.find_element_by_id('batch_video').click()
         # time.sleep(1)
