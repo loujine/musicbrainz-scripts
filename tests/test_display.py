@@ -87,10 +87,11 @@ class DisplayUserscriptsTC(UserscriptsTC):
         assert not self.driver.find_elements_by_css_selector(f"li > a[href$='{RELEASE_MBID}/tags']")
         assert not self.driver.find_element_by_css_selector('th.rating').text
         assert not self.driver.find_element_by_css_selector('h2.rating').text
-        assert not self.driver.find_element_by_css_selector('#block-release-information').is_displayed()
-        assert not self.driver.find_element_by_css_selector('#block-additional-details').is_displayed()
-        assert self.driver.find_element_by_css_selector('#block-labels').is_displayed()
-        # assert not self.driver.find_element_by_css_selector('#block-release-events').is_displayed()
+        assert not self.driver.find_element_by_css_selector('#toggle-release-information dl').is_displayed()
+        assert not self.driver.find_element_by_css_selector('#toggle-additional-details dl').is_displayed()
+        assert not self.driver.find_element_by_css_selector('#toggle-labels ul').is_displayed()
+        assert not self.driver.find_element_by_css_selector('#toggle-release-events div').is_displayed()
+        assert not self.driver.find_element_by_css_selector('#toggle-external-links ul').is_displayed()
         assert not self.driver.find_element_by_css_selector('h2.reviews').text
 
 
