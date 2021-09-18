@@ -10,6 +10,7 @@ MAIN_WORK_MBID = 'db6400f0-6492-4c4a-9361-470be14d5bf2'
 MAIN_WORK_MBID2 = '8f32fb44-fde9-4e44-ad54-d7ac12703b4f'
 RECORDING_MBID = '4044dfc7-e7d4-48ca-98b4-d11e0692a21d'
 CONDUCTOR_MBID = '642284f1-54ef-4d2c-b27e-a74bb02fe387'
+RELEASE_MBID = '0a6a05dc-bc64-4090-923a-0faaefc591f5'
 
 
 class DisplayUserscriptsTC(UserscriptsTC):
@@ -72,6 +73,25 @@ class DisplayUserscriptsTC(UserscriptsTC):
         btn.click()
         time.sleep(35)
         assert '(23:34)' in self.driver.page_source
+
+    def test_script_lean_ui(self):
+        self.login('release', RELEASE_MBID)
+        assert self.driver.find_element_by_css_selector(f"li > a[href$='{RELEASE_MBID}/details']")
+        assert self.driver.find_element_by_css_selector(f"li > a[href$='{RELEASE_MBID}/tags']")
+        assert self.driver.find_element_by_css_selector('th.rating').text
+        assert self.driver.find_element_by_css_selector('h2.rating').text
+        assert self.driver.find_element_by_css_selector('h2.reviews').text
+
+        self.load_userscript('mb-display_lean_ui.user.js')
+        assert not self.driver.find_elements_by_css_selector(f"li > a[href$='{RELEASE_MBID}/details']")
+        assert not self.driver.find_elements_by_css_selector(f"li > a[href$='{RELEASE_MBID}/tags']")
+        assert not self.driver.find_element_by_css_selector('th.rating').text
+        assert not self.driver.find_element_by_css_selector('h2.rating').text
+        assert not self.driver.find_element_by_css_selector('#block-release-information').is_displayed()
+        assert not self.driver.find_element_by_css_selector('#block-additional-details').is_displayed()
+        assert self.driver.find_element_by_css_selector('#block-labels').is_displayed()
+        # assert not self.driver.find_element_by_css_selector('#block-release-events').is_displayed()
+        assert not self.driver.find_element_by_css_selector('h2.reviews').text
 
 
 if __name__ == "__main__":
