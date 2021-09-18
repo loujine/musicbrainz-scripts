@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Lean display
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.12
+// @version      2021.9.17
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -22,91 +22,80 @@
 // @run-at       document-end
 // ==/UserScript==
 
-const mbid = document.URL.split('/')[4].slice(0,36);
 
-$(`li > a[href$='${mbid}/details']`).parent().remove();
-$(`li > a[href$='${mbid}/tags']`).parent().remove();
+function removeTabHeadersUI() {
+    const mbid = document.URL.split('/')[4].slice(0,36);
+    $(`li > a[href$='${mbid}/details']`).parent().remove();
+    $(`li > a[href$='${mbid}/tags']`).parent().remove();
+}
 
-// Ratings
-$('th.rating').empty();
-$('th.rating').css('width', '1px');
-// $('td.rating').empty();
-$("td.rating span").removeClass(); // needed for mass merge recordings script
-$("td.rating a").empty(); // needed for mass merge recordings script
-$('td.rating').css('width', '1px');
-$('h2.rating + p').empty();
-$('h2.rating').empty();
+function removeRatingsUI() {
+    // document.querySelectorAll("div#content table.tbl > * > tr > th.rating, div#content table.tbl > tbody > tr > td.rating, div#sidebar > h2.rating, div#sidebar > h2.rating + p, div#page > div.tabs > ul.tabs > li:not(.sel) > a[href$='/ratings'], div.header ul.menu li.data a[href$='/ratings']");
+    $('th.rating').empty();
+    $('th.rating').css('width', '1px');
+    // $('td.rating').empty();
+    $('td.rating span').removeClass(); // needed for mass merge recordings script
+    $('td.rating a').empty(); // needed for mass merge recordings script
+    $('td.rating').css('width', '1px');
+    $('h2.rating + p').empty();
+    $('h2.rating').empty();
+}
 
-// document.querySelectorAll("div#content table.tbl > * > tr > th.rating, div#content table.tbl > tbody > tr > td.rating, div#sidebar > h2.rating, div#sidebar > h2.rating + p, div#page > div.tabs > ul.tabs > li:not(.sel) > a[href$='/ratings'], div.header ul.menu li.data a[href$='/ratings']");
 
-if (document.URL.split('/')[3] === 'release') {
+function collapseReleaseSidebar() {
     // would prevent "expand/collapse all mediums" script
     // $('h2.tracklist').empty();
+
+    const summaryTag = '<summary style="display: block;margin-left: 8px;cursor: pointer;"></summary>';
 
     const $infoheader = $('#sidebar h2.release-information');
     if ($infoheader.length) {
         const $infodl = $('#sidebar h2.release-information + dl');
-        $infoheader.before('<span id="toggle-release-information"></span>');
-        $('span#toggle-release-information').append($infoheader);
-        $infodl.before('<div id="block-release-information"></div>');
-        $('div#block-release-information').append($infodl);
-        $('div#block-release-information')[0].style.display = 'none';
-        document.getElementById('toggle-release-information').addEventListener('click', () => {
-            const block = document.getElementById('block-release-information');
-            const display = block.style.display;
-            block.style.display = display == "block" ? "none" : "block";
-        });
+        $infoheader.before('<details id="toggle-release-information"></details>');
+        $('details#toggle-release-information').append(
+            $(summaryTag).append($infoheader)
+        );
+        $infoheader.css({display: 'list-item'});
+        $('details#toggle-release-information').append($infodl);
     }
 
     const $detailsheader = $('#sidebar h2.additional-details');
     if ($detailsheader.length) {
         const $detailsdl = $('#sidebar h2.additional-details + dl');
-        $detailsheader.before('<span id="toggle-additional-details"></span>');
-        $('span#toggle-additional-details').append($detailsheader);
-        $detailsdl.before('<div id="block-additional-details"></div>');
-        $('div#block-additional-details').append($detailsdl);
-        $('div#block-additional-details')[0].style.display = 'none';
-        document.getElementById('toggle-additional-details').addEventListener('click', () => {
-            const block = document.getElementById('block-additional-details');
-            const display = block.style.display;
-            block.style.display = display == "block" ? "none" : "block";
-        });
+        $detailsheader.before('<details id="toggle-additional-details"></details>');
+        $('details#toggle-additional-details').append(
+            $(summaryTag).append($detailsheader)
+        );
+        $detailsheader.css({display: 'list-item'});
+        $('details#toggle-additional-details').append($detailsdl);
     }
 
     const $labelheader = $('#sidebar h2.labels');
     if ($labelheader.length) {
         const $labelul = $('#sidebar h2.labels + ul.links');
-        $labelheader.before('<span id="toggle-labels"></span>');
-        $('span#toggle-labels').append($labelheader);
-        $labelul.before('<div id="block-labels"></div>');
-        $('div#block-labels').append($labelul);
-        $('div#block-labels')[0].style.display = 'block';
-        document.getElementById('toggle-labels').addEventListener('click', () => {
-            const block = document.getElementById('block-labels');
-            const display = block.style.display;
-            block.style.display = display == "block" ? "none" : "block";
-        });
+        $labelheader.before('<details id="toggle-labels"></details>');
+        $('details#toggle-labels').append(
+            $(summaryTag).append($labelheader)
+        );
+        $labelheader.css({display: 'list-item'});
+        $('details#toggle-labels').append($labelul);
     }
 
     const $eventsheader = $('#sidebar h2.release-events');
     if ($eventsheader.length) {
         const $eventsblock = $('#sidebar h2.release-events + script + div');
-        $eventsheader.before('<span id="toggle-release-events"></span>');
-        $('span#toggle-release-events').append($eventsheader);
-        $eventsblock.before('<div id="block-release-events"></div>');
-        $('div#block-release-events').append($eventsblock);
-        $('div#block-release-events')[0].style.display = 'block';
-        document.getElementById('toggle-release-events').addEventListener('click', () => {
-            const block = document.getElementById('block-release-events');
-            const display = block.style.display;
-            block.style.display = display == "block" ? "none" : "block";
-        });
+        $eventsheader.before('<details id="toggle-release-events"></details>');
+        $('details#toggle-release-events').append(
+            $(summaryTag).append($eventsheader)
+        );
+        $eventsheader.css({display: 'list-item'});
+        $('details#toggle-release-events').append($eventsblock);
     }
 
     $('h2.reviews + p').empty();
     $('h2.reviews').empty();
 
-    $('div.sidebar-tags').empty();
+    $('div#sidebar-tags').empty();
 
     let $linksheader = $('#sidebar h2.external-links');
     if ($linksheader.length) {
@@ -114,19 +103,24 @@ if (document.URL.split('/')[3] === 'release') {
         const $linksul = $(
             '#sidebar h2.external-links,#sidebar h2.external-links + ul.external_links'
         ).not(':first');
-        $linksheader.before('<span id="toggle-external-links"></span>');
-        $('span#toggle-external-links').append($linksheader);
-        $linksul.first().before('<div id="block-external-links"></div>');
-        $('div#block-external-links').append($linksul);
-        $('div#block-external-links')[0].style.display = 'none';
-        document.getElementById('toggle-external-links').addEventListener('click', () => {
-            const block = document.getElementById('block-external-links');
-            const display = block.style.display;
-            block.style.display = display == "block" ? "none" : "block";
-        });
+        $linksheader.before('<details id="toggle-external-links"></details>');
+        $('details#toggle-external-links').append(
+            $(summaryTag).append($linksheader)
+        );
+        $linksheader.css({display: 'list-item'});
+        $('details#toggle-external-links').append($linksul);
     }
 
     if ($('dd span.high-data-quality,dd span.low-data-quality').length) {
         $('span.prefix').after($('dd span.high-data-quality,dd span.low-data-quality')[0]);
     }
 }
+
+$(document).ready(function () {
+    removeTabHeadersUI();
+    removeRatingsUI();
+    if (document.URL.split('/')[3] === 'release') {
+        collapseReleaseSidebar();
+    }
+    return false;
+});
