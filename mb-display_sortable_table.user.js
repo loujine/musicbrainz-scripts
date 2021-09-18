@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display sort button on table columns
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2021.9.18
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_sortable_table.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_sortable_table.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -19,6 +19,7 @@
 // @include      http*://*musicbrainz.org/instrument/*/recordings
 // @include      http*://*musicbrainz.org/instrument/*/recordings?page=*
 // @include      http*://*musicbrainz.org/artist/*/relationships
+// @include      http*://*musicbrainz.org/artist/*/releases
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
