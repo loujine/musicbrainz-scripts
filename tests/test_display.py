@@ -22,6 +22,10 @@ class DisplayUserscriptsTC(UserscriptsTC):
         btn.click()
         assert self.driver.find_element_by_css_selector('th.sortable').text == 'Date↕'
 
+        assert int(self.driver.find_element_by_css_selector('table.tbl tr.odd td').text[:4]) < 1950
+        self.driver.find_element_by_css_selector('th.sortable').click()
+        assert int(self.driver.find_element_by_css_selector('table.tbl tr.odd td').text[:4]) > 2018
+
     def test_script_acousticbrainz_data(self):
         self.login('recording', RECORDING_MBID)
         self.load_userscript('mb-display_acousticbrainz_data_for_recording.user.js')
