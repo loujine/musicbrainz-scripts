@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Change release quality
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.12.17
+// @version      2021.9.19
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-change-release-quality.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-change-release-quality.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -65,6 +65,9 @@ function _changeQuality(offsetQuality) {
 }
 
 (function displayArrows() {
+    if (!document.querySelector('a[href*="/change-quality"]')) {
+        return;
+    }
     document.querySelector('a[href*="/change-quality"]').insertAdjacentHTML('afterend', `
         <span id="upgrade_quality">&#9650;</span>
         <span id="downgrade_quality">&#9660;</span>
@@ -77,6 +80,9 @@ function _changeQuality(offsetQuality) {
 })();
 
 $(document).ready(function () {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     document.getElementById('upgrade_quality').addEventListener('click', () => {
         _changeQuality(1)
     });

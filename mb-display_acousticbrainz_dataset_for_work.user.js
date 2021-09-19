@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display AcousticBrainz datasets count for work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.26
+// @version      2021.9.19
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_acousticbrainz_dataset_for_work.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_acousticbrainz_dataset_for_work.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts

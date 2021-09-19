@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.12
+// @version      2021.9.19
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -100,6 +100,9 @@ function createArrangement(mbid, parentMbid) {
 
 
 (function displaySidebar() {
+    if (!helper.isUserLoggedIn()) {
+        return;
+    }
     sidebar.container().insertAdjacentHTML('beforeend', `
       <details>
         <summary style="display: block;margin-left: 8px;cursor: pointer;">
@@ -123,6 +126,9 @@ function createArrangement(mbid, parentMbid) {
 
 
 $(document).ready(function () {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     $('#disambiguation').keydown(function () {
         $('#create-arrangement').prop('disabled', false);
     });
