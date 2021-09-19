@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display (more) AcousticBrainz data on recording page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.22
+// @version      2021.9.19
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_acousticbrainz_data_for_recording.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_acousticbrainz_data_for_recording.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts

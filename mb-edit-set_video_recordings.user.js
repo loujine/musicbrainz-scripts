@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Mark recordings as video
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.27
+// @version      2021.9.19
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -125,6 +125,9 @@ function setVideo() {
 }
 
 (function displaySidebar() {
+    if (!helper.isUserLoggedIn()) {
+        return;
+    }
     sidebar.container().insertAdjacentHTML('beforeend', `
       <details id="video_script_toggle">
         <summary style="display: block;margin-left: 8px;cursor: pointer;">
@@ -151,6 +154,9 @@ function setVideo() {
 })();
 
 $(document).ready(function () {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     document.getElementById('video_script_toggle').addEventListener('click', () => {
         if (!document.getElementsByClassName('videoSelectorColumn').length) {
             showSelectors();

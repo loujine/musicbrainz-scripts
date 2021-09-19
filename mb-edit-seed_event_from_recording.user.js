@@ -4,7 +4,7 @@
 // @name         MusicBrainz recording: Seed concert event from recording
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.22
+// @version      2021.9.19
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-seed_event_from_recording.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-seed_event_from_recording.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -119,6 +119,9 @@ function seedConcert() {
 }
 
 (function main() {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Seed concert</h3>
         <input type="button" id="createConcert" value="Create concert">
@@ -126,6 +129,9 @@ function seedConcert() {
 })();
 
 $(document).ready(function () {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     document.getElementById('createConcert').addEventListener('click', () => {
         document.getElementById('createConcert').disabled = true;
         seedConcert();

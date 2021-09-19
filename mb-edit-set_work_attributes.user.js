@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Set work attributes from the composer Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.11.16
+// @version      2021.9.19
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_attributes.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_attributes.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -131,6 +131,9 @@ function editWork() {
 
 
 (function displaySidebar() {
+    if (!helper.isUserLoggedIn()) {
+        return;
+    }
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Edit works</h3>
         <p>Edit note:</p>
@@ -138,11 +141,12 @@ function editWork() {
                   cols="20" rows="7">${sidebar.editNote(GM_info.script)}</textarea>
         <input type="button" id="batch_edit" value="Edit selected works">
     `);
-    document.querySelector('h2.rating').insertAdjacentElement(
-        'beforebegin', sidebar.container())
 })();
 
 $(document).ready(function () {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     document.getElementById('batch_edit').addEventListener('click', editWork);
     return false;
 });

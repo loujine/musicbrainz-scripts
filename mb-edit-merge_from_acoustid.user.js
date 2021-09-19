@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Display acoustIDs and merge recordings with common acoustID
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.22
+// @version      2021.9.19
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-merge_from_acoustid.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-merge_from_acoustid.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -118,6 +118,9 @@ function mergeFromAcoustID() {
 
 
 (function displaySidebar() {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     sidebar.container().insertAdjacentHTML('beforeend', `
         <h3>Show acoustIDs</h3>
         <input type="button" id="showAcoustids" value="Show acoustIDs">
@@ -128,6 +131,9 @@ function mergeFromAcoustID() {
 })();
 
 $(document).ready(function() {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     document.getElementById('showAcoustids').addEventListener(
         'click', showAcoustids);
     document.getElementById('merge').addEventListener(

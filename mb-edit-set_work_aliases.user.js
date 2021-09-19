@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Set recording names as work aliases
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2021.9.19
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_aliases.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_aliases.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -81,6 +81,9 @@ function submitRecordingsAliases() {
 
 
 $(document).ready(function () {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     document.getElementsByTagName('table')[0].insertAdjacentHTML('afterend', `
         <h3>Add aliases from recordings</h3>
         <div id="recordingAliases"></div>
