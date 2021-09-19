@@ -46,7 +46,10 @@ function collapseReleaseSidebar() {
     // would prevent "expand/collapse all mediums" script
     // $('h2.tracklist').empty();
 
-    const summaryTag = '<summary style="display: block;margin-left: 8px;cursor: pointer;"></summary>';
+    const summaryTag = `
+        <summary style="display: block;margin-left: 8px;cursor: pointer;">
+        </summary>
+    `;
 
     const $infoheader = $('#sidebar h2.release-information');
     if ($infoheader.length) {
