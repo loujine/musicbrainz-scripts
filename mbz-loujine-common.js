@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.8.26
+// @version      2021.9.19
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -674,6 +674,14 @@ class Helper {
         rels = rels.sort(this.sortBy('linkOrder'));
         return rels.map(rel => rel.target);
     }
+
+    isUserLoggedIn() {
+        const isLoggedIn = !document.querySelector('a[href*="/register"]');
+        if (!isLoggedIn) {
+            console.debug('User is not logged in, exiting the script');
+        }
+        return isLoggedIn;
+    }
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -689,15 +697,11 @@ class Sidebar {
     }
 
     container() {
-        if (document.querySelector('.top ul.menu a').href.includes('login')) {
-            console.warn('You are not logged in');
-        }
-
         const container = document.getElementById('loujine-sidebar');
         if (container !== null) {
             return container;
         }
-        document.querySelector('h2.collections').insertAdjacentHTML('beforebegin', `
+        document.querySelector('#sidebar h2.editing + ul.links').insertAdjacentHTML('afterend', `
             <div id="loujine-sidebar"
                  style="background-color: white;
                         padding: 8px; margin: 0px -6px 6px;
