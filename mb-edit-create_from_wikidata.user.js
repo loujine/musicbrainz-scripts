@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.8.22
+// @version      2021.9.25
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -405,8 +405,7 @@ function _fillExternalLinks(url) {
             valueSetter.call(element, value);
         }
     }
-    const fields = document.getElementById('external-links-editor')
-                           .getElementsByTagName('input');
+    const fields = document.querySelectorAll('#external-links-editor input[type="url"]');
     const input = fields[fields.length - 1];
     _setNativeValue(input, url);
     input.dispatchEvent(new Event('input', {'bubbles': true}));
