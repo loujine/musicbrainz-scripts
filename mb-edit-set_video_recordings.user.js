@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Mark recordings as video
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.9.19
+// @version      2021.10.30
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_video_recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -69,6 +69,7 @@ function parseEditData(editData) {
             data['isrcs.' + idx] = isrc.isrc;
         });
     }
+    data['edit_note'] = $('#batch_video_edit_note')[0].value;
     data.make_votable = document.getElementById('votable').checked ? '1' : '0';
     return data;
 }
