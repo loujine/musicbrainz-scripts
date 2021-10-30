@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Lean display
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.9.17
+// @version      2021.9.25
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-display_lean_ui.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -32,11 +32,11 @@ function removeTabHeadersUI() {
 function removeRatingsUI() {
     // document.querySelectorAll("div#content table.tbl > * > tr > th.rating, div#content table.tbl > tbody > tr > td.rating, div#sidebar > h2.rating, div#sidebar > h2.rating + p, div#page > div.tabs > ul.tabs > li:not(.sel) > a[href$='/ratings'], div.header ul.menu li.data a[href$='/ratings']");
     $('th.rating').empty();
-    $('th.rating').css('width', '1px');
+    $('th.rating').css('display', 'none');
     // $('td.rating').empty();
     $('td.rating span').removeClass(); // needed for mass merge recordings script
     $('td.rating a').empty(); // needed for mass merge recordings script
-    $('td.rating').css('width', '1px');
+    $('td.rating').css('display', 'none');
     $('h2.rating + p').empty();
     $('h2.rating').empty();
 }
