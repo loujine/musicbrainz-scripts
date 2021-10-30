@@ -4,7 +4,7 @@
 // @name         MusicBrainz event editor: Fill event setlist
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.9.14
+// @version      2021.10.30
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-fill_event_setlist.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-fill_event_setlist.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -44,7 +44,7 @@ function fillEventSetlist(entityType) {
             const filledEntity = entityType === 'artist' ?
                 `@ [${resp.artists[0].id}|${resp.artists[0].name}]` :
                 `* [${resp.works[0].id}|${resp.works[0].title}]`;
-            area.value = area.value.replace(`/${entity}/g`, filledEntity);
+            area.value = area.value.replace(entity, filledEntity);
         }
     )
 }
