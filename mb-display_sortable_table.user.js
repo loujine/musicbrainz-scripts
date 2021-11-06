@@ -4,7 +4,7 @@
 // @name         MusicBrainz: Display sort button on table columns
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.9.18
+// @version      2021.11.6
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_sortable_table.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_sortable_table.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -65,7 +65,7 @@ function sortByClickedColumn(evt) {
     const colidx = $(evt.target).index();
     const coltitle = evt.target.textContent;
     let rowclass;
-    let rows = table.find('tbody tr').not('.subh').get().sort(
+    let rows = table.find('tbody tr.even,tbody tr tr.odd').not('.subh').get().sort(
         comparefct(colidx, coltitle, this.asc) // eslint-disable-line no-invalid-this
     );
     // reverse order if clicked several times
@@ -77,6 +77,9 @@ function sortByClickedColumn(evt) {
         row.classList.remove('even', 'odd');
         rowclass = idx % 2 ? 'even' : 'odd';
         row.classList.add(rowclass);
+        table.append(row);
+    });
+    table[0].querySelectorAll('tbody tr:not(.even,.odd,.subh)').forEach((row, idx) => {
         table.append(row);
     });
 }
