@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.4.12
+// @version      2021.11.20
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -18,7 +18,7 @@
 // @run-at       document-end
 // ==/UserScript==
 
-function setInstrument(fromType, toType, fromAttrId, toAttrId) {
+function setInstrument(fromType, toType, fromAttrId, toAttrId, toCredit) {
     const attrInfo = server.getInstrumentRelationshipAttrInfo();
     const toAttr = isNaN(toAttrId)
         ? null
@@ -42,7 +42,7 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
             }
             if (toAttr) {
                 // attrs order must be kept for credits, etc.
-                attrs.splice(idx, 0, {type: toAttr});
+                attrs.splice(idx, 0, {type: toAttr, credited_as: toCredit});
             }
             relation.setAttributes(attrs);
         });
@@ -71,6 +71,8 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId) {
               <select id="toRoleAttrs">${roles.roleAttrs}</select>
             <input type="text" id="toId" value="" placeholder="or use instrument/vocal id">
             <br />
+            <input type="text" id="toCredit" value="" placeholder="instrument credit">
+            <br />
             <input type="button" id="setRole" value='Apply'>
           </p>
         </div>
@@ -95,7 +97,8 @@ $(document).ready(function () {
             parseInt(document.getElementById('fromId').value) ||
                 parseInt(document.getElementById('fromRoleAttrs').value),
             parseInt(document.getElementById('toId').value) ||
-                parseInt(document.getElementById('toRoleAttrs').value)
+                parseInt(document.getElementById('toRoleAttrs').value),
+            document.getElementById('toCredit').value
         );
         relEditor.editNote(GM_info.script);
     });
