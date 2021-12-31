@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.9.19
+// @version      2021.12.4
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -159,6 +159,7 @@ class Server {
             'Italian': 195,
             'Japanese': 198,
             'Korean': 224,
+            'Norwegian': 309,
             'Polish': 338,
             'Portuguese': 340,
             'Russian': 353,
@@ -181,6 +182,7 @@ class Server {
             jpn: 'Japanese',
             kor: 'Korean',
             mul: '[Multiple languages]',
+            nor: 'Norwegian',
             pol: 'Polish',
             por: 'Portuguese',
             rus: 'Russian',
@@ -568,6 +570,7 @@ class Edits {
             type_id: editData.type_id || ' ',
         };
         editData.languages.forEach((lang, idx) => {
+            // FIXME error message if unknown language, edit will fail
             data['languages.' + idx] = server.language[lang];
         });
         if (editData.iswcs === undefined || !editData.iswcs.length) {
