@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.8.26
+// @version      2021.12.31
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -20,12 +20,12 @@
 
 const MBID_REGEX = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
 
-function autoCompleteRec() {
-    const $input = $('input#cloneExtRecording');
+function autoComplete(nodeId, entityType) {
+    const $input = $(`input#${nodeId}`);
     const match = $input.val().match(MBID_REGEX);
     if (match) {
         const mbid = match[0];
-        requests.GET(`/ws/2/recording/${mbid}?fmt=json`, data => {
+        requests.GET(`/ws/2/${entityType}/${mbid}?fmt=json`, data => {
             data = JSON.parse(data);
             $input.data('mbid', mbid);
             $input.val(data.title || data.name);
@@ -35,6 +35,14 @@ function autoCompleteRec() {
         $input.data().mbid = "";
         $input.css('background', '#ffaaaa');
     }
+}
+
+function autoCompleteRec() {
+    return autoComplete('cloneExtRecording', 'recording');
+}
+
+function autoCompleteRel() {
+    return autoComplete('cloneExtRelease', 'release');
 }
 
 function cloneAR(refIdx) {
@@ -123,6 +131,45 @@ function cloneExtAR(recMBID) {
     });
 }
 
+function cloneReleaseExtAR(relMBID) {
+    if (relMBID.split('/').length > 1) {
+        relMBID = relMBID.split('/')[4];
+    }
+    const vm = MB.releaseRelationshipEditor;
+    const release = MB.entity({entityType: 'release', gid: document.URL.split('/')[4]});
+    let dialog;
+
+    requests.GET(`/ws/js/entity/${relMBID}?inc=rels`, resp => {
+        const sourceRels = JSON.parse(resp).relationships;
+        sourceRels.map(sourceRel => {
+            dialog = new MB.relationshipEditor.UI.AddDialog({
+                viewModel: vm,
+                source: release,
+                target: sourceRel.target,
+            });
+            dialog.accept();
+
+            dialog.relationship().linkTypeID(sourceRel.linkTypeID);
+            dialog.relationship().setAttributes(sourceRel.attributes);
+
+            dialog.relationship().entity0_credit(sourceRel.entity0_credit);
+            dialog.relationship().entity1_credit(sourceRel.entity1_credit);
+
+            if (sourceRel.begin_date) {
+                dialog.relationship().begin_date.year(sourceRel.begin_date.year);
+                dialog.relationship().begin_date.month(sourceRel.begin_date.month);
+                dialog.relationship().begin_date.day(sourceRel.begin_date.day);
+            }
+            if (sourceRel.end_date) {
+                dialog.relationship().end_date.year(sourceRel.end_date.year);
+                dialog.relationship().end_date.month(sourceRel.end_date.month);
+                dialog.relationship().end_date.day(sourceRel.end_date.day);
+                dialog.accept();
+            }
+        });
+    });
+}
+
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
              .insertAdjacentHTML('beforeend', `
@@ -146,11 +193,25 @@ function cloneExtAR(recMBID) {
           <input type="button" id="cloneAR" value="Apply">
         </div>
       </details>
+      <details>
+        <summary style="display: block;margin-left: 8px;cursor: pointer;">
+          <h3 style="display: list-item;">
+            Clone release relations from another release
+          </h3>
+        </summary>
+        <div>
+          <span>release link:&nbsp;</span>
+          <input type="text" id="cloneExtRelease" placeholder="release mbid">
+          <br />
+          <input type="button" id="cloneReleaseAR" value="Apply">
+        </div>
+      </details>
     `);
 })();
 
 $(document).ready(function () {
     $('input#cloneExtRecording').on('input', autoCompleteRec);
+    $('input#cloneExtRelease').on('input', autoCompleteRel);
     let appliedNote = false;
     document.getElementById('cloneAR').addEventListener('click', () => {
         const recMBID = $('input#cloneExtRecording').data('mbid');
@@ -159,6 +220,16 @@ $(document).ready(function () {
         } else {
             const refIdx = parseInt(document.getElementById('cloneRef').value);
             cloneAR(refIdx);
+        }
+        if (!appliedNote) {
+            relEditor.editNote(GM_info.script);
+            appliedNote = true;
+        }
+    });
+    document.getElementById('cloneReleaseAR').addEventListener('click', () => {
+        const relMBID = $('input#cloneExtRelease').data('mbid');
+        if (relMBID) {
+            cloneReleaseExtAR(relMBID);
         }
         if (!appliedNote) {
             relEditor.editNote(GM_info.script);
