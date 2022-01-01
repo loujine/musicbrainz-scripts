@@ -27,9 +27,9 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('clone_rels_script_toggle').click()
         self.driver.find_element_by_css_selector('td.recording input').click()
         self.driver.find_element_by_id('cloneExtRecording').send_keys(RECORDING_URL)
-        time.sleep(1)
+        time.sleep(3)
         self.driver.find_element_by_id('cloneAR').click()
-        time.sleep(1)
+        time.sleep(3)
         assert len(self.driver.find_elements_by_class_name('rel-add')) > 1
 
     def test_script_clone_GH_28(self):
@@ -42,9 +42,9 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('clone_rels_script_toggle').click()
         self.driver.find_element_by_css_selector('td.recording input').click()
         self.driver.find_element_by_id('cloneExtRecording').send_keys(RECORDING_RELS_URL)
-        time.sleep(1)
+        time.sleep(3)
         self.driver.find_element_by_id('cloneAR').click()
-        time.sleep(1)
+        time.sleep(3)
         assert len(self.driver.find_elements_by_class_name('rel-add')) > 1
         assert not self.driver.page_source.count('samples of')
         assert self.driver.page_source.count('sampled by') == count_backward + 3
