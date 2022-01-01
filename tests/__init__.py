@@ -22,6 +22,7 @@ class UserscriptsTC(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         options = Options()
+        options.add_argument('--disable-gpu')
         if os.environ.get('SHOW', '0') != '1':
             options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=options)
