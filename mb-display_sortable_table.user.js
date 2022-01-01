@@ -65,7 +65,7 @@ function sortByClickedColumn(evt) {
     const colidx = $(evt.target).index();
     const coltitle = evt.target.textContent;
     let rowclass;
-    let rows = table.find('tbody tr.even,tbody tr tr.odd').not('.subh').get().sort(
+    let rows = table.find('tbody tr.even,tbody tr.odd').not('.subh').get().sort(
         comparefct(colidx, coltitle, this.asc) // eslint-disable-line no-invalid-this
     );
     // reverse order if clicked several times
