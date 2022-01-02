@@ -234,7 +234,7 @@ $(document).ready(function () {
             cloneReleaseExtAR(relMBID);
         }
         if (!appliedNote) {
-            relEditor.editNote(GM_info.script);
+            relEditor.editNote(GM_info.script, 'Cloned from https://musicbrainz.org/release/' + relMBID);
             appliedNote = true;
         }
     });
