@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.12.31
+// @version      2022.1.2
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -103,7 +103,6 @@ function cloneExtAR(recMBID) {
                     source: rec,
                     target: sourceRel.target,
                 });
-                dialog.accept();
 
                 dialog.relationship().linkTypeID(sourceRel.linkTypeID);
                 dialog.relationship().setAttributes(sourceRel.attributes);
@@ -124,8 +123,8 @@ function cloneExtAR(recMBID) {
                     dialog.relationship().end_date.year(sourceRel.end_date.year);
                     dialog.relationship().end_date.month(sourceRel.end_date.month);
                     dialog.relationship().end_date.day(sourceRel.end_date.day);
-                    dialog.accept();
                 }
+                dialog.accept();
             });
         });
     });
@@ -149,7 +148,6 @@ function cloneReleaseExtAR(relMBID) {
                 source: release,
                 target: sourceRel.target,
             });
-            dialog.accept();
 
             dialog.relationship().linkTypeID(sourceRel.linkTypeID);
             dialog.relationship().setAttributes(sourceRel.attributes);
@@ -166,8 +164,8 @@ function cloneReleaseExtAR(relMBID) {
                 dialog.relationship().end_date.year(sourceRel.end_date.year);
                 dialog.relationship().end_date.month(sourceRel.end_date.month);
                 dialog.relationship().end_date.day(sourceRel.end_date.day);
-                dialog.accept();
             }
+            dialog.accept();
         });
     });
 }
