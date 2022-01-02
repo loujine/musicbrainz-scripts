@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.9.25
+// @version      2022.1.1
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -620,15 +620,7 @@ function fillFormFromVIAF(viafURL) {
     fetch(viafURL).then(resp => resp.text()).then(html => {
         fillExternalLinks(viafURL);
         const doc = new DOMParser().parseFromString(html, 'text/xml');
-        setValue(
-            `id-edit-${entityType}.name`,
-            doc.getElementsByTagName('h2')[1].textContent,
-            () => {
-                if (document.getElementsByClassName('guesscase-sortname').length) {
-                    document.getElementsByClassName('guesscase-sortname')[0].click();
-                }
-            }
-        );
+        _fillEntityName(doc.getElementsByTagName('h2')[1].textContent, entityType);
         for (const site of ["catalogue.bnf.fr", "d-nb.info", "wikidata.org", "id.loc.gov"]) {
             const link = doc.querySelector(`a[href*="${site}"]`);
             if (link && link.href) {
