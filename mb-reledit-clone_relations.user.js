@@ -140,7 +140,9 @@ function cloneReleaseExtAR(relMBID) {
     let dialog;
 
     requests.GET(`/ws/js/entity/${relMBID}?inc=rels`, resp => {
-        const sourceRels = JSON.parse(resp).relationships;
+        const sourceRels = JSON.parse(resp).relationships.filter(
+            rel => rel.target_type != 'url'
+        );
         sourceRels.map(sourceRel => {
             dialog = new MB.relationshipEditor.UI.AddDialog({
                 viewModel: vm,
