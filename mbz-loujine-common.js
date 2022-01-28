@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.12.4
+// @version      2022.1.28
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -405,6 +405,16 @@ function buildLanguageOptions(obj) {
         .join('');
 }
 
+function buildLocaleOptions(obj) {
+    return Object.entries(obj)
+        .map(
+            ([type, code]) =>
+                `<option class="language" value="${code}">${code} ${type}</option>`
+        )
+        .sort()
+        .join('');
+}
+
 // eslint-disable-next-line no-unused-vars
 const aliases = {
     artistType: `
@@ -428,7 +438,7 @@ const aliases = {
     locale: `
         <select>
           <option> </option>
-          ${buildOptions(server.locale)}
+          ${buildLocaleOptions(server.locale)}
         </select>
     `,
 };
