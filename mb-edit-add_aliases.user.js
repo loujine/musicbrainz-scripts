@@ -38,8 +38,8 @@ function addRow() {
           </td>
           <td><a href="#" class="deleteRow" style="color:red;">×</a></td>
     `);
-    document.querySelector('a.deleteRow').addEventListener('click', evt => {
-        evt.target.parentElement.parentElement.remove();
+    document.querySelector('tr:last-child a.deleteRow').addEventListener('click', evt => {
+        evt.target.closest('tr').remove();
     });
 }
 
