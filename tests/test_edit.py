@@ -3,6 +3,8 @@
 import time
 import unittest
 
+from selenium.webdriver.support.ui import Select
+
 from tests import UserscriptsTC
 
 ARTIST_MBID = 'cea4a3b8-c26c-4b61-a243-cf72555e2c71'
@@ -48,6 +50,28 @@ class EditUserscriptsTC(UserscriptsTC):
         assert '<dd>Kept "Víkingur Ólafsson"</dd>' in self.driver.page_source
         assert 'New external link added' in self.driver.page_source
         assert 'teacher suggestion' in self.driver.page_source
+
+    def test_script_set_aliases(self):
+        self.login('artist', ARTIST_MBID + '/aliases')
+        self.load_userscript('mb-edit-add_aliases.user.js')
+        assert 'Add a new row' in self.driver.page_source
+        self.driver.find_element_by_id('addRow').click()
+        time.sleep(1)
+        lang = [o.text for o in self.driver.find_elements_by_class_name('language')]
+        assert sorted(lang) == lang
+        select = Select(self.driver.find_element_by_css_selector('tr.newAlias select'))
+        select.select_by_visible_text('Legal name')
+        assert self.driver.find_element_by_css_selector(
+            'tr.newAlias select').get_attribute('selectedIndex') == '2'
+        self.driver.find_element_by_id('addRow').click()
+        time.sleep(1)
+        assert len(self.driver.find_elements_by_class_name('newAlias')) == 2
+        # remove first (modified) row
+        self.driver.find_element_by_class_name('deleteRow').click()
+        time.sleep(1)
+        # row 1 is now the former row 2 (i.e. empty)
+        assert self.driver.find_element_by_css_selector(
+            'tr.newAlias select').get_attribute('selectedIndex') == '0'
 
 
 if __name__ == "__main__":
