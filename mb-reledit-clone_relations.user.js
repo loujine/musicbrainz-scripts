@@ -235,6 +235,10 @@ function cloneReleaseExtAR(relMBID) {
 $(document).ready(function () {
     $('input#cloneExtRecording').on('input', autoCompleteRec);
     $('input#cloneExtRelease').on('input', autoCompleteRel);
+    $('input#cloneRef').on('input', () => {
+        document.getElementById('cloneExtRecording').value = '';
+        autoCompleteRec();
+    });
     let appliedNote = false;
     document.getElementById('cloneAR').addEventListener('click', () => {
         const recMBID = $('input#cloneExtRecording').data('mbid');
