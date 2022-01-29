@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2022.1.2
+// @version      2022.1.28
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -46,22 +46,32 @@ function autoCompleteRel() {
 }
 
 function cloneAR(refIdx) {
-    refIdx = refIdx - 1 || 0;
+    let startIdx;
+    let range;
+    if (refIdx.includes('-')) {
+        startIdx = parseInt(refIdx.split('-')[0]) - 1;
+        range = parseInt(refIdx.split('-')[1]) - startIdx;
+    } else {
+        startIdx = parseInt(refIdx) - 1 || 0;
+        range = 1;
+    }
     const vm = MB.releaseRelationshipEditor;
     const selectedRecordings = MB.relationshipEditor.UI.checkedRecordings();
-    const sourceRecording = selectedRecordings.splice(refIdx, 1)[0];
-    const sourceRels = sourceRecording.relationships().filter(
-        rel => !['recording-recording', 'recording-work'].includes(rel.entityTypes)
-    );
+    const sourceRecordings = selectedRecordings.splice(startIdx, range);
     let dialog;
 
-    selectedRecordings.map(rec => {
+    selectedRecordings.map((rec, idx) => {
+        const sourceRecording = sourceRecordings[idx % sourceRecordings.length];
+        const sourceRels = sourceRecording.relationships().filter(
+            rel => !['recording-recording', 'recording-work'].includes(rel.entityTypes)
+        );
         sourceRels.map(sourceRel => {
             dialog = new MB.relationshipEditor.UI.AddDialog({
                 viewModel: vm,
                 source: rec,
                 target: sourceRel.entities().filter(ent => ent.entityType !== 'recording')[0],
             });
+            dialog.accept();  // apparently required for Firefox
 
             dialog.relationship().linkTypeID(sourceRel.linkTypeID());
             dialog.relationship().setAttributes(sourceRel.attributes());
@@ -103,6 +113,7 @@ function cloneExtAR(recMBID) {
                     source: rec,
                     target: sourceRel.target,
                 });
+                dialog.accept();  // apparently required for Firefox
 
                 dialog.relationship().linkTypeID(sourceRel.linkTypeID);
                 dialog.relationship().setAttributes(sourceRel.attributes);
@@ -218,7 +229,7 @@ $(document).ready(function () {
         if (recMBID) {
             cloneExtAR(recMBID);
         } else {
-            const refIdx = parseInt(document.getElementById('cloneRef').value);
+            const refIdx = document.getElementById('cloneRef').value;
             cloneAR(refIdx);
         }
         if (!appliedNote) {

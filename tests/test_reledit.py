@@ -11,6 +11,7 @@ from tests import MBSERVER, UserscriptsTC
 RELEASE_MBID = '57eac48b-da83-4be2-9328-4d350b255261'
 RELEASE_WO_WORKS_MBID = '06cf52ff-747b-45b3-b928-2a987fa412c0'
 RECORDING_URL = f'{MBSERVER}/recording/91390a5d-317d-4012-80c9-314a139f4800'
+RECORDING2_URL = f'{MBSERVER}/recording/d787eb84-37a4-4195-bbc9-93f7731140d4'
 # WORK_MBID = 'cc6eba78-85ef-3834-a400-a34e0d8856d9'
 MAIN_WORK_MBID = 'db6400f0-6492-4c4a-9361-470be14d5bf2'
 # RECORDING_MBID = '4044dfc7-e7d4-48ca-98b4-d11e0692a21d'
@@ -55,6 +56,41 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert all(
             'recorded at' in node.text for node in
             self.driver.find_elements_by_css_selector('td.recording'))
+
+    def test_script_clone_multi_sources(self):
+        self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
+        self.load_userscript('mb-reledit-clone_relations.user.js')
+        time.sleep(1)
+        self.driver.find_element_by_id('clone_rels_script_toggle').click()
+
+        self.driver.find_elements_by_css_selector('td.recording input')[0].click()
+        self.driver.find_element_by_id('cloneExtRecording').send_keys(RECORDING_URL)
+        time.sleep(5)
+        self.driver.find_element_by_id('cloneAR').click()
+        time.sleep(3)
+        self.driver.find_elements_by_css_selector('td.recording input')[0].click()
+        self.driver.find_element_by_id('cloneExtRecording').clear()
+
+        self.driver.find_elements_by_css_selector('td.recording input')[1].click()
+        self.driver.find_element_by_id('cloneExtRecording').send_keys(RECORDING2_URL)
+        time.sleep(5)
+        self.driver.find_element_by_id('cloneAR').click()
+        time.sleep(3)
+        self.driver.find_element_by_id('cloneExtRecording').clear()
+
+        # trigger autocomplete
+        self.driver.find_element_by_id('cloneExtRecording').send_keys(' ')
+        self.driver.find_element_by_css_selector('th.recordings input').click()
+        self.driver.find_element_by_id('cloneRef').send_keys('1-2')
+        time.sleep(1)
+        self.driver.find_element_by_id('cloneAR').click()
+        time.sleep(2)
+        assert all(
+            'recorded at' in node.text for node in
+            self.driver.find_elements_by_css_selector('tr:not(.even) td.recording'))
+        assert all(
+            'baritone' in node.text for node in
+            self.driver.find_elements_by_css_selector('tr.even td.recording'))
 
     def test_script_clone_release_relations(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
