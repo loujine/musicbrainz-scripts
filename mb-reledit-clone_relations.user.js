@@ -80,7 +80,13 @@ function cloneAR(refIdx) {
             dialog.accept();  // apparently required for Firefox
 
             dialog.relationship().linkTypeID(sourceRel.linkTypeID());
-            dialog.relationship().setAttributes(sourceRel.attributes());
+            const attrs = sourceRel.attributes();
+            attrs.map(attr => {
+                if (attr.creditedAs()) {
+                    attr.credited_as = attr.creditedAs();
+                }
+            });
+            dialog.relationship().setAttributes(attrs);
 
             dialog.relationship().entity0_credit(sourceRel.entity0_credit());
             dialog.relationship().entity1_credit(sourceRel.entity1_credit());

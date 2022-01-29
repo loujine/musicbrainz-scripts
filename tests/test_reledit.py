@@ -91,6 +91,8 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert all(
             'baritone' in node.text for node in
             self.driver.find_elements_by_css_selector('tr.even td.recording'))
+        assert "[Cesare Angelotti]" in self.driver.find_elements_by_css_selector(
+            'tr.even td.recording')[1].text
 
     def test_script_clone_release_relations(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
