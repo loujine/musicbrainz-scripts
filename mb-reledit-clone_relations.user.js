@@ -19,6 +19,12 @@
 // ==/UserScript==
 
 const MBID_REGEX = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
+const cloneIdxHelp = `Index(es) to clone relationships from.
+Indexes start at 1 and are related to the list of selected recordings, not the tracklist indexes.
+Indexes can be empty (= 1, first selected), a number n or a range n1-n2.
+Relations are cloned by looping over the 'source' recordings (e.g. '1-2' on 7 selected recordings
+will clone the relations of R1 to R3,R5,R7 and the ones from R2 to R4,R6
+`;
 
 function autoComplete(nodeId, entityType) {
     const $input = $(`input#${nodeId}`);
@@ -192,12 +198,12 @@ function cloneReleaseExtAR(relMBID) {
         </summary>
         <div>
           <span>
-            <abbr title="index of selected recording to clone from">
-              Recording index in selection
-            </abbr>
-            :&nbsp;
+            Source recording index in selection:
           </span>
-          <input type="text" id="cloneRef" placeholder="1 (clone from 1st selected recording)">
+          &nbsp;
+          <input type="text" id="cloneRef" placeholder="empty or n or 'n1-n2'">
+          <span title="${cloneIdxHelp}">🛈</span>
+          &nbsp;
           <span>OR recording link:&nbsp;</span>
           <input type="text" id="cloneExtRecording" placeholder="recording mbid">
           <br />
