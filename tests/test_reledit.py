@@ -67,7 +67,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('cloneExtRecording').send_keys(RECORDING_URL)
         time.sleep(5)
         self.driver.find_element_by_id('cloneAR').click()
-        time.sleep(3)
+        time.sleep(5)
         self.driver.find_elements_by_css_selector('td.recording input')[0].click()
         self.driver.find_element_by_id('cloneExtRecording').clear()
 
@@ -75,7 +75,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('cloneExtRecording').send_keys(RECORDING2_URL)
         time.sleep(5)
         self.driver.find_element_by_id('cloneAR').click()
-        time.sleep(3)
+        time.sleep(5)
         self.driver.find_element_by_id('cloneExtRecording').clear()
 
         # trigger autocomplete
@@ -104,7 +104,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('cloneExtRelease').send_keys(RELEASE_RELS_URL)
         time.sleep(3)
         self.driver.find_element_by_id('cloneReleaseAR').click()
-        time.sleep(3)
+        time.sleep(5)
         assert len(self.driver.find_elements_by_css_selector('#release-rels div.ar')) == 1
 
     def test_script_clone_GH_28(self):
@@ -159,7 +159,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
 
         self.driver.find_element_by_css_selector('td.recording input').click()
         self.driver.find_element_by_id('searchWork').click()
-        time.sleep(4)
+        time.sleep(5)
         assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 1
 
     def test_script_guess_main_works(self):

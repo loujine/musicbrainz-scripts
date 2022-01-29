@@ -44,9 +44,11 @@ class DisplayUserscriptsTC(UserscriptsTC):
     def test_script_acousticbrainz_dataset(self):
         self.login('work', WORK_MBID)
         self.load_userscript('mb-display_acousticbrainz_dataset_for_work.user.js')
+        time.sleep(1)
         assert self.driver.find_element_by_id('loujine-sidebar')
         btn = self.driver.find_element_by_id('showABids')
         btn.click()
+        time.sleep(5)
         headers = self.driver.find_elements_by_css_selector('th')
         assert 'ABrainz' in [h.text for h in headers]
         datasets = self.driver.find_elements_by_css_selector("a[href*='/acousticbrainz.org/']")
