@@ -96,7 +96,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_css_selector('th.recordings input').click()
         self.driver.find_element_by_id('mainWork').send_keys(MAIN_WORK_MBID)
         time.sleep(1)
-        self.driver.find_element_by_id('searchSubworks').click()
+        self.driver.find_element_by_id('fetchSubworks').click()
         time.sleep(5)
         assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 4
 
@@ -112,7 +112,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 0
         self.driver.find_element_by_id('repeats').send_keys('1,1,2,1')
         time.sleep(1)
-        self.driver.find_element_by_id('searchSubworks').click()
+        self.driver.find_element_by_id('fetchSubworks').click()
         time.sleep(4)
         assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 5
         assert ['partial' in node.text for node in self.driver.find_elements_by_css_selector(
@@ -126,7 +126,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('repeats').clear()
         self.driver.find_element_by_id('repeats').send_keys('1,1,0,1')
         time.sleep(1)
-        self.driver.find_element_by_id('searchSubworks').click()
+        self.driver.find_element_by_id('fetchSubworks').click()
         time.sleep(3)
         assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 3
         for node in self.driver.find_elements_by_css_selector('td.works')[:3]:
@@ -146,7 +146,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('repeats').clear()
         self.driver.find_element_by_id('repeats').send_keys('1,1,-1,1')
         time.sleep(2)
-        self.driver.find_element_by_id('searchSubworks').click()
+        self.driver.find_element_by_id('fetchSubworks').click()
         time.sleep(4)
         assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 4
         assert [len(node.find_elements_by_css_selector('td > div.ar'))

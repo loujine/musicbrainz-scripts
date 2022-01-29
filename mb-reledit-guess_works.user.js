@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2022.1.16
+// @version      2022.1.28
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -19,6 +19,12 @@
 // ==/UserScript==
 
 const MBID_REGEX = /[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/;
+const repeatHelp = `Ways to associate subworks SW1, SW2, SW3... with selected tracks T1, T2, T3...
+    1,1,1 (or empty) -> SW1 on T1, SW2 on T2, SW3 on T3...
+    1,0,1 -> SW1 on T1, SW2 skipped, SW3 on T2...
+    1,2,1 -> SW1 on T1, SW2 on T2 and T3 (as partial); SW3 on T4...
+    1,-1,1 -> SW1 and SW2 on T1, SW3 on T2...
+`;
 
 function setWork(recording, work, partial) {
     requests.GET(`/ws/js/entity/${work.gid}?inc=rels`, function (resp) {
@@ -101,7 +107,7 @@ function autoComplete() {
     }
 }
 
-function guessSubWorks(workMbid, replace) {
+function fetchSubWorks(workMbid, replace) {
     replace = replace || false;
     if (workMbid.split('/').length > 1) {
         workMbid = workMbid.split('/')[4];
@@ -172,17 +178,17 @@ function guessSubWorks(workMbid, replace) {
             Fill the main work mbid to link selected recordings to (ordered) parts of the work.
           </p>
           <span>
-            <abbr title="to use the same subwork on successive
-            recordings (e.g. for opera acts)">Repeats</abbr>:&nbsp;
+            Repeats:&nbsp;
           </span>
           <input type="text" id="repeats" placeholder="n1,n2,n3... (optional)">
+          <span title="${repeatHelp}">🛈</span>
           <br />
           <label for="replaceSubworks">Replace work if pre-existing:&nbsp;</label>
           <input type="checkbox" id="replaceSubworks">
           <br />
           <span>Main work name:&nbsp;</span>
           <input type="text" id="mainWork" placeholder="main work mbid">
-          <input type="button" id="searchSubworks" value="Guess subworks">
+          <input type="button" id="fetchSubworks" value="Load subworks">
         </div>
       </details>
     `);
@@ -199,8 +205,8 @@ $(document).ready(function() {
         }
     });
     $('input#mainWork').on('input', autoComplete);
-    document.querySelector('input#searchSubworks').addEventListener('click', () => {
-        guessSubWorks(
+    document.querySelector('input#fetchSubworks').addEventListener('click', () => {
+        fetchSubWorks(
             $('input#mainWork').data('mbid'),
             document.querySelector('input#replaceSubworks').checked
         );
