@@ -84,7 +84,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
 
         self.driver.find_element_by_css_selector('td.recording input').click()
         self.driver.find_element_by_id('searchWork').click()
-        time.sleep(2)
+        time.sleep(4)
         assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 1
 
     def test_script_guess_main_works(self):
@@ -99,10 +99,14 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('searchSubworks').click()
         time.sleep(5)
         assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 4
-        for node in self.driver.find_elements_by_css_selector(
-                'td.works > div.ar > span.remove-button'):
-            node.click()
-        time.sleep(2)
+
+    def test_script_guess_repeated_subworks(self):
+        self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
+        self.load_userscript('mb-reledit-guess_works.user.js')
+        time.sleep(1)
+        self.driver.find_element_by_css_selector('th.recordings input').click()
+        self.driver.find_element_by_id('mainWork').send_keys(MAIN_WORK_MBID)
+        time.sleep(1)
 
         # partial repeats
         assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 0
@@ -128,10 +132,30 @@ class ReleditUserscriptsTC(UserscriptsTC):
         for node in self.driver.find_elements_by_css_selector('td.works')[:3]:
             assert node.find_element_by_css_selector('div.ar').text
         for node in self.driver.find_elements_by_css_selector('td.works')[3:]:
-            assert not node.find_element_by_css_selector('div.ar')
-        for node in self.driver.find_elements_by_css_selector(
-                'td.works > div.ar > span.remove-button'):
-            node.click()
+            assert not node.find_elements_by_css_selector('div.ar')
+
+    def test_script_guess_overlapping_subworks(self):
+        self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
+        self.load_userscript('mb-reledit-guess_works.user.js')
+        time.sleep(1)
+        self.driver.find_element_by_css_selector('th.recordings input').click()
+        self.driver.find_element_by_id('mainWork').send_keys(MAIN_WORK_MBID)
+        time.sleep(1)
+
+        # overlapping repeats
+        self.driver.find_element_by_id('repeats').clear()
+        self.driver.find_element_by_id('repeats').send_keys('1,1,-1,1')
+        time.sleep(2)
+        self.driver.find_element_by_id('searchSubworks').click()
+        time.sleep(4)
+        assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 4
+        assert [len(node.find_elements_by_css_selector('td > div.ar'))
+                for node in self.driver.find_elements_by_css_selector('td.works')[:3]] == [1, 2, 1]
+        assert not any(
+            ['partial' in node.text for node in self.driver.find_elements_by_css_selector(
+                'td.works > div.ar > span.link-phrase')])
+        for node in self.driver.find_elements_by_css_selector('td.works')[3:]:
+            assert not node.find_elements_by_css_selector('div.ar')
 
     def test_script_release_rels(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')

@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.8.26
+// @version      2022.1.16
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -112,7 +112,7 @@ function guessSubWorks(workMbid, replace) {
         let total = subWorks.length;
         if (repeats) {
             repeats = repeats.split(/[,; ]+/).map(s => Number.parseInt(s));
-            total = repeats.reduce((n, m) => n + m, 0);
+            total = repeats.reduce((n, m) => Math.max(n,0) + Math.max(m,0), 0);
         } else {
             repeats = subWorks.map(() => 1);
         }
@@ -120,21 +120,29 @@ function guessSubWorks(workMbid, replace) {
         const partialSubWorks = Array(total);
         let start = 0;
         subWorks.forEach((sb, sbIdx) => {
-            repeatedSubWorks.fill(sb, start, start + repeats[sbIdx]);
-            partialSubWorks.fill(repeats[sbIdx] > 1 ? true : false, start, start + repeats[sbIdx]);
-            start += repeats[sbIdx];
+            if (repeats[sbIdx] < 0) {
+                repeatedSubWorks[start-1].push(sb);
+                partialSubWorks.fill(false, start-1, start);
+                // start += repeats[sbIdx];
+            } else {
+                repeatedSubWorks.fill([sb], start, start + repeats[sbIdx]);
+                partialSubWorks.fill(
+                    repeats[sbIdx] > 1 ? true : false, start, start + repeats[sbIdx]);
+                start += repeats[sbIdx];
+            }
         });
-
         MB.relationshipEditor.UI.checkedRecordings().forEach(
             (recording, recIdx) => {
                 if (recIdx >= repeatedSubWorks.length) {
                     return;
                 }
-                if (replace && recording.performances().length) {
-                    replaceWork(recording, repeatedSubWorks[recIdx], recording.performances()[0]);
-                } else if (!recording.performances().length) {
-                    setWork(recording, repeatedSubWorks[recIdx], partialSubWorks[recIdx]);
-                }
+                repeatedSubWorks[recIdx].map(subw => {
+                    if (replace && recording.performances().length) {
+                        replaceWork(recording, subw, recording.performances()[0]);
+                    } else if (!recording.performances().length) {
+                        setWork(recording, subw, partialSubWorks[recIdx]);
+                    }
+                });
             }
         );
     });
