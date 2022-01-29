@@ -9,9 +9,10 @@ from selenium.common.exceptions import NoAlertPresentException
 from tests import MBSERVER, UserscriptsTC
 
 RELEASE_MBID = '57eac48b-da83-4be2-9328-4d350b255261'
+RELEASE_WO_WORKS_MBID = '06cf52ff-747b-45b3-b928-2a987fa412c0'
 RECORDING_URL = '{MBSERVER}/recording/91390a5d-317d-4012-80c9-314a139f4800'
 # WORK_MBID = 'cc6eba78-85ef-3834-a400-a34e0d8856d9'
-# MAIN_WORK_MBID = 'db6400f0-6492-4c4a-9361-470be14d5bf2'
+MAIN_WORK_MBID = 'db6400f0-6492-4c4a-9361-470be14d5bf2'
 # RECORDING_MBID = '4044dfc7-e7d4-48ca-98b4-d11e0692a21d'
 # CONDUCTOR_MBID = '642284f1-54ef-4d2c-b27e-a74bb02fe387'
 RECORDING_RELS_URL = f'{MBSERVER}/recording/54029746-25ba-4f88-9885-387ac581e45f'
@@ -75,11 +76,62 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert self.driver.page_source.count('>2016-04-07<') > 1
 
     def test_script_guess_works(self):
-        self.login('release', RELEASE_MBID + '/edit-relationships')
+        self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-guess_works.user.js')
         time.sleep(1)
         assert 'Search for works' in self.driver.page_source
-        # TODO
+        assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 0
+
+        self.driver.find_element_by_css_selector('td.recording input').click()
+        self.driver.find_element_by_id('searchWork').click()
+        time.sleep(2)
+        assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 1
+
+    def test_script_guess_main_works(self):
+        self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
+        self.load_userscript('mb-reledit-guess_works.user.js')
+        time.sleep(1)
+
+        # no repeats
+        self.driver.find_element_by_css_selector('th.recordings input').click()
+        self.driver.find_element_by_id('mainWork').send_keys(MAIN_WORK_MBID)
+        time.sleep(1)
+        self.driver.find_element_by_id('searchSubworks').click()
+        time.sleep(5)
+        assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 4
+        for node in self.driver.find_elements_by_css_selector(
+                'td.works > div.ar > span.remove-button'):
+            node.click()
+        time.sleep(2)
+
+        # partial repeats
+        assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 0
+        self.driver.find_element_by_id('repeats').send_keys('1,1,2,1')
+        time.sleep(1)
+        self.driver.find_element_by_id('searchSubworks').click()
+        time.sleep(4)
+        assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 5
+        assert ['partial' in node.text for node in self.driver.find_elements_by_css_selector(
+            'td.works > div.ar > span.link-phrase')] == [False, False, True, True, False]
+        for node in self.driver.find_elements_by_css_selector(
+                'td.works > div.ar > span.remove-button'):
+            node.click()
+        time.sleep(2)
+
+        # missing repeats
+        self.driver.find_element_by_id('repeats').clear()
+        self.driver.find_element_by_id('repeats').send_keys('1,1,0,1')
+        time.sleep(1)
+        self.driver.find_element_by_id('searchSubworks').click()
+        time.sleep(3)
+        assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 3
+        for node in self.driver.find_elements_by_css_selector('td.works')[:3]:
+            assert node.find_element_by_css_selector('div.ar').text
+        for node in self.driver.find_elements_by_css_selector('td.works')[3:]:
+            assert not node.find_element_by_css_selector('div.ar')
+        for node in self.driver.find_elements_by_css_selector(
+                'td.works > div.ar > span.remove-button'):
+            node.click()
 
     def test_script_release_rels(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
