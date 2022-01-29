@@ -16,6 +16,7 @@ MAIN_WORK_MBID = 'db6400f0-6492-4c4a-9361-470be14d5bf2'
 # RECORDING_MBID = '4044dfc7-e7d4-48ca-98b4-d11e0692a21d'
 # CONDUCTOR_MBID = '642284f1-54ef-4d2c-b27e-a74bb02fe387'
 RECORDING_RELS_URL = f'{MBSERVER}/recording/54029746-25ba-4f88-9885-387ac581e45f'
+RELEASE_RELS_URL = f'{MBSERVER}/release/9e10cf78-0d27-3db9-a6cb-de45c5ca174e'
 
 
 class ReleditUserscriptsTC(UserscriptsTC):
@@ -33,7 +34,21 @@ class ReleditUserscriptsTC(UserscriptsTC):
         time.sleep(3)
         assert len(self.driver.find_elements_by_class_name('rel-add')) > 1
 
+    def test_script_clone_release_relations(self):
+        self.login('release', RELEASE_MBID + '/edit-relationships')
+        self.load_userscript('mb-reledit-clone_relations.user.js')
+        time.sleep(1)
+        assert len(self.driver.find_elements_by_class_name('rel-add')) == 1
+        assert len(self.driver.find_elements_by_css_selector('#release-rels div.ar')) == 0
+        self.driver.find_element_by_id('clone_release_rels_script_toggle').click()
+        self.driver.find_element_by_id('cloneExtRelease').send_keys(RELEASE_RELS_URL)
+        time.sleep(3)
+        self.driver.find_element_by_id('cloneReleaseAR').click()
+        time.sleep(3)
+        assert len(self.driver.find_elements_by_css_selector('#release-rels div.ar')) == 1
+
     def test_script_clone_GH_28(self):
+        # check the relation direction is kept
         self.login('release', RELEASE_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-clone_relations.user.js')
         time.sleep(1)
@@ -97,7 +112,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('mainWork').send_keys(MAIN_WORK_MBID)
         time.sleep(1)
         self.driver.find_element_by_id('fetchSubworks').click()
-        time.sleep(5)
+        time.sleep(6)
         assert len(self.driver.find_elements_by_css_selector('td.works > div.ar')) == 4
 
     def test_script_guess_repeated_subworks(self):

@@ -193,7 +193,7 @@ function cloneReleaseExtAR(relMBID) {
           <input type="button" id="cloneAR" value="Apply">
         </div>
       </details>
-      <details>
+      <details id="clone_release_rels_script_toggle">
         <summary style="display: block;margin-left: 8px;cursor: pointer;">
           <h3 style="display: list-item;">
             Clone release relations from another release

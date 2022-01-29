@@ -38,7 +38,7 @@ class DisplayUserscriptsTC(UserscriptsTC):
         self.login('work', WORK_MBID)
         self.load_userscript('mb-display_count_alias.user.js')
         header = self.driver.find_element_by_css_selector("a[href$='/aliases']")
-        time.sleep(1)
+        time.sleep(5)
         assert 'background-color: rgb' in header.get_attribute('style')
 
     def test_script_acousticbrainz_dataset(self):
