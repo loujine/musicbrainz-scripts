@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2022.1.28
+// @version      2022.3.22
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -107,9 +107,11 @@ class Server {
             'vocals',
             'orchestra',
             'conductor',
+            'performer',
+        ];
+        this._minorPerformingRoles = [
             'concertmaster',
             'chorusmaster',
-            'performer',
         ];
         this.aliasArtistType = {
             'Artist name': 1,
@@ -351,8 +353,11 @@ class Server {
         return this.recordingLinkType[this.releaseLinkTypeID[linkTypeID]];
     }
 
-    performingLinkTypes() {
-        return this._performingRoles.map(role => this.recordingLinkType[role]);
+    performingLinkTypes(skipMinorRoles = false) {
+        const roles = skipMinorRoles ? this._performingRoles : [
+            ...this._performingRoles, ...this._minorPerformingRoles
+        ];
+        return roles.map(role => this.recordingLinkType[role]);
     }
 
     getRelationshipTypeInfo() {

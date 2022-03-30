@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace recording artists from a Release page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.9.19
+// @version      2022.3.22
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-replace_rec_artist_from_release_page.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -112,8 +112,9 @@ function parseEditData(editData) {
         const filterPending = document.getElementById('pending').checked
             ? !rel.editsPending
             : true;
+        const skipMinorRels = document.getElementById('skip-minor-rels').checked;
         if (
-            server.performingLinkTypes().includes(linkType) &&
+            server.performingLinkTypes(skipMinorRels).includes(linkType) &&
             !uniqueIds.includes(rel.target.id) &&
             filterPending &&
             rel.target.name !== '[unknown]'
@@ -215,6 +216,10 @@ function replaceArtist() {
             <tr>
               <td><label for="set-unknown">Set [unknown] artist if no rel</label></td>
               <td><input type="checkbox" id="set-unknown"></td>
+            </tr>
+            <tr>
+              <td><label for="skip-minor-rels">Skip minor rels (e.g. concertmaster)</label></td>
+              <td><input type="checkbox" id="skip-minor-rels"></td>
             </tr>
           </table>
           <br />Edit note:
