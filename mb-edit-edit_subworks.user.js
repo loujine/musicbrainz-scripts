@@ -19,10 +19,39 @@
 // @run-at       document-end
 // ==/UserScript==
 
+const success = (xhr, idx) => {
+    const $status = $('#replace' + idx);
+    const rx = new RegExp(
+        '/edit/(\\d+)">edit</a>'
+    ).exec(xhr.responseText);
+    if (rx === null) {
+        // usually means the POST was accepted but nothing was changed
+        // i.e. the attributes names are wrong
+        $status.text(
+            'Edit was probably not applied, please check'
+        ).parent().css('color', 'red');
+        return;
+    }
+    const editId = rx[1];
+    $status.parent().css('color', 'green');
+    $status.after(
+        $('<p>').append(
+            `<a href="/edit/${editId}" target="_blank">edit ${editId}</a>`
+        )
+    );
+};
+
+const fail = (xhr, idx) => {
+    $('#replace' + idx).text(
+        `Error (code ${xhr.status})`
+    ).parent().css('color', 'red');
+};
+
 function replaceSubworksTitles() {
     let idx = 0;
-    $('table label:contains("parts:")').parents('tr')
-            .find('a[href*="/work/"]').each(function (_idx, node) {
+    $('table label:contains("parts:")').parents('tr').find(
+        'a[href*="/work/"]'
+    ).each((_idx, node) => {
         const searchExp = document.getElementById('subwork-regexp-search').value;
         const replaceExp = document.getElementById('subwork-regexp-replace').value;
         if (!searchExp || searchExp === replaceExp) {
@@ -38,32 +67,6 @@ function replaceSubworksTitles() {
         const mbid = helper.mbidFromURL(node.href);
         const url = edits.urlFromMbid('work', mbid);
 
-        function success(xhr) {
-            const $status = $('#replace' + _idx);
-            const rx = new RegExp(
-                '/edit/(\\d+)">edit</a>'
-            ).exec(xhr.responseText);
-            if (rx === null) {
-                // usually means the POST was accepted but nothing was changed
-                // i.e. the attributes names are wrong
-                $status.text(
-                    'Edit was probably not applied, please check'
-                ).parent().css('color', 'red');
-                return;
-            }
-            const editId = rx[1];
-            $status.parent().css('color', 'green');
-            $status.after(
-                $('<p>').append(
-                    '<a href="/edit/' + editId + '" target="_blank">edit ' + editId + '</a>'
-                )
-            )
-        }
-        function fail(xhr) {
-            $('#replace' + _idx).text(
-                'Error (code ' + xhr.status + ')'
-            ).parent().css('color', 'red');
-        }
         function callback(editData) {
             $('#replace' + _idx).text('Sending edit data');
             editData.name = name;
@@ -74,8 +77,8 @@ function replaceSubworksTitles() {
             requests.POST(
                 url,
                 edits.formatEdit('edit-work', postData),
-                success,
-                fail
+                (xhr) => success(xhr, _idx),
+                (xhr) => fail(xhr, _idx)
             );
         }
         setTimeout(function () {
