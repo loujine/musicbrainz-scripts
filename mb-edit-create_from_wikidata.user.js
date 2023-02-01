@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2022.1.1
+// @version      2023.2.2
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -131,7 +131,7 @@ class WikiDataHelpers {
             idGenius: 'https://genius.com/artists/',
             idSecondHandSongs: 'https://secondhandsongs.com/artist/',
             idVGMDB: 'https://vgmdb.net/artist/',
-            idOperabase: 'http://operabase.com/a/',
+            idOperabase: 'http://operabase.com/artists/',
             idSNAC: 'http://snaccooperative.org/ark:/99166/',
             // social media
             idTwitter: 'https://twitter.com/',
