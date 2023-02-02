@@ -42,6 +42,7 @@ class EditUserscriptsTC(UserscriptsTC):
     def test_script_wikidata(self):
         self.login('artist', ARTIST_MBID + '/edit')
         self.load_userscript('mb-edit-create_from_wikidata.user.js')
+        time.sleep(1)
         assert 'Add external link' in self.driver.page_source
         assert len(self.driver.find_elements_by_class_name('url')) > 18
         self.driver.find_element_by_id('linkParser').send_keys(WIKIDATA_LINK)
