@@ -196,7 +196,7 @@ class WikiDataHelpers {
         }
         if (this.existField(entityArea, 'mbidArea')) {
             input.value = this.fieldValue(entityArea, 'mbidArea');
-            $(input).trigger('keydown');
+            input.dispatchEvent(new Event('input'));
             $('#area-bubble').remove();
         } else {
             input.value = area;
