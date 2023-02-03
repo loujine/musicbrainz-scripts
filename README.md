@@ -38,16 +38,6 @@ Mark recordings not linked to any work on an artist recordings or relationships 
 [![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://github.com/loujine/musicbrainz-scripts/blob/master/mb-display_work_relations_for_artist_recordings.user.js)
 [![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_work_relations_for_artist_recordings.user.js)
 
-#### Display AcousticBrainz data on recording page
-
-[![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://github.com/loujine/musicbrainz-scripts/blob/master/mb-display_acousticbrainz_data_for_recording.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_acousticbrainz_data_for_recording.user.js)
-
-#### Display AcousticBrainz datasets count for work
-
-[![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://github.com/loujine/musicbrainz-scripts/blob/master/mb-display_acousticbrainz_dataset_for_work.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_acousticbrainz_dataset_for_work.user.js)
-
 #### Display RG timeline
 
 Display release groups timeline on artist overview page
