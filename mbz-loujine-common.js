@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2022.3.22
+// @version      2023.2.3
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -36,6 +36,8 @@ class Server {
             strings: 69,
             bass: 70,
             double_bass: 71,
+            acoustic_bass_guitar: 73,
+            electric_bass_guitar: 74,
             guitar_family: 75,
             violin_family: 82,
             cello: 84,
