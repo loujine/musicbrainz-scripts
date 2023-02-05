@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.2.3
+// @version      2023.2.4
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -587,7 +587,7 @@ class Edits {
 
     /* in order to determine the edit parameters required by POST
      * we first load the /edit page and parse the JSON data
-     * in the sourceData block
+     * in the sourceData (before 2023) or source_entity block
      */
     getEditParams(url, callback) {
         requests.GET(url, resp => {
@@ -603,6 +603,24 @@ class Edits {
     }
 
     getWorkEditParams(url, callback) {
+        this.getEditParams(url, data => {
+            const editData = {
+                name: data.name,
+                type_id: data.typeID,
+                languages: data.languages.map(it => it.language.id),
+                iswcs: data.iswcs.map(it => it.iswc),
+                attributes: data.attributes.map(attr => ({
+                    type_id: attr.typeID,
+                    value: attr.value,
+                })),
+            };
+            callback(editData);
+        });
+    }
+
+    /* get edit POST parameters from a JSON API call
+     * need to reconvert all values to internal ids */
+    getWorkEditParamsFromJSON(url, callback) {
         fetch(url)
             .then(resp => resp.json())
             .then(data => {
@@ -636,7 +654,7 @@ class Edits {
         };
         editData.languages.forEach((lang, idx) => {
             // FIXME error message if unknown language, edit will fail
-            data['languages.' + idx] = server.language[lang];
+            data['languages.' + idx] = server.language[lang] ? server.language[lang] : lang;
         });
         if (editData.iswcs === undefined || !editData.iswcs.length) {
             data['iswcs.0'] = null;

@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Set work attributes from the composer Work page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.9.19
+// @version      2023.2.4
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_attributes.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-set_work_attributes.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -86,6 +86,7 @@ function updateFromPage(editData, node) {
 function editWork() {
     $('.commit:input:checked:enabled').each(function (idx, node) {
         const mbid = node.id.replace('edit-', '');
+        const url = edits.urlFromMbid('work', mbid);
         function success(xhr) {
             const $status = $('#' + node.id + '-text');
             node.disabled = true;
@@ -107,14 +108,12 @@ function editWork() {
             ).parent().css('color', 'red');
         }
         function callback(editData) {
-            // no need to POST relations
-            delete editData.relations;
             $('#' + node.id + '-text').text('Sending edit data');
             const postData = edits.prepareEdit(updateFromPage(editData, node));
             postData.edit_note = $('#batch_replace_edit_note')[0].value;
             console.info('Data ready to be posted: ', postData);
             requests.POST(
-                edits.urlFromMbid('work', mbid),
+                url,
                 edits.formatEdit('edit-work', postData),
                 success,
                 fail
@@ -124,7 +123,7 @@ function editWork() {
             $('#' + node.id + '-text').empty();
             $(node).after('<span id="' + node.id + '-text">' +
                           'Fetching required data</span>');
-            edits.getWorkEditParams(helper.wsUrl('work', [], mbid), callback);
+            edits.getWorkEditParams(url, callback);
         }, 2 * idx * server.timeout);
     });
 }

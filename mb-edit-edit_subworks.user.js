@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace subwork titles and attributes in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.11.16
+// @version      2023.2.4
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -36,6 +36,7 @@ function replaceSubworksTitles() {
             return;
         }
         const mbid = helper.mbidFromURL(node.href);
+        const url = edits.urlFromMbid('work', mbid);
 
         function success(xhr) {
             const $status = $('#replace' + _idx);
@@ -64,8 +65,6 @@ function replaceSubworksTitles() {
             ).parent().css('color', 'red');
         }
         function callback(editData) {
-            // no need to POST relations
-            delete editData.relations;
             $('#replace' + _idx).text('Sending edit data');
             editData.name = name;
             $('#replace' + _idx).text(' replaced by ' + name);
@@ -73,7 +72,7 @@ function replaceSubworksTitles() {
             postData.edit_note = sidebar.editNote(GM_info.script);
             console.info('Data ready to be posted: ', postData);
             requests.POST(
-                edits.urlFromMbid('work', mbid),
+                url,
                 edits.formatEdit('edit-work', postData),
                 success,
                 fail
@@ -82,7 +81,7 @@ function replaceSubworksTitles() {
         setTimeout(function () {
             $(node).after('<span id="replace' + _idx + '">' +
                           'Fetching required data</span>');
-            edits.getWorkEditParams(helper.wsUrl('work', [], mbid), callback);
+            edits.getWorkEditParams(url, callback);
         }, 2 * idx * server.timeout);
         idx += 1;
     });
