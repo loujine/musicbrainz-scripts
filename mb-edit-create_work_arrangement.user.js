@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create work arrangement from existing work
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.9.19
+// @version      2023.2.4
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_work_arrangement.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -22,7 +22,7 @@
 
 function createArrangement(mbid, parentMbid) {
     $('#create-arrangement-text').empty();
-    edits.getWorkEditParams(
+    edits.getWorkEditParamsFromJSON(
         helper.wsUrl('work', ['artist-rels', 'work-rels'], mbid),
         editData => {
             // do not copy ISWC to arrangement
