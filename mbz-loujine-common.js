@@ -591,7 +591,13 @@ class Edits {
      */
     getEditParams(url, callback) {
         requests.GET(url, resp => {
-            const data = new RegExp(/sourceData: (.*),\n/).exec(resp)[1];
+            let data;
+            if (resp.includes('source_entity')) {
+               data = new RegExp(/source_entity":(.*)},"user":/).exec(resp)[1];
+            } else {
+               // pre PR musicbrainz-server#2582
+               data = new RegExp(/sourceData: (.*),\n/).exec(resp)[1];
+            }
             callback(JSON.parse(data));
         });
     }
