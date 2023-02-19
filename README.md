@@ -74,7 +74,7 @@ Make table columns sortable
 #### MusicBrainz edit: Change release quality
 
 [![Source](https://raw.github.com/jerone/UserScripts/master/_resources/Source-button.png)](https://github.com/loujine/musicbrainz-scripts/blob/master/mb-edit-change_release_quality.user.js)
-[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-change-release-quality.user.js)
+[![Install](https://raw.github.com/jerone/UserScripts/master/_resources/Install-button.png)](https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-change_release_quality.user.js)
 
 #### MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 

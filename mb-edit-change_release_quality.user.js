@@ -4,9 +4,9 @@
 // @name         MusicBrainz edit: Change release quality
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2021.9.19
-// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-change-release-quality.user.js
-// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-change-release-quality.user.js
+// @version      2023.2.19
+// @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-change_release_quality.user.js
+// @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-change_release_quality.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
 // @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
 // @description  musicbrainz.org: Change release quality
