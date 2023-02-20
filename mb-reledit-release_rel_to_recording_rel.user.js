@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Replace release relations by recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.10.15
+// @version      2023.2.28
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-release_rel_to_recording_rel.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-release_rel_to_recording_rel.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -18,55 +18,35 @@
 // @run-at       document-end
 // ==/UserScript==
 
-function fetchLinkIds() {
-    const typeInfo = server.getRelationshipTypeInfo()['artist-release'].filter(
-        relation => relation.id === 34 // performance
-    )[0];
-    const ids = [typeInfo.id];
-    for (const rel of typeInfo.children) {
-        ids.push(rel.id);
-        if (rel.children && rel.children.length) {
-            for (const subrel of rel.children) {
-                ids.push(subrel.id);
-            }
-        }
-    }
-    return ids;
-}
-
-function moveAR(ids) {
-    const vm = MB.releaseRelationshipEditor;
-    vm.source.relationships().filter(
-        rel => rel.entityTypes === "artist-release" && ids.includes(rel.linkTypeID())
-    ).forEach(rel => {
-        const performer = rel.entities()[0];
-        const releaseLinkType = rel.linkTypeID();
-        const releaseLinkAttributes = rel.attributes();
-        const recordings = MB.relationshipEditor.UI.checkedRecordings();
-        for (const recording of recordings) {
-            if (recording.relationships().filter(
-                rel => rel.entityTypes === "artist-recording"
-            ).map(
-                rel => rel.entities()[0].id
-            ).includes(performer.id)) {
-                continue;
-            }
-            const dialog = new MB.relationshipEditor.UI.AddDialog({
-                source: recording,
-                target: performer,
-                viewModel: vm
+function moveAR() {
+    const release = MB.relationshipEditor.state.entity;
+    const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
+    release.relationships.filter(
+        rel => Object.keys(server.releaseLinkTypeID).includes(String(rel.linkTypeID))
+    ).map(artistRel => {
+        recordings.map(rec => {
+            MB.relationshipEditor.dispatch({
+                type: 'update-relationship-state',
+                sourceEntity: rec,
+                ...relEditor.dispatchDefaults,
+                newRelationshipState: {
+                    ...relEditor.stateDefaults,
+                    _status: 1,
+                    attributes: relEditor.createAttributeTree(artistRel.attributes),
+                    begin_date: artistRel.begin_date,
+                    entity0: artistRel.target,
+                    entity1: rec,
+                    end_date: artistRel.end_date,
+                    ended: artistRel.ended,
+                    id: artistRel.id,
+                    linkTypeID: server.releaseToRecordingLink(artistRel.linkTypeID),
+                },
             });
-            dialog.relationship().linkTypeID(
-                server.releaseToRecordingLink(releaseLinkType)
-            );
-            dialog.accept();
-            if (releaseLinkAttributes.length) {
-                dialog.relationship().setAttributes(releaseLinkAttributes);
-            }
-        }
+        });
         if (recordings.length) {
-            const realIdx = vm.source.relationships().indexOf(rel);
-            document.querySelectorAll('#release-rels .remove-button')[realIdx].click();
+            document.getElementById(
+                `remove-relationship-${artistRel.target_type}-${artistRel.source_type}-${artistRel.id}`
+            ).click();
         }
     });
 }
@@ -80,9 +60,8 @@ function moveAR(ids) {
 })();
 
 $(document).ready(function () {
-    const ids = fetchLinkIds();
     document.getElementById('moveAR').addEventListener('click', () => {
-        moveAR(ids);
+        moveAR();
         relEditor.editNote(
             GM_info.script,
             'Move performers in release relations to individual recordings'

@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.2.4
+// @version      2023.2.13
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -806,18 +806,41 @@ const sidebar = new Sidebar();
 
 class RelationshipEditor {
 
+    constructor() {
+        this.dispatchDefaults = {
+            batchSelectionCount: null,
+            creditsToChangeForSource: '',
+            creditsToChangeForTarget: '',
+            oldRelationshipState: null,
+        };
+        this.stateDefaults = {
+            _original: null,
+            _status: 0,
+            attributes: null,
+            begin_date: null,
+            editsPending: false,
+            end_date: null,
+            ended: false,
+            entity0_credit: '',
+            entity1_credit: '',
+            id: null,
+            linkOrder: 0,
+            linkTypeID: null,
+        };
+    }
+
     editNote(meta, msg) {
+        const node = document.getElementById('edit-note-text');
         msg = msg ? '\n' + msg : '';
         const separator = '\n —\n';
         const signature = `GM script: "${meta.name}" (${meta.version})\n`;
-        const vm = MB.releaseRelationshipEditor;
-        let existingMsg = vm.editNote();
+        let existingMsg = node.value;
         let existingSign;
         if (existingMsg.includes(separator)) {
             [existingMsg, existingSign] = existingMsg.split(separator);
-            vm.editNote([existingMsg + msg, existingSign + signature].join(separator));
+            node.value = [existingMsg + msg, existingSign + signature].join(separator);
         } else {
-            vm.editNote([existingMsg + msg, signature].join(separator));
+            node.value = [existingMsg + msg, signature].join(separator);
         }
     }
 
@@ -836,6 +859,19 @@ class RelationshipEditor {
             </div>
         `);
         return document.getElementById('loujine-menu');
+    }
+
+    createAttributeTree(attributes) {
+        return MB.tree.fromDistinctAscArray(attributes
+            .map((attribute) => {
+                const attributeType = MB.linkedEntities.link_attribute_type[attribute.type.gid];
+                return {
+                    ...attribute,
+                    type: attributeType,
+                    typeID: attributeType.id,
+                };
+            })
+        );
     }
 }
 
