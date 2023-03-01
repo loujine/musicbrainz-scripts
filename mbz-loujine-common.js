@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.2.13
+// @version      2023.2.27
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -768,6 +768,19 @@ class Helper {
         }
         return isLoggedIn;
     }
+
+    delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    waitFor(pollingFunction, pollingInterval) {
+        return new Promise(async (resolve) => { // eslint-disable-line no-async-promise-executor
+            while (pollingFunction() === false) {
+                await this.delay(pollingInterval);
+            }
+            resolve();
+        });
+    }
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -872,6 +885,13 @@ class RelationshipEditor {
                 };
             })
         );
+    }
+
+    parseDate(dateProp) {
+        if (dateProp === null) {
+            return {year: '', month: '', day: ''};
+        }
+        return {year: dateProp.year ?? '', month: dateProp.month ?? '', day: dateProp.day ?? ''};
     }
 }
 
