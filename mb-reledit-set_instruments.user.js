@@ -1,10 +1,10 @@
-/* global $ MB roles server relEditor */
+/* global $ helper MB roles relEditor */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.2.3
+// @version      2023.2.28
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -18,24 +18,67 @@
 // @run-at       document-end
 // ==/UserScript==
 
-function setInstrument(fromType, toType, fromAttrId, toAttrId, toCredit) {
-    const attrInfo = server.getInstrumentRelationshipAttrInfo();
-    const toAttr = isNaN(toAttrId)
-        ? null
-        : attrInfo.filter(attr => attr.id === toAttrId)[0];
+const setInstrument = (fromType, toType, fromAttrId, toAttrId, toCredit) => {
+    const toAttr = MB.linkedEntities.link_attribute_type[toAttrId];
 
-    for (const recording of MB.relationshipEditor.UI.checkedRecordings()) {
-        recording.relationships().filter(
-            relation => relation.linkTypeID() === fromType
+    const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
+    if (!recordings.length) {
+        alert('No relation selected');
+        return;
+    }
+
+    // sort recordings by order in tracklist to avoid having the dialog jump everywhere
+    const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
+        m => m.tracks
+    ).map(t => t.recording.id);
+    recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
+
+    let recIdx = 0;
+    recordings.map(async rec => {
+        recIdx += 1;
+        await helper.delay(recIdx * 100);
+        let relIdx = 0;
+
+        rec.relationships.filter(
+            rel => rel.linkTypeID === fromType
         ).filter(
-            relation => (
-                (isNaN(fromAttrId) && relation.attributes().length === 0)
-                || relation.attributes().map(attr => attr.type.id).includes(fromAttrId)
+            rel => (
+                (isNaN(fromAttrId) && rel.attributes.length === 0)
+                || rel.attributes.map(attr => attr.type.id).includes(fromAttrId)
             )
-        ).map(relation => {
-            let attrs = relation.attributes();
-            let idx = 0;
-            relation.linkTypeID(toType);
+        ).map(async rel => {
+            relIdx += 1;
+            await helper.delay(relIdx * 10);
+
+            const relType = rel.backward
+                ? `${rel.target_type}-${rel.source_type}`
+                : `${rel.source_type}-${rel.target_type}`;
+
+            await helper.waitFor(() => !MB.relationshipEditor.relationshipDialogDispatch, 1);
+
+            document.getElementById(`edit-relationship-${relType}-${rel.id}`).click();
+            await helper.waitFor(() => !!MB.relationshipEditor.relationshipDialogDispatch, 1);
+
+            MB.relationshipEditor.relationshipDialogDispatch({
+                type: 'update-link-type',
+                source: rec,
+                action: {
+                    type: 'update-autocomplete',
+                    source: rec,
+                    action: {
+                        type: 'select-item',
+                        item: {
+                            id: toType,
+                            name: MB.linkedEntities.link_type[toType].name,
+                            type: 'option',
+                            entity: MB.linkedEntities.link_type[toType],
+                        }
+                    },
+                },
+            });
+
+            let idx;
+            let attrs = rel.attributes;
             if (!isNaN(fromAttrId)) {
                 idx = attrs.findIndex(attr => attr.type.id == fromAttrId);
                 attrs = attrs.filter(attr => attr.type.id != fromAttrId);
@@ -44,10 +87,17 @@ function setInstrument(fromType, toType, fromAttrId, toAttrId, toCredit) {
                 // attrs order must be kept for credits, etc.
                 attrs.splice(idx, 0, {type: toAttr, credited_as: toCredit});
             }
-            relation.setAttributes(attrs);
+
+            MB.relationshipEditor.relationshipDialogDispatch({
+                type: 'set-attributes',
+                attributes: attrs,
+            });
+            await helper.delay(1);
+
+            document.querySelector('.dialog-content button.positive').click();
         });
-    }
-}
+    });
+};
 
 
 (function displayToolbar() {
