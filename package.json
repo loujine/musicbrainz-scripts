@@ -6,7 +6,7 @@
     "scripts": {
         "prettier:format": "prettier mb*user.js",
         "lint": "npm run eslint",
-        "eslint": "eslint *user.js *common.js"
+        "eslint": "./node_modules/eslint/bin/eslint.js *user.js *common.js"
     },
     "repository": {
         "type": "git",
@@ -23,11 +23,11 @@
     },
     "homepage": "https://github.com/loujine/musicbrainz-scripts#readme",
     "devDependencies": {
-        "eslint": "^7.9.0",
-        "eslint-config-prettier": "^6.11.0",
-        "eslint-plugin-import": "^2.22.0",
-        "eslint-plugin-prettier": "^3.1.4",
-        "prettier": "^2.1.1"
+        "eslint": "^8.35.0",
+        "eslint-config-prettier": "^8.6.0",
+        "eslint-plugin-import": "^2.27.5",
+        "eslint-plugin-prettier": "^4.2.1",
+        "prettier": "^2.8.4"
     },
     "prettier": {
         "printWidth": 80,

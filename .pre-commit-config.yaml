@@ -16,9 +16,10 @@ repos:
         entry: flake8 .
         language: python
         types: [python]
+
       - id: eslint
         name: eslint
-        entry: eslint -c .eslintrc.js
+        entry: ./node_modules/eslint/bin/eslint.js -c .eslintrc.js
         files: ^mb.*(user|common).js$
         language: system
         always_run: true

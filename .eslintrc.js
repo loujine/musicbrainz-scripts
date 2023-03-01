@@ -1,8 +1,7 @@
 module.exports = {
     "env": {
         "browser": true,
-        "es2020": true,
-        "es6": true,
+        "es2022": true,
         "greasemonkey": true,
     },
     "extends": [
@@ -15,7 +14,7 @@ module.exports = {
             "jsx": false,
             "modules": false
         },
-        "ecmaVersion": 6,
+        "ecmaVersion": 2020,
         "sourceType": "module"
     },
     "rules": {
