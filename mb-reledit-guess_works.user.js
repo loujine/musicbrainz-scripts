@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2022.1.28
+// @version      2023.2.28
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -26,52 +26,112 @@ const repeatHelp = `Ways to associate subworks SW1, SW2, SW3... with selected tr
     1,-1,1 -> SW1 and SW2 on T1, SW3 on T2...
 `;
 
-function setWork(recording, work, partial) {
-    requests.GET(`/ws/js/entity/${work.gid}?inc=rels`, function (resp) {
-        const target = JSON.parse(resp);
-        const dialog = new MB.relationshipEditor.UI.AddDialog({
+const setWork = async (recording, work, partial) => {
+    const medium = MB.relationshipEditor.state.mediumsByRecordingId.get(recording.id)[0];
+    const mediumIdx = medium.position - 1;
+    const trackIdx = medium.tracks.filter(t => t.recording.id === recording.id)[0].position -1;
+
+    await helper.waitFor(() => !MB.relationshipEditor.relationshipDialogDispatch, 1);
+    MB.relationshipEditor.dispatch({
+        type: 'update-dialog-location',
+        location: {
+            batchSelection: false,
             source: recording,
-            target: target,
-            viewModel: MB.releaseRelationshipEditor,
-        });
-        target.relationships.forEach(rel => {
-            // apparently necessary to fill MB.entityCache with rels
-            MB.getRelationship(rel, target);
-        });
-
-        if (partial) {
-            dialog.relationship().setAttributes([{
-                // 'partial' attribute, id 579
-                type: {gid: "d2b63be6-91ec-426a-987a-30b47f8aae2d"}
-            }]);
-        }
-        dialog.accept();
+            targetType: 'work',
+            track: MB.relationshipEditor.state.entity.mediums[mediumIdx].tracks[trackIdx],
+        },
     });
-}
+    await helper.waitFor(() => !!MB.relationshipEditor.relationshipDialogDispatch, 1);
 
-function replaceWork(recording, work, rel) {
-    requests.GET(`/ws/js/entity/${work.gid}?inc=rels`, function (resp) {
-        const target = JSON.parse(resp);
-        const dialog = new MB.relationshipEditor.UI.EditDialog({
+    MB.relationshipEditor.relationshipDialogDispatch({
+        type: 'update-target-entity',
+        source: recording,
+        action: {
+            type: 'update-autocomplete',
             source: recording,
-            relationship: rel,
-            viewModel: MB.releaseRelationshipEditor,
-        });
-        target.relationships.forEach(rel => {
-            // apparently necessary to fill MB.entityCache with rels
-            MB.getRelationship(rel, target);
-        });
-        dialog.relationship().entities([
-            MB.entity({entityType: 'recording', gid: recording.gid}),
-            MB.entity({entityType: 'work', gid: work.gid}),
-        ]);
-        dialog.accept();
+            action: {
+                type: 'select-item',
+                item: {
+                    type: 'option',
+                    entity: work,
+                    id: work.id,
+                    name: work.name,
+                },
+            },
+        },
     });
-}
 
-function guessWork() {
+    if (partial) {
+        const attrType = MB.linkedEntities.link_attribute_type[server.attr.partial];
+        MB.relationshipEditor.relationshipDialogDispatch({
+            type: 'set-attributes',
+            attributes: [{
+                type: {gid: attrType.gid},
+                typeID: attrType.id,
+                typeName: attrType.name,
+            }],
+        });
+    }
+    await helper.delay(1);
+
+    if (document.querySelector('.dialog-content p.error')) {
+        console.error('Dialog error, probably an identical relation already exists');
+        document.querySelector('.dialog-content button.negative').click();
+    } else {
+        document.querySelector('.dialog-content button.positive').click();
+    }
+};
+
+const replaceWork = async (recording, work) => {
+    const rel = recording.relationships.filter(rel => rel.target_type === 'work')[0];
+
+    await helper.waitFor(() => !MB.relationshipEditor.relationshipDialogDispatch, 1);
+
+    document.getElementById(`edit-relationship-recording-work-${rel.id}`).click();
+    await helper.waitFor(() => !!MB.relationshipEditor.relationshipDialogDispatch, 1);
+
+    MB.relationshipEditor.relationshipDialogDispatch({
+        type: 'update-target-entity',
+        source: recording,
+        action: {
+            type: 'update-autocomplete',
+            source: recording,
+            action: {
+                type: 'select-item',
+                item: {
+                    type: 'option',
+                    entity: work,
+                    id: work.id,
+                    name: work.name,
+                },
+            },
+        },
+    });
+    await helper.delay(1);
+
+    if (document.querySelector('.dialog-content p.error')) {
+        console.error('Dialog error, probably an identical relation already exists');
+        document.querySelector('.dialog-content button.negative').click();
+    } else {
+        document.querySelector('.dialog-content button.positive').click();
+    }
+};
+
+const guessWork = () => {
+    const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
+    if (!recordings.length) {
+        alert('No relation selected');
+        return;
+    }
+
+    // sort recordings by order in tracklist to avoid having the dialog jump everywhere
+    const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
+        m => m.tracks
+    ).map(t => t.recording.id);
+    recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
+
     let idx = 0;
-    MB.relationshipEditor.UI.checkedRecordings().forEach(recording => {
+    recordings.forEach(recording => {
         const url =
             '/ws/js/work/?q=' +
             encodeURIComponent(document.getElementById('prefix').value) +
@@ -80,7 +140,7 @@ function guessWork() {
             '&artist=' +
             encodeURIComponent(recording.artist) +
             '&fmt=json&limit=1';
-        if (!recording.performances().length) {
+        if (!recording.related_works.length) {
             idx += 1;
             setTimeout(function () {
                 requests.GET(url, function (resp) {
@@ -89,9 +149,9 @@ function guessWork() {
             }, idx * server.timeout);
         }
     });
-}
+};
 
-function autoComplete() {
+const autoComplete = () => {
     const $input = $('input#mainWork');
     const match = $input.val().match(MBID_REGEX);
     if (match) {
@@ -105,9 +165,9 @@ function autoComplete() {
     } else {
         $input.css('background', '#ffaaaa');
     }
-}
+};
 
-function fetchSubWorks(workMbid, replace) {
+const fetchSubWorks = (workMbid, replace) => {
     replace = replace || false;
     if (workMbid.split('/').length > 1) {
         workMbid = workMbid.split('/')[4];
@@ -129,7 +189,6 @@ function fetchSubWorks(workMbid, replace) {
             if (repeats[sbIdx] < 0) {
                 repeatedSubWorks[start-1].push(sb);
                 partialSubWorks.fill(false, start-1, start);
-                // start += repeats[sbIdx];
             } else {
                 repeatedSubWorks.fill([sb], start, start + repeats[sbIdx]);
                 partialSubWorks.fill(
@@ -137,23 +196,35 @@ function fetchSubWorks(workMbid, replace) {
                 start += repeats[sbIdx];
             }
         });
-        MB.relationshipEditor.UI.checkedRecordings().forEach(
-            (recording, recIdx) => {
-                if (recIdx >= repeatedSubWorks.length) {
-                    return;
-                }
-                repeatedSubWorks[recIdx].map(subw => {
-                    if (replace && recording.performances().length) {
-                        replaceWork(recording, subw, recording.performances()[0]);
-                    } else if (!recording.performances().length) {
-                        setWork(recording, subw, partialSubWorks[recIdx]);
-                    }
-                });
-            }
-        );
-    });
-}
 
+        const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
+        if (!recordings.length) {
+            alert('No relation selected');
+            return;
+        }
+
+        // sort recordings by order in tracklist to avoid having the dialog jump everywhere
+        const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
+            m => m.tracks
+        ).map(t => t.recording.id);
+        recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
+
+        recordings.forEach(async (recording, recIdx) => {
+            await helper.delay(recIdx * 200);
+            if (recIdx >= repeatedSubWorks.length) {
+                return;
+            }
+            repeatedSubWorks[recIdx].forEach(async (subw, subwIdx) => {
+                await helper.delay(subwIdx * 60);
+                if (replace && recording.related_works.length) {
+                    replaceWork(recording, subw);
+                } else if (!recording.related_works.length) {
+                    setWork(recording, subw, partialSubWorks[recIdx]);
+                }
+            });
+        });
+    });
+};
 
 (function displayToolbar() {
     relEditor.container(document.querySelector('div.tabs'))
