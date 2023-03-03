@@ -1,10 +1,10 @@
-/* global $ MB relEditor requests */
+/* global $ helper MB relEditor requests */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2022.1.28
+// @version      2023.2.28
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -61,47 +61,46 @@ function cloneAR(refIdx) {
         startIdx = parseInt(refIdx) - 1 || 0;
         range = 1;
     }
-    const vm = MB.releaseRelationshipEditor;
-    const selectedRecordings = MB.relationshipEditor.UI.checkedRecordings();
-    const sourceRecordings = selectedRecordings.splice(startIdx, range);
-    let dialog;
 
-    selectedRecordings.map((rec, idx) => {
+    const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
+    if (!recordings.length) {
+        alert('No relation selected');
+        return;
+    }
+
+    // sort recordings by order in tracklist to avoid having the dialog jump everywhere
+    const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
+        m => m.tracks
+    ).map(t => t.recording.id);
+    recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
+
+    const sourceRecordings = recordings.splice(startIdx, range);
+
+    recordings.map((rec, idx) => {
         const sourceRecording = sourceRecordings[idx % sourceRecordings.length];
-        const sourceRels = sourceRecording.relationships().filter(
+        const sourceRels = sourceRecording.relationships.filter(
             rel => !['recording-recording', 'recording-work'].includes(rel.entityTypes)
         );
         sourceRels.map(sourceRel => {
-            dialog = new MB.relationshipEditor.UI.AddDialog({
-                viewModel: vm,
-                source: rec,
-                target: sourceRel.entities().filter(ent => ent.entityType !== 'recording')[0],
+            MB.relationshipEditor.dispatch({
+                type: 'update-relationship-state',
+                sourceEntity: rec,
+                ...relEditor.dispatchDefaults,
+                batchSelectionCount: null,
+                newRelationshipState: {
+                    ...relEditor.stateDefaults,
+                    _status: 1,
+                    entity0: sourceRel.backward ? sourceRel.target : rec,
+                    entity1: sourceRel.backward ? rec : sourceRel.target,
+                    entity0_credit: sourceRel.entity0_credit,
+                    entity1_credit: sourceRel.entity1_credit,
+                    begin_date: sourceRel.begin_date,
+                    end_date: sourceRel.end_date,
+                    ended: sourceRel.ended,
+                    attributes: relEditor.createAttributeTree(sourceRel.attributes),
+                    linkTypeID: sourceRel.linkTypeID,
+                },
             });
-            dialog.accept();  // apparently required for Firefox
-
-            dialog.relationship().linkTypeID(sourceRel.linkTypeID());
-            const attrs = sourceRel.attributes();
-            attrs.map(attr => {
-                if (attr.creditedAs()) {
-                    attr.credited_as = attr.creditedAs();
-                }
-            });
-            dialog.relationship().setAttributes(attrs);
-
-            dialog.relationship().entity0_credit(sourceRel.entity0_credit());
-            dialog.relationship().entity1_credit(sourceRel.entity1_credit());
-
-            if (sourceRel.begin_date) {
-                dialog.relationship().begin_date.year(sourceRel.begin_date.year());
-                dialog.relationship().begin_date.month(sourceRel.begin_date.month());
-                dialog.relationship().begin_date.day(sourceRel.begin_date.day());
-            }
-            if (sourceRel.end_date) {
-                dialog.relationship().end_date.year(sourceRel.end_date.year());
-                dialog.relationship().end_date.month(sourceRel.end_date.month());
-                dialog.relationship().end_date.day(sourceRel.end_date.day());
-            }
-            dialog.accept();
         });
     });
 }
@@ -110,44 +109,45 @@ function cloneExtAR(recMBID) {
     if (recMBID.split('/').length > 1) {
         recMBID = recMBID.split('/')[4];
     }
-    const vm = MB.releaseRelationshipEditor;
-    const selectedRecordings = MB.relationshipEditor.UI.checkedRecordings();
-    let dialog;
-
     requests.GET(`/ws/js/entity/${recMBID}?inc=rels`, resp => {
         const sourceRels = JSON.parse(resp).relationships.filter(
             rel => rel.target_type != 'work'
         );
-        selectedRecordings.map(rec => {
+
+        const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
+        if (!recordings.length) {
+            alert('No relation selected');
+            return;
+        }
+
+        // sort recordings by order in tracklist to avoid having the dialog jump everywhere
+        const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
+            m => m.tracks
+        ).map(t => t.recording.id);
+        recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
+
+        recordings.map(async (rec, idx) => {
+            await helper.delay(idx * 100);
             sourceRels.map(sourceRel => {
-                dialog = new MB.relationshipEditor.UI.AddDialog({
-                    viewModel: vm,
-                    source: rec,
-                    target: sourceRel.target,
+                MB.relationshipEditor.dispatch({
+                    type: 'update-relationship-state',
+                    sourceEntity: rec,
+                    ...relEditor.dispatchDefaults,
+                    batchSelectionCount: null,
+                    newRelationshipState: {
+                        ...relEditor.stateDefaults,
+                        _status: 1,
+                        entity0: sourceRel.backward ? sourceRel.target : rec,
+                        entity1: sourceRel.backward ? rec : sourceRel.target,
+                        entity0_credit: sourceRel.entity0_credit,
+                        entity1_credit: sourceRel.entity1_credit,
+                        begin_date: sourceRel.begin_date,
+                        end_date: sourceRel.end_date,
+                        ended: sourceRel.ended,
+                        attributes: relEditor.createAttributeTree(sourceRel.attributes),
+                        linkTypeID: sourceRel.linkTypeID,
+                    },
                 });
-                dialog.accept();  // apparently required for Firefox
-
-                dialog.relationship().linkTypeID(sourceRel.linkTypeID);
-                dialog.relationship().setAttributes(sourceRel.attributes);
-
-                dialog.relationship().entity0_credit(sourceRel.entity0_credit);
-                dialog.relationship().entity1_credit(sourceRel.entity1_credit);
-
-                if (sourceRel.target_type === 'recording'
-                        && sourceRel.backward) {
-                    dialog.changeDirection();
-                }
-                if (sourceRel.begin_date) {
-                    dialog.relationship().begin_date.year(sourceRel.begin_date.year);
-                    dialog.relationship().begin_date.month(sourceRel.begin_date.month);
-                    dialog.relationship().begin_date.day(sourceRel.begin_date.day);
-                }
-                if (sourceRel.end_date) {
-                    dialog.relationship().end_date.year(sourceRel.end_date.year);
-                    dialog.relationship().end_date.month(sourceRel.end_date.month);
-                    dialog.relationship().end_date.day(sourceRel.end_date.day);
-                }
-                dialog.accept();
             });
         });
     });
@@ -157,38 +157,33 @@ function cloneReleaseExtAR(relMBID) {
     if (relMBID.split('/').length > 1) {
         relMBID = relMBID.split('/')[4];
     }
-    const vm = MB.releaseRelationshipEditor;
-    const release = MB.entity({entityType: 'release', gid: document.URL.split('/')[4]});
-    let dialog;
 
-    requests.GET(`/ws/js/entity/${relMBID}?inc=rels`, resp => {
+    requests.GET(`/ws/js/entity/${relMBID}?inc=rels`, async resp => {
         const sourceRels = JSON.parse(resp).relationships.filter(
-            rel => rel.target_type != 'url'
+            rel => rel.target_type !== 'url'
         );
+        const dialogSource = MB.relationshipEditor.state.entity;
+
         sourceRels.map(sourceRel => {
-            dialog = new MB.relationshipEditor.UI.AddDialog({
-                viewModel: vm,
-                source: release,
-                target: sourceRel.target,
+            MB.relationshipEditor.dispatch({
+                type: 'update-relationship-state',
+                sourceEntity: dialogSource,
+                ...relEditor.dispatchDefaults,
+                batchSelectionCount: null,
+                newRelationshipState: {
+                    ...relEditor.stateDefaults,
+                    _status: 1,
+                    entity0: sourceRel.backward ? sourceRel.target : dialogSource,
+                    entity1: sourceRel.backward ? dialogSource : sourceRel.target,
+                    entity0_credit: sourceRel.entity0_credit,
+                    entity1_credit: sourceRel.entity1_credit,
+                    begin_date: sourceRel.begin_date,
+                    end_date: sourceRel.end_date,
+                    ended: sourceRel.ended,
+                    attributes: relEditor.createAttributeTree(sourceRel.attributes),
+                    linkTypeID: sourceRel.linkTypeID,
+                },
             });
-
-            dialog.relationship().linkTypeID(sourceRel.linkTypeID);
-            dialog.relationship().setAttributes(sourceRel.attributes);
-
-            dialog.relationship().entity0_credit(sourceRel.entity0_credit);
-            dialog.relationship().entity1_credit(sourceRel.entity1_credit);
-
-            if (sourceRel.begin_date) {
-                dialog.relationship().begin_date.year(sourceRel.begin_date.year);
-                dialog.relationship().begin_date.month(sourceRel.begin_date.month);
-                dialog.relationship().begin_date.day(sourceRel.begin_date.day);
-            }
-            if (sourceRel.end_date) {
-                dialog.relationship().end_date.year(sourceRel.end_date.year);
-                dialog.relationship().end_date.month(sourceRel.end_date.month);
-                dialog.relationship().end_date.day(sourceRel.end_date.day);
-            }
-            dialog.accept();
         });
     });
 }
