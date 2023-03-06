@@ -45,7 +45,8 @@ function moveAR() {
         });
         if (recordings.length) {
             document.getElementById(
-                `remove-relationship-${artistRel.target_type}-${artistRel.source_type}-${artistRel.id}`
+                `remove-relationship-${artistRel.target_type}-` +
+                `${artistRel.source_type}-${artistRel.id}`
             ).click();
         }
     });

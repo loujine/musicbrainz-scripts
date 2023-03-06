@@ -79,7 +79,7 @@ function sortByClickedColumn(evt) {
         row.classList.add(rowclass);
         table.append(row);
     });
-    table[0].querySelectorAll('tbody tr:not(.even,.odd,.subh)').forEach((row, idx) => {
+    table[0].querySelectorAll('tbody tr:not(.even,.odd,.subh)').forEach(row => {
         table.append(row);
     });
 }
