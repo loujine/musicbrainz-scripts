@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.2.28
+// @version      2023.3.5
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -23,28 +23,12 @@ const setAttributes = (targetType, attrName, toggle) => {
         attr => attr.name === attrName
     )[0];
 
-    const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
-    if (!recordings.length) {
-        alert('No relation selected');
-        return;
-    }
-
-    // sort recordings by order in tracklist to avoid having the dialog jump everywhere
-    const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
-        m => m.tracks
-    ).map(t => t.recording.id);
-    recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
-
-    let recIdx = 0;
-    recordings.map(async rec => {
-        recIdx += 1;
+    relEditor.orderedSelectedRecordings().forEach(async (recording, recIdx) => {
         await helper.delay(recIdx * 100);
-        let relIdx = 0;
 
-        rec.relationships.filter(
+        recording.relationships.filter(
             rel => rel.target_type === targetType
-        ).map(async rel => {
-            relIdx += 1;
+        ).forEach(async (rel, relIdx) => {
             await helper.delay(relIdx * 10);
 
             const attrs = rel.attributes;

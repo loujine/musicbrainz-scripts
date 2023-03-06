@@ -62,18 +62,7 @@ function cloneAR(refIdx) {
         range = 1;
     }
 
-    const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
-    if (!recordings.length) {
-        alert('No relation selected');
-        return;
-    }
-
-    // sort recordings by order in tracklist to avoid having the dialog jump everywhere
-    const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
-        m => m.tracks
-    ).map(t => t.recording.id);
-    recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
-
+    const recordings = relEditor.orderedSelectedRecordings();
     const sourceRecordings = recordings.splice(startIdx, range);
 
     recordings.map((rec, idx) => {
@@ -114,31 +103,19 @@ function cloneExtAR(recMBID) {
             rel => rel.target_type != 'work'
         );
 
-        const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
-        if (!recordings.length) {
-            alert('No relation selected');
-            return;
-        }
-
-        // sort recordings by order in tracklist to avoid having the dialog jump everywhere
-        const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
-            m => m.tracks
-        ).map(t => t.recording.id);
-        recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
-
-        recordings.map(async (rec, idx) => {
-            await helper.delay(idx * 100);
+        relEditor.orderedSelectedRecordings().forEach(async (recording, recIdx) => {
+            await helper.delay(recIdx * 100);
             sourceRels.map(sourceRel => {
                 MB.relationshipEditor.dispatch({
                     type: 'update-relationship-state',
-                    sourceEntity: rec,
+                    sourceEntity: recording,
                     ...relEditor.dispatchDefaults,
                     batchSelectionCount: null,
                     newRelationshipState: {
                         ...relEditor.stateDefaults,
                         _status: 1,
-                        entity0: sourceRel.backward ? sourceRel.target : rec,
-                        entity1: sourceRel.backward ? rec : sourceRel.target,
+                        entity0: sourceRel.backward ? sourceRel.target : recording,
+                        entity1: sourceRel.backward ? recording : sourceRel.target,
                         entity0_credit: sourceRel.entity0_credit,
                         entity1_credit: sourceRel.entity1_credit,
                         begin_date: sourceRel.begin_date,

@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.2.28
+// @version      2023.3.5
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -21,33 +21,17 @@
 const setInstrument = (fromType, toType, fromAttrId, toAttrId, toCredit) => {
     const toAttr = MB.linkedEntities.link_attribute_type[toAttrId];
 
-    const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
-    if (!recordings.length) {
-        alert('No relation selected');
-        return;
-    }
-
-    // sort recordings by order in tracklist to avoid having the dialog jump everywhere
-    const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
-        m => m.tracks
-    ).map(t => t.recording.id);
-    recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
-
-    let recIdx = 0;
-    recordings.map(async rec => {
-        recIdx += 1;
+    relEditor.orderedSelectedRecordings().forEach(async (recording, recIdx) => {
         await helper.delay(recIdx * 100);
-        let relIdx = 0;
 
-        rec.relationships.filter(
+        recording.relationships.filter(
             rel => rel.linkTypeID === fromType
         ).filter(
             rel => (
                 (isNaN(fromAttrId) && rel.attributes.length === 0)
                 || rel.attributes.map(attr => attr.type.id).includes(fromAttrId)
             )
-        ).map(async rel => {
-            relIdx += 1;
+        ).forEach(async (rel, relIdx) => {
             await helper.delay(relIdx * 10);
 
             const relType = rel.backward
@@ -61,10 +45,10 @@ const setInstrument = (fromType, toType, fromAttrId, toAttrId, toCredit) => {
 
             MB.relationshipEditor.relationshipDialogDispatch({
                 type: 'update-link-type',
-                source: rec,
+                source: recording,
                 action: {
                     type: 'update-autocomplete',
-                    source: rec,
+                    source: recording,
                     action: {
                         type: 'select-item',
                         item: {

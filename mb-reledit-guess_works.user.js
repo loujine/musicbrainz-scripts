@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.2.28
+// @version      2023.3.5
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -118,20 +118,8 @@ const replaceWork = async (recording, work) => {
 };
 
 const guessWork = () => {
-    const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
-    if (!recordings.length) {
-        alert('No relation selected');
-        return;
-    }
-
-    // sort recordings by order in tracklist to avoid having the dialog jump everywhere
-    const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
-        m => m.tracks
-    ).map(t => t.recording.id);
-    recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
-
     let idx = 0;
-    recordings.forEach(recording => {
+    relEditor.orderedSelectedRecordings().forEach(recording => {
         const url =
             '/ws/js/work/?q=' +
             encodeURIComponent(document.getElementById('prefix').value) +
@@ -197,19 +185,7 @@ const fetchSubWorks = (workMbid, replace) => {
             }
         });
 
-        const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
-        if (!recordings.length) {
-            alert('No relation selected');
-            return;
-        }
-
-        // sort recordings by order in tracklist to avoid having the dialog jump everywhere
-        const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
-            m => m.tracks
-        ).map(t => t.recording.id);
-        recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
-
-        recordings.forEach(async (recording, recIdx) => {
+        relEditor.orderedSelectedRecordings().forEach(async (recording, recIdx) => {
             await helper.delay(recIdx * 200);
             if (recIdx >= repeatedSubWorks.length) {
                 return;
