@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.5
+// @version      2023.3.6
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts

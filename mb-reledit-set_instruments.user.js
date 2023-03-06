@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.5
+// @version      2023.3.6
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
