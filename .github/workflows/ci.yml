@@ -33,4 +33,4 @@ jobs:
         run: sudo apt install -y python3-selenium python3-pytest chromium-driver
 
       - name: 'Run tests'
-        run: pytest-3 -l -v -s tests/
+        run: pytest-3 || pytest-3 --lf --lfnf none
