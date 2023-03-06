@@ -887,6 +887,20 @@ class RelationshipEditor {
         );
     }
 
+    orderedSelectedRecordings() {
+        const recordings = MB.tree.toArray(MB.relationshipEditor.state.selectedRecordings);
+        if (!recordings.length) {
+            alert('No relation selected');
+        }
+
+        // sort recordings by order in tracklist to avoid having the dialog jump everywhere
+        const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
+            m => m.tracks
+        ).map(t => t.recording.id);
+        recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
+        return recordings;
+    }
+
     parseDate(dateProp) {
         if (dateProp === null) {
             return {year: '', month: '', day: ''};
