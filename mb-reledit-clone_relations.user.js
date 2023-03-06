@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.2.28
+// @version      2023.3.5
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -79,7 +79,7 @@ function cloneAR(refIdx) {
     recordings.map((rec, idx) => {
         const sourceRecording = sourceRecordings[idx % sourceRecordings.length];
         const sourceRels = sourceRecording.relationships.filter(
-            rel => !['recording-recording', 'recording-work'].includes(rel.entityTypes)
+            rel => !['recording', 'work'].includes(rel.target_type)
         );
         sourceRels.map(sourceRel => {
             MB.relationshipEditor.dispatch({
