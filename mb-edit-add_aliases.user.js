@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Add entity aliases in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2020.10.21.1
+// @version      2023.3.6.1
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/aliases_for_ff44/mb-edit-add_aliases.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/aliases_for_ff44/mb-edit-add_aliases.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -146,8 +146,19 @@ const server = {
         'zh_Hant_HK': 'Chinese Hong Kong SAR China Traditional',
         'zh_Hant_TW': 'Chinese Taiwan Traditional',
         'zu': 'Zulu',
+        'arz': 'Arab in Egypt',
+        'chr': 'Cherokee',
+        'gv': 'Manx',
+        'mai': 'Maithili',
+        'no': 'Norwegian',
+        'rm': 'Romansh',
+        'sa': 'Sanskrit',
+        'sc': 'Sardinian',
+        'su': 'Sundanese',
+        'su_Latn': 'Sundanese Latin',
+        'tt': 'Tatar',
     },
-}
+};
 
 const aliases = {
     artistType: `
