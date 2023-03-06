@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.2.27
+// @version      2023.3.6
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -842,6 +842,13 @@ class RelationshipEditor {
         };
     }
 
+    // from https://github.com/kellnerd/musicbrainz-scripts/blob/main/utils/dom/react.js
+    setReactTextareaValue(input, value) {
+        const setter = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value').set;
+        setter.call(input, value);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
     editNote(meta, msg) {
         const node = document.getElementById('edit-note-text');
         msg = msg ? '\n' + msg : '';
@@ -851,10 +858,17 @@ class RelationshipEditor {
         let existingSign;
         if (existingMsg.includes(separator)) {
             [existingMsg, existingSign] = existingMsg.split(separator);
-            node.value = [existingMsg + msg, existingSign + signature].join(separator);
+            this.setReactTextareaValue(
+                node,
+                [existingMsg + msg, existingSign + signature].join(separator),
+            );
         } else {
-            node.value = [existingMsg + msg, signature].join(separator);
+            this.setReactTextareaValue(
+                node,
+                [existingMsg + msg, signature].join(separator),
+            );
         }
+
     }
 
     container(node) {
@@ -874,6 +888,7 @@ class RelationshipEditor {
         return document.getElementById('loujine-menu');
     }
 
+    // from https://github.com/kellnerd/musicbrainz-scripts/blob/main/src/relationship-editor/createRelationship.js
     createAttributeTree(attributes) {
         return MB.tree.fromDistinctAscArray(attributes
             .map((attribute) => {

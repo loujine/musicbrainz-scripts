@@ -38,6 +38,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert len(self.driver.find_elements_by_class_name('rel-add')) > 1
         assert 'recorded at' in self.driver.find_element_by_css_selector(
             'td.recording').text
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_clone_ext_recording_relations(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
@@ -51,6 +52,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('cloneAR').click()
         time.sleep(5)
         assert len(self.driver.find_elements_by_class_name('rel-add')) > 1
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_clone_recording_relations(self):
         self.login('release', RELEASE_W_RECRELS_MBID + '/edit-relationships')
@@ -64,6 +66,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('cloneAR').click()
         time.sleep(5)
         assert len(self.driver.find_elements_by_class_name('rel-add')) > 1
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_clone_multi_sources(self):
         self.login('release', RELEASE_W_RECRELS_MBID + '/edit-relationships')
@@ -80,6 +83,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
             'tr:not(.even) td.recording span.rel-add a')])) < 3
         assert 0 < len(set([node.text for node in self.driver.find_elements_by_css_selector(
             'tr.even td.recording span.rel-add a')])) < 3
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_clone_release_relations(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
@@ -95,6 +99,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         time.sleep(5)
         assert len(self.driver.find_elements_by_css_selector(
             'table.rel-editor-table td.relationship-list span.rel-add')) == 1
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_clone_GH_28(self):
         # check the relation direction is kept
@@ -105,6 +110,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert not self.driver.page_source.count('samples of')
         count_backward = self.driver.page_source.count('sampled by')
         self.driver.find_element_by_id('clone_rels_script_toggle').click()
+        time.sleep(1)
         self.driver.find_element_by_css_selector('td.recording input').click()
         self.driver.find_element_by_id('cloneExtRecording').send_keys(RECORDING_RELS_URL)
         time.sleep(3)
@@ -113,6 +119,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert len(self.driver.find_elements_by_class_name('rel-add')) > 1
         assert not self.driver.page_source.count('samples of')
         assert self.driver.page_source.count('sampled by') == count_backward + 1
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_remove_dates(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
@@ -123,6 +130,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('removeDates').click()
         time.sleep(1)
         assert 'on 2016-04-07' not in self.driver.page_source
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_copy_dates(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
@@ -140,6 +148,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('copyDates').click()
         time.sleep(1)
         assert self.driver.page_source.count('on 2016-04-07') > 1
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_guess_works(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
@@ -152,6 +161,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('searchWork').click()
         time.sleep(5)
         assert len(self.driver.find_elements_by_css_selector('td.relationship-list span.rel-add')) == 1
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_guess_main_works(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
@@ -165,6 +175,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('fetchSubworks').click()
         time.sleep(6)
         assert len(self.driver.find_elements_by_css_selector('td.relationship-list span.rel-add')) == 4
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_guess_repeated_subworks(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
@@ -195,6 +206,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         self.driver.find_element_by_id('fetchSubworks').click()
         time.sleep(3)
         assert len(self.driver.find_elements_by_css_selector('td.relationship-list span.rel-add')) == 3
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_guess_overlapping_subworks(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
@@ -216,6 +228,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert not any(
             ['partial' in node.text for node in self.driver.find_elements_by_css_selector(
                 'td.relationship-list span.rel-add')])
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_release_rels(self):
         self.login('release', RELEASE_W_RELS_MBID + '/edit-relationships')
@@ -228,6 +241,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert len(self.driver.find_elements_by_css_selector('td.relationship-list span.rel-add')) == 4
         assert len(self.driver.find_elements_by_css_selector(
             'table.rel-editor-table td.relationship-list span.rel-remove')) == 4
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_set_instruments(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
@@ -245,6 +259,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         time.sleep(1)
         assert self.driver.page_source.count('orchestra') < count_from
         assert self.driver.page_source.count('remixer') > count_to
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def test_script_relation_attrs(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
@@ -272,6 +287,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert '(live)' not in self.driver.page_source
         assert '(live and partial)' not in self.driver.page_source
         assert '(partial)' in self.driver.page_source
+        assert self.driver.find_element_by_id('edit-note-text').text
 
     def tearDown(self):
         super().tearDown()
