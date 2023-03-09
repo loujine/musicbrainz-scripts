@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.6
+// @version      2023.3.9
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -827,6 +827,7 @@ class RelationshipEditor {
             oldRelationshipState: null,
         };
         this.stateDefaults = {
+            _lineage: [],
             _original: null,
             _status: 0,
             attributes: null,
