@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Clone recording relations onto other recordings
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.6
+// @version      2023.3.9
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-clone_relations.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -87,6 +87,7 @@ function cloneAR(refIdx) {
                     end_date: sourceRel.end_date,
                     ended: sourceRel.ended,
                     attributes: relEditor.createAttributeTree(sourceRel.attributes),
+                    id: MB.relationshipEditor.getRelationshipStateId(),
                     linkTypeID: sourceRel.linkTypeID,
                 },
             });
@@ -122,6 +123,7 @@ function cloneExtAR(recMBID) {
                         end_date: sourceRel.end_date,
                         ended: sourceRel.ended,
                         attributes: relEditor.createAttributeTree(sourceRel.attributes),
+                        id: MB.relationshipEditor.getRelationshipStateId(),
                         linkTypeID: sourceRel.linkTypeID,
                     },
                 });
@@ -158,6 +160,7 @@ function cloneReleaseExtAR(relMBID) {
                     end_date: sourceRel.end_date,
                     ended: sourceRel.ended,
                     attributes: relEditor.createAttributeTree(sourceRel.attributes),
+                    id: MB.relationshipEditor.getRelationshipStateId(),
                     linkTypeID: sourceRel.linkTypeID,
                 },
             });
