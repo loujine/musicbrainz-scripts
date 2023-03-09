@@ -361,35 +361,6 @@ class Server {
         ];
         return roles.map(role => this.recordingLinkType[role]);
     }
-
-    getRelationshipTypeInfo() {
-        const scriptSrc = document.scripts[document.scripts.length - 1].text;
-        const jsonSource = new RegExp(
-            /RE.exportTypeInfo\(\n(.*),\n(.*)\n/
-        ).exec(scriptSrc);
-        return JSON.parse(jsonSource[1]);
-    }
-
-    getRelationshipAttrInfo() {
-        const scriptSrc = document.scripts[document.scripts.length - 1].text;
-        const jsonSource = new RegExp(
-            /RE.exportTypeInfo\(\n(.*),\n(.*)\n/
-        ).exec(scriptSrc);
-        return Object.values(JSON.parse(jsonSource[2]));
-    }
-
-    getInstrumentRelationshipAttrInfo() {
-        return this.getRelationshipAttrInfo().filter(attr =>
-            [
-                // all instruments as children of the "instrument" parent
-                this.instrumentType.instrument,
-                // lead, background, choir
-                this.vocalType.vocal,
-                // all standard voices
-                this.vocalType.lead,
-            ].includes(attr.parent_id)
-        );
-    }
 }
 
 const server = new Server();
