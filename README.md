@@ -187,7 +187,7 @@ Set/unset role relations on selected recordings
 
 ### Importer scripts
 
-Importer scripts should be installed from [https://raw.githubusercontent.com/murdos/musicbrainz-userscripts](murdos's repo) when possible (e.g. Naxos Library)
+Importer scripts should be installed from [murdos's repo](https://github.com/murdos/musicbrainz-userscripts) when possible (e.g. Naxos Library)
 
 #### Import Idagio releases to MusicBrainz
 
