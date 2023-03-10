@@ -166,7 +166,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
     def test_script_guess_main_works(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-guess_works.user.js')
-        time.sleep(1)
+        time.sleep(2)
 
         # no repeats
         self.driver.find_element_by_css_selector('th.recordings input').click()
@@ -211,7 +211,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
     def test_script_guess_overlapping_subworks(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-guess_works.user.js')
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_css_selector('th.recordings input').click()
         self.driver.find_element_by_id('mainWork').send_keys(MAIN_WORK_MBID)
         time.sleep(1)
