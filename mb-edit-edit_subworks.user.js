@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace subwork titles, disambiguations and attributes in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.10
+// @version      2023.3.11
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -19,39 +19,34 @@
 // @run-at       document-end
 // ==/UserScript==
 
-const success = (xhr, idx) => {
-    const $status = $('#replace' + idx);
+const success = (xhr, nodeIdx) => {
+    const statusNode = document.getElementById(`replace${nodeIdx}`);
     const rx = new RegExp(
         '/edit/(\\d+)">edit</a>'
     ).exec(xhr.responseText);
     if (rx === null) {
         // usually means the POST was accepted but nothing was changed
         // i.e. the attributes names are wrong
-        $status.text(
-            'Edit was probably not applied, please check'
-        ).parent().css('color', 'red');
+        statusNode.textContent = 'Edit was probably not applied, please check';
+        statusNode.parentElement.style.color = 'red';
         return;
     }
     const editId = rx[1];
-    $status.parent().css('color', 'green');
-    $status.after(
-        $('<p>').append(
-            `<a href="/edit/${editId}" target="_blank">edit ${editId}</a>`
-        )
+    statusNode.parentElement.style.color = 'green';
+    statusNode.insertAdjacentHTML(
+        'afterend', `<p><a href="/edit/${editId}" target="_blank">edit ${editId}</a></p>`
     );
 };
 
-const fail = (xhr, idx) => {
-    $('#replace' + idx).text(
-        `Error (code ${xhr.status})`
-    ).parent().css('color', 'red');
+const fail = (xhr, nodeIdx) => {
+    const statusNode = document.getElementById(`replace${nodeIdx}`);
+    statusNode.textContent = `Error (code ${xhr.status})`;
+    statusNode.parentElement.style.color = 'red';
 };
 
 function replaceSubworksTitles() {
-    let idx = 0;
-    $('table label:contains("parts:")').parents('tr').find(
-        'a[href*="/work/"]'
-    ).each((_idx, node) => {
+    let delayIdx = 0;
+    document.querySelectorAll('table tr.parts a[href*="/work/"]').forEach((node, nodeIdx) => {
         const searchExp = document.getElementById('subwork-regexp-search').value;
         const replaceExp = document.getElementById('subwork-regexp-replace').value;
         if (!searchExp || searchExp === replaceExp) {
@@ -61,47 +56,48 @@ function replaceSubworksTitles() {
             node.textContent.replace(eval(searchExp), replaceExp) : // eslint-disable-line no-eval
             node.textContent.split(searchExp).join(replaceExp);
         if (name === node.textContent) {
-            $(node).after('<span>nothing to replace</span>');
+            node.insertAdjacentHTML('afterend', '<span>nothing to replace</span>');
             return;
         }
         const mbid = helper.mbidFromURL(node.href);
         const url = edits.urlFromMbid('work', mbid);
 
         function callback(editData) {
-            $('#replace' + _idx).text('Sending edit data');
+            document.getElementById(`replace${nodeIdx}`).textContent = 'Sending edit data';
             editData.name = name;
-            $('#replace' + _idx).text(' replaced by ' + name);
+            document.getElementById(`replace${nodeIdx}`).textContent = 'replaced by ' + name;
             const postData = edits.prepareEdit(editData);
             postData.edit_note = sidebar.editNote(GM_info.script);
             console.info('Data ready to be posted: ', postData);
             requests.POST(
                 url,
                 edits.formatEdit('edit-work', postData),
-                (xhr) => success(xhr, _idx),
-                (xhr) => fail(xhr, _idx)
+                (xhr) => success(xhr, nodeIdx),
+                (xhr) => fail(xhr, nodeIdx)
             );
         }
         setTimeout(function () {
-            $(node).after('<span id="replace' + _idx + '">' +
-                          'Fetching required data</span>');
+            node.insertAdjacentHTML(
+                'afterend', ` <span id="replace${nodeIdx}">Fetching required data</span>`);
             edits.getWorkEditParams(url, callback);
-        }, 2 * idx * server.timeout);
-        idx += 1;
+        }, 2 * delayIdx * server.timeout);
+        delayIdx += 1;
     });
 }
 
 
 function replaceSubworksDisambiguations(comment) {
-    let idx = 0;
-    $('table label:contains("parts:")').parents('tr').find(
-        'a[href*="/work/"]'
-    ).each((_idx, node) => {
+    let delayIdx = 0;
+    document.querySelectorAll('table tr.parts a[href*="/work/"]').forEach((node, nodeIdx) => {
         const mbid = helper.mbidFromURL(node.href);
         const url = edits.urlFromMbid('work', mbid);
 
         function callback(editData) {
-            $('#replace' + _idx).text(' (' + comment + ')');
-            $('#replace' + _idx).siblings('.comment').hide(); // hide old disambiguation
+            const statusNode = document.getElementById(`replace${nodeIdx}`);
+            statusNode.textContent = ` (${comment})`;
+            if (node.parentElement.querySelector('.comment')) {
+                node.parentElement.querySelector('.comment').textContent = "";
+            }
             const postData = edits.prepareEdit(editData);
             postData.comment = comment; // workaround, it would be better to let prepareEdit() handle this
             postData.edit_note = sidebar.editNote(GM_info.script);
@@ -109,16 +105,16 @@ function replaceSubworksDisambiguations(comment) {
             requests.POST(
                 url,
                 edits.formatEdit('edit-work', postData),
-                (xhr) => success(xhr, _idx),
-                (xhr) => fail(xhr, _idx)
+                (xhr) => success(xhr, nodeIdx),
+                (xhr) => fail(xhr, nodeIdx)
             );
         }
         setTimeout(function () {
-            $(node).after('<span id="replace' + _idx + '">' +
-                          'Fetching required data</span>');
+            node.insertAdjacentHTML(
+                'afterend', ` <span id="replace${nodeIdx}">Fetching required data</span>`);
             edits.getWorkEditParams(url, callback);
-        }, 2 * idx * server.timeout);
-        idx += 1;
+        }, 2 * delayIdx * server.timeout);
+        delayIdx += 1;
     });
 }
 
@@ -135,6 +131,9 @@ function setSubworksAttributes(attrIdx) {
 
 
 (function displayToolbar() {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     document.getElementsByClassName('half-width')[0].insertAdjacentHTML(
         'afterend', '<div id="side-col" style="float: right;"></div>');
     relEditor.container(document.getElementById('side-col')).insertAdjacentHTML(
@@ -170,17 +169,20 @@ function setSubworksAttributes(attrIdx) {
 
 
 $(document).ready(function () {
-    $('#subwork-regexp-search').keydown(function () {
-        $('#replaceTitles').prop('disabled', false);
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
+    document.getElementById('subwork-regexp-search').addEventListener('keydown', () => {
+        document.getElementById('replaceTitles').disabled = false;
     });
     document.getElementById('replaceTitles').addEventListener('click', () => {
         replaceSubworksTitles();
     });
     document.getElementById('replaceSubworksDisambiguations').addEventListener('click', () => {
-        replaceSubworksDisambiguations($('#subwork-disambiguation')[0].value);
+        replaceSubworksDisambiguations(document.getElementById('subwork-disambiguation').value);
     });
     document.getElementById('setSubworksAttributes').addEventListener('click', () => {
-        setSubworksAttributes($('select#subwork_attribute')[0].value);
+        setSubworksAttributes(document.getElementById('subwork_attribute').value);
         document.getElementById('id-edit-work.edit_note')
             .value = sidebar.editNote(GM_info.script, 'Set subworks attributes');
     });
