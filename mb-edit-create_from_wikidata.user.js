@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.2.3
+// @version      2023.3.11
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -682,6 +682,9 @@ function fillFormFromISNI(isniURL) {
 
 
 (function displayToolbar() {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     document.getElementsByClassName('half-width')[0].insertAdjacentHTML(
         'afterend', '<div id="side-col" style="float: right;"></div>');
     relEditor.container(document.getElementById('side-col')).insertAdjacentHTML(
@@ -697,6 +700,9 @@ function fillFormFromISNI(isniURL) {
 })();
 
 $(document).ready(function () {
+    if (!helper.isUserLoggedIn()) {
+        return false;
+    }
     const node = document.getElementById('linkParser');
     node.addEventListener('input', () => {
         node.value = node.value.trim();
