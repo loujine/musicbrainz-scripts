@@ -11,6 +11,7 @@ ARTIST_MBID = 'cea4a3b8-c26c-4b61-a243-cf72555e2c71'
 RELEASE_MBID = '0381e8bd-29d3-4fa1-bf8a-e8b1d87ff531'
 RECORDING_MBID = '4b86f0bf-be35-4c78-a554-80f795c020aa'
 WIKIDATA_LINK = 'https://www.wikidata.org/wiki/Q27916341'
+WORK_WITH_SW_MBID = 'cbfca1d7-30de-4d40-967b-f7bc4c2e3176'
 
 
 class EditUserscriptsTC(UserscriptsTC):
@@ -73,6 +74,25 @@ class EditUserscriptsTC(UserscriptsTC):
         # row 1 is now the former row 2 (i.e. empty)
         assert self.driver.find_element_by_css_selector(
             'tr.newAlias select').get_attribute('selectedIndex') == '0'
+
+    def test_script_edit_subworks(self):
+        self.login('work', WORK_WITH_SW_MBID + '/edit')
+        self.load_userscript('mb-edit-edit_subworks.user.js')
+        time.sleep(1)
+        assert '(movement)' in self.driver.page_source
+
+        select = Select(self.driver.find_element_by_id('subwork_attribute'))
+        select.select_by_visible_text('act')
+        self.driver.find_element_by_id('setSubworksAttributes').click()
+        time.sleep(1)
+        assert '(movement)' not in self.driver.page_source
+        assert '(act and movement)' in self.driver.page_source
+
+        select.select_by_visible_text('movement')
+        self.driver.find_element_by_id('setSubworksAttributes').click()
+        time.sleep(1)
+        assert '(act and movement)' not in self.driver.page_source
+        assert '(act)' in self.driver.page_source
 
 
 if __name__ == "__main__":

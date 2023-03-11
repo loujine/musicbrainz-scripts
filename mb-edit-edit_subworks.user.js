@@ -1,4 +1,4 @@
-/* global $ relEditor requests edits server sidebar helper */
+/* global $ relEditor requests edits MB server sidebar helper */
 'use strict';
 // ==UserScript==
 // @name         MusicBrainz edit: Replace subwork titles, disambiguations and attributes in Work edit page
@@ -119,14 +119,19 @@ function replaceSubworksDisambiguations(comment) {
 }
 
 
-function setSubworksAttributes(attrIdx) {
-    $('table label:contains("parts:")').parents('tr').find('button[class*="edit-item"]').each(
-        function (_idx, node) {
-            node.click();
-            $('.attribute-container input')[attrIdx].click();
-            $('.rel-editor-dialog button.positive').click();
-        }
-    );
+function setSubworksAttributes(attrName) {
+    document.querySelectorAll('table tr.parts button.edit-item').forEach(async (button, swIdx) => {
+        await helper.delay(swIdx * 10);
+        await helper.waitFor(() => !MB.relationshipEditor.relationshipDialogDispatch, 1);
+
+        button.click();
+        await helper.waitFor(() => !!MB.relationshipEditor.relationshipDialogDispatch, 1);
+
+        document.querySelector(`.dialog-content input#${attrName}-checkbox`).click();
+        await helper.delay(1);
+
+        document.querySelector('.dialog-content button.positive').click();
+    });
 }
 
 
@@ -156,10 +161,10 @@ function setSubworksAttributes(attrIdx) {
         <h3>Set subworks attributes</h3>
         <select id="subwork_attribute">
           <option value=""></option>
-          <option value=0>act</option>
-          <option value=1>movement</option>
-          <option value=2>number</option>
-          <option value=3>part of collection</option>
+          <option value="act">act</option>
+          <option value="movement">movement</option>
+          <option value="number">number</option>
+          <option value="part-of-collection">part of collection</option>
         </select>
         <input type="button" id="setSubworksAttributes" value="Set attribute on all subworks">
 
