@@ -4,7 +4,7 @@
 // @name         mbz-loujine-common
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.9
+// @version      2023.3.12
 // @description  musicbrainz.org: common functions
 // @compatible   firefox+greasemonkey
 // @license      MIT
@@ -882,7 +882,13 @@ class RelationshipEditor {
 
     // sort recordings by order in tracklist to avoid having the dialog jump everywhere
     const recOrder = MB.getSourceEntityInstance().mediums.flatMap(
+      // tracks on mediums 1-10 loaded by default
       m => m.tracks
+    ).concat(
+      // tracks on unfolded mediums
+      Array.from(MB.relationshipEditor.state.loadedTracks.keys()).sort().flatMap(
+        k => MB.relationshipEditor.state.loadedTracks.get(k)
+      )
     ).map(t => t.recording.id);
     recordings.sort((r1, r2) => recOrder.indexOf(r1.id) - recOrder.indexOf(r2.id));
     return recordings;

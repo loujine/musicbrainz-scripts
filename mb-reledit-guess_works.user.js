@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.6
+// @version      2023.3.12
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -28,8 +28,12 @@ const repeatHelp = `Ways to associate subworks SW1, SW2, SW3... with selected tr
 
 const setWork = async (recording, work, partial) => {
   const medium = MB.relationshipEditor.state.mediumsByRecordingId.get(recording.id)[0];
-  const mediumIdx = medium.position - 1;
-  const trackIdx = medium.tracks.filter(t => t.recording.id === recording.id)[0].position -1;
+  const tracks = medium.tracks
+    // if medium was unfolded manually, medium.tracks stays empty
+    // but relEditor.state.loadedTracks has the new data
+    ? medium.tracks
+    : MB.relationshipEditor.state.loadedTracks.get(medium.position);
+  const track = tracks.filter(t => t.recording.id === recording.id)[0];
 
   await helper.waitFor(() => !MB.relationshipEditor.relationshipDialogDispatch, 1);
   MB.relationshipEditor.dispatch({
@@ -38,7 +42,7 @@ const setWork = async (recording, work, partial) => {
       batchSelection: false,
       source: recording,
       targetType: 'work',
-      track: MB.relationshipEditor.state.entity.mediums[mediumIdx].tracks[trackIdx],
+      track: track,
     },
   });
   await helper.waitFor(() => !!MB.relationshipEditor.relationshipDialogDispatch, 1);
