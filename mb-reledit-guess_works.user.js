@@ -144,18 +144,18 @@ const guessWork = () => {
 };
 
 const autoComplete = () => {
-  const $input = $('input#mainWork');
-  const match = $input.val().match(MBID_REGEX);
+  const input = document.getElementById('mainWork');
+  const match = input.value.match(MBID_REGEX);
   if (match) {
     const mbid = match[0];
     requests.GET(`/ws/2/work/${mbid}?fmt=json`, (data) => {
       data = JSON.parse(data);
-      $input.data('mbid', mbid);
-      $input.val(data.title || data.name);
-      $input.css('background', '#bbffbb');
+      input.setAttribute('mbid', mbid);
+      input.value = data.title || data.name;
+      input.style.backgroundColor = '#bbffbb';
     });
   } else {
-    $input.css('background', '#ffaaaa');
+    input.style.backgroundColor = '#ffaaaa';
   }
 };
 
@@ -254,11 +254,11 @@ $(document).ready(function() {
       appliedNote = true;
     }
   });
-  $('input#mainWork').on('input', autoComplete);
-  document.querySelector('input#fetchSubworks').addEventListener('click', () => {
+  document.getElementById('mainWork').addEventListener('input', autoComplete);
+  document.getElementById('fetchSubworks').addEventListener('click', () => {
     fetchSubWorks(
-      $('input#mainWork').data('mbid'),
-      document.querySelector('input#replaceSubworks').checked
+      document.getElementById('mainWork').getAttribute('mbid'),
+      document.getElementById('replaceSubworks').checked,
     );
     if (!appliedNote) {
       relEditor.editNote(GM_info.script, 'Set guessed subworks');
