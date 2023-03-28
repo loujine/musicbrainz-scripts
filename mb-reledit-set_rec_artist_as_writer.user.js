@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set writer relation from recording artist
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.11
+// @version      2023.3.28
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_rec_artist_as_writer.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_rec_artist_as_writer.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -19,7 +19,7 @@
 // ==/UserScript==
 
 const fillWriterDialog = async (work, track, artistCredit) => {
-  const writerLinkType = MB.linkedEntities.link_type[server.workLinkType.writer];
+  const writerLinkType = MB.linkedEntities.link_type[server.workLinkType.composer];
 
   MB.relationshipEditor.dispatch({
     type: 'update-dialog-location',
@@ -68,6 +68,19 @@ const fillWriterDialog = async (work, track, artistCredit) => {
   });
   await helper.delay(10);
 
+  MB.relationshipEditor.relationshipDialogDispatch({
+    type: 'update-target-entity',
+    source: work,
+    action: {
+      type: 'update-credit',
+      action: {
+        type: 'set-credit',
+        creditedAs: artistCredit.name,
+      },
+    },
+  });
+  await helper.delay(10);
+
   if (document.querySelector('.dialog-content p.error')) {
     console.error('Dialog error, probably an identical relation already exists');
     document.querySelector('.dialog-content button.negative').click();
@@ -83,16 +96,16 @@ const applyWriter = () => {
     const trackIdx = medium.tracks.filter(t => t.recording.id === recording.id)[0].position -1;
     const track = MB.relationshipEditor.state.entity.mediums[mediumIdx].tracks[trackIdx];
 
-    await helper.delay(recIdx * 100);
+    await helper.delay(recIdx * 1000);
     requests.GET(`/ws/js/entity/${recording.gid}`, resp => {
       const artistCredits = JSON.parse(resp).artistCredit.names;
       recording.relationships.filter(
         rel => rel.target_type === 'work'
       ).map(async (rel, relIdx) => {
-        await helper.delay(relIdx * 30);
+        await helper.delay(relIdx * 400);
         const work = rel.target;
         artistCredits.forEach(async (credit, creditIdx) => {
-          await helper.delay(creditIdx * 10);
+          await helper.delay(creditIdx * 300);
           fillWriterDialog(work, track, credit);
         });
       });
