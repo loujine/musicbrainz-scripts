@@ -75,6 +75,7 @@ class WikiDataHelpers {
             idWorldCat: 'P244',
             idBNF: 'P268',
             idRefId: 'P269',
+            idCiNii: 'P271',
             idTrove: 'P1315',
             // databases
             idIMDB: 'P345',
@@ -121,6 +122,7 @@ class WikiDataHelpers {
             idWorldCat: 'https://www.worldcat.org/identities/lccn-',
             idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
             idRefId: 'http://www.idref.fr/',
+            idCiNii: 'https://ci.nii.ac.jp/author/',
             idTrove: 'https://nla.gov.au/nla.party-',
             // databases
             idIMDB: 'https://www.imdb.com/name/',
