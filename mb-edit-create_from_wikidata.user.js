@@ -93,6 +93,7 @@ class WikiDataHelpers {
             idVGMDB: 'P3435',
             idOperabase: 'P4869',
             idRateYourMusic: 'P5404',
+            idWhoSampled: 'P6517',
             // social media
             idTwitter: 'P2002',
             idInstagram: 'P2003',
@@ -143,6 +144,7 @@ class WikiDataHelpers {
             idOperabase: 'http://operabase.com/artists/',
             idSNAC: 'http://snaccooperative.org/ark:/99166/',
             idRateYourMusic: 'https://rateyourmusic.com/artist/',
+            idWhoSampled: 'https://www.whosampled.com/',
             // social media
             idTwitter: 'https://twitter.com/',
             idInstagram: 'https://www.instagram.com/',
