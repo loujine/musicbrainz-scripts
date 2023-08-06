@@ -134,7 +134,7 @@ class WikiDataHelpers {
             idIMDB: 'https://www.imdb.com/name/',
             idOL: 'https://openlibrary.org/works/',
             idIMSLP: 'https://imslp.org/wiki/',
-            idIDBD: 'https://ibdb.com/person.php?id=',
+            idIDBD: 'https://www.ibdb.com/broadway-cast-staff/',
             idAllMusic: 'https://www.allmusic.com/artist/',
             idMetalArchivesBand: 'https://www.metal-archives.com/band.php?id=',
             idDiscogs: 'https://www.discogs.com/artist/',
