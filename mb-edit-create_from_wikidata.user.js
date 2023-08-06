@@ -103,6 +103,7 @@ class WikiDataHelpers {
             idMyspace: 'P3265',
             idWeibo: 'P3579',
             idPinterest: 'P3836',
+            idTikTok: 'P7085',
             // other
             idSpotify: 'P1902',
             idYoutube: 'P2397',
@@ -153,6 +154,7 @@ class WikiDataHelpers {
             idMyspace: 'https://myspace.com/',
             idWeibo: 'https://weibo.com/',
             idPinterest: 'https://www.pinterest.com/',
+            idTikTok: 'https://www.tiktok.com/@',
             // other
             idSpotify: 'https://open.spotify.com/artist/',
             idYoutube: 'https://www.youtube.com/channel/',
