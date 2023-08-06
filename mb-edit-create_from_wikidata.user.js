@@ -115,6 +115,7 @@ class WikiDataHelpers {
             idSongkick: 'P3478',
             idVimeo: 'P4015',
             idPatreon: 'P4175',
+            idTwitch: 'P5797',
             // missing: Tumblr (P3943), Bandcamp (P3283)
         };
         this.urls = {
@@ -166,6 +167,7 @@ class WikiDataHelpers {
             idSongkick: 'https://www.songkick.com/artists/',
             idVimeo: 'https://vimeo.com/',
             idPatreon: 'https://www.patreon.com/',
+            idTwitch: 'https://www.twitch.tv/',
         };
     }
 
