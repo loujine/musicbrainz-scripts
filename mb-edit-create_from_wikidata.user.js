@@ -74,6 +74,7 @@ class WikiDataHelpers {
             idLoC: 'P244',
             idWorldCat: 'P244',
             idBNF: 'P268',
+            idRefId: 'P269',
             idTrove: 'P1315',
             // databases
             idIMDB: 'P345',
@@ -119,6 +120,7 @@ class WikiDataHelpers {
             idLoC: 'https://id.loc.gov/authorities/names/',
             idWorldCat: 'https://www.worldcat.org/identities/lccn-',
             idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
+            idRefId: 'http://www.idref.fr/',
             idTrove: 'https://nla.gov.au/nla.party-',
             // databases
             idIMDB: 'https://www.imdb.com/name/',
