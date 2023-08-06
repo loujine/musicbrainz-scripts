@@ -74,6 +74,9 @@ class WikiDataHelpers {
             idLoC: 'P244',
             idWorldCat: 'P244',
             idBNF: 'P268',
+            idRefId: 'P269',
+            idCiNii: 'P271',
+            idWebNDL: 'P349',
             idTrove: 'P1315',
             // databases
             idIMDB: 'P345',
@@ -84,10 +87,13 @@ class WikiDataHelpers {
             idMetalArchivesBand: 'P1952',
             idDiscogs: 'P1953',
             idMetalArchivesArtist: 'P1989',
+            idBookBrainz: 'P2607',
             idSecondHandSongs: 'P2909',
             idSNAC: 'P3430',
             idVGMDB: 'P3435',
             idOperabase: 'P4869',
+            idRateYourMusic: 'P5404',
+            idWhoSampled: 'P6517',
             // social media
             idTwitter: 'P2002',
             idInstagram: 'P2003',
@@ -97,6 +103,7 @@ class WikiDataHelpers {
             idMyspace: 'P3265',
             idWeibo: 'P3579',
             idPinterest: 'P3836',
+            idTikTok: 'P7085',
             // other
             idSpotify: 'P1902',
             idYoutube: 'P2397',
@@ -108,6 +115,7 @@ class WikiDataHelpers {
             idSongkick: 'P3478',
             idVimeo: 'P4015',
             idPatreon: 'P4175',
+            idTwitch: 'P5797',
             // missing: Tumblr (P3943), Bandcamp (P3283)
         };
         this.urls = {
@@ -118,21 +126,27 @@ class WikiDataHelpers {
             idLoC: 'https://id.loc.gov/authorities/names/',
             idWorldCat: 'https://www.worldcat.org/identities/lccn-',
             idBNF: 'http://catalogue.bnf.fr/ark:/12148/cb',
+            idRefId: 'http://www.idref.fr/',
+            idCiNii: 'https://ci.nii.ac.jp/author/',
+            idWebNDL: 'https://id.ndl.go.jp/auth/ndlna/',
             idTrove: 'https://nla.gov.au/nla.party-',
             // databases
             idIMDB: 'https://www.imdb.com/name/',
             idOL: 'https://openlibrary.org/works/',
             idIMSLP: 'https://imslp.org/wiki/',
-            idIDBD: 'https://ibdb.com/person.php?id=',
+            idIDBD: 'https://www.ibdb.com/broadway-cast-staff/',
             idAllMusic: 'https://www.allmusic.com/artist/',
             idMetalArchivesBand: 'https://www.metal-archives.com/band.php?id=',
             idDiscogs: 'https://www.discogs.com/artist/',
             idMetalArchivesArtist: 'https://www.metal-archives.com/artist.php?id=',
+            idBookBrainz: 'https://bookbrainz.org/author/',
             idGenius: 'https://genius.com/artists/',
             idSecondHandSongs: 'https://secondhandsongs.com/artist/',
             idVGMDB: 'https://vgmdb.net/artist/',
             idOperabase: 'http://operabase.com/artists/',
             idSNAC: 'http://snaccooperative.org/ark:/99166/',
+            idRateYourMusic: 'https://rateyourmusic.com/artist/',
+            idWhoSampled: 'https://www.whosampled.com/',
             // social media
             idTwitter: 'https://twitter.com/',
             idInstagram: 'https://www.instagram.com/',
@@ -141,6 +155,7 @@ class WikiDataHelpers {
             idMyspace: 'https://myspace.com/',
             idWeibo: 'https://weibo.com/',
             idPinterest: 'https://www.pinterest.com/',
+            idTikTok: 'https://www.tiktok.com/@',
             // other
             idSpotify: 'https://open.spotify.com/artist/',
             idYoutube: 'https://www.youtube.com/channel/',
@@ -152,6 +167,7 @@ class WikiDataHelpers {
             idSongkick: 'https://www.songkick.com/artists/',
             idVimeo: 'https://vimeo.com/',
             idPatreon: 'https://www.patreon.com/',
+            idTwitch: 'https://www.twitch.tv/',
         };
     }
 
