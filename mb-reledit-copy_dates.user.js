@@ -79,7 +79,7 @@ async function applyNewDate(rel, dateProps) {
     });
     await helper.delay(1);
 
-    document.querySelector('.dialog-content button.positive').click();
+    document.querySelector('.relationship-dialog button.positive').click();
 }
 
 const propagateDates = (replace) => {
