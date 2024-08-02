@@ -323,7 +323,7 @@ class Server {
         'Uyghur': 'ug',
         'Uzbek': 'uz',
         'Venetian': 'vec',
-        'Vietnamese': ', 'vi',
+        'Vietnamese': 'vi',
         'Wallon': 'wa',
         'Welsh': 'cy',
         'Western Frisian': 'fy',
