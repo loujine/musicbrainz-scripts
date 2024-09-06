@@ -109,6 +109,7 @@ class WikiDataHelpers {
             idSongkick: 'P3478',
             idVimeo: 'P4015',
             idPatreon: 'P4175',
+            idAnghami: 'P10885',
             // missing: Tumblr (P3943), Bandcamp (P3283)
         };
         this.urls = {
@@ -154,6 +155,7 @@ class WikiDataHelpers {
             idSongkick: 'https://www.songkick.com/artists/',
             idVimeo: 'https://vimeo.com/',
             idPatreon: 'https://www.patreon.com/',
+            idAnghami: 'https://play.anghami.com/artist/',
         };
     }
 
