@@ -9,7 +9,7 @@
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-display_count_alias.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
 // @icon         https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/icon.png
-// @description  musicbrainz.org: Display alias count on work/artist pages
+// @description  musicbrainz.org: Display alias count on work/event/artist pages
 // @compatible   firefox+tampermonkey
 // @license      MIT
 // @require      https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mbz-loujine-common.js
@@ -17,6 +17,10 @@
 // @exclude      http*://*musicbrainz.org/work/add*
 // @exclude      http*://*musicbrainz.org/work/create*
 // @exclude      http*://*musicbrainz.org/work/*/edits
+// @include      http*://*musicbrainz.org/event/*
+// @exclude      http*://*musicbrainz.org/event/add*
+// @exclude      http*://*musicbrainz.org/event/create*
+// @exclude      http*://*musicbrainz.org/event/*/edits
 // @include      http*://*musicbrainz.org/artist/*
 // @exclude      http*://*musicbrainz.org/artist/add*
 // @exclude      http*://*musicbrainz.org/artist/create*
