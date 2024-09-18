@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.11
+// @version      2024.9.18
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -248,12 +248,12 @@ class WikiDataHelpers {
             }
             return;
         }
-        setValue(prefix + '.year', date.getFullYear());
+        setValue(prefix + '.year', date.getUTCFullYear());
         const yearInput = document.getElementById(prefix + '.year');
         if (!yearInput) {
             return;
         }
-        if (yearInput.classList.contains('jesus2099')) {
+        if (yearInput.className.indexOf('jesus2099') > 0) {
             // jesus2099's EASY_DATE script is shifting the input node
             // containing the year but not its id
             yearInput.nextSibling.value = date.getUTCFullYear();
