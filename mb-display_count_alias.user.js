@@ -17,6 +17,14 @@
 // @exclude      http*://*musicbrainz.org/work/add*
 // @exclude      http*://*musicbrainz.org/work/create*
 // @exclude      http*://*musicbrainz.org/work/*/edits
+// @include      http*://*musicbrainz.org/release/*
+// @exclude      http*://*musicbrainz.org/release/add*
+// @exclude      http*://*musicbrainz.org/release/create*
+// @exclude      http*://*musicbrainz.org/release/*/edits
+// @include      http*://*musicbrainz.org/release-group/*
+// @exclude      http*://*musicbrainz.org/release-group/add*
+// @exclude      http*://*musicbrainz.org/release-group/create*
+// @exclude      http*://*musicbrainz.org/release-group/*/edits
 // @include      http*://*musicbrainz.org/event/*
 // @exclude      http*://*musicbrainz.org/event/add*
 // @exclude      http*://*musicbrainz.org/event/create*
