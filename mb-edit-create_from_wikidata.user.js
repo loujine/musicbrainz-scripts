@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.11
+// @version      2024.10.24
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -248,7 +248,7 @@ class WikiDataHelpers {
             }
             return;
         }
-        setValue(prefix + '.year', date.getFullYear());
+        setValue(prefix + '.year', date.getUTCFullYear());
         const yearInput = document.getElementById(prefix + '.year');
         if (!yearInput) {
             return;
@@ -350,8 +350,8 @@ function setValue(nodeId, value, callback) {
 
 function fillISNI(isni) {
     const existing_isni = [];
-    const isniBlock = document.getElementsByClassName(
-        'edit-artist.isni_codes-template')[0].parentElement;
+    const isniBlock = document.querySelector(
+        'input[name="edit-artist.isni_codes.0"]').closest('.row');
     const fields = isniBlock.getElementsByTagName('input');
     for (const input of fields) {
         existing_isni.push(input.value.split(' ').join(''));
@@ -652,7 +652,7 @@ function fillFormFromISNI(isniURL) {
         onload: resp => {
             fillISNI(isniURL.split('/')[3]);
             let rgx = new RegExp(`href="(.*?musicbrainz.org.*?)"`).exec(resp.responseText);
-            if (rgx.length) {
+            if (rgx) {
                 // eslint-disable-next-line no-alert
                 if (window.confirm(
                         'An entity already exists linked to this ISNI id, ' +
@@ -665,7 +665,7 @@ function fillFormFromISNI(isniURL) {
                 'catalogue.bnf.fr', 'd-nb.info', 'wikidata.org', 'id.loc.gov', 'viaf.org'
             ]) {
                 rgx = new RegExp(`href="(.*?${site}.*?)"`).exec(resp.responseText);
-                if (rgx.length) {
+                if (rgx) {
                     fillExternalLinks(rgx[1]);
                 }
             }
@@ -673,7 +673,7 @@ function fillFormFromISNI(isniURL) {
             rgx = new RegExp(
                 /Name:.*?<psi:text>(.*?)<\/psi:text>/
             ).exec(resp.responseText.replace(/\n/g, ''));
-            if (rgx.length) {
+            if (rgx) {
                 _fillEntityName(rgx[1], entityType);
             }
         },
