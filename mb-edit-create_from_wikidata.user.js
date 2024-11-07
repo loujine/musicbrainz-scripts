@@ -723,7 +723,6 @@ $(document).ready(function () {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: node.value,
-                timeout: 1000,
                 onload: function(resp) {
                     const doc = (new DOMParser()).parseFromString(resp.responseText, 'text/html');
                     const link = doc.querySelector('li > a[href^="https://www.wikidata.org/wiki/Special:EntityPage/Q"]');
