@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2024.10.24
+// @version      2024.11.7
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -350,29 +350,34 @@ function setValue(nodeId, value, callback) {
 
 function fillISNI(isni) {
     const existing_isni = [];
-    const isniBlock = document.querySelector(
-        'input[name="edit-artist.isni_codes.0"]').closest('.row');
-    const fields = isniBlock.getElementsByTagName('input');
-    for (const input of fields) {
-        existing_isni.push(input.value.split(' ').join(''));
+    const isni_fields = document.querySelectorAll('input[name^="edit-artist.isni_codes."]');
+    for (const input of isni_fields) {
+        if (input.value) {
+            existing_isni.push(input.value.split(' ').join(''));
+        }
     }
-    existing_isni.splice(0, 1); // skip template
-    if (existing_isni.includes(isni.split(' ').join(''))) {
-        return;
-    }
-    if (existing_isni.length === 1 && existing_isni[0] === '') {
-        document.getElementsByName('edit-artist.isni_codes.0')[0].value = isni;
+    if (existing_isni.length === 0) {
+        isni_fields[0].value = isni;
+        $('#newFields').append(
+            $('<dt>', {'text': 'New ISNI code added:'})
+        ).append(
+            $('<dd>', {'text': isni}).css('color', 'green')
+        );
     } else {
-        isniBlock.getElementsByClassName('form-row-add')[0]
-                 .getElementsByTagName('button')[0].click();
-        document.getElementsByName(
-            `edit-artist.isni_codes.${existing_isni.length}`)[0].value = isni;
+        $('#newFields').append(
+            $('<dt>', {'text': `Fields "ISNI codes":`})
+        );
+        if (existing_isni.includes(isni.split(' ').join(''))) {
+            $('#newFields').append(
+                $('<dd>', {'text': `Kept "${isni}"`})
+            );
+        } else {
+            $('#newFields').append(
+                $('<dd>', {'text': `Different value "${isni}" suggested`}
+                ).css('color', 'red')
+            );
+        }
     }
-    $('#newFields').append(
-        $('<dt>', {'text': 'New ISNI code added:'})
-    ).append(
-        $('<dd>', {'text': isni}).css('color', 'green')
-    );
 }
 
 
