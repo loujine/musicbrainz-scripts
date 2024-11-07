@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2024.11.7
+// @version      2024.11.8
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -357,7 +357,8 @@ function fillISNI(isni) {
         }
     }
     if (existing_isni.length === 0) {
-        isni_fields[0].value = isni;
+        (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(isni_fields[0]), 'value').set).call(isni_fields[0], isni);
+        isni_fields[0].dispatchEvent(new Event('input', {bubbles: true}));
         $('#newFields').append(
             $('<dt>', {'text': 'New ISNI code added:'})
         ).append(
