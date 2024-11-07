@@ -725,9 +725,8 @@ $(document).ready(function () {
                 url: node.value,
                 timeout: 1000,
                 onload: function(resp) {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(resp.responseText, 'text/html');
-                    const link = doc.querySelector('#p-tb a[href*="www.wikidata.org"]');
+                    const doc = (new DOMParser()).parseFromString(resp.responseText, 'text/html');
+                    const link = doc.querySelector('li > a[href^="https://www.wikidata.org/wiki/Special:EntityPage/Q"]');
                     fillExternalLinks(link.href);
                     fillFormFromWikidata(link.href.match(/\/(Q\d+)\b/)[1]);
                 }
