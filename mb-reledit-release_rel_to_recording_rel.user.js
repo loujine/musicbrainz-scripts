@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Replace release relations by recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.9
+// @version      2024.11.13
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-release_rel_to_recording_rel.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-release_rel_to_recording_rel.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -35,6 +35,7 @@ function moveAR() {
                     attributes: relEditor.createAttributeTree(artistRel.attributes),
                     begin_date: artistRel.begin_date,
                     entity0: artistRel.target,
+                    entity0_credit: artistRel.entity0_credit,
                     entity1: rec,
                     end_date: artistRel.end_date,
                     ended: artistRel.ended,
