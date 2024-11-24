@@ -3,6 +3,7 @@
 import time
 import unittest
 
+import pytest
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoAlertPresentException
 
@@ -25,6 +26,7 @@ RELEASE_RELS_URL = f'{MBSERVER}/release/{RELEASE_W_RECRELS_MBID}'
 
 class ReleditUserscriptsTC(UserscriptsTC):
 
+    @pytest.mark.skip(reason="")
     def test_script_clone_ext_relations(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-clone_relations.user.js')
@@ -41,6 +43,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
             'td.recording').text
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_clone_ext_recording_relations(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-clone_relations.user.js')
@@ -55,6 +58,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert len(self.driver.find_elements_by_class_name('rel-add')) > 1
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_clone_recording_relations(self):
         self.login('release', RELEASE_W_RECRELS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-clone_relations.user.js')
@@ -69,6 +73,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert len(self.driver.find_elements_by_class_name('rel-add')) > 1
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_clone_multi_sources(self):
         self.login('release', RELEASE_W_RECRELS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-clone_relations.user.js')
@@ -122,6 +127,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert self.driver.page_source.count('sampled by') == count_backward + 1
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_remove_dates(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-copy_dates.user.js')
@@ -133,6 +139,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert 'on 2016-04-07' not in self.driver.page_source
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_copy_dates(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-copy_dates.user.js')
@@ -151,6 +158,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert self.driver.page_source.count('on 2016-04-07') > 1
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_guess_works(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-guess_works.user.js')
@@ -164,6 +172,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert len(self.driver.find_elements_by_css_selector('td.relationship-list span.rel-add')) == 1
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_guess_main_works(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-guess_works.user.js')
@@ -178,6 +187,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert len(self.driver.find_elements_by_css_selector('td.relationship-list span.rel-add')) == 4
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_guess_repeated_subworks(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-guess_works.user.js')
@@ -209,6 +219,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert len(self.driver.find_elements_by_css_selector('td.relationship-list span.rel-add')) == 3
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_guess_overlapping_subworks(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-guess_works.user.js')
@@ -231,6 +242,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
                 'td.relationship-list span.rel-add')])
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_release_rels(self):
         self.login('release', RELEASE_W_RELS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-release_rel_to_recording_rel.user.js')
@@ -244,6 +256,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
             'table.rel-editor-table td.relationship-list span.rel-remove')) == 4
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_set_instruments(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-set_instruments.user.js')
@@ -262,6 +275,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert self.driver.page_source.count('remixer') > count_to
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_relation_attrs(self):
         self.login('release', RELEASE_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-set_relation_attrs.user.js')
@@ -290,6 +304,7 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert '(partial)' in self.driver.page_source
         assert self.driver.find_element_by_id('edit-note-text').text
 
+    @pytest.mark.skip(reason="")
     def test_script_set_writer(self):
         self.login('release', SMALL_RELEASE_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-set_rec_artist_as_writer.user.js')

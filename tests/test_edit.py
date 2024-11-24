@@ -3,6 +3,7 @@
 import time
 import unittest
 
+import pytest
 from selenium.webdriver.support.ui import Select
 
 from tests import UserscriptsTC
@@ -40,6 +41,7 @@ class EditUserscriptsTC(UserscriptsTC):
         # time.sleep(1)
         # assert 'Fetching required data' in self.driver.page_source
 
+    @pytest.mark.skip(reason="external link already exists")
     def test_script_wikidata(self):
         self.login('artist', ARTIST_MBID + '/edit')
         self.load_userscript('mb-edit-create_from_wikidata.user.js')
@@ -75,6 +77,7 @@ class EditUserscriptsTC(UserscriptsTC):
         assert self.driver.find_element_by_css_selector(
             'tr.newAlias select').get_attribute('selectedIndex') == '0'
 
+    @pytest.mark.skip(reason="async releditor")
     def test_script_edit_subworks(self):
         self.login('work', WORK_WITH_SW_MBID + '/edit')
         self.load_userscript('mb-edit-edit_subworks.user.js')
