@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.11
+// @version      2024.11.24
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -350,8 +350,8 @@ function setValue(nodeId, value, callback) {
 
 function fillISNI(isni) {
     const existing_isni = [];
-    const isniBlock = document.getElementsByClassName(
-        'edit-artist.isni_codes-template')[0].parentElement;
+    const isniBlock = document.getElementById(
+        'add-isni-code').parentElement.parentElement;
     const fields = isniBlock.getElementsByTagName('input');
     for (const input of fields) {
         existing_isni.push(input.value.split(' ').join(''));
