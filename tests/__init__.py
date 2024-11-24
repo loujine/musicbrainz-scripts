@@ -5,6 +5,8 @@ import unittest
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+
 # from selenium.webdriver.common.keys import Keys
 
 
@@ -35,15 +37,15 @@ class UserscriptsTC(unittest.TestCase):
         if args:
             url += '?returnto=%2F' + '%2F'.join(args)
         self.driver.get(url)
-        elem = self.driver.find_element_by_id('id-username')
+        elem = self.driver.find_element(By.ID, 'id-username')
         elem.send_keys('loujin')
-        elem = self.driver.find_element_by_id('id-password')
+        elem = self.driver.find_element(By.ID, 'id-password')
         elem.send_keys('mb')
         elem.submit()
 
 #     def test_login(self):
 #         self.login()
-#         assert 'loujin' in self.driver.find_element_by_class_name('account').text
+#         assert 'loujin' in self.driver.find_element(By.CLASS_NAME, 'account').text
 #         assert self.driver.current_url == 'https://test.musicbrainz.org/user/loujin'
 
     def load_userscript(self, filepath):
