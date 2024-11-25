@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Guess related works in batch
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.12
+// @version      2024.11.25
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-guess_works.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -78,11 +78,11 @@ const setWork = async (recording, work, partial) => {
   }
   await helper.delay(1);
 
-  if (document.querySelector('.dialog-content p.error')) {
+  if (document.querySelector('.relationship-dialog p.error')) {
     console.error('Dialog error, probably an identical relation already exists');
-    document.querySelector('.dialog-content button.negative').click();
+    document.querySelector('.relationship-dialog button.negative').click();
   } else {
-    document.querySelector('.dialog-content button.positive').click();
+    document.querySelector('.relationship-dialog button.positive').click();
   }
 };
 
@@ -113,11 +113,11 @@ const replaceWork = async (recording, work) => {
   });
   await helper.delay(1);
 
-  if (document.querySelector('.dialog-content p.error')) {
+  if (document.querySelector('.relationship-dialog p.error')) {
     console.error('Dialog error, probably an identical relation already exists');
-    document.querySelector('.dialog-content button.negative').click();
+    document.querySelector('.relationship-dialog button.negative').click();
   } else {
-    document.querySelector('.dialog-content button.positive').click();
+    document.querySelector('.relationship-dialog button.positive').click();
   }
 };
 

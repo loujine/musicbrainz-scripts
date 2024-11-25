@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.6
+// @version      2024.11.25
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -78,7 +78,7 @@ const setInstrument = (fromType, toType, fromAttrId, toAttrId, toCredit) => {
             });
             await helper.delay(1);
 
-            document.querySelector('.dialog-content button.positive').click();
+            document.querySelector('.relationship-dialog button.positive').click();
         });
     });
 };
