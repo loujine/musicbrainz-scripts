@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Set relation attributes
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.6
+// @version      2024.11.25
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_relation_attrs.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -58,7 +58,7 @@ const setAttributes = (targetType, attrName, toggle) => {
             });
             await helper.delay(1);
 
-            document.querySelector('.dialog-content button.positive').click();
+            document.querySelector('.relationship-dialog button.positive').click();
         });
     });
 };
