@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2024.11.8
+// @version      2024.11.25
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -97,17 +97,23 @@ class WikiDataHelpers {
             idMyspace: 'P3265',
             idWeibo: 'P3579',
             idPinterest: 'P3836',
+            idThreads: 'P11892',
             // other
             idSpotify: 'P1902',
             idYoutube: 'P2397',
             idDeezer: 'P2722',
             idiTunes: 'P2850',
+            idNapster: 'P6972',
+            idTidal: 'P4576',
+            idAmazonMusic: 'P6276',
+            idBoomplay: 'P11090',
             idDailymotion: 'P2942',
             idSoundCloud: 'P3040',
             idLastFM: 'P3192',
             idSongkick: 'P3478',
             idVimeo: 'P4015',
             idPatreon: 'P4175',
+            idAnghami: 'P10885',
             // missing: Tumblr (P3943), Bandcamp (P3283)
         };
         this.urls = {
@@ -141,17 +147,23 @@ class WikiDataHelpers {
             idMyspace: 'https://myspace.com/',
             idWeibo: 'https://weibo.com/',
             idPinterest: 'https://www.pinterest.com/',
+            idThreads: 'https://www.threads.net/@',
             // other
             idSpotify: 'https://open.spotify.com/artist/',
             idYoutube: 'https://www.youtube.com/channel/',
             idDeezer: 'https://www.deezer.com/artist/',
             idiTunes: 'https://itunes.apple.com/artist/',
+            idNapster: 'https://web.napster.com/artist/',
+            idTidal: 'https://tidal.com/browse/artist/',
+            idAmazonMusic: 'https://music.amazon.com/artists/',
+            idBoomplay: 'https://www.boomplay.com/artists/',
             idDailymotion: 'https://www.dailymotion.com/',
             idSoundCloud: 'https://soundcloud.com/',
             idLastFM: 'https://www.last.fm/music/',
             idSongkick: 'https://www.songkick.com/artists/',
             idVimeo: 'https://vimeo.com/',
             idPatreon: 'https://www.patreon.com/',
+            idAnghami: 'https://play.anghami.com/artist/',
         };
     }
 

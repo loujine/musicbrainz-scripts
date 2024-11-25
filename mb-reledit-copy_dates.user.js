@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: Copy dates on recording relations
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.6
+// @version      2024.11.25
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-copy_dates.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-copy_dates.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -79,7 +79,7 @@ async function applyNewDate(rel, dateProps) {
     });
     await helper.delay(1);
 
-    document.querySelector('.dialog-content button.positive').click();
+    document.querySelector('.relationship-dialog button.positive').click();
 }
 
 const propagateDates = (replace) => {

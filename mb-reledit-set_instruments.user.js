@@ -4,7 +4,7 @@
 // @name         MusicBrainz relation editor: set role in recording-artist relation
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.6
+// @version      2024.11.25
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-reledit-set_instruments.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -29,7 +29,7 @@ const setInstrument = (fromType, toType, fromAttrId, toAttrId, toCredit) => {
         ).filter(
             rel => (
                 (isNaN(fromAttrId) && rel.attributes.length === 0)
-                || rel.attributes.map(attr => attr.type.id).includes(fromAttrId)
+                || rel.attributes.map(attr => attr.typeID).includes(fromAttrId)
             )
         ).forEach(async (rel, relIdx) => {
             await helper.delay(relIdx * 10);
@@ -64,8 +64,8 @@ const setInstrument = (fromType, toType, fromAttrId, toAttrId, toCredit) => {
             let idx;
             let attrs = rel.attributes;
             if (!isNaN(fromAttrId)) {
-                idx = attrs.findIndex(attr => attr.type.id == fromAttrId);
-                attrs = attrs.filter(attr => attr.type.id != fromAttrId);
+                idx = attrs.findIndex(attr => attr.typeID == fromAttrId);
+                attrs = attrs.filter(attr => attr.typeID != fromAttrId);
             }
             if (toAttr) {
                 // attrs order must be kept for credits, etc.
@@ -78,7 +78,7 @@ const setInstrument = (fromType, toType, fromAttrId, toAttrId, toCredit) => {
             });
             await helper.delay(1);
 
-            document.querySelector('.dialog-content button.positive').click();
+            document.querySelector('.relationship-dialog button.positive').click();
         });
     });
 };

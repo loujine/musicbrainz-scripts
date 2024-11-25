@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Replace subwork titles, disambiguations and attributes in Work edit page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2023.3.11
+// @version      2024.11.25
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-edit_subworks.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -127,10 +127,10 @@ function setSubworksAttributes(attrName) {
         button.click();
         await helper.waitFor(() => !!MB.relationshipEditor.relationshipDialogDispatch, 1);
 
-        document.querySelector(`.dialog-content input#${attrName}-checkbox`).click();
+        document.querySelector(`.relationship-dialog input#${attrName}-checkbox`).click();
         await helper.delay(1);
 
-        document.querySelector('.dialog-content button.positive').click();
+        document.querySelector('.relationship-dialog button.positive').click();
     });
 }
 
