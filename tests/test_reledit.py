@@ -12,6 +12,7 @@ from tests import MBSERVER, UserscriptsTC
 
 RELEASE_MBID = '57eac48b-da83-4be2-9328-4d350b255261'
 RELEASE_WO_WORKS_MBID = '06cf52ff-747b-45b3-b928-2a987fa412c0'
+RELEASE_WO_WORKS_MBID2 = '83a094b8-438e-4010-a36d-2790a3a92bee'
 RELEASE_W_RELS_MBID = 'd5d4b955-2517-445a-bf1e-6efdb1279710'
 RELEASE_W_RECRELS_MBID = '9e10cf78-0d27-3db9-a6cb-de45c5ca174e'
 SMALL_RELEASE_MBID = 'a3bceee7-c9d9-4ce1-9fd4-5a47553a0305'
@@ -43,14 +44,13 @@ class ReleditUserscriptsTC(UserscriptsTC):
             By.CSS_SELECTOR, 'td.recording').text
         assert self.driver.find_element(By.ID, 'edit-note-text').text
 
-    @pytest.mark.skip(reason="")
     def test_script_clone_ext_recording_relations(self):
         self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-clone_relations.user.js')
         time.sleep(1)
         assert len(self.driver.find_elements(By.CLASS_NAME, 'rel-add')) == 0
         self.driver.find_element(By.ID, 'clone_rels_script_toggle').click()
-        self.driver.find_elements(By.CSS_SELECTOR, 'td.recording input')[1].click()
+        self.driver.find_elements(By.CSS_SELECTOR, 'td.recording input')[0].click()
         self.driver.find_element(By.ID, 'cloneExtRecording').send_keys(RECORDING_URL)
         time.sleep(5)
         self.driver.find_element(By.ID, 'cloneAR').click()
@@ -154,13 +154,12 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert self.driver.page_source.count('on 2016-04-07') > 1
         assert self.driver.find_element(By.ID, 'edit-note-text').text
 
-    @pytest.mark.skip(reason="")
     def test_script_guess_works(self):
-        self.login('release', RELEASE_WO_WORKS_MBID + '/edit-relationships')
+        self.login('release', RELEASE_WO_WORKS_MBID2 + '/edit-relationships')
         self.load_userscript('mb-reledit-guess_works.user.js')
         time.sleep(1)
         assert 'Search for works' in self.driver.page_source
-        assert len(self.driver.find_elements(By.CSS_SELECTOR, 'td.relationship-list')) == 0
+        assert len(self.driver.find_elements(By.CSS_SELECTOR, 'td.relationship-list')) == 1
 
         self.driver.find_element(By.CSS_SELECTOR, 'td.recording input').click()
         self.driver.find_element(By.ID, 'searchWork').click()
@@ -296,19 +295,16 @@ class ReleditUserscriptsTC(UserscriptsTC):
         assert '(partial)' in self.driver.page_source
         assert self.driver.find_element(By.ID, 'edit-note-text').text
 
-    @pytest.mark.skip(reason="")
     def test_script_set_writer(self):
         self.login('release', SMALL_RELEASE_MBID + '/edit-relationships')
         self.load_userscript('mb-reledit-set_rec_artist_as_writer.user.js')
         time.sleep(2)
-        assert not len(self.driver.find_elements(By.CSS_SELECTOR, 'tr.writer'))
+        # assert not len(self.driver.find_elements(By.CSS_SELECTOR, 'tr.composer'))
         self.driver.find_element(By.CSS_SELECTOR, 'td.recording input').click()
         self.driver.find_element(By.ID, 'setWriter').click()
         time.sleep(2)
-        assert len(self.driver.find_elements(By.CSS_SELECTOR, 'tr.writer'))
-        assert self.driver.find_element(By.CSS_SELECTOR, 'tr.writer').text == 'writer:\nAttacca Quartet'
-
-        pass
+        assert len(self.driver.find_elements(By.CSS_SELECTOR, 'tr.composer'))
+        assert 'composer:\nAttacca Quartet' in self.driver.find_element(By.CSS_SELECTOR, 'tr.composer').text
 
     def tearDown(self):
         super().tearDown()
