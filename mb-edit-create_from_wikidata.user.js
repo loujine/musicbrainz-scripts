@@ -4,7 +4,7 @@
 // @name         MusicBrainz edit: Create entity or fill data from wikipedia / wikidata / VIAF / ISNI
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2024.11.25
+// @version      2024.11.26
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/mb-edit-create_from_wikidata.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -260,7 +260,7 @@ class WikiDataHelpers {
             }
             return;
         }
-        setValue(prefix + '.year', date.getFullYear());
+        setValue(prefix + '.year', date.getUTCFullYear());
         const yearInput = document.getElementById(prefix + '.year');
         if (!yearInput) {
             return;
@@ -362,29 +362,35 @@ function setValue(nodeId, value, callback) {
 
 function fillISNI(isni) {
     const existing_isni = [];
-    const isniBlock = document.getElementById(
-        'add-isni-code').parentElement.parentElement;
-    const fields = isniBlock.getElementsByTagName('input');
-    for (const input of fields) {
-        existing_isni.push(input.value.split(' ').join(''));
+    const isni_fields = document.querySelectorAll('input[name^="edit-artist.isni_codes."]');
+    for (const input of isni_fields) {
+        if (input.value) {
+            existing_isni.push(input.value.split(' ').join(''));
+        }
     }
-    existing_isni.splice(0, 1); // skip template
-    if (existing_isni.includes(isni.split(' ').join(''))) {
-        return;
-    }
-    if (existing_isni.length === 1 && existing_isni[0] === '') {
-        document.getElementsByName('edit-artist.isni_codes.0')[0].value = isni;
+    if (existing_isni.length === 0) {
+        (Object.getOwnPropertyDescriptor(Object.getPrototypeOf(isni_fields[0]), 'value').set).call(isni_fields[0], isni);
+        isni_fields[0].dispatchEvent(new Event('input', {bubbles: true}));
+        $('#newFields').append(
+            $('<dt>', {'text': 'New ISNI code added:'})
+        ).append(
+            $('<dd>', {'text': isni}).css('color', 'green')
+        );
     } else {
-        isniBlock.getElementsByClassName('form-row-add')[0]
-                 .getElementsByTagName('button')[0].click();
-        document.getElementsByName(
-            `edit-artist.isni_codes.${existing_isni.length}`)[0].value = isni;
+        $('#newFields').append(
+            $('<dt>', {'text': `Fields "ISNI codes":`})
+        );
+        if (existing_isni.includes(isni.split(' ').join(''))) {
+            $('#newFields').append(
+                $('<dd>', {'text': `Kept "${isni}"`})
+            );
+        } else {
+            $('#newFields').append(
+                $('<dd>', {'text': `Different value "${isni}" suggested`}
+                ).css('color', 'red')
+            );
+        }
     }
-    $('#newFields').append(
-        $('<dt>', {'text': 'New ISNI code added:'})
-    ).append(
-        $('<dd>', {'text': isni}).css('color', 'green')
-    );
 }
 
 
@@ -664,7 +670,7 @@ function fillFormFromISNI(isniURL) {
         onload: resp => {
             fillISNI(isniURL.split('/')[3]);
             let rgx = new RegExp(`href="(.*?musicbrainz.org.*?)"`).exec(resp.responseText);
-            if (rgx.length) {
+            if (rgx) {
                 // eslint-disable-next-line no-alert
                 if (window.confirm(
                         'An entity already exists linked to this ISNI id, ' +
@@ -677,7 +683,7 @@ function fillFormFromISNI(isniURL) {
                 'catalogue.bnf.fr', 'd-nb.info', 'wikidata.org', 'id.loc.gov', 'viaf.org'
             ]) {
                 rgx = new RegExp(`href="(.*?${site}.*?)"`).exec(resp.responseText);
-                if (rgx.length) {
+                if (rgx) {
                     fillExternalLinks(rgx[1]);
                 }
             }
@@ -685,7 +691,7 @@ function fillFormFromISNI(isniURL) {
             rgx = new RegExp(
                 /Name:.*?<psi:text>(.*?)<\/psi:text>/
             ).exec(resp.responseText.replace(/\n/g, ''));
-            if (rgx.length) {
+            if (rgx) {
                 _fillEntityName(rgx[1], entityType);
             }
         },
@@ -730,11 +736,9 @@ $(document).ready(function () {
             GM_xmlhttpRequest({
                 method: "GET",
                 url: node.value,
-                timeout: 1000,
                 onload: function(resp) {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(resp.responseText, 'text/html');
-                    const link = doc.querySelector('#p-tb a[href*="www.wikidata.org"]');
+                    const doc = (new DOMParser()).parseFromString(resp.responseText, 'text/html');
+                    const link = doc.querySelector('li > a[href^="https://www.wikidata.org/wiki/Special:EntityPage/Q"]');
                     fillExternalLinks(link.href);
                     fillFormFromWikidata(link.href.match(/\/(Q\d+)\b/)[1]);
                 }
