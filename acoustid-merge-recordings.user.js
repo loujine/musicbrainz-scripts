@@ -4,7 +4,7 @@
 // @name         MusicBrainz: merge recordings from acoustID page
 // @namespace    mbz-loujine
 // @author       loujine
-// @version      2024.12.1
+// @version      2024.12.2
 // @downloadURL  https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/acoustid-merge-recordings.user.js
 // @updateURL    https://raw.githubusercontent.com/loujine/musicbrainz-scripts/master/acoustid-merge-recordings.user.js
 // @supportURL   https://github.com/loujine/musicbrainz-scripts
@@ -29,10 +29,10 @@ function checkRecordings(undefined_recordings) {
         setTimeout(() => {
             GM_xmlhttpRequest({
                 method: 'GET',
-                url: `https://musicbrainz.org/recording/${undefined_recording.mbid}`,
+                url: `https://musicbrainz.org/ws/2/recording/${undefined_recording.mbid}?inc=artists&fmt=json`,
                 onreadystatechange: resp => {
-                    const mbid = resp.finalUrl.split('/')[4];
-                    var obsolete_elements = '';
+                    const mbid = resp.finalUrl.split(/[/?&]/)[6];
+                    let obsolete_elements = '';
                     if (resp.status == '404') {
                         if (resp.readyState === 2) {
                             // recording was deleted
@@ -61,7 +61,13 @@ function checkRecordings(undefined_recordings) {
                         if (resp.readyState == 4) {
                             // recording was merged into a recording not visible in this page
                             obsolete_elements += '.loading';
-                            undefined_recording.tr.querySelector('a[href]').textContent = resp.responseXML.title.replace(/ - MusicBrainz$/, '');
+                            const response = JSON.parse(resp.responseText);
+                            undefined_recording.tr.querySelector('a[href]').textContent = response.title;
+                            undefined_recording.tr.cells[0].removeAttribute('colspan');
+                            undefined_recording.tr.cells[0].insertAdjacentHTML(
+                                'afterend',
+                                `<td>${artistCreditToString(response['artist-credit'])}</td><td>${response.length ? msToDuration(response.length) : '?:??'}</td>`
+                            );
                         }
                     }
                     if (obsolete_elements) {
@@ -73,6 +79,19 @@ function checkRecordings(undefined_recordings) {
             });
         }, 1000 * idx);
     });
+}
+
+function artistCreditToString(ac) {
+    let str = '';
+    for (let c = 0; c < ac.length; c++) {
+        str += ac[c].name + ac[c].joinphrase;
+    }
+    return str;
+}
+
+function msToDuration(durationMs) {
+    let d = new Date(durationMs);
+    return (d.getUTCHours() > 0 ? d.getUTCHours() + ":" + (d.getUTCMinutes() / 100).toFixed(2).slice(2) : d.getUTCMinutes()) + ":" + (d.getUTCSeconds() / 100).toFixed(2).slice(2) + (d.getUTCMilliseconds() > 0 ? "." + (d.getUTCMilliseconds() / 1000).toFixed(3).slice(2) : "");
 }
 
 function launchMerge() {
@@ -115,7 +134,7 @@ function launchMerge() {
           <input id="checkAll" value="Select all" type="button">
         </th>
     `);
-    var undefined_recordings = [];
+    let undefined_recordings = [];
     document.querySelectorAll('table a[href*="/recording/"]').forEach(node => {
         const mbid = node.href.split('/')[4];
         const tr = node.closest('tr');
